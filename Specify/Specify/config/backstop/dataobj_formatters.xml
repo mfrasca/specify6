@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<formatters xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <format
+        name="Agent"
+        class="edu.ku.brc.specify.datamodel.Agent"
+        default="true"
+        >
+        <switch single="false" field="agentType">
+            <fields value="0">
+                <field>name</field>
+            </fields>
+            <fields value="1">
+                <field>lastName</field>
+                <field sep=", " >firstName</field>
+            </fields>
+        </switch>
+    </format>
+    
+    <format
+        name="CollectionObject"
+        class="edu.ku.brc.specify.datamodel.CollectionObject"
+        default="true"
+        >
+        <switch single="true">
+            <fields>
+                <field format="%.0f" type="float">catalogNumber</field>
+            </fields>
+        </switch>
+    </format>
+
+    <format
+        name="Permit"
+        class="edu.ku.brc.specify.datamodel.Permit"
+        default="true"
+        >
+        <switch single="true">
+            <fields>
+                <field>permitNumber</field>
+            </fields>
+        </switch>
+    </format>
+    
+    <format
+        name="AccessionAuthorizations"
+        class="edu.ku.brc.specify.datamodel.AccessionAuthorizations"
+        default="true"
+        >
+        <switch single="true">
+            <fields>
+                <field>permit.permitNumber</field>
+            </fields>
+        </switch>
+    </format>
+    
+    <format
+        name="AccessionAgents"
+        class="edu.ku.brc.specify.datamodel.AccessionAgents"
+        default="true"
+        >
+        <switch single="true">
+            <fields>
+                <field formatter="Agent">agent</field>
+                <field sep=" - ">role</field>
+            </fields>
+        </switch>
+    </format>
+    
+    <format
+        name="Geography"
+        class="edu.ku.brc.specify.datamodel.Geography"
+        default="true"
+        >
+        <switch single="true">
+            <fields>
+                <field>name</field>
+            </fields>
+        </switch>
+    </format>
+    
+    <format
+        name="PrepType"
+        class="edu.ku.brc.specify.datamodel.PrepType"
+        default="true"
+        >
+        <switch single="true">
+            <fields>
+                <field>name</field>
+            </fields>
+        </switch>
+    </format>
+    
+    <format
+        name="DeterminationStatus"
+        class="edu.ku.brc.specify.datamodel.DeterminationStatus"
+        default="true"
+        >
+        <switch single="true">
+            <fields>
+                <field>name</field>
+            </fields>
+        </switch>
+    </format>
+    
+    <format
+        name="Preparation"
+        class="edu.ku.brc.specify.datamodel.Preparation"
+        default="true"
+        >
+        <switch single="true">
+            <fields>
+                <field formatter="PrepType">prepType</field>
+                <field sep=" - "  format="%d" type="int">count</field>
+            </fields>
+        </switch>
+    </format>
+    
+    <format
+        name="Determination"
+        class="edu.ku.brc.specify.datamodel.Determination"
+        default="true"
+        >
+        <switch single="true">
+            <fields>
+                <field>taxon.fullName</field>
+            </fields>
+        </switch>
+    </format>
+    
+    
+    <aggregators>
+        <aggregator name="AccessionAuthorizations" class="edu.ku.brc.specify.datamodel.AccessionAuthorizations" separator="; " count="" ending="" format="AccessionAuthorizations" default="true"/>
+        <aggregator name="AccessionAgents"         class="edu.ku.brc.specify.datamodel.AccessionAgents" separator="; " count="" ending="" format="AccessionAgents" default="true"/>   
+        <aggregator name="Preparation"             class="edu.ku.brc.specify.datamodel.Preparation" separator="; " count="" ending="" format="Preparation" default="true"/>   
+        <aggregator name="Determination"           class="edu.ku.brc.specify.datamodel.Determination" separator="; " count="1" ending="" format="Determination" default="true"/>   
+    </aggregators>
+    
+     
+</formatters>
+
+

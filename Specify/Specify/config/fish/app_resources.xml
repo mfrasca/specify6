@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files>
+    <file level="3" mimetype="text/xml" name="StartUpPanel" description="StartUpPanel" file="startup_panel.xml"/>    
+    <file level="3" mimetype="text/xml" name="StatisticsPanel" description="StatisticsPanel" file="statistics_panel.xml"/>    
+    <file level="3" mimetype="text/xml" name="StatsSummaryPanel" description="StatsSummaryPanel" file="stats_summary_panel.xml"/>
+    <file level="3" mimetype="text/xml" name="DataEntryTaskInit" description="DataEntryTaskInit" file="dataentry_task.xml"/>
+    
+    <!-- Labels -->  
+    <file level="3" mimetype="jrxml/label" name="fish_label.jrxml" description="Fish Labels" file="fish_label.jrxml" 
+        metadata="tableid=1;reqrs=true;type=Labels;action=PrintLabel;reporttype=Label;reportsubtype=CollectionObject"/>
+        
+    <file level="3" mimetype="jrxml/report" name="LoanInvoice.jrxml" description="LoanInvoice" file="LoanInvoice.jrxml" 
+        metadata="tableid=52;reqrs=true;type=Labels;action=PrintLabel;reporttype=Report;reportsubtype=Invoice;subreports=LoanInvoice_subreport1.jrxml"/>
+        
+    <file level="3" mimetype="jrxml/subreport" name="LoanInvoice_subreport1.jrxml" description="LoanInvoice SubReport" file="LoanInvoice_subreport1.jrxml" 
+        metadata=""/>
+</files>
