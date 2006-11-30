@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<icons>
+	<icon name="Save"       file="filesave.png" sizes="all"/>
+
+    <icon name="Configure"  file="configure.gif" sizes="all"/>
+    <icon name="Startup"    file="specify_icon.gif" sizes="all"/>
+    <icon name="AppIcon"    file="specify_icon.gif" sizes="32"/>
+    <icon name="Specify16"  file="specify_icon16.gif" sizes="16"/>
+    <icon name="Workbench"  file="workbench.gif" sizes="all"/>
+    <icon name="Data_Entry" file="form.gif" sizes="all"/>
+    <icon name="Taxon_Tree" file="taxon.gif" sizes="all"/>
+    <icon name="Labels"     file="labels.gif" sizes="all"/>
+    <icon name="Reports"    file="reports.gif" sizes="all"/>
+    <icon name="Interactions" file="loans.gif" sizes="all"/>
+    <icon name="Search"     file="queryIt.gif" sizes="all"/>
+    <icon name="Statistics" file="stats.gif" sizes="all"/>
+    <icon name="Pie_Chart"  file="piechart.gif" sizes="all"/>
+    <icon name="Bar_Chart"  file="barchart.gif" sizes="all"/>
+    <icon name="Record_Set" file="recordset.gif" sizes="all"/>
+    <icon name="Agent"      file="agent.gif" sizes="all"/>
+    <icon name="Person"		file="emblem-personal.png" sizes="all"/>
+    <icon name="People"		file="emblem-people.png" sizes="all"/>
+    <icon name="Determination"       file="agent.gif" sizes="all"/>
+    <icon name="AccessionAgent"      file="agent.gif" sizes="all"/>
+    <icon name="CollectionObject"    file="bug.png" sizes="all"/>
+    <icon name="Series"     file="series.gif" sizes="all"/>
+    <icon name="Taxon"      file="taxon.gif" sizes="all"/>
+    <icon name="Form"       file="form.gif" sizes="all"/>
+    <icon name="Geography"  file="earth.png" sizes="all"/>
+    <icon name="Locality"   file="locality.gif" sizes="all"/>
+    <icon name="ColObj"     file="catobj_fish.gif" sizes="all"/>
+    <icon name="Address"    file="address.gif" sizes="all"/>
+    <icon name="Location"   file="location.jpg" sizes="all"/>
+    <icon name="Geologic Time Period" file="clock.png" sizes="all"/>
+    <icon name="ColEvent"   file="collevent.gif" sizes="all"/>
+    <icon name="Accession"  file="accession.gif" sizes="all"/>
+    <icon name="Permit"     file="permit.png" sizes="all"/>
+    <icon name="InfoRequest" file="information.gif" sizes="all"/>
+    <icon name="SystemSetup" file="information.gif" sizes="all"/>
+    <icon name="Search"      file="search.gif" sizes="all"/>
+    <icon name="LocalityMapper" file="map.png" sizes="all"/>
+    <icon name="PrepType"    file="preptype.png" sizes="all"/>
+    
+    <icon name="SpecifyLargeIcon" file="specify_large_icon.gif" sizes="NonStd"/>
+
+    <icon name="Blue Dot"    file="blue_dot.png" sizes="all"/>
+
+    <icon name="UserInterface" file="form.gif" sizes="all"/>
+
+    <icon name="DropDownArrow" file="dropdownarrow.gif" sizes="NonStd"/>
+    <icon name="UpArrow"       file="up.png"            sizes="16"/>
+    <icon name="DownArrow"     file="down.png"          sizes="16"/>
+    <icon name="BlankIcon"     file="blank16x16.png"    sizes="16"/>
+
+
+    <icon name="FirstRec" file="first.gif" sizes="NonStd"/>
+    <icon name="PrevRec"  file="prev.gif"  sizes="NonStd"/>
+    <icon name="NextRec"  file="next.gif"  sizes="NonStd"/>
+    <icon name="LastRec"  file="last.gif"  sizes="NonStd"/>
+    <icon name="SmallTrash" file="smalltrash.gif" sizes="NonStd"/>
+    <!--
+    <icon name="Save"     file="save_disk.gif"  sizes="all"/>
+    <icon name="FirstRec" file="go-first.png" sizes="NonStd"/>
+    <icon name="PrevRec"  file="go-previous.png"  sizes="NonStd"/>
+    <icon name="NextRec"  file="go-next.png"  sizes="NonStd"/>
+    <icon name="LastRec"  file="go-last.png"  sizes="NonStd"/>
+    <icon name="NewRec"   file="document-new16.png"  sizes="NonStd"/>
+    -->
+
+    <icon name="CreateObj"   file="document-new32.png"  sizes="all"/>
+
+    <icon name="NewRec"   file="newrec.gif"  sizes="NonStd"/>
+    <!--
+    <icon name="Save"     file="document-save16.png"  sizes="NonStd"/>
+	-->
+	
+    <icon name="EditIcon" file="edit_icon.gif"  sizes="NonStd"/>
+    <icon name="EditForm" file="editicon2_16.png" sizes="16"/>
+    <icon name="Spreadsheet" file="spreadsheet.gif" sizes="all"/>
+    <icon name="InfoIcon" file="info.png"       sizes="NonStd"/>
+    <icon name="Reload"   file="view-refresh16.png" sizes="16"/>
+    <icon name="ViewForm" file="viewform16.gif" sizes="16"/>
+    <icon name="ViewForm" file="viewform.gif" sizes="32"/>
+
+    <icon name="BGImage"  file="splash.jpg" sizes="NonStd"/>
+    <!-- <icon name="BGImage"  file="frogs_bg.gif" sizes="NonStd"/> -->
+
+    <icon name="ValidationValid"   file="validation-valid.gif" sizes="NonStd"/>
+    <icon name="ValidationWarning" file="validation-warning.gif" sizes="NonStd"/>
+    <icon name="ValidationError"   file="validation-error.gif" sizes="NonStd"/>
+    
+    <icon name="Green Arrow Down" file="green_arrow_down.gif" sizes="16"/>
+    <icon name="Green Arrow Up" file="green_arrow_up.gif" sizes="16"/>
+
+    <icon name="Down" file="down.png" sizes="NonStd"/>
+    <icon name="Forward" file="forward.png" sizes="NonStd"/>
+    
+    <icon name="Checkmark" file="stock-apply.png" sizes="all"/>
+    
+    <!-- Discipline Icons -->
+    <icon name="FishColObj"  file="catobj_fish.gif" sizes="all"/>    
+
+    <!--  Plugins -->
+    <icon name="FishBase" file="fblogootw32.png" sizes="all"/>
+    <icon name="GoogleEarth" file="GoogleEarth16x16.png" sizes="16"/>
+    <icon name="BioGeoMancer" file="biogeomancer.png" sizes="all"/>
+    
+    <icon name="Warning" file="exclaim_yellow.gif" sizes="all"/>
+    <icon name="Error" file="exclaim.gif" sizes="all"/>
+    
+    <!-- Preferences -->
+    <icon name="Browse" file="browse.gif" sizes="all"/>
+    
+    <!-- TreeTableViewer icons -->
+    <icon name="TTV_Subtree"        file="zoom_in.png"    sizes="16"/>
+    <icon name="TTV_WholeTree"      file="zoom_out.png"   sizes="16"/>
+    <icon name="TTV_AllDescend"     file="expand.png"     sizes="16"/>
+    <icon name="TTV_SyncViews"      file="sync.png"       sizes="16"/>
+    <icon name="TTV_NewChild"       file="add.png"        sizes="16"/>
+    <icon name="TTV_EditNode"       file="edit.png"       sizes="16"/>
+    <icon name="TTV_DelNode"        file="delete.png"     sizes="16"/>
+    <icon name="TTV_ToParent"       file="undo.png"       sizes="16"/>
+    <icon name="TTV_ToggleViewMode" file="split_view.png" sizes="32"/>
+    
+    <!-- Tree Task icons -->
+    <icon name="Geography_Tree"     file="earth.png"    sizes="all"/>
+    <icon name="Location_Tree"      file="location.jpg" sizes="all"/>
+    <icon name="GeoTimePeriod_Tree" file="clock.png"    sizes="all"/>
+    <icon name="Taxon_Tree"         file="taxon.gif"    sizes="all"/>
+
+	<icon name="TreeDefEditor"		file="taxon.gif"	sizes="all"/>
+	
+	<!-- MIME type icons -->
+	<icon name="audio"				file="audio.png"	sizes="all"/>
+	<icon name="video"				file="video.png"	sizes="all"/>
+	<icon name="image"				file="image.png"	sizes="all"/>
+	<icon name="unknown"			file="unknown.png"	sizes="all"/>
+	
+	<!-- sorting button icons -->
+	<icon name="move_to_start"		file="start.png"		sizes="all"/>
+	<icon name="move_left"			file="1leftarrow.png"	sizes="all"/>
+	<icon name="move_right"			file="1rightarrow.png"	sizes="all"/>
+	<icon name="move_to_end"		file="finish.png"		sizes="all"/>
+	
+	<!-- prep type icons -->
+    <icon name="skeleton"			file="fishskel.png"     sizes="all"/>
+    <icon name="xray"				file="xray.png"			sizes="all"/>
+    <icon name="etoh"				file="fishinjar.png"	sizes="all"/>
+    <icon name="cs"					file="fishskeljar.png"  sizes="all"/>
+	
+</icons>

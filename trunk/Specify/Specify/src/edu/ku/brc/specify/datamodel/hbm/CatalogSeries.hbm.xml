@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd"><hibernate-mapping>
+
+<class name="edu.ku.brc.specify.datamodel.CatalogSeries" table="catalogseries" lazy="true">
+    <meta attribute="class-description" inherit="false"/>
+
+    <id name="catalogSeriesId" type="java.lang.Long" column="CatalogSeriesID">
+        <meta attribute="field-description">Primary key</meta>
+        <meta attribute="scope-field">protected</meta>
+        <generator class="native"/>
+    </id>
+
+    <timestamp name="timestampModified" column="TimestampModified">
+        <meta attribute="scope-field">protected</meta>
+        <meta attribute="field-description">Versioning TimeStamp</meta>
+    </timestamp>
+
+    <property name="isTissueSeries" type="boolean" column="IsTissueSeries">
+        <meta attribute="scope-field">protected</meta>
+        <meta attribute="field-description"></meta>    
+    </property>
+    
+    <property name="seriesName" type="java.lang.String" column="SeriesName" length="50">
+        <meta attribute="scope-field">protected</meta>
+        <meta attribute="field-description">Textual name for Catalog series. E.g. Main specimen collection</meta>
+    </property>
+    
+    <property name="catalogSeriesPrefix" type="java.lang.String" column="CatalogSeriesPrefix" length="50">
+        <meta attribute="scope-field">protected</meta>
+        <meta attribute="field-description">Text Displayed with Catalog numbers. E.g. 'KU'</meta>
+    </property>
+    
+    <property name="remarks" type="text" column="Remarks">
+        <meta attribute="scope-field">protected</meta>
+        <meta attribute="field-description"></meta>    
+    </property>
+    
+    <property name="timestampCreated" type="java.sql.Timestamp" column="TimestampCreated" length="23" not-null="true" update="false">
+        <meta attribute="scope-field">protected</meta>
+        <meta attribute="field-description"></meta>    
+    </property>
+    
+    <property name="lastEditedBy" type="java.lang.String" column="LastEditedBy" length="50">
+        <meta attribute="scope-field">protected</meta>
+        <meta attribute="field-description"></meta>    
+    </property>
+
+    <!-- Associations -->
+  
+    <!-- bi-directional many-to-many association to CollectionObjDef -->
+    <set name="collectionObjDefItems" table="catseries_colobjdef" lazy="true" cascade="save-update">
+        <key>
+            <column name="CatalogSeriesID"/>
+        </key>
+        <many-to-many class="edu.ku.brc.specify.datamodel.CollectionObjDef" column="CollectionObjDefID"/>
+    </set>
+    
+    <!-- bi-directional many-to-one association to CatalogSeries -->
+    <many-to-one name="tissue" class="edu.ku.brc.specify.datamodel.CatalogSeries" cascade="save-update" not-null="false" outer-join="true">
+        <meta attribute="field-description"></meta>
+        <column name="TissueID"/>
+    </many-to-one>
+    
+    <!-- bi-directional one-to-many association to AppResourceDefault -->
+    <set name="appResourceDefaults" lazy="true" inverse="true" cascade="none">
+        <meta attribute="field-description"></meta>
+        <key>
+            <column name="CatalogSeriesID"/>
+        </key>
+        <one-to-many class="edu.ku.brc.specify.datamodel.AppResourceDefault"/>
+    </set>
+    
+    <!--
+    <set name="vouchers" table="catalogseries" inverse="true">
+        <meta attribute="scope-field">protected</meta>
+        <key column="TissueID"/>
+        <one-to-many class="edu.ku.brc.specify.datamodel.CatalogSeries"/>
+    </set>
+    -->
+</class>
+</hibernate-mapping>
