@@ -35,7 +35,6 @@
         <activity android:name=".TripDataDefActivity"/>
         <activity android:name=".TripDataDefDetailActivity"/>
         <activity android:name=".TripDataEntryDetailActivity"/>
-        <activity android:name=".TripMapActivity"/>
         <activity android:name=".TripMapLocationActivity"/>
     </application>
     <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="4"/>

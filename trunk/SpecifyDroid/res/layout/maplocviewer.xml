@@ -8,4 +8,32 @@
 			android:id="@+id/map_location_viewer" 
     	    android:layout_width="fill_parent"
         	android:layout_height="fill_parent"/>
+        	
+    <LinearLayout   xmlns:android="http://schemas.android.com/apk/res/android" 
+           android:layout_width="fill_parent" 
+           android:layout_height="fill_parent"
+           android:orientation="vertical"
+           android:gravity="top"
+           android:paddingLeft="5px"
+           android:paddingTop="5px"
+           android:paddingRight="5px">
+
+        <com.pocketjourney.view.TransparentPanel
+                android:id="@+id/transparent_panel" 
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="5px"
+                android:paddingLeft="5px"
+                android:paddingBottom="5px"
+                android:paddingRight="5px">
+        
+            <TextView android:id="@+id/sat_terrain_btn"
+		            android:layout_width="wrap_content" 
+		            android:layout_height="wrap_content"
+		            android:gravity="right"
+		            android:text="Click Me!"/>
+		            
+        </com.pocketjourney.view.TransparentPanel>
+
+    </LinearLayout>
 </FrameLayout>
