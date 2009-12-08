@@ -44,7 +44,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import edu.ku.brc.specifydroid.datamodel.Trip;
 import edu.ku.brc.specifydroid.datamodel.TripDataDef;
 import edu.ku.brc.specifydroid.datamodel.TripDataDef.TripDataDefType;
 
@@ -165,7 +164,6 @@ public class TripMainPanelAdapter extends BaseAdapter
                       
                       case 5: // Maps
                       {
-                          //Intent intent = new Intent(tripMainActivity, TripMapActivity.class);
                           Intent intent = new Intent(tripMainActivity, TripMapLocationActivity.class);
                           intent.putExtra(TripListActivity.ID_EXTRA, tripId);
                           tripMainActivity.startActivity(intent);

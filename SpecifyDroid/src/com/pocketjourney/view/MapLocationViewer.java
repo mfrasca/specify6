@@ -4,11 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.ZoomButtonsController;
 
 import com.google.android.maps.MapView;
+
+import edu.ku.brc.specifydroid.R;
+import edu.ku.brc.specifydroid.TripMapLocationActivity;
 
 /**
  * @author Anthony (Acopernicus)
@@ -25,7 +32,10 @@ public class MapLocationViewer extends LinearLayout {
     //  Known latitude/longitude coordinates that we'll be using.
 	protected List<MapLocation> mapLocations;
     
-	protected MapView mapView;
+	protected MapView  mapView;
+	protected TextView satBtn;
+	protected boolean  isSatellite = true;
+	
     
 	/**
 	 * @param context
@@ -70,13 +80,77 @@ public class MapLocationViewer extends LinearLayout {
     	}
 	}
 	
-	public List<MapLocation> getMapLocations() {
+	protected void setSatellite(final boolean isSat)
+	{
+	    isSatellite = isSat;
+        if (isSatellite)
+        {
+            satBtn.setText("  Map  ");
+            mapView.setSatellite(true);
+        } else
+        {
+            satBtn.setText("Satellite");
+            mapView.setSatellite(false);
+        }
+	}
+	
+	protected void initUI()
+	{
+        if (satBtn == null)
+        {
+            TripMapLocationActivity tmlAct = ((TripMapLocationActivity)getContext());
+            satBtn = (TextView)tmlAct.findViewById(R.id.sat_terrain_btn);
+            if (satBtn != null)
+            {
+                setSatellite(mapView.isSatellite());
+                
+                satBtn.setTextColor(Color.DKGRAY);
+                satBtn.setBackgroundColor(Color.argb(128, 200, 200, 200));
+                
+                satBtn.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        setSatellite(!mapView.isSatellite());
+                    }
+                });
+            }
+        }
+	}
+	
+	/* (non-Javadoc)
+     * @see android.view.View#onFinishInflate()
+     */
+    @Override
+    protected void onFinishInflate()
+    {
+        super.onFinishInflate();
+        
+        initUI();
+    }
+
+    /* (non-Javadoc)
+     * @see android.widget.LinearLayout#onLayout(boolean, int, int, int, int)
+     */
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b)
+    {
+        initUI();
+        super.onLayout(changed, l, t, r, b);
+    }
+
+    /* (non-Javadoc)
+     * @see android.view.View#onRestoreInstanceState(android.os.Parcelable)
+     */
+    @Override
+    protected void onRestoreInstanceState(Parcelable state)
+    {
+        super.onRestoreInstanceState(state);
+    }
+
+    public List<MapLocation> getMapLocations() {
 		if (mapLocations == null) {
 			mapLocations = new ArrayList<MapLocation>();
-			//mapLocations.add(new MapLocation("North Beach", "", 37.799800872802734,-122.40699768066406));
-			//mapLocations.add(new MapLocation("China Town",37.792598724365234,-122.40599822998047));
-			//mapLocations.add(new MapLocation("Fisherman's Wharf",37.80910110473633,-122.41600036621094));
-			//mapLocations.add(new MapLocation("Financial District",37.79410171508789,-122.4010009765625));
 		}
 		return mapLocations;
 	}
