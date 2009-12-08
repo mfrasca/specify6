@@ -1,0 +1,81 @@
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:stretchColumns="1"
+	android:layout_height="fill_parent">
+	<TableRow>
+		<TextView android:text="@string/trpnamelbl" />
+		<EditText android:id="@+id/name" />
+	</TableRow>
+	<TableRow>
+		<TextView android:text="@string/trptypelbl" android:layout_height="fill_parent" android:gravity="center_vertical"/>
+		<RadioGroup android:id="@+id/types"
+		    android:orientation="horizontal">
+			<RadioButton android:text="Collecting" android:id="@+id/collecting"/>
+			<RadioButton android:text="Observing" android:id="@+id/observing"/>
+			
+		</RadioGroup>
+	</TableRow>
+    <TableRow>
+        <TextView android:text="@string/trpdatelbl" 
+			        android:layout_height="fill_parent"/>
+
+        <LinearLayout android:id="@+id/LinearLayout01" 
+                      android:layout_width="wrap_content" 
+                      android:layout_height="fill_parent"
+                      >
+                      
+            <TextView android:id="@+id/date" 
+                android:layout_height="fill_parent" 
+                android:layout_weight="2" android:layout_width="wrap_content"/>
+                
+            <ImageView android:id="@+id/calendarbtn"
+              android:src="@drawable/calendar"
+              android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_weight="1" android:layout_gravity="right" android:clickable="true"/>
+        </LinearLayout>
+    </TableRow>
+    <TableRow>
+        <TextView android:text="@string/trpnoteslbl" />
+        <EditText android:id="@+id/notes"
+            android:singleLine="false"
+            android:gravity="top"
+            android:lines="2"
+            android:scrollHorizontally="false"
+            android:maxLines="2"
+            android:maxWidth="200sp"
+        />
+    </TableRow>    
+    <TableRow>
+    <View android:layout_width="fill_parent" android:layout_height="2dip" android:background="#FFFFFFFF" android:layout_span="3" /> 
+    </TableRow>    
+    <TableRow android:layout_height="fill_parent" android:layout_gravity="fill_vertical|fill" android:layout_weight="2">
+		    <ListView android:id="@+id/tripdatadeflist"
+		        android:layout_width="fill_parent"
+		        android:layout_height="fill_parent"
+		               android:layout_span="3" 
+		        
+		    android:layout_gravity="fill_vertical|fill" android:scrollbars="vertical"/>
+    </TableRow>
+    <TableRow android:layout_width="fill_parent" android:layout_gravity="bottom|fill_vertical">
+        <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:stretchColumns="2"
+		     android:layout_span="3"
+		    >
+		    <TableRow>
+                <ImageButton android:id="@+id/addttd" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/android:ic_input_add"></ImageButton>
+                <View android:layout_width="fill_parent" android:layout_height="2dip" android:layout_span="3" /> 
+
+                <ImageButton android:id="@+id/deltrip" 
+                             android:layout_width="wrap_content" 
+                             android:layout_height="wrap_content"
+                             android:src="@drawable/android:ic_delete"/>
+		            
+		        <Button android:id="@+id/save"
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:text="@string/save"/>
+            </TableRow>
+        </TableLayout>
+     </TableRow>    
+</TableLayout>

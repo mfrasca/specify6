@@ -1,0 +1,51 @@
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/uicontainer"
+	android:layout_width="fill_parent"
+	android:stretchColumns="1" android:layout_height="fill_parent">
+    <TableRow>
+        <TextView android:id="@+id/tdctitle" 
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content" android:layout_weight="1"/>
+    </TableRow>
+    
+    <TableRow android:orientation="horizontal" android:layout_gravity="center">
+    
+   
+<LinearLayout android:stretchColumns="1"
+              android:layout_span="2"
+              android:id="@+id/reccontroller" android:layout_height="wrap_content" android:layout_width="fill_parent" android:layout_gravity="center">
+<ImageButton android:id="@+id/posfirst" android:src="@drawable/android:ic_media_previous" android:layout_width="wrap_content" android:layout_height="wrap_content"></ImageButton>
+<ImageButton android:id="@+id/posprev" android:src="@drawable/android:ic_media_rew" android:layout_width="wrap_content" android:layout_height="wrap_content"></ImageButton>
+<TextView android:id="@+id/reclabel" android:layout_width="wrap_content" android:layout_height="wrap_content" android:lines="1" android:text="XXX of XXX" android:layout_gravity="center_vertical"></TextView>
+<ImageButton android:id="@+id/posnext" android:src="@drawable/android:ic_media_ff" android:layout_width="wrap_content" android:layout_height="wrap_content"></ImageButton>
+<ImageButton  android:id="@+id/poslast" android:src="@drawable/android:ic_media_next" android:layout_width="wrap_content" android:layout_height="wrap_content"></ImageButton>
+
+</LinearLayout>
+</TableRow>
+    
+    <TableRow>
+        <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="1"
+             android:layout_span="2"
+            >
+            <TableRow>
+                <ImageButton android:id="@+id/tdcadd" 
+                             android:layout_width="wrap_content" 
+                             android:layout_height="wrap_content" 
+                             android:src="@drawable/android:ic_input_add"/>
+                                          
+                <View android:layout_width="fill_parent" 
+                      android:layout_height="2dip" 
+                      android:background="#00000000"/> 
+                    
+                <Button android:id="@+id/tdcsave"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/save"/>
+            </TableRow>
+        </TableLayout>
+    </TableRow>
+
+</TableLayout>

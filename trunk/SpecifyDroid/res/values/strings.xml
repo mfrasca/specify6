@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string name="app_name">Specify</string>
+    <string name="save">Save</string>
+    
+    <string name="alert_dialog_ok">OK</string>
+    <string name="alert_dialog_cancel">Cancel</string>
+
+    <!--  App Main Grid -->
+    <string name="satellites">Satellites</string>
+    <string name="compass">Compass</string>
+    <string name="observations">Observations</string>
+    <string name="collecting">Collecting</string>
+    <string name="trips">Trips</string>
+    
+    
+    <!--  Trip Detail -->
+    <string name="trpnamelbl">Name:</string>
+    <string name="trptypelbl">Type:</string>
+    <string name="trpdatelbl">Date:</string>
+    <string name="trpnoteslbl">Notes:</string>
+    
+    <!--  Trip Detail Menus -->
+    <string name="tripconfig">Config</string>
+    
+    
+    <!--  Trip Data Def Detail Form -->
+    <string name="tddname">Name:</string>
+    <string name="tddtitle">Title:</string>
+    <string name="tdddatatype">Data Type:</string>
+    
+    <!-- Trip Main Grid -->
+    <string name="tmgconfig">Config Trip</string>
+    <string name="tmgconfigstd">Config Std</string>
+    <string name="tmgaddpnt">Add Location</string>
+    <string name="tmgdeltrip">Delete</string>
+    <string name="tmgcamera">Take Photo</string>
+    <string name="tmgmyloc">Mark Location</string>
+    <string name="tmgbrowsedb">Browse</string>
+    <string name="tmgexportdataset">Export</string>
+    <string name="tmgemail">EMail</string>
+    <string name="tmggooglemaps">Map</string>
+    
+    
+</resources>
