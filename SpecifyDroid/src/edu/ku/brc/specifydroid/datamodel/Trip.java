@@ -1,7 +1,9 @@
 package edu.ku.brc.specifydroid.datamodel;
 
+import java.io.PrintWriter;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Vector;
 
 import android.content.ContentValues;
@@ -9,6 +11,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import edu.ku.brc.specifydroid.BaseDataObj;
+
+import static edu.ku.brc.utils.XMLHelper.*;
 
 /**
  * @author rods
@@ -322,6 +326,69 @@ public class Trip extends BaseDataObj<Trip>
         }
 
         return null;
+    }
+    
+    public void writeCVSHeader(final PrintWriter pw)
+    {
+        pw.println("Id,Name,Type,Notes,TripDate,TimestampCreated");
+    }
+    
+    public void writeCVSValues(final PrintWriter pw)
+    {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat stsf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        pw.println(String.format("%d,%s,%d,\"%s\",\"%s\",\"%d\"", id,name,type,notes,sdf.format(tripDate),stsf.format(timestampCreated)));
+    }
+    
+    /**
+     * @param pw
+     */
+    public void toXML(final SQLiteDatabase db, final PrintWriter pw)
+    {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat stsf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        
+        StringBuilder sb = new StringBuilder(); 
+        addNode(sb, 0, "trip", false);
+        addAttr(sb, "name", name);
+        addAttr(sb, "type", type);
+        addAttr(sb, "tripdate", sdf.format(tripDate));
+        addAttr(sb, "timestampcreated", stsf.format(timestampCreated));
+        sb.append(">");
+        xmlNode(sb, "notes", notes, true);
+        
+        Cursor c = null;
+        try
+        {
+            addNode(sb, 4, "celldefs", false);
+            String[] args = { id.toString() };
+            c = db.rawQuery("SELECT * FROM tripdatadef WHERE TripID=?", args);
+            if (c.moveToFirst())
+            {
+                do 
+                {
+                    addNode(sb, 8, "def", false);
+                    addAttr(sb, "name", c.getString(c.getColumnIndex("Name")));
+                    addAttr(sb, "title", c.getString(c.getColumnIndex("Title")));
+                    addAttr(sb, "type", c.getInt(c.getColumnIndex("DataType")));
+                    addAttr(sb, "columnindex", c.getString(c.getColumnIndex("ColumnIndex")));
+                    addNode(sb, 8, "def", true);
+                } while (c.moveToNext());
+            }
+        } catch (Exception ex)
+        {
+            Log.e("Trip", "Error writing xml", ex);
+        } finally
+        {
+            if (c != null)
+            {
+                c.close();
+            }
+        }
+        addNode(sb, 4, "celldefs", true);
+        addNode(sb, 0, name, true);
+               
+        pw.println(sb.toString());
     }
     
 }

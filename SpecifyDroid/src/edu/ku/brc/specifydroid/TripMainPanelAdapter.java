@@ -162,6 +162,13 @@ public class TripMainPanelAdapter extends BaseAdapter
                           break;
                       }
                       
+                      case 3: // Export as CSV
+                      {
+                          TripSQLiteHelper dbHelper = new TripSQLiteHelper(tripMainActivity);
+                          dbHelper.export(SpecifyActivity.getDatabase(), tripId);
+                          break;
+                      }
+                      
                       case 5: // Maps
                       {
                           Intent intent = new Intent(tripMainActivity, TripMapLocationActivity.class);

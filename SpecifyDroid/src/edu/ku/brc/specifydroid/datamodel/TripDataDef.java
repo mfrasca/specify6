@@ -25,7 +25,6 @@ public class TripDataDef extends BaseDataObj<TripDataDef>
     protected Integer columnIndex = null;
     protected Integer tripID      = null;
 
-
     /**
      * @param tableName
      */

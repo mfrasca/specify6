@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -16,7 +17,9 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Environment;
 import android.util.Log;
+import edu.ku.brc.specifydroid.datamodel.Trip;
 import edu.ku.brc.utils.ZipFileHelper;
 
 class TripSQLiteHelper extends SQLiteOpenHelper
@@ -146,6 +149,54 @@ class TripSQLiteHelper extends SQLiteOpenHelper
         }
     }
     
+    /**
+     * @param db
+     */
+    public void export(final SQLiteDatabase db, final String tripId)
+    {
+        PrintWriter pw = null;
+        try
+        {
+            File root = Environment.getExternalStorageDirectory();
+            if (root.canWrite())
+            {
+                Trip trip = Trip.getById(db, tripId);
+                pw = new PrintWriter(new File(root, "test.xml"));
+                trip.toXML(db, pw);
+                
+                /*trip.writeCVSValues(pw);
+                pw.println("---");
+                
+                Cursor c = db.execSQL("SELECT ");
+                
+                pw = new PrintWriter(new File("/sddata/test.csv"));
+                
+                Trip trip = Trip.getById(db, tripId);
+                trip.writeCVSHeader(pw);
+                trip.writeCVSValues(pw);
+                pw.println("---");
+                
+                Cursor c = db.execSQL("SELECT )*/
+            } else
+            {
+                Log.d("TripSQL", "Can't write to sdcard");
+            }
+                    
+        } catch (IOException ex)
+        {
+            Log.e("", "Error export to CSV", ex);
+        } finally
+        {
+            if (pw != null)
+            {
+                pw.close();
+            }
+        }
+    }
+    
+    /**
+     * @param db
+     */
     public void loadTestData(final SQLiteDatabase db)
     {
         int tripId = 2;
