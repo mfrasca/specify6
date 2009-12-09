@@ -82,15 +82,15 @@ public class SpecifyActivity extends Activity
             return;
         }
 
-        final ProgressDialog prgDlg = new ProgressDialog( this );
-        prgDlg.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        prgDlg.setMessage("Loading...");
-        prgDlg.setCancelable(false);
-
-        prgDlg.show();
-        
         if (taxaFile.exists())
         {
+            final ProgressDialog prgDlg = new ProgressDialog( this );
+            prgDlg.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            prgDlg.setMessage("Loading...");
+            prgDlg.setCancelable(false);
+
+            prgDlg.show();
+            
             prgDlg.setMax((int)taxaFile.length());
             prgDlg.setProgress(0); 
             
