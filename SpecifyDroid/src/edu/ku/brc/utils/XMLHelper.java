@@ -205,6 +205,7 @@ public class XMLHelper
        if (isEnd) sb.append('/');
        sb.append(name);
        sb.append('>');
+       if (isEnd) sb.append('\n');
    }
    
    public static void addNode(final StringBuilder sb, final int indent, final String name, final String value)
@@ -220,7 +221,7 @@ public class XMLHelper
        sb.append(name);
    }
    
-   public static void closeNode(final StringBuilder sb, final int indent, final String name, final boolean isEnd)
+   public static void closeNode(final StringBuilder sb, final int indent, final String name)
    {
        indent(sb, indent);
        sb.append('<');
@@ -279,10 +280,11 @@ public class XMLHelper
        }
    }
    
-   public static void xmlNode(final StringBuilder sb, final String tag, final String val, final boolean useCData)
+   public static void xmlNode(final StringBuilder sb, final int indent, final String tag, final String val, final boolean useCData)
    {
        if (val != null || isEmptyAttrOK)
        {
+           indent(sb, indent);
            sb.append("<"); //$NON-NLS-1$
            sb.append(tag);
            sb.append(">"); //$NON-NLS-1$
