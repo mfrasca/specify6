@@ -152,17 +152,37 @@ class TripSQLiteHelper extends SQLiteOpenHelper
     /**
      * @param db
      */
-    public void export(final SQLiteDatabase db, final String tripId)
+    public void export(final Activity activity, final SQLiteDatabase db, final String tripId)
     {
         PrintWriter pw = null;
         try
         {
-            File root = Environment.getExternalStorageDirectory();
+            final File root = Environment.getExternalStorageDirectory();
             if (root.canWrite())
             {
-                Trip trip = Trip.getById(db, tripId);
                 pw = new PrintWriter(new File(root, "test.xml"));
-                trip.toXML(db, pw);
+                
+                final PrintWriter pwf = pw;
+                final ProgressDialog prgDlg = ProgressDialog.show(activity, null, "Exporting...", true); // I18N
+                prgDlg.show();
+                
+                new Thread() 
+                {
+                    public void run() 
+                    {
+                         try
+                         {
+                             Trip trip = Trip.getById(db, tripId);
+                             
+                             trip.toXML(db, pwf);
+
+                             Thread.sleep(2000);
+                             
+                         } catch (Exception e) {  }
+                         // Dismiss the Dialog
+                         prgDlg.dismiss();
+                    }
+               }.start();
                 
                 /*trip.writeCVSValues(pw);
                 pw.println("---");

@@ -29,6 +29,7 @@ import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.GridView;
@@ -71,7 +72,8 @@ public class SpecifyActivity extends Activity
         gridview.setBackgroundColor(Color.WHITE);
         gridview.setAdapter(new SpecifyMainPanelAdapter(this));
         
-        final File taxaFile = new File("/sdcard/fish_taxa.csv");
+        File root = Environment.getExternalStorageDirectory();
+        final File taxaFile = new File(root, "fish_taxa.csv");
         long  fileTime      = taxaFile.lastModified();
         
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
@@ -106,65 +108,6 @@ public class SpecifyActivity extends Activity
                 TaxonLoadThread.getInstance().set(this, database, prgDlg);
             }
         }
-        
-        /*if (false)
-        {
-            final File taxonZipFile = new File("/sdcard/fish_taxa.csv");
-            if (taxonZipFile.exists())
-            {
-                //final ProgressDialog prgDlg = ProgressDialog.show(this, "Loading Taxon...", null, false, false);
-                //prgDlg.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                //prgDlg.show();
-                
-                //prgDlg.setIndeterminate(false);
-                
-                
-                final ProgressDialog prgDlg = new ProgressDialog( this );
-                prgDlg.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                prgDlg.setMessage("Loading...");
-                prgDlg.setCancelable(false);
-    
-                prgDlg.setMax((int)taxonZipFile.length());
-                prgDlg.setProgress(0);  
-                
-                prgDlg.show();
-
-                new Thread() 
-                {
-                    public void run() 
-                    {
-                        try
-                        {
-                            if (TripSQLiteHelper.loadTaxa(SpecifyActivity.this, database, taxonZipFile, prgDlg))
-                            {
-                                //taxonZipFile.delete();
-                                Log.d("SpecifyActivity", "Deleted taxon zip.");
-                            }
-                        } catch (Exception ex)
-                        {
-                            Log.e("SpecifyActivity", "Error", ex);
-                        } finally
-                        {
-                            prgDlg.dismiss();
-                            
-                            SpecifyActivity.this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
-                            
-                            //activity.runOnUiThread(new Runnable() {
-                            //    public void run() {
-                            //        SpecifyActivity.this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                            //    }
-                            //  });
-                        }
-                    }
-               }.start(); 
-                
-                
-            } else
-            {
-                Log.d(getClass().getSimpleName(), "The taxon file["+taxonZipFile.getAbsolutePath()+"] is not found.");
-            }
-        }*/
-            
     }
     
     

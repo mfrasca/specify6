@@ -165,7 +165,7 @@ public class TripMainPanelAdapter extends BaseAdapter
                       case 3: // Export as CSV
                       {
                           TripSQLiteHelper dbHelper = new TripSQLiteHelper(tripMainActivity);
-                          dbHelper.export(SpecifyActivity.getDatabase(), tripId);
+                          dbHelper.export(tripMainActivity, SpecifyActivity.getDatabase(), tripId);
                           break;
                       }
                       

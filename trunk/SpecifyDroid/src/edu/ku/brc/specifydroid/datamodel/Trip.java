@@ -349,30 +349,33 @@ public class Trip extends BaseDataObj<Trip>
         SimpleDateFormat stsf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         
         StringBuilder sb = new StringBuilder(); 
-        addNode(sb, 0, "trip", false);
+        sb.append("<trip");
         addAttr(sb, "name", name);
         addAttr(sb, "type", type);
         addAttr(sb, "tripdate", sdf.format(tripDate));
         addAttr(sb, "timestampcreated", stsf.format(timestampCreated));
-        sb.append(">");
-        xmlNode(sb, "notes", notes, true);
+        sb.append(">\n");
+        xmlNode(sb, 4, "notes", notes, true);
         
         Cursor c = null;
         try
         {
             addNode(sb, 4, "celldefs", false);
+            sb.append("\n");
             String[] args = { id.toString() };
             c = db.rawQuery("SELECT * FROM tripdatadef WHERE TripID=?", args);
             if (c.moveToFirst())
             {
                 do 
                 {
-                    addNode(sb, 8, "def", false);
+                    indent(sb, 8);
+                    sb.append("<def");
                     addAttr(sb, "name", c.getString(c.getColumnIndex("Name")));
                     addAttr(sb, "title", c.getString(c.getColumnIndex("Title")));
                     addAttr(sb, "type", c.getInt(c.getColumnIndex("DataType")));
                     addAttr(sb, "columnindex", c.getString(c.getColumnIndex("ColumnIndex")));
-                    addNode(sb, 8, "def", true);
+                    sb.append("/>\n");
+                   
                 } while (c.moveToNext());
             }
         } catch (Exception ex)
@@ -386,7 +389,7 @@ public class Trip extends BaseDataObj<Trip>
             }
         }
         addNode(sb, 4, "celldefs", true);
-        addNode(sb, 0, name, true);
+        sb.append("</trip>\n");
                
         pw.println(sb.toString());
     }

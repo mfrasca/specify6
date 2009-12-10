@@ -120,7 +120,8 @@ public class TripDataEntryDetailActivity extends Activity
         isCreateRec = getIntent().getBooleanExtra(ID_ISCREATE, false);
         isNewRec    = isCreateRec;
         
-        numRows = SQLUtils.getCount(db, "SELECT TripRowIndex AS count FROM tripdatacell ORDER BY TripRowIndex DESC LIMIT 1");
+        String sql = String.format("SELECT TripRowIndex AS count FROM tripdatacell WHERE TripID = %s ORDER BY TripRowIndex DESC LIMIT 1", tripId);
+        numRows = SQLUtils.getCount(db, sql);
         numRows++;
         
         saveBtn = (Button) findViewById(R.id.tdcsave);
@@ -310,9 +311,6 @@ public class TripDataEntryDetailActivity extends Activity
             for (View view : viewToTTDId.keySet())
             {
                 String value = getValue(view);
-                
-                rowIndex = SQLUtils.getCount(db, "SELECT TripRowIndex AS count FROM tripdatacell WHERE TripID = " +tripId+" ORDER BY TripRowIndex DESC LIMIT 1");
-                rowIndex++;
                 
                 tripDataCell.setTripDataDefID(viewToTTDId.get(view));
                 tripDataCell.setTripID(trpId);
@@ -663,6 +661,9 @@ public class TripDataEntryDetailActivity extends Activity
             String data = valueHash.get(i);
             setValue(comps.get(i), data != null ? data : "");
         }
+        
+        saveBtn.setEnabled(false);
+        isChanged = false;
     }
     
     /**
