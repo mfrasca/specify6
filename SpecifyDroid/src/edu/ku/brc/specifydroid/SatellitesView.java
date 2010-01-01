@@ -51,34 +51,26 @@ public class SatellitesView extends View
     
     private HashMap<Integer, SatelliteInfo> satellites = new HashMap<Integer, SatelliteInfo>();
     private Vector<SatelliteInfo>           satList    = new Vector<SatelliteInfo>();
-    private Bitmap[] bitmaps = null;
-    private int      iconWidth  = 0;
-    private int      iconHeight = 0;
-    private float    textHeight = 0;
+    private Bitmap[]  bitmaps    = null;
+    private int       iconWidth  = 0;
+    private int       iconHeight = 0;
+    private float     textHeight = 0;
     
-    protected int    barWidth   = 14;
-    protected int    barGap     = 4;
+    protected int     barWidth   = 14;
+    protected int     barGap     = 4;
     
-    
-    /*private int      scrWidth   = 0;
-    private int      scrHeight  = 0;
-    private boolean  isPortait  = true;
-    
-    private int      barWidth   = 6;
-    private int      barGap     = 2;*/
-    
-    private int xGap = 16;
-    private int yGap = 8;
+    private Integer   xGap       = null;
+    private int       yGap       = 2;
+    private int       leading    = 16;
     
     private int cols = 0;
-    //private int rows = 0;
     
     /**
      * @param context
      * @param attrs
      * @param defStyle
      */
-    public SatellitesView(Context context, AttributeSet attrs, int defStyle)
+    public SatellitesView(final Context context, final AttributeSet attrs, final int defStyle)
     {
         super(context, attrs, defStyle);
     }
@@ -87,7 +79,7 @@ public class SatellitesView extends View
      * @param context
      * @param attrs
      */
-    public SatellitesView(Context context, AttributeSet attrs)
+    public SatellitesView(final Context context, final AttributeSet attrs)
     {
         super(context, attrs);
     }
@@ -95,12 +87,10 @@ public class SatellitesView extends View
     /**
      * @param context
      */
-    public SatellitesView(Context context)
+    public SatellitesView(final Context context)
     {
         super(context);
     }
-    
-    
     
     /**
      * @param bitmapids
@@ -131,6 +121,7 @@ public class SatellitesView extends View
 
         this.barPaint.setARGB(255, 0, 0, 255);
         this.barPaint.setAntiAlias(true);
+        
         /*this.barPaint.setStyle(Style.FILL); 
         Shader shader = new LinearGradient(0, 0, barWidth, 48, new int[] {Color.GREEN, Color.YELLOW, Color.BLUE, Color.parseColor("#E6E6FA"), Color.RED, }, 
                                            new float[]{0.1f, 0.3f, 0.6f, 0.8f, 1.0f}, Shader.TileMode.CLAMP); 
@@ -146,6 +137,26 @@ public class SatellitesView extends View
         this.textHeight = this.textPaint.getFontMetrics().ascent + this.textPaint.getFontMetrics().descent;
     }
     
+    /**
+     * 
+     */
+    private void calcXGap()
+    {
+        int viewWidth = getWidth();
+
+        if (xGap == null && viewWidth > 0)
+        {
+            int cellSize = barWidth + barGap + iconWidth;
+            int numCells = viewWidth / cellSize;
+            xGap         = (viewWidth - (cellSize * numCells)) / (numCells + 1);
+            if (xGap < 4)
+            {
+                numCells -= 1;
+                xGap = (viewWidth - (cellSize * numCells)) / (numCells + 1);
+            }
+        }
+    }
+    
     /* (non-Javadoc)
      * @see android.view.View#onDraw(android.graphics.Canvas)
      */
@@ -154,30 +165,16 @@ public class SatellitesView extends View
     {
         super.onDraw(canvas);
         
+        if (getWidth() == 0)
+        {
+            return;
+        }
         this.textHeight = Math.abs(this.textPaint.getFontMetrics().ascent) + this.textPaint.getFontMetrics().descent;
         
-        /*RectF rect;
-        if (isPortait)
-        {
-            int h = scrHeight / 2;
-            int w = Math.min(h, scrWidth);
-            int x = (scrWidth - w) / 2;
-            int y = h + ((h - w) / 2);
-            rect = new RectF(x, y, x+w, y+w);
-        } else
-        {
-            int w = scrWidth / 2;
-            int h = Math.min(w, scrHeight);
-            int y = (scrHeight - h) / 2;
-            int x = w + ((w - h) / 2);
-            rect = new RectF(x, y, x+h, y+h);
-        }
-        rect.inset(4, 4);
-        canvas.drawArc(rect, 0, 360, true, whitePaint);
-        */
+        calcXGap();
         
         float x = xGap;
-        float y = yGap;
+        float y = leading / 2;
         int   r = 0;
         for (int i=0;i<satList.size();i++)
         {
@@ -185,42 +182,26 @@ public class SatellitesView extends View
             String        text      = Integer.toString(si.getSatellite().getPrn());
             float         textWidth = textPaint.measureText(text);
             
-            float snr     = Math.min(si.getSatellite().getSnr(), 50.0f) / 50.0f;
-            int snrOffset = iconHeight - (int)Math.round(snr * iconHeight);
+            float signalNoiseRatio  = Math.min(si.getSatellite().getSnr(), 50.0f) / 50.0f;
+            float barHeight         = signalNoiseRatio * iconHeight;
+            canvas.drawRect(x, y, x+barWidth, y + iconHeight, barOutlinePaint);
             
-            if (false)
-            {
-                canvas.drawBitmap(bitmaps[0], x, y, iconPaint); // paint with fade
-                canvas.save();
-                canvas.clipRect(x, y+snrOffset, x+iconWidth, y+iconHeight);
-                canvas.drawBitmap(bitmaps[0], x, y, null);
-                canvas.restore();
-            } else
-            {
-                float barHeight = snr * iconHeight;
-                canvas.drawRect(x, y, x+barWidth, y + iconHeight, barOutlinePaint);
-                
-                canvas.save();
-                canvas.clipRect(x, y + (iconHeight - barHeight), x+barWidth, y + iconHeight);
-                canvas.drawRect(x, y, x+barWidth, y + iconHeight, barPaint);
-                canvas.restore();
-                
-                x += barWidth + barGap;
-                canvas.drawBitmap(bitmaps[0], x, y, null);
-            }
+            canvas.save();
+            canvas.clipRect(x, y + (iconHeight - barHeight), x+barWidth, y + iconHeight);
+            canvas.drawRect(x, y, x+barWidth, y + iconHeight, barPaint);
+            canvas.restore();
             
-            //placeSatellite(rect, canvas, si.getSatellite());
+            x += barWidth + barGap;
+            canvas.drawBitmap(bitmaps[0], x, y, null);
             
-            //Log.d("APP", String.format("%2.0f, %2.0f, %2.0f, %2.0f", x, y+snrOffset, x+iconWidth, y+iconHeight));
-            
-            canvas.drawText(text, x + ((iconWidth - textWidth) / 2), y + iconHeight + (yGap / 2) + this.textHeight, textPaint);
+            canvas.drawText(text, x + ((iconWidth - textWidth) / 2), y + iconHeight + yGap + this.textHeight, textPaint);
             
             r++;
             if (r >= cols)
             {
                 r = 0;
                 x = xGap;
-                y += iconHeight + yGap + (yGap / 2) + this.textHeight;
+                y += iconHeight + yGap + leading + this.textHeight;
                 
             } else
             {
@@ -382,9 +363,11 @@ public class SatellitesView extends View
         //cols = (isPortait ? widthMeasureSpec : (widthMeasureSpec / 2)) / (iconWidth + xGap);
         //rows = (isPortait ? (heightMeasureSpec / 2) : heightMeasureSpec) / (iconHeight + yGap + (int)textHeight + (yGap / 2));
         
+        calcXGap();
+        
         int cellWidth = iconWidth + barGap + barWidth;
         
-        cols = widthMeasureSpec / (cellWidth + xGap);
+        cols = widthMeasureSpec / (cellWidth + (xGap != null ? xGap : 4));
         //rows = heightMeasureSpec / (iconHeight + yGap + (int)textHeight + (yGap / 2));
     }
 
