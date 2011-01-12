@@ -212,11 +212,7 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
     {
         super.onStop();
         
-        if (cursorModel != null)
-        {
-            cursorModel.close();
-            cursorModel = null;
-        }
+        closeCursor();
         
         closeDB();
     }
@@ -542,12 +538,7 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
         }
         cursor.close();
         
-        if (cursorModel != null)
-        {
-            stopManagingCursor(cursorModel);
-            cursorModel.close();
-            cursorModel = null;
-        }
+        closeCursor();
 
         rowIndex = null;
         
@@ -770,11 +761,7 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
     {
         super.onDestroy();
         
-        if (cursorModel != null)
-        {
-            cursorModel.close();
-            cursorModel = null;
-        }
+        closeCursor();
     }
     
   //----------------------------------------------------------------

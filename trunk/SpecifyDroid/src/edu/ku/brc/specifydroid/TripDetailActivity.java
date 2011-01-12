@@ -211,12 +211,7 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
      */
     private void initTripDataDefList()
     {
-        if (cursorModel != null)
-        {
-            stopManagingCursor(cursorModel);
-            cursorModel.close();
-            cursorModel = null;
-        }
+        closeCursor();
 
         String where = "WHERE TripId = " + tripId;
         cursorModel = TripDataDef.getAll(getDB(), "tripdatadef", where, null);
@@ -256,11 +251,7 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
     {
         super.onStop();
         
-        if (cursorModel != null)
-        {
-            cursorModel.close();
-            cursorModel = null;
-        }
+        closeCursor();
         
         closeDB();
     }
