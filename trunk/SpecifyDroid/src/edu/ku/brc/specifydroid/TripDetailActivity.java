@@ -5,12 +5,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -30,7 +27,7 @@ import android.widget.TextView;
 import edu.ku.brc.specifydroid.datamodel.Trip;
 import edu.ku.brc.specifydroid.datamodel.TripDataDef;
 
-public class TripDetailActivity extends Activity implements DatePickerDialog.OnDateSetListener
+public class TripDetailActivity extends SpBaseActivity implements DatePickerDialog.OnDateSetListener
 {
     
     public final static String ID_EXTRA = "edu.ku.brc.specifydroid._ID";
@@ -52,7 +49,6 @@ public class TripDetailActivity extends Activity implements DatePickerDialog.OnD
     private ImageView      delBtn;
     private Button         saveBtn;
     
-    private Cursor         cursorModel = null;
     private boolean        hasChanged  = false;
     
     private HashMap<Integer, EditText> editTexts = new HashMap<Integer, EditText>();
@@ -219,6 +215,7 @@ public class TripDetailActivity extends Activity implements DatePickerDialog.OnD
         {
             stopManagingCursor(cursorModel);
             cursorModel.close();
+            cursorModel = null;
         }
 
         String where = "WHERE TripId = " + tripId;
@@ -252,18 +249,20 @@ public class TripDetailActivity extends Activity implements DatePickerDialog.OnD
 
 
     /* (non-Javadoc)
-     * @see android.app.Activity#onDestroy()
+     * @see android.app.Activity#onStop()
      */
     @Override
-    public void onDestroy()
+    protected void onStop()
     {
-        super.onDestroy();
+        super.onStop();
         
         if (cursorModel != null)
         {
-            stopManagingCursor(cursorModel);
             cursorModel.close();
+            cursorModel = null;
         }
+        
+        closeDB();
     }
 
     /* (non-Javadoc)
@@ -464,18 +463,4 @@ public class TripDetailActivity extends Activity implements DatePickerDialog.OnD
             startActivity(i);
         }
     };
-    
-    
-    //------------------------------------------------------------------------
-    //-- Database Access
-    //------------------------------------------------------------------------
-    private TripSQLiteHelper  tripDBHelper = null;
-    private SQLiteDatabase getDB()
-    {
-        if (tripDBHelper == null)
-        {
-            tripDBHelper = new TripSQLiteHelper(this.getApplicationContext());
-        }
-        return tripDBHelper.getWritableDatabase();
-    }
 }

@@ -46,7 +46,11 @@ public class SpecifyDroidApp extends Application
     @Override
     public void onTerminate()
     {
+        TripSQLiteHelper tripDBHelper = new TripSQLiteHelper(this.getApplicationContext());
+        if (tripDBHelper != null)
+        {
+            tripDBHelper.close();
+        }
         super.onTerminate();
     }
-
 }

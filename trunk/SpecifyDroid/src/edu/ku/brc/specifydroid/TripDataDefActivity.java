@@ -21,10 +21,7 @@ package edu.ku.brc.specifydroid;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -39,12 +36,11 @@ import edu.ku.brc.specifydroid.datamodel.TripDataDef;
  * Nov 10, 2009
  *
  */
-public class TripDataDefActivity extends Activity
+public class TripDataDefActivity extends SpBaseActivity
 {
     public final static String ID_EXTRA = "edu.ku.brc.specifydroid._TripDataDefID";
     
     private AtomicBoolean              isActive = new AtomicBoolean(true);
-    private Cursor                     cursorModel = null;
     private ListView                   list        = null;
     private String                     tripId      = null;
 
@@ -116,6 +112,8 @@ public class TripDataDefActivity extends Activity
             cursorModel.close();
             cursorModel = null;
         }
+        
+        closeDB();
     }
 
     /**
@@ -127,6 +125,7 @@ public class TripDataDefActivity extends Activity
         {
             stopManagingCursor(cursorModel);
             cursorModel.close();
+            cursorModel = null;
         }
 
         cursorModel = TripDataDef.getAll(getDB(), "tripdatadef", "");
@@ -158,19 +157,5 @@ public class TripDataDefActivity extends Activity
             startActivity(i);
         }
     };
-    
-    
-    //------------------------------------------------------------------------
-    //-- Database Access
-    //------------------------------------------------------------------------
-    private TripSQLiteHelper  tripDBHelper = null;
-    private SQLiteDatabase getDB()
-    {
-        if (tripDBHelper == null)
-        {
-            tripDBHelper = new TripSQLiteHelper(this.getApplicationContext());
-        }
-        return tripDBHelper.getWritableDatabase();
-    }
 }
 
