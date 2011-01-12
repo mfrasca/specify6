@@ -34,6 +34,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.location.LocationManager;
 import android.util.Log;
@@ -44,6 +45,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import edu.ku.brc.specifydroid.datamodel.Trip;
 import edu.ku.brc.specifydroid.datamodel.TripDataDef;
 import edu.ku.brc.specifydroid.datamodel.TripDataDef.TripDataDefType;
 
@@ -96,8 +98,10 @@ public class TripMainPanelAdapter extends BaseAdapter
     @Override
     public View getView(final int position, final View convertView, final ViewGroup parent)
     {
+        // NOTE: Tried ImageButton but disabled state doesn't make image look disabled.
         LinearLayout llCell    = new LinearLayout(tripMainActivity);
         ImageView    imageView = null; 
+        TextView     titleView = null;
         if (convertView == null)
         { 
             llCell.setOrientation(LinearLayout.VERTICAL);
@@ -112,7 +116,7 @@ public class TripMainPanelAdapter extends BaseAdapter
             //imageView.setLayoutParams(new GridView.LayoutParams(48, 48));
 
             
-            TextView titleView = new TextView(tripMainActivity);
+            titleView = new TextView(tripMainActivity);
             titleView.setText(titleIds[position]);
             titleView.setGravity(Gravity.CENTER_HORIZONTAL);
             
@@ -125,75 +129,92 @@ public class TripMainPanelAdapter extends BaseAdapter
             imageView = (ImageView)llCell.getChildAt(0);
         }
         
-        try
+        if (position == 2 || position == 4)
         {
-            imageView.setOnClickListener(new View.OnClickListener() 
+            imageView.setEnabled(false);
+            titleView.setEnabled(false);
+        } else
+        {
+            try
             {
-                @Override
-                public void onClick(View view) 
+                imageView.setOnClickListener(new View.OnClickListener() 
                 {
-                  //Log.d("onClick","position ["+position+"]");
-                  
-                  switch (position)
-                  {
-                      case 0: // My Location Lat/Lon
-                      {
-                          addLatLon();
-                          break;
-                      } 
+                    @Override
+                    public void onClick(View view) 
+                    {
+                      //Log.d("onClick","position ["+position+"]");
                       
-                      case 1: // Browse
+                      switch (position)
                       {
-                          Intent intent = new Intent(tripMainActivity, TripDataEntryDetailActivity.class);
-                          intent.putExtra(TripListActivity.ID_EXTRA, tripId);
-                          intent.putExtra(TripListActivity.TRIP_TYPE, TripListActivity.COLL_TRIP);
-                          intent.putExtra(TripListActivity.DETAIL_CLASS, TripDataEntryDetailActivity.class.getName());
-                          tripMainActivity.startActivity(intent);
-                          break;
-                      } 
-     
-                      case 2: // Camera
-                      {
-                          //Intent intent = new Intent(tripMainActivity, TripListActivity.class);
-                          //intent.putExtra(TripListActivity.TRIP_TYPE, TripListActivity.CONFIG_TRIP);
-                          //tripMainActivity.startActivity(intent);
-                          TripSQLiteHelper dbHelper = new TripSQLiteHelper(tripMainActivity);
-                          dbHelper.loadTestData(SpecifyActivity.getDatabase());
-                          break;
-                      }
-                      
-                      case 3: // Export as CSV
-                      {
-                          TripSQLiteHelper dbHelper = new TripSQLiteHelper(tripMainActivity);
-                          dbHelper.export(tripMainActivity, SpecifyActivity.getDatabase(), tripId);
-                          break;
-                      }
-                      
-                      case 5: // Maps
-                      {
-                          Intent intent = new Intent(tripMainActivity, TripMapLocationActivity.class);
-                          intent.putExtra(TripListActivity.ID_EXTRA, tripId);
-                          tripMainActivity.startActivity(intent);
-                          break;
-                      }
-                      
-                      case 6: // Config
-                      {
-                          Intent intent = new Intent(tripMainActivity, TripDetailActivity.class);
-                          intent.putExtra(TripListActivity.ID_EXTRA, tripId);
-                          tripMainActivity.startActivity(intent);
-                          break;
-                      }
+                          case 0: // My Location Lat/Lon
+                          {
+                              addLatLon();
+                              break;
+                          } 
                           
-                      case 7: // Config Std
-                          doStdConfig();
-                          break;
+                          case 1: // Browse
+                          {
+                              Intent intent = new Intent(tripMainActivity, TripDataEntryDetailActivity.class);
+                              intent.putExtra(TripListActivity.ID_EXTRA, tripId);
+                              intent.putExtra(TripListActivity.TRIP_TYPE, TripListActivity.COLL_TRIP);
+                              intent.putExtra(TripListActivity.DETAIL_CLASS, TripDataEntryDetailActivity.class.getName());
+                              tripMainActivity.startActivity(intent);
+                              break;
+                          } 
+         
+                          case 2: // Camera
+                          {
+                              //Intent intent = new Intent(tripMainActivity, TripListActivity.class);
+                              //intent.putExtra(TripListActivity.TRIP_TYPE, TripListActivity.CONFIG_TRIP);
+                              //tripMainActivity.startActivity(intent);
+                              
+                              TripSQLiteHelper dbHelper = new TripSQLiteHelper(tripMainActivity);
+                              dbHelper.loadTestData(getDB());
+                              break;
+                          }
                           
-    
-                  }
-                }
-              });
-        } catch (Exception ex) {}
+                          case 3: // Export as CSV
+                          {
+                              TripSQLiteHelper dbHelper = new TripSQLiteHelper(tripMainActivity);
+                              dbHelper.export(tripMainActivity, getDB(), tripId);
+                              break;
+                          }
+                          
+                          case 4: // Email exported file.
+                          {
+                              //TripSQLiteHelper dbHelper = new TripSQLiteHelper(tripMainActivity);
+                              //dbHelper.export(tripMainActivity, getDB(), tripId);
+                              break;
+                          }
+                          
+                          case 5: // Maps
+                          {
+                              Intent intent = new Intent(tripMainActivity, TripMapLocationActivity.class);
+                              intent.putExtra(TripListActivity.ID_EXTRA, tripId);
+                              tripMainActivity.startActivity(intent);
+                              break;
+                          }
+                          
+                          case 6: // Config
+                          {
+                              Intent intent = new Intent(tripMainActivity, TripDetailActivity.class);
+                              intent.putExtra(TripListActivity.ID_EXTRA, tripId);
+                              tripMainActivity.startActivity(intent);
+                              break;
+                          }
+                              
+                          case 7: // Config Std
+                              doStdConfig();
+                              break;
+                              
+                          case 8: // Delete Trip
+                              doDeleteTrip();
+                              break;
+                      }
+                    }
+                  });
+            } catch (Exception ex) {}
+        }
         
         /*imageView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -274,7 +295,7 @@ public class TripMainPanelAdapter extends BaseAdapter
     private void doStdPopulate(final Vector<TripDataDef> tripDataDefs, final boolean[] selected)
     {
         String sql      = String.format("SELECT ColumnIndex FROM tripdatadef WHERE TripID = %s ORDER BY ColumnIndex DESC LIMIT 1", tripId);
-        int    colIndex = SQLUtils.getCount(SpecifyActivity.getDatabase(), sql);
+        int    colIndex = SQLUtils.getCount(getDB(), sql);
         int    trpId    = Integer.parseInt(tripId);
         
         int i = 0;
@@ -283,20 +304,46 @@ public class TripMainPanelAdapter extends BaseAdapter
             if (selected[i])
             {
                 sql = String.format("SELECT COUNT(*) AS count FROM tripdatadef WHERE TripID = %s AND Name = '%s'", tripId, tdd.getName());
-                if (SQLUtils.getCount(SpecifyActivity.getDatabase(), sql) < 1)
+                if (SQLUtils.getCount(getDB(), sql) < 1)
                 {
                     colIndex++;
                     
                     tdd.setTripID(trpId);
                     tdd.setColumnIndex(colIndex);
                     
-                    long _id = tdd.insert(SpecifyActivity.getDatabase());
+                    long _id = tdd.insert(getDB());
                     
                     Log.d("POPULATE", "_id: ["+_id+"] trpId: " + tdd.getTripID() +"  colIndex["+tdd.getColumnIndex()+"] Name: "+ tdd.getName() + "  Type: "+tdd.getDataType());
                 }
             }
             i++;
         }
+    }
+    
+    /**
+     * 
+     */
+    private void doDeleteTrip()
+    {
+        String sql      = String.format("SELECT Name FROM trip WHERE _id = %s", tripId);
+        String tripName = SQLUtils.getStringObj(getDB(), sql);
+        
+        final AlertDialog.Builder builder = new AlertDialog.Builder(tripMainActivity)
+        .setPositiveButton(R.string.alert_dialog_ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                if (Trip.doDeleteTrip(getDB(), tripId))
+                {
+                    tripMainActivity.finish();   
+                }
+            }
+            })
+        .setNegativeButton(R.string.alert_dialog_cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+            }
+            });
+        builder.setTitle("Delete '"+tripName+"'?");
+        AlertDialog alert = builder.create();
+        alert.show();
     }
     
     /* (non-Javadoc)
@@ -365,6 +412,20 @@ public class TripMainPanelAdapter extends BaseAdapter
         }
         
         return false;
+    }
+    
+    
+    //------------------------------------------------------------------------
+    //-- Database Access
+    //------------------------------------------------------------------------
+    private TripSQLiteHelper  tripDBHelper = null;
+    private SQLiteDatabase getDB()
+    {
+        if (tripDBHelper == null)
+        {
+            tripDBHelper = new TripSQLiteHelper(tripMainActivity.getApplicationContext());
+        }
+        return tripDBHelper.getWritableDatabase();
     }
 }
 

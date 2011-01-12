@@ -16,15 +16,13 @@ public class TripMapLocationActivity extends MapActivity {
      */
     @SuppressWarnings("deprecation")
     @Override
-    public void onCreate(Bundle icicle)
+    public void onCreate(Bundle savedInstanceState)
     {
-        super.onCreate(icicle);
+        super.onCreate(savedInstanceState);
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         
         setContentView(R.layout.maplocviewer);
-        
-        //tripId = getIntent().getStringExtra(TripListActivity.ID_EXTRA);
         
         Paint innerPaint = new Paint();
         innerPaint.setARGB(0, 255, 255, 255); //gray

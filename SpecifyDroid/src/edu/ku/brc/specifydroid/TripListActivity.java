@@ -54,7 +54,6 @@ public class TripListActivity extends Activity
     public final static String TRIP_TYPE    = "edu.ku.brc.specifydroid.TRIP_TYPE";
     public final static String DETAIL_CLASS = "edu.ku.brc.specifydroid.DETAIL_CLASS";
     
-    private  SQLiteDatabase            db          = null;
     private AtomicBoolean              isActive    = new AtomicBoolean(true);
     private Cursor                     cursorModel = null;
     private SharedPreferences          prefs       = null;
@@ -79,20 +78,29 @@ public class TripListActivity extends Activity
     {
         super.onCreate(savedInstanceState);
         
-        setContentView(R.layout.main);
+        String detailedClsName = null;
+        if (savedInstanceState != null)
+        {
+            tripType        = savedInstanceState.getInt(TRIP_TYPE, CONFIG_TRIP);
+            detailedClsName = savedInstanceState.getString(DETAIL_CLASS);
+        } else
+        {
+            tripType        = getIntent().getIntExtra(TRIP_TYPE, CONFIG_TRIP);
+            detailedClsName = getIntent().getStringExtra(DETAIL_CLASS);
+        }
         
-        db = SpecifyActivity.getDatabase();
-        
-        tripType = getIntent().getIntExtra(TRIP_TYPE, CONFIG_TRIP);
-        
-        String detailedClsName = getIntent().getStringExtra(DETAIL_CLASS);
         if (detailedClsName != null)
         {
             try
             {
                 detailedClass = Class.forName(detailedClsName);
-            } catch (ClassNotFoundException ex) {}
+            } catch (ClassNotFoundException ex) 
+            {
+                detailedClass = TripMainActivity.class;
+            }
         }
+        
+        setContentView(R.layout.main);
         
         list  = (ListView) findViewById(R.id.trips);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -123,7 +131,6 @@ public class TripListActivity extends Activity
         super.onResume();
 
         isActive.set(true);
-
     }
 
     /* (non-Javadoc)
@@ -140,6 +147,18 @@ public class TripListActivity extends Activity
         }
     }
 
+    /* (non-Javadoc)
+     * @see android.app.Activity#onSaveInstanceState(android.os.Bundle)
+     */
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState)
+    {
+        super.onSaveInstanceState(savedInstanceState);
+
+        savedInstanceState.putInt(TRIP_TYPE, tripType);
+        savedInstanceState.putString(DETAIL_CLASS, detailedClass.getName());
+    }
+    
     /* (non-Javadoc)
      * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
      */
@@ -210,7 +229,7 @@ public class TripListActivity extends Activity
                      }
                      
                      
-                     cursorModel = Trip.getAll(db, "trip", where, prefs.getString("sort_order", ""));
+                     cursorModel = Trip.getAll(getDB(), "trip", where, prefs.getString("sort_order", ""));
                      
                      runOnUiThread(new Runnable()
                      {
@@ -284,6 +303,18 @@ public class TripListActivity extends Activity
         }
     };
 
-
+    
+    //------------------------------------------------------------------------
+    //-- Database Access
+    //------------------------------------------------------------------------
+    private TripSQLiteHelper  tripDBHelper = null;
+    private SQLiteDatabase getDB()
+    {
+        if (tripDBHelper == null)
+        {
+            tripDBHelper = new TripSQLiteHelper(this.getApplicationContext());
+        }
+        return tripDBHelper.getWritableDatabase();
+    }
     
 }

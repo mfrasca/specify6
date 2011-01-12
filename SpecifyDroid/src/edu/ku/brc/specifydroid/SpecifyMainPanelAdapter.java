@@ -124,7 +124,7 @@ public class SpecifyMainPanelAdapter extends BaseAdapter
                 imageView = (ImageView)llCell.getChildAt(0);
                 textView  = (TextView)llCell.getChildAt(1);
             }
-        } else
+        }/* else
         {
             if (convertView == null)
             { // if it's not recycled, initialize some attributes
@@ -139,7 +139,7 @@ public class SpecifyMainPanelAdapter extends BaseAdapter
             {
                 imageView = (ImageView) convertView;
             }
-        }
+        }*/
         
         textView.setText(titleIds[position]);
 

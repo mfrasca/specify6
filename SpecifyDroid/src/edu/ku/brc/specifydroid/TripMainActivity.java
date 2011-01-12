@@ -21,6 +21,7 @@ package edu.ku.brc.specifydroid;
 
 import edu.ku.brc.specifydroid.datamodel.Trip;
 import android.app.Activity;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.widget.GridView;
 import android.widget.TextView;
@@ -35,28 +36,15 @@ import android.widget.TextView;
  */
 public class TripMainActivity extends Activity
 {
-    private String tripId;
-    private TextView         titleView;
-    private String           baseTitle;
+    private String    tripId;
+    private TextView  titleView;
+    private String    baseTitle;
     /**
      * 
      */
     public TripMainActivity()
     {
         super();
-    }
-    
-    /**
-     * 
-     */
-    public void updateTitle()
-    {
-        if (tripId != null)
-        {
-            String sql = String.format("select COUNT(*) AS count FROM (select TripRowIndex from tripdatacell where TripID = %s GROUP BY TripRowIndex)", tripId);
-            int itemCount = SQLUtils.getCount(SpecifyActivity.getDatabase(), sql);
-            titleView.setText(String.format("%s - %d items.", baseTitle, itemCount));
-        }
     }
 
     /* (non-Javadoc)
@@ -67,7 +55,13 @@ public class TripMainActivity extends Activity
     {
         super.onCreate(savedInstanceState);
 
-        tripId = getIntent().getStringExtra(TripListActivity.ID_EXTRA);
+        if (savedInstanceState != null)
+        {
+            tripId = savedInstanceState.getString(TripListActivity.ID_EXTRA);
+        } else
+        {
+            tripId = getIntent().getStringExtra(TripListActivity.ID_EXTRA);
+        }
 
         setContentView(R.layout.tripmain);
 
@@ -78,25 +72,26 @@ public class TripMainActivity extends Activity
         titleView = (TextView)findViewById(R.id.tripmaintitle);
         if (tripId != null)
         {   
-            Trip trip = Trip.getById(SpecifyActivity.getDatabase(), tripId);
+            Trip trip = Trip.getById(getDB(), tripId);
             if (trip != null)
             {
                 baseTitle = trip.getName();
                 titleView.setText(baseTitle);
             }
         }
-        
     }
 
     /* (non-Javadoc)
-     * @see android.app.Activity#onDestroy()
+     * @see android.app.Activity#onSaveInstanceState(android.os.Bundle)
      */
     @Override
-    protected void onDestroy()
+    protected void onSaveInstanceState(Bundle outState)
     {
-        super.onDestroy();
+        super.onSaveInstanceState(outState);
+        
+        outState.putString(tripId, TripListActivity.ID_EXTRA);
     }
-
+    
     /* (non-Javadoc)
      * @see android.app.Activity#onPostResume()
      */
@@ -125,5 +120,32 @@ public class TripMainActivity extends Activity
     {
         super.onResume();
         updateTitle();
+    }
+    
+    /**
+     * 
+     */
+    public void updateTitle()
+    {
+        if (tripId != null)
+        {
+            String sql = String.format("select COUNT(*) AS count FROM (select TripRowIndex from tripdatacell where TripID = %s GROUP BY TripRowIndex)", tripId);
+            int itemCount = SQLUtils.getCount(getDB(), sql);
+            titleView.setText(String.format("%s - %d items.", baseTitle, itemCount));
+        }
+    }
+
+    
+    //------------------------------------------------------------------------
+    //-- Database Access
+    //------------------------------------------------------------------------
+    private TripSQLiteHelper  tripDBHelper = null;
+    private SQLiteDatabase getDB()
+    {
+        if (tripDBHelper == null)
+        {
+            tripDBHelper = new TripSQLiteHelper(this.getApplicationContext());
+        }
+        return tripDBHelper.getWritableDatabase();
     }
 }

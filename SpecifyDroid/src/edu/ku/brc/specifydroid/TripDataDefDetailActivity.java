@@ -1,3 +1,22 @@
+/* Copyright (C) 2009, University of Kansas Center for Research
+ * 
+ * Specify Software Project, specify@ku.edu, Biodiversity Institute,
+ * 1345 Jayhawk Boulevard, Lawrence, Kansas, 66045, USA
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*/
 package edu.ku.brc.specifydroid;
 
 import java.util.HashMap;
@@ -17,6 +36,14 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import edu.ku.brc.specifydroid.datamodel.TripDataDef;
 
+/**
+ * @author rods
+ *
+ * @code_status Alpha
+ *
+ * Nov 20, 2009
+ *
+ */
 public class TripDataDefDetailActivity extends Activity implements AdapterView.OnItemSelectedListener
 {
     public static final String[] dataTypeItems = new String[] {"Integer", "Double", "Float", "String", "Date"};
@@ -26,7 +53,6 @@ public class TripDataDefDetailActivity extends Activity implements AdapterView.O
 
     private Spinner        dataTypeSP    = null;
     private TripDataDef    current       = null;
-    private SQLiteDatabase db            = null;
     private String         tripId        = null;
     private String         tripDataDefId = null;
     
@@ -48,13 +74,29 @@ public class TripDataDefDetailActivity extends Activity implements AdapterView.O
     {
         super.onCreate(savedInstanceState);
         
+        if (savedInstanceState != null)
+        {
+            tripId        = savedInstanceState.getString(TripListActivity.ID_EXTRA);
+            tripDataDefId = savedInstanceState.getString(TripDataDefActivity.ID_EXTRA);
+
+        } else
+        {
+            tripId        = getIntent().getStringExtra(TripListActivity.ID_EXTRA);
+            tripDataDefId = getIntent().getStringExtra(TripDataDefActivity.ID_EXTRA);
+        }
+        
         setContentView(R.layout.tdd_detail_form);
         
-        db = SpecifyActivity.getDatabase();
-        
+        int i = 0;
         for (Integer id : txtEdtIds)
         {
-            editTexts.put(id, (EditText) findViewById(id));
+            EditText edtTxt = (EditText) findViewById(id);
+            editTexts.put(id, edtTxt);
+            if (i < txtEdtIds.length-2)
+            {
+                edtTxt.setNextFocusDownId(txtEdtIds[i+1]);
+            }
+            i++;
         }
 
         ArrayAdapter<String> dataTypeAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, dataTypeItems);
@@ -67,9 +109,6 @@ public class TripDataDefDetailActivity extends Activity implements AdapterView.O
         Button save = (Button) findViewById(R.id.ttdsave);
         save.setOnClickListener(onSave);
 
-        tripId        = getIntent().getStringExtra(TripListActivity.ID_EXTRA);
-        tripDataDefId = getIntent().getStringExtra(TripDataDefActivity.ID_EXTRA);
-
         if (tripDataDefId == null)
         {
             current = new TripDataDef();
@@ -80,7 +119,7 @@ public class TripDataDefDetailActivity extends Activity implements AdapterView.O
 
         if (savedInstanceState != null)
         {
-            int i = 0;
+            i = 0;
             for (Integer id : txtEdtIds)
             {
                 editTexts.get(id).setText(savedInstanceState.getString(txtEdtNames[i]));
@@ -107,6 +146,9 @@ public class TripDataDefDetailActivity extends Activity implements AdapterView.O
         super.onSaveInstanceState(savedInstanceState);
 
         savedInstanceState.putShort("datatype", ((Integer)dataTypeSP.getSelectedItemPosition()).shortValue());
+        
+        savedInstanceState.putString(TripListActivity.ID_EXTRA, tripId);
+        savedInstanceState.putString(TripDataDefActivity.ID_EXTRA, tripDataDefId);
         
         int i = 0;
         for (Integer id : txtEdtIds)
@@ -165,7 +207,7 @@ public class TripDataDefDetailActivity extends Activity implements AdapterView.O
      */
     private void load()
     {
-        current = TripDataDef.getById(tripDataDefId, tripId, db);
+        current = TripDataDef.getById(tripDataDefId, tripId, getDB());
         editTexts.get(R.id.tddname).setText(current.getName());
         editTexts.get(R.id.tddtitle).setText(current.getTitle());
         
@@ -179,7 +221,7 @@ public class TripDataDefDetailActivity extends Activity implements AdapterView.O
         @Override
         public void onClick(View v)
         {
-            int count = SQLUtils.getCount(db, "SELECT COUNT(*) AS count FROM tripdatadef WHERE TripID = " + tripId);
+            int count = SQLUtils.getCount(getDB(), "SELECT COUNT(*) AS count FROM tripdatadef WHERE TripID = " + tripId);
             if (count > -1)
             {
                 current.setName(editTexts.get(R.id.tddname).getText().toString());
@@ -190,14 +232,28 @@ public class TripDataDefDetailActivity extends Activity implements AdapterView.O
                 {
                     current.setTripID(Integer.parseInt(tripId));
                     current.setColumnIndex(count);
-                    current.insert(db);
+                    current.insert(getDB());
                 } else
                 {
-                    current.update(tripDataDefId, db);
+                    current.update(tripDataDefId, getDB());
                 }
             }
 
             finish();
         }
     };
+    
+    
+    //------------------------------------------------------------------------
+    //-- Database Access
+    //------------------------------------------------------------------------
+    private TripSQLiteHelper  tripDBHelper = null;
+    private SQLiteDatabase getDB()
+    {
+        if (tripDBHelper == null)
+        {
+            tripDBHelper = new TripSQLiteHelper(this.getApplicationContext());
+        }
+        return tripDBHelper.getWritableDatabase();
+    }
 }
