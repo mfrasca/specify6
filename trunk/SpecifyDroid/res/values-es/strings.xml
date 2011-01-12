@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string name="app_name">Specify</string>
+    <string name="save">Guardar</string>
+    
+    <string name="alert_dialog_ok">Aceptar</string>
+    <string name="alert_dialog_cancel">Cancelar</string>
+
+    <!--  App Main Grid -->
+    <string name="satellites">Satélites</string>
+    <string name="compass">Brújula</string>
+    <string name="observations">Observaciones</string>
+    <string name="collecting">Recolección</string>
+    <string name="trips">Viajes</string>
+    
+
+    
+    <!--  Trip Detail -->
+    <string name="trpnamelbl">Nombre:</string>
+    <string name="trptypelbl">Tipo:</string>
+    <string name="trpdatelbl">Fecha:</string>
+    <string name="trpnoteslbl">Notas:</string>
+    
+    <!--  Trip Detail Menus -->
+    <string name="tripconfig">Configurar</string>
+    
+    
+    <!--  Trip Data Def Detail Form -->
+    <string name="tddname">Nombre:</string>
+    <string name="tddtitle">Título:</string>
+    <string name="tdddatatype">Tipo de datos:</string>
+    
+    <!-- Trip Main Grid -->
+    <string name="tmgconfig">Config viaje</string>
+    <string name="tmgconfigstd">Config estándar</string>
+    <string name="tmgaddpnt">Añadir lugar</string>
+    <string name="tmgdeltrip">Eliminar</string>
+    <string name="tmgcamera">Tomar foto</string>
+    <string name="tmgmyloc">Marcar el lugar</string>
+    <string name="tmgbrowsedb">Examinar</string>
+    <string name="tmgexportdataset">Exportar</string>
+    <string name="tmgemail">EMail</string>
+    <string name="tmggooglemaps">Mapa</string>
+    
+</resources>

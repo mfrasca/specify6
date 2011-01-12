@@ -45,7 +45,6 @@ public class TripDetailActivity extends Activity implements DatePickerDialog.OnD
     private TextView       dateLbl  = null;
     private RadioGroup     types    = null;
     private Trip           current  = null;
-    private SQLiteDatabase db       = SpecifyActivity.getDatabase();
     private String         tripId   = null;
     private Calendar       tripDate = Calendar.getInstance();
     
@@ -74,6 +73,14 @@ public class TripDetailActivity extends Activity implements DatePickerDialog.OnD
     {
         super.onCreate(savedInstanceState);
         
+        if (savedInstanceState != null)
+        {
+            tripId = savedInstanceState.getString(TripListActivity.ID_EXTRA);
+        } else
+        {
+            tripId = getIntent().getStringExtra(TripListActivity.ID_EXTRA);
+        }
+        
         setContentView(R.layout.detail_form);
         
         for (Integer id : txtEdtIds)
@@ -89,8 +96,6 @@ public class TripDetailActivity extends Activity implements DatePickerDialog.OnD
 
         saveBtn = (Button) findViewById(R.id.save);
         saveBtn.setOnClickListener(onSave);
-
-        tripId = getIntent().getStringExtra(TripListActivity.ID_EXTRA);
 
         if (tripId == null)
         {
@@ -118,7 +123,7 @@ public class TripDetailActivity extends Activity implements DatePickerDialog.OnD
             }
         }
         
-        TextWatcher textWather = new TextWatcher() {
+        TextWatcher textWatcher = new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {}
             @Override
@@ -131,8 +136,8 @@ public class TripDetailActivity extends Activity implements DatePickerDialog.OnD
             }
         };
         
-        editTexts.get(R.id.name).addTextChangedListener(textWather);
-        editTexts.get(R.id.notes).addTextChangedListener(textWather);
+        editTexts.get(R.id.name).addTextChangedListener(textWatcher);
+        editTexts.get(R.id.notes).addTextChangedListener(textWatcher);
         
         View.OnClickListener rbListener = new View.OnClickListener() {
             public void onClick(View v) {
@@ -165,7 +170,7 @@ public class TripDetailActivity extends Activity implements DatePickerDialog.OnD
                 addTripDataDef();
             }
         });
-        addBtn.setVisibility(tripId != null ? View.VISIBLE : View.INVISIBLE);
+        addBtn.setVisibility(tripId != null ? View.INVISIBLE : View.VISIBLE);
         
         delBtn = (ImageView) findViewById(R.id.deltrip);
         delBtn.setOnClickListener(new View.OnClickListener()
@@ -179,7 +184,7 @@ public class TripDetailActivity extends Activity implements DatePickerDialog.OnD
         
         updateUIState();
     }
-    
+
     /**
      * 
      */
@@ -217,7 +222,7 @@ public class TripDetailActivity extends Activity implements DatePickerDialog.OnD
         }
 
         String where = "WHERE TripId = " + tripId;
-        cursorModel = TripDataDef.getAll(db, "tripdatadef", where, null);
+        cursorModel = TripDataDef.getAll(getDB(), "tripdatadef", where, null);
         
         if (cursorModel != null)
         {
@@ -253,7 +258,12 @@ public class TripDetailActivity extends Activity implements DatePickerDialog.OnD
     public void onDestroy()
     {
         super.onDestroy();
-        cursorModel.close();
+        
+        if (cursorModel != null)
+        {
+            stopManagingCursor(cursorModel);
+            cursorModel.close();
+        }
     }
 
     /* (non-Javadoc)
@@ -326,7 +336,7 @@ public class TripDetailActivity extends Activity implements DatePickerDialog.OnD
     {
         if (tripId != null)
         {   
-            current = Trip.getById(db, tripId);
+            current = Trip.getById(getDB(), tripId);
         }
 
         editTexts.get(R.id.name).setText(current.getName());
@@ -386,6 +396,8 @@ public class TripDetailActivity extends Activity implements DatePickerDialog.OnD
         current.setName(editTexts.get(R.id.name).getText().toString());
         current.setNotes(editTexts.get(R.id.notes).getText().toString());
         
+        editTexts.get(R.id.name).setNextFocusDownId(R.id.notes);
+        
         /*current.setFirstName1(editTexts.get(R.id.firstName1).getText().toString());
         current.setLastName1(editTexts.get(R.id.lastName1).getText().toString());
         current.setFirstName2(editTexts.get(R.id.firstName2).getText().toString());
@@ -415,12 +427,12 @@ public class TripDetailActivity extends Activity implements DatePickerDialog.OnD
 
         if (tripId == null)
         {
-            Long id = current.insert(db);
+            Long id = current.insert(getDB());
             tripId = id.toString();
             
         } else
         {
-            current.update(tripId, db);
+            current.update(tripId, getDB());
         }
         
         hasChanged = false;
@@ -452,4 +464,18 @@ public class TripDetailActivity extends Activity implements DatePickerDialog.OnD
             startActivity(i);
         }
     };
+    
+    
+    //------------------------------------------------------------------------
+    //-- Database Access
+    //------------------------------------------------------------------------
+    private TripSQLiteHelper  tripDBHelper = null;
+    private SQLiteDatabase getDB()
+    {
+        if (tripDBHelper == null)
+        {
+            tripDBHelper = new TripSQLiteHelper(this.getApplicationContext());
+        }
+        return tripDBHelper.getWritableDatabase();
+    }
 }

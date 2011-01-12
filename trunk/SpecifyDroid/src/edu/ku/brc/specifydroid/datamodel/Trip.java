@@ -99,7 +99,7 @@ public class Trip extends BaseDataObj<Trip>
     public void renumberColumnIndexes(final SQLiteDatabase db)
     {
         Vector<Integer> ids    = new Vector<Integer>();
-        Cursor          cursor = db.rawQuery("SELECT _id FROM trapdatadef WHERE TripID = " + id, null);
+        Cursor          cursor = db.rawQuery("SELECT _id FROM tripdatadef WHERE TripID = " + id, null);
         if (cursor.moveToFirst())
         {
             int inx = cursor.getColumnIndex("_id");
@@ -114,7 +114,7 @@ public class Trip extends BaseDataObj<Trip>
         int inx = 0;
         for (Integer id : ids)
         {
-            db.rawQuery("UPDATE tripdatadef SET ColumnIndex=" + inx + " WHERE _id=" + id, null);
+            db.rawQuery("UPDATE tripdatadef SET ColumnIndex=" + inx + " WHERE TripDataDefID=" + id, null);
             inx++;
         }   
     }
@@ -392,6 +392,32 @@ public class Trip extends BaseDataObj<Trip>
         sb.append("</trip>\n");
                
         pw.println(sb.toString());
+    }
+    
+    /**
+     * @param tridId
+     * @return
+     */
+    public static boolean doDeleteTrip(final SQLiteDatabase db, final String tripId)
+    {
+        try
+        {
+            db.beginTransaction();
+            String[] args = new String[] {tripId};
+            db.delete("tripdatacell", "TripID = ?", args);
+            db.delete("tripdatadef", "TripID = ?", args);
+            db.delete("trip", "_id = ?", args);
+            db.setTransactionSuccessful();
+            return true;
+            
+        } catch  (Exception ex)
+        {
+            ex.printStackTrace();
+        } finally
+        {
+            db.endTransaction();
+        }
+        return false;
     }
     
 }

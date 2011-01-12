@@ -44,8 +44,8 @@ import android.widget.GridView;
  */
 public class SpecifyActivity extends Activity
 {
-    private static SQLiteDatabase database       = null;
     public static final String   TAXA_FILE_PREF = "TAXA_FILE_PREF";
+    
     /**
      * 
      */
@@ -53,7 +53,7 @@ public class SpecifyActivity extends Activity
     {
         super();
     }
-
+    
     /* (non-Javadoc)
      * @see android.app.ActivityGroup#onCreate(android.os.Bundle)
      */
@@ -63,8 +63,6 @@ public class SpecifyActivity extends Activity
         super.onCreate(savedInstanceState);
         
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        
-        database = (new TripSQLiteHelper(this)).getWritableDatabase();
         
         setContentView(R.layout.anzatrek);
 
@@ -96,6 +94,7 @@ public class SpecifyActivity extends Activity
             prgDlg.setMax((int)taxaFile.length());
             prgDlg.setProgress(0); 
             
+            SQLiteDatabase database = getDB();
             if (TaxonLoadThread.getInstance() == null)
             {
                 TaxonLoadThread tlt = new TaxonLoadThread(database, taxaFile);
@@ -200,6 +199,30 @@ public class SpecifyActivity extends Activity
         super.onStop();
     }
 
+    /* (non-Javadoc)
+     * @see android.app.Activity#onDestroy()
+     */
+    @Override
+    public void onDestroy()
+    {
+        Log.d("DBG", "onDestroy");
+        super.onDestroy();
+    }
+    
+    //------------------------------------------------------------------------
+    //-- Database Access
+    //------------------------------------------------------------------------
+    private TripSQLiteHelper  tripDBHelper = null;
+    private SQLiteDatabase getDB()
+    {
+        if (tripDBHelper == null)
+        {
+            tripDBHelper = new TripSQLiteHelper(this.getApplicationContext());
+        }
+        return tripDBHelper.getWritableDatabase();
+    }
+
+    
     /*private void checkPath()
     {
         try
@@ -218,24 +241,5 @@ public class SpecifyActivity extends Activity
             Log.e(getClass().getSimpleName(), ex.getMessage(), ex);
         }
     }
-
-    /* (non-Javadoc)
-     * @see android.app.Activity#onDestroy()
-     */
-    @Override
-    public void onDestroy()
-    {
-        super.onDestroy();
-
-        database.close();
-    }
-    
-    /**
-     * @return the database
-     */
-    public static SQLiteDatabase getDatabase()
-    {
-        return database;
-    }
-
+*/
 }

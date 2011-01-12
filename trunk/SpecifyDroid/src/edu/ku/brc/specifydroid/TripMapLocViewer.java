@@ -26,6 +26,7 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.AttributeSet;
 import android.util.Log;
 
@@ -73,7 +74,7 @@ public class TripMapLocViewer extends MapLocationViewer
             tripId = ((Activity)getContext()).getIntent().getStringExtra(TripListActivity.ID_EXTRA);
             
             String sql = String.format("SELECT tc._id, tc.Data, tc.TripRowIndex, td.Name FROM tripdatacell tc INNER JOIN tripdatadef td ON tc.TripDataDefID = td._id WHERE tc.TripID = %s ORDER BY tc.TripRowIndex, td.ColumnIndex", tripId);
-            Cursor  cursor = SpecifyActivity.getDatabase().rawQuery(sql, null);
+            Cursor  cursor = getDB().rawQuery(sql, null);
             if (cursor.moveToFirst())
             {
                 HashMap<String, String> dataHash = new HashMap<String, String>();
@@ -130,5 +131,17 @@ public class TripMapLocViewer extends MapLocationViewer
         }
         return mapLocations;
     }
-
+    
+    //------------------------------------------------------------------------
+    //-- Database Access
+    //------------------------------------------------------------------------
+    private TripSQLiteHelper  tripDBHelper = null;
+    private SQLiteDatabase getDB()
+    {
+        if (tripDBHelper == null)
+        {
+            tripDBHelper = new TripSQLiteHelper(this.getContext().getApplicationContext());
+        }
+        return tripDBHelper.getWritableDatabase();
+    }
 }

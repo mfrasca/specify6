@@ -44,7 +44,6 @@ public class TripDataDefActivity extends Activity
     public final static String ID_EXTRA = "edu.ku.brc.specifydroid._TripDataDefID";
     
     private AtomicBoolean              isActive = new AtomicBoolean(true);
-    private SQLiteDatabase             db          = null;
     private Cursor                     cursorModel = null;
     private ListView                   list        = null;
     private String                     tripId      = null;
@@ -59,13 +58,28 @@ public class TripDataDefActivity extends Activity
         
         setContentView(R.layout.main);
         
-        tripId = getIntent().getStringExtra(TripListActivity.ID_EXTRA);
-
-        db = SpecifyActivity.getDatabase();
+        if (savedInstanceState != null)
+        {
+            tripId = savedInstanceState.getString(TripListActivity.ID_EXTRA);
+        } else
+        {
+            tripId = getIntent().getStringExtra(TripListActivity.ID_EXTRA);
+        }
 
         list = (ListView) findViewById(R.id.trips); // use the same layout
         list.setOnItemClickListener(onListClick);
         initList();
+    }
+
+    /* (non-Javadoc)
+     * @see android.app.Activity#onSaveInstanceState(android.os.Bundle)
+     */
+    @Override
+    protected void onSaveInstanceState(Bundle outState)
+    {
+        super.onSaveInstanceState(outState);
+        
+        outState.putString(tripId, TripListActivity.ID_EXTRA);
     }
 
     /* (non-Javadoc)
@@ -93,13 +107,14 @@ public class TripDataDefActivity extends Activity
      * @see android.app.Activity#onDestroy()
      */
     @Override
-    public void onDestroy()
+    public void onStop()
     {
-        super.onDestroy();
+        super.onStop();
         
         if (cursorModel != null)
         {
             cursorModel.close();
+            cursorModel = null;
         }
     }
 
@@ -114,7 +129,7 @@ public class TripDataDefActivity extends Activity
             cursorModel.close();
         }
 
-        cursorModel = TripDataDef.getAll(db, "tripdatadef", "");
+        cursorModel = TripDataDef.getAll(getDB(), "tripdatadef", "");
         
         if (cursorModel != null)
         {
@@ -143,5 +158,19 @@ public class TripDataDefActivity extends Activity
             startActivity(i);
         }
     };
+    
+    
+    //------------------------------------------------------------------------
+    //-- Database Access
+    //------------------------------------------------------------------------
+    private TripSQLiteHelper  tripDBHelper = null;
+    private SQLiteDatabase getDB()
+    {
+        if (tripDBHelper == null)
+        {
+            tripDBHelper = new TripSQLiteHelper(this.getApplicationContext());
+        }
+        return tripDBHelper.getWritableDatabase();
+    }
 }
 

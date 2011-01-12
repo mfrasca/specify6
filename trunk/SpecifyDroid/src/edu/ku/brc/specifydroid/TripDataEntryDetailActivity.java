@@ -33,6 +33,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -67,7 +68,6 @@ public class TripDataEntryDetailActivity extends Activity
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     
     private AtomicBoolean              isActive = new AtomicBoolean(true);
-    private SQLiteDatabase             db          = null;
     private String                     tripId      = null;
     private Cursor                     cursorModel;
     private boolean                    isNewRec    = false;
@@ -114,14 +114,21 @@ public class TripDataEntryDetailActivity extends Activity
         
         setContentView(R.layout.tdc_detail_form);
         
-        tripId = getIntent().getStringExtra(TripListActivity.ID_EXTRA);
-        db     = SpecifyActivity.getDatabase();
+        if (savedInstanceState != null)
+        {
+            tripId      = savedInstanceState.getString(TripListActivity.ID_EXTRA);
+            isCreateRec = savedInstanceState.getBoolean(ID_ISCREATE, false);
+        } else
+        {
+            tripId      = getIntent().getStringExtra(TripListActivity.ID_EXTRA);
+            isCreateRec = getIntent().getBooleanExtra(ID_ISCREATE, false);
+        }
         
-        isCreateRec = getIntent().getBooleanExtra(ID_ISCREATE, false);
+        
         isNewRec    = isCreateRec;
         
         String sql = String.format("SELECT TripRowIndex AS count FROM tripdatacell WHERE TripID = %s ORDER BY TripRowIndex DESC LIMIT 1", tripId);
-        numRows = SQLUtils.getCount(db, sql);
+        numRows = SQLUtils.getCount(getDB(), sql);
         numRows++;
         
         saveBtn = (Button) findViewById(R.id.tdcsave);
@@ -179,6 +186,7 @@ public class TripDataEntryDetailActivity extends Activity
         {
             LinearLayout recController = (LinearLayout)findViewById(R.id.reccontroller);
             recController.setVisibility(View.INVISIBLE);
+            addBtn.setVisibility(View.INVISIBLE);
             
             saveBtn.setOnClickListener(new View.OnClickListener()
             {
@@ -195,6 +203,19 @@ public class TripDataEntryDetailActivity extends Activity
         }
 
         buildUI();
+    }
+    
+
+    /* (non-Javadoc)
+     * @see android.app.Activity#onSaveInstanceState(android.os.Bundle)
+     */
+    @Override
+    protected void onSaveInstanceState(Bundle outState)
+    {
+        super.onSaveInstanceState(outState);
+        
+        outState.putString(tripId, TripListActivity.ID_EXTRA);
+        outState.putBoolean(ID_ISCREATE, isCreateRec);
     }
     
     /**
@@ -246,6 +267,9 @@ public class TripDataEntryDetailActivity extends Activity
         changedHash.clear();
     }
     
+    /**
+     * 
+     */
     private void moveToPrevious()
     {
         int rowInx = cursorModel.getColumnIndex("TripRowIndex");
@@ -292,13 +316,13 @@ public class TripDataEntryDetailActivity extends Activity
         {
             if (rowIndex == null)
             {
-                int count = SQLUtils.getCount(db, "SELECT COUNT(*) AS count FROM tripdatacell WHERE TripID = " + tripId);
+                int count = SQLUtils.getCount(getDB(), "SELECT COUNT(*) AS count FROM tripdatacell WHERE TripID = " + tripId);
                 if (count == 0)
                 {
                     rowIndex = 0;
                 } else
                 {
-                    rowIndex = SQLUtils.getCount(db, "SELECT TripRowIndex AS count FROM tripdatacell WHERE TripID = " +tripId+" ORDER BY TripRowIndex DESC LIMIT 1");
+                    rowIndex = SQLUtils.getCount(getDB(), "SELECT TripRowIndex AS count FROM tripdatacell WHERE TripID = " +tripId+" ORDER BY TripRowIndex DESC LIMIT 1");
                     rowIndex++;
                 }
             } else
@@ -316,7 +340,7 @@ public class TripDataEntryDetailActivity extends Activity
                 tripDataCell.setTripID(trpId);
                 tripDataCell.setTripRowIndex(rowIndex);
                 tripDataCell.setData(value);
-                tripDataCell.insert(db);
+                tripDataCell.insert(getDB());
                 
                 Log.d("DBG", "New Row: V["+value+"] tripDataDefID["+tripDataCell.getTripDataDefID()+"] rowIndex["+tripDataCell.getTripRowIndex()+"] data["+tripDataCell.getData()+"] TripID["+tripDataCell.getTripID()+"]");
             }
@@ -344,7 +368,7 @@ public class TripDataEntryDetailActivity extends Activity
                     Log.d("DBG", "Update Row: ID["+cursorModel.getString(idInx)+"] tripDataDefID["+tripDataCell.getTripDataDefID()+"] rowIndex["+tripDataCell.getTripRowIndex()+"] data["+tripDataCell.getData()+"] TripID["+tripDataCell.getTripID()+"]");
                     
                     Integer recNo = recNumHash.get(view);
-                    tripDataCell.update(recNo.toString(), db);          
+                    tripDataCell.update(recNo.toString(), getDB());          
                     cursorModel.requery();
                 }
             }
@@ -353,6 +377,10 @@ public class TripDataEntryDetailActivity extends Activity
         changedHash.clear();
     }
     
+    /**
+     * @param fieldView
+     * @return
+     */
     private String getValue(final View fieldView)
     {
         if (fieldView instanceof EditText)
@@ -400,7 +428,7 @@ public class TripDataEntryDetailActivity extends Activity
         ProgressDialog prgDlg = ProgressDialog.show(this, null, "Loading...", true);
         
         TableLayout tableLayout = (TableLayout)findViewById(R.id.uicontainer);
-        Cursor      cursor      = TripDataDef.getAll(db, "tripdatadef", "WHERE TripId = " + tripId, "ORDER BY ColumnIndex ASC");
+        Cursor      cursor      = TripDataDef.getAll(getDB(), "tripdatadef", "WHERE TripId = " + tripId, "ORDER BY ColumnIndex ASC");
         if (cursor.moveToFirst())
         {
             int nmInx = cursor.getColumnIndex("Name");
@@ -414,12 +442,12 @@ public class TripDataEntryDetailActivity extends Activity
                 String   cellTitle = cursor.getString(ttInx);
                 short    type      = cursor.getShort(dtInx);
                 
-                
                 TableRow tblRow    = new TableRow(this);
                 tblRow.setOrientation(TableRow.HORIZONTAL); 
                 
                 TextView label  = new TextView(this);
                 label.setText(cellTitle + ":");
+                label.setGravity(Gravity.RIGHT);
 
                 EditText edtTxt = null;
                 View     view   = null;
@@ -510,7 +538,7 @@ public class TripDataEntryDetailActivity extends Activity
         boolean doFill = true;
         if (!isCreateRec)
         {
-            int count = SQLUtils.getCount(db, "SELECT COUNT(*) as count FROM tripdatacell WHERE TripID = " + tripId);
+            int count = SQLUtils.getCount(getDB(), "SELECT COUNT(*) as count FROM tripdatacell WHERE TripID = " + tripId);
             if (count == 0)
             {
                 isNewRec = true;
@@ -520,7 +548,7 @@ public class TripDataEntryDetailActivity extends Activity
             {
                 String sql = String.format("SELECT tc._id, tc.Data, tc.TripRowIndex, td.ColumnIndex FROM tripdatacell tc INNER JOIN tripdatadef td ON tc.TripDataDefID = td._id WHERE tc.TripID = %s ORDER BY tc.TripRowIndex, td.ColumnIndex", tripId);
                 		
-                cursorModel = db.rawQuery(sql, null);
+                cursorModel = getDB().rawQuery(sql, null);
                 
                 if (cursorModel.moveToFirst())
                 {
@@ -771,11 +799,11 @@ public class TripDataEntryDetailActivity extends Activity
             @Override
             public Cursor runQuery(final CharSequence constraint)
             {
-                Log.d("debug", "Cnt: " + SQLUtils.getCount(SpecifyActivity.getDatabase(), "SELECT COUNT(*) AS count FROM taxon"));
+                Log.d("debug", "Cnt: " + SQLUtils.getCount(getDB(), "SELECT COUNT(*) AS count FROM taxon"));
                 
                 String sql = "SELECT _id, Name FROM taxon WHERE Name LIKE '"+constraint+"%'";
                 Log.d("T", sql);
-                return SpecifyActivity.getDatabase().rawQuery(sql, null);
+                return getDB().rawQuery(sql, null);
             }
         });
         autoCompTextField.setAdapter(adapter2);
@@ -792,4 +820,18 @@ public class TripDataEntryDetailActivity extends Activity
             return aColumnString;
         }
     } 
+    
+    
+    //------------------------------------------------------------------------
+    //-- Database Access
+    //------------------------------------------------------------------------
+    private TripSQLiteHelper  tripDBHelper = null;
+    private SQLiteDatabase getDB()
+    {
+        if (tripDBHelper == null)
+        {
+            tripDBHelper = new TripSQLiteHelper(this.getApplicationContext());
+        }
+        return tripDBHelper.getWritableDatabase();
+    }
 }

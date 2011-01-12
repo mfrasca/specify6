@@ -24,21 +24,22 @@ import edu.ku.brc.utils.ZipFileHelper;
 
 class TripSQLiteHelper extends SQLiteOpenHelper
 {
-    private static final String DATABASE_NAME  = "trip.db";
-    private static final int    SCHEMA_VERSION = 1;
+    private static final String  DATABASE_NAME  = "trip.db";
+    private static final int     SCHEMA_VERSION = 1;
     
-    private Context context;
+    private static boolean firstTime      = false;
+    
+    private Context appContext;
 
     /**
      * @param context
      */
-    public TripSQLiteHelper(final Context context)
+    public TripSQLiteHelper(final Context appContext)
     {
-        super(context, DATABASE_NAME, null, SCHEMA_VERSION);
-        this.context = context;
+        super(appContext, DATABASE_NAME, null, SCHEMA_VERSION);
+        this.appContext = appContext;
     }
-
-    static boolean firstTime = false;
+    
     /* (non-Javadoc)
      * @see android.database.sqlite.SQLiteOpenHelper#onOpen(android.database.sqlite.SQLiteDatabase)
      */
@@ -48,9 +49,29 @@ class TripSQLiteHelper extends SQLiteOpenHelper
         super.onOpen(db);
         
         dropAndBuild(db, firstTime);
+        
         firstTime = false;
     }
     
+    /* (non-Javadoc)
+     * @see android.database.sqlite.SQLiteOpenHelper#onCreate(android.database.sqlite.SQLiteDatabase)
+     */
+    @Override
+    public void onCreate(final SQLiteDatabase db)
+    {
+        dropAndBuild(db, true);
+    }
+
+    /* (non-Javadoc)
+     * @see android.database.sqlite.SQLiteOpenHelper#onUpgrade(android.database.sqlite.SQLiteDatabase, int, int)
+     */
+    @Override
+    public void onUpgrade(final SQLiteDatabase db, final int oldVersion, final int newVersion)
+    {
+        android.util.Log.w("Trip", "Upgrading database, which will destroy all old data");
+        //db.execSQL("DROP TABLE IF EXISTS trip");
+        //onCreate(db);
+    }
     /**
      * @param text
      * @param repl
@@ -98,7 +119,7 @@ class TripSQLiteHelper extends SQLiteOpenHelper
             //if (true)
             if (c.getCount() == 0)
             {
-                Resources    res      = context.getResources();
+                Resources    res      = appContext.getResources();
                 AssetManager assetMgr = res.getAssets();
                 for (String assetName : assetMgr.list(""))
                 {
@@ -133,11 +154,6 @@ class TripSQLiteHelper extends SQLiteOpenHelper
                 }
             } 
            
-            if (c != null)
-            {
-                c.close();
-            }
-            
         } catch (IOException ex)
         {
             ex.printStackTrace();
@@ -145,7 +161,10 @@ class TripSQLiteHelper extends SQLiteOpenHelper
             
         } finally
         {
-            c.close();
+            if (c != null)
+            {
+                c.close();
+            }
         }
     }
     
@@ -219,8 +238,8 @@ class TripSQLiteHelper extends SQLiteOpenHelper
      */
     public void loadTestData(final SQLiteDatabase db)
     {
-        int tripId = 2;
-        int bInx   = 7; // base index
+        int tripId = 1;
+        int bInx   = 1; // base index
         
         String[] values= {
                 "Little Pigeon River", "-83.53372824519164", "35.69161799381586", "Catostomus commersoni",
@@ -409,24 +428,5 @@ class TripSQLiteHelper extends SQLiteOpenHelper
         }
         return false;
     }
-    
-    /* (non-Javadoc)
-     * @see android.database.sqlite.SQLiteOpenHelper#onCreate(android.database.sqlite.SQLiteDatabase)
-     */
-    @Override
-    public void onCreate(final SQLiteDatabase db)
-    {
-        dropAndBuild(db, true);
-    }
 
-    /* (non-Javadoc)
-     * @see android.database.sqlite.SQLiteOpenHelper#onUpgrade(android.database.sqlite.SQLiteDatabase, int, int)
-     */
-    @Override
-    public void onUpgrade(final SQLiteDatabase db, final int oldVersion, final int newVersion)
-    {
-        android.util.Log.w("Trip", "Upgrading database, which will destroy all old data");
-        db.execSQL("DROP TABLE IF EXISTS trip");
-        onCreate(db);
-    }
 }

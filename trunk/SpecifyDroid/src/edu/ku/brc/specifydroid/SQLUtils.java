@@ -70,5 +70,36 @@ public class SQLUtils
         return cnt;
     }
 
+    /**
+     * Gets a single String value from the first row, first column
+     * @param db the database
+     * @param sql the SQL that should return just one row and one column
+     * @return a string or null
+     */
+    public static String getStringObj(final SQLiteDatabase db, final String sql)
+    {
+        String strVal = null;
+        Cursor c      = null;
+        try
+        {
+            c = db.rawQuery(sql, null);
+            if (c.moveToFirst())
+            {
+                strVal = c.getString(0);
+            }
+        } catch (Exception ex)
+        {
+            ex.printStackTrace();
+            
+        } finally
+        {
+            if (c != null)
+            {
+                c.close();
+            }
+        }
+        return strVal;
+    }
+
 
 }
