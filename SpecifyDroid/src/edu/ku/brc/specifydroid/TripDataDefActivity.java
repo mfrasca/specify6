@@ -107,12 +107,7 @@ public class TripDataDefActivity extends SpBaseActivity
     {
         super.onStop();
         
-        if (cursorModel != null)
-        {
-            cursorModel.close();
-            cursorModel = null;
-        }
-        
+        closeCursor();
         closeDB();
     }
 
@@ -121,12 +116,7 @@ public class TripDataDefActivity extends SpBaseActivity
      */
     private void initList()
     {
-        if (cursorModel != null)
-        {
-            stopManagingCursor(cursorModel);
-            cursorModel.close();
-            cursorModel = null;
-        }
+        closeCursor();
 
         cursorModel = TripDataDef.getAll(getDB(), "tripdatadef", "");
         

@@ -193,12 +193,7 @@ public class TripListActivity extends SpBaseActivity
     {
         Log.e("*** TripListActivity", "initList");
         
-        if (cursorModel != null)
-        {
-            stopManagingCursor(cursorModel);
-            cursorModel.close();
-            cursorModel = null;
-        }
+        closeCursor();
 
         /*final ProgressDialog prgDlg = new ProgressDialog(this);
         prgDlg.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -262,16 +257,9 @@ public class TripListActivity extends SpBaseActivity
     @Override
     protected void onStop()
     {
-        Log.e("*** TripListActivity", "onStop");
-        
         super.onStop();
         
-        if (cursorModel != null)
-        {
-            cursorModel.close();
-            cursorModel = null;
-        }
-        
+        closeCursor();
         closeDB();
     }
     
