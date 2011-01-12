@@ -21,7 +21,6 @@ package edu.ku.brc.specifydroid;
 
 import java.io.File;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
@@ -42,7 +41,7 @@ import android.widget.GridView;
  * Oct 27, 2009
  *
  */
-public class SpecifyActivity extends Activity
+public class SpecifyActivity extends SpBaseActivity
 {
     public static final String   TAXA_FILE_PREF = "TAXA_FILE_PREF";
     
@@ -106,6 +105,7 @@ public class SpecifyActivity extends Activity
             {
                 TaxonLoadThread.getInstance().set(this, database, prgDlg);
             }
+            closeDB();
         }
     }
     
@@ -208,20 +208,6 @@ public class SpecifyActivity extends Activity
         Log.d("DBG", "onDestroy");
         super.onDestroy();
     }
-    
-    //------------------------------------------------------------------------
-    //-- Database Access
-    //------------------------------------------------------------------------
-    private TripSQLiteHelper  tripDBHelper = null;
-    private SQLiteDatabase getDB()
-    {
-        if (tripDBHelper == null)
-        {
-            tripDBHelper = new TripSQLiteHelper(this.getApplicationContext());
-        }
-        return tripDBHelper.getWritableDatabase();
-    }
-
     
     /*private void checkPath()
     {

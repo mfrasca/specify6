@@ -19,12 +19,10 @@
 */
 package edu.ku.brc.specifydroid;
 
-import edu.ku.brc.specifydroid.datamodel.Trip;
-import android.app.Activity;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.widget.GridView;
 import android.widget.TextView;
+import edu.ku.brc.specifydroid.datamodel.Trip;
 
 /**
  * @author rods
@@ -34,7 +32,7 @@ import android.widget.TextView;
  * Nov 15, 2009
  *
  */
-public class TripMainActivity extends Activity
+public class TripMainActivity extends SpBaseActivity
 {
     private String    tripId;
     private TextView  titleView;
@@ -78,6 +76,7 @@ public class TripMainActivity extends Activity
                 baseTitle = trip.getName();
                 titleView.setText(baseTitle);
             }
+            closeDB();
         }
     }
 
@@ -132,20 +131,7 @@ public class TripMainActivity extends Activity
             String sql = String.format("select COUNT(*) AS count FROM (select TripRowIndex from tripdatacell where TripID = %s GROUP BY TripRowIndex)", tripId);
             int itemCount = SQLUtils.getCount(getDB(), sql);
             titleView.setText(String.format("%s - %d items.", baseTitle, itemCount));
+            closeDB();
         }
-    }
-
-    
-    //------------------------------------------------------------------------
-    //-- Database Access
-    //------------------------------------------------------------------------
-    private TripSQLiteHelper  tripDBHelper = null;
-    private SQLiteDatabase getDB()
-    {
-        if (tripDBHelper == null)
-        {
-            tripDBHelper = new TripSQLiteHelper(this.getApplicationContext());
-        }
-        return tripDBHelper.getWritableDatabase();
     }
 }

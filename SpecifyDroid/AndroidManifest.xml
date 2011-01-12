@@ -38,5 +38,5 @@
         <activity android:name=".TripDataEntryDetailActivity"/>
         <activity android:name=".TripMapLocationActivity"/>
     </application>
-    <uses-sdk android:targetSdkVersion="8" android:minSdkVersion="7"/>
+    <uses-sdk android:targetSdkVersion="8" android:minSdkVersion="4"/>
 </manifest> 

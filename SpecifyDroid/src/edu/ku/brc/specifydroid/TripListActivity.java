@@ -20,14 +20,12 @@ package edu.ku.brc.specifydroid;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -44,7 +42,7 @@ import edu.ku.brc.specifydroid.datamodel.Trip;
  * Oct 27, 2009
  * 
  */
-public class TripListActivity extends Activity
+public class TripListActivity extends SpBaseActivity
 {
     public final static int CONFIG_TRIP = 0; // Config
     public final static int COLL_TRIP   = 1; // Config
@@ -55,7 +53,6 @@ public class TripListActivity extends Activity
     public final static String DETAIL_CLASS = "edu.ku.brc.specifydroid.DETAIL_CLASS";
     
     private AtomicBoolean              isActive    = new AtomicBoolean(true);
-    private Cursor                     cursorModel = null;
     private SharedPreferences          prefs       = null;
     private ListView                   list        = null;
     
@@ -123,6 +120,20 @@ public class TripListActivity extends Activity
     }
 
     /* (non-Javadoc)
+     * @see android.app.Activity#onStart()
+     */
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+        
+        if (cursorModel == null)
+        {
+            initList();
+        }
+    }
+
+    /* (non-Javadoc)
      * @see android.app.Activity#onResume()
      */
     @Override
@@ -131,20 +142,6 @@ public class TripListActivity extends Activity
         super.onResume();
 
         isActive.set(true);
-    }
-
-    /* (non-Javadoc)
-     * @see android.app.Activity#onDestroy()
-     */
-    @Override
-    public void onDestroy()
-    {
-        super.onDestroy();
-
-        if (cursorModel != null)
-        {
-            cursorModel.close();
-        }
     }
 
     /* (non-Javadoc)
@@ -194,10 +191,13 @@ public class TripListActivity extends Activity
      */
     private void initList()
     {
+        Log.e("*** TripListActivity", "initList");
+        
         if (cursorModel != null)
         {
             stopManagingCursor(cursorModel);
             cursorModel.close();
+            cursorModel = null;
         }
 
         /*final ProgressDialog prgDlg = new ProgressDialog(this);
@@ -254,9 +254,27 @@ public class TripListActivity extends Activity
                  prgDlg.dismiss();
             }
        }.start(); 
-
     }
 
+    /* (non-Javadoc)
+     * @see android.app.Activity#onStop()
+     */
+    @Override
+    protected void onStop()
+    {
+        Log.e("*** TripListActivity", "onStop");
+        
+        super.onStop();
+        
+        if (cursorModel != null)
+        {
+            cursorModel.close();
+            cursorModel = null;
+        }
+        
+        closeDB();
+    }
+    
     /**
      * @return the class of the Detailed Activity to be launched when an item in the list is clicked
      */
@@ -302,19 +320,4 @@ public class TripListActivity extends Activity
             }
         }
     };
-
-    
-    //------------------------------------------------------------------------
-    //-- Database Access
-    //------------------------------------------------------------------------
-    private TripSQLiteHelper  tripDBHelper = null;
-    private SQLiteDatabase getDB()
-    {
-        if (tripDBHelper == null)
-        {
-            tripDBHelper = new TripSQLiteHelper(this.getApplicationContext());
-        }
-        return tripDBHelper.getWritableDatabase();
-    }
-    
 }

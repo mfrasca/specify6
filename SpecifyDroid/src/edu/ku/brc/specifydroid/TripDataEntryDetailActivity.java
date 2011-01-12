@@ -28,7 +28,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -57,7 +56,7 @@ import edu.ku.brc.specifydroid.datamodel.TripDataDef;
  * Nov 11, 2009
  *
  */
-public class TripDataEntryDetailActivity extends Activity
+public class TripDataEntryDetailActivity extends SpBaseActivity
 {
     public final static String ID_EXTRA    = "edu.ku.brc.specifydroid._TripDataDefID";
     public final static String ID_ISCREATE = "edu.ku.brc.specifydroid._ISNEW";
@@ -69,7 +68,6 @@ public class TripDataEntryDetailActivity extends Activity
     
     private AtomicBoolean              isActive = new AtomicBoolean(true);
     private String                     tripId      = null;
-    private Cursor                     cursorModel;
     private boolean                    isNewRec    = false;
     private boolean                    isCreateRec = false;
     private boolean                    isChanged   = false;
@@ -205,6 +203,23 @@ public class TripDataEntryDetailActivity extends Activity
         buildUI();
     }
     
+
+    /* (non-Javadoc)
+     * @see android.app.Activity#onStop()
+     */
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+        
+        if (cursorModel != null)
+        {
+            cursorModel.close();
+            cursorModel = null;
+        }
+        
+        closeDB();
+    }
 
     /* (non-Javadoc)
      * @see android.app.Activity#onSaveInstanceState(android.os.Bundle)
@@ -531,6 +546,7 @@ public class TripDataEntryDetailActivity extends Activity
         {
             stopManagingCursor(cursorModel);
             cursorModel.close();
+            cursorModel = null;
         }
 
         rowIndex = null;
@@ -757,6 +773,7 @@ public class TripDataEntryDetailActivity extends Activity
         if (cursorModel != null)
         {
             cursorModel.close();
+            cursorModel = null;
         }
     }
     
@@ -820,18 +837,4 @@ public class TripDataEntryDetailActivity extends Activity
             return aColumnString;
         }
     } 
-    
-    
-    //------------------------------------------------------------------------
-    //-- Database Access
-    //------------------------------------------------------------------------
-    private TripSQLiteHelper  tripDBHelper = null;
-    private SQLiteDatabase getDB()
-    {
-        if (tripDBHelper == null)
-        {
-            tripDBHelper = new TripSQLiteHelper(this.getApplicationContext());
-        }
-        return tripDBHelper.getWritableDatabase();
-    }
 }

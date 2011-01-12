@@ -21,9 +21,7 @@ package edu.ku.brc.specifydroid;
 
 import java.util.HashMap;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -44,7 +42,7 @@ import edu.ku.brc.specifydroid.datamodel.TripDataDef;
  * Nov 20, 2009
  *
  */
-public class TripDataDefDetailActivity extends Activity implements AdapterView.OnItemSelectedListener
+public class TripDataDefDetailActivity extends SpBaseActivity implements AdapterView.OnItemSelectedListener
 {
     public static final String[] dataTypeItems = new String[] {"Integer", "Double", "Float", "String", "Date"};
     
@@ -213,6 +211,7 @@ public class TripDataDefDetailActivity extends Activity implements AdapterView.O
         
         short inx = current.getDataType();
         dataTypeSP.setSelection(inx);
+        closeDB();
     }
     
     //----------------------------------------------------------------
@@ -238,22 +237,8 @@ public class TripDataDefDetailActivity extends Activity implements AdapterView.O
                     current.update(tripDataDefId, getDB());
                 }
             }
-
+            closeDB();
             finish();
         }
     };
-    
-    
-    //------------------------------------------------------------------------
-    //-- Database Access
-    //------------------------------------------------------------------------
-    private TripSQLiteHelper  tripDBHelper = null;
-    private SQLiteDatabase getDB()
-    {
-        if (tripDBHelper == null)
-        {
-            tripDBHelper = new TripSQLiteHelper(this.getApplicationContext());
-        }
-        return tripDBHelper.getWritableDatabase();
-    }
 }
