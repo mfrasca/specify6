@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.location.GpsSatellite;
 import android.location.GpsStatus;
 import android.location.Location;
@@ -52,7 +53,8 @@ public class SatelliteActivity extends Activity
 
         satView = (SatellitesView)findViewById(R.id.satellites);
         satView.init(new int[] {R.drawable.satellite48});
-        
+        satView.setBackgroundColor(Color.WHITE);
+
         locMgr = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 10.0f, onLocationChange);
 

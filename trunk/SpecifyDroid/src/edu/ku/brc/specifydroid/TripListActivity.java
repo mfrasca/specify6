@@ -20,20 +20,26 @@ package edu.ku.brc.specifydroid;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.View.OnCreateContextMenuListener;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import edu.ku.brc.specifydroid.datamodel.Trip;
-
 /**
  * @author rods
  * 
@@ -44,13 +50,15 @@ import edu.ku.brc.specifydroid.datamodel.Trip;
  */
 public class TripListActivity extends SpBaseActivity
 {
-    public final static int CONFIG_TRIP = 0; // Config
-    public final static int COLL_TRIP   = 1; // Config
-    public final static int OBS_TRIP    = 2; // Config
+    private static final String  TAG               = "TripListActivity";
     
-    public final static String ID_EXTRA     = "edu.ku.brc.specifydroid._ID";
-    public final static String TRIP_TYPE    = "edu.ku.brc.specifydroid.TRIP_TYPE";
-    public final static String DETAIL_CLASS = "edu.ku.brc.specifydroid.DETAIL_CLASS";
+    public final static int CONFIG_TRIP = 0; // Configure Trip
+    public final static int COLL_TRIP   = 1; // Collection Trip
+    public final static int OBS_TRIP    = 2; // Observation
+    
+    public final static String         ID_EXTRA     = "edu.ku.brc.specifydroid._ID";
+    public final static String         TRIP_TYPE    = "edu.ku.brc.specifydroid.TRIP_TYPE";
+    public final static String         DETAIL_CLASS = "edu.ku.brc.specifydroid.DETAIL_CLASS";
     
     private AtomicBoolean              isActive    = new AtomicBoolean(true);
     private SharedPreferences          prefs       = null;
@@ -58,6 +66,8 @@ public class TripListActivity extends SpBaseActivity
     
     private Integer                    tripType      = CONFIG_TRIP; // Default Trip type
     private Class<?>                   detailedClass = TripMainActivity.class;
+    
+    private AtomicBoolean              isLoading     = new AtomicBoolean(false);
     
     /**
      * 
@@ -97,15 +107,124 @@ public class TripListActivity extends SpBaseActivity
             }
         }
         
-        setContentView(R.layout.main);
+        //requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+        
+        setContentView(R.layout.trip_list_main);
+        
+        //getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.window_title);
+
         
         list  = (ListView) findViewById(R.id.trips);
+        //list.getBackground().setDither(true);
+
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         list.setOnItemClickListener(createItemClickListener());
-        
+
+        OnCreateContextMenuListener listener = new OnCreateContextMenuListener()
+        {
+            @Override
+            public void onCreateContextMenu(final ContextMenu menu, final View v, final ContextMenuInfo menuInfo)
+            {
+                AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+                menu.setHeaderTitle(getNameFromCursor(list.getItemAtPosition(info.position)));
+
+                MenuInflater inflater = getMenuInflater();
+                inflater.inflate(R.menu.triplistcontextmenu, menu);
+            }
+        };
+        list.setOnCreateContextMenuListener(listener);
+
         initList();
 
         prefs.registerOnSharedPreferenceChangeListener(prefListener);
+    }
+    
+    /* (non-Javadoc)
+     * @see android.app.Activity#onContextItemSelected(android.view.MenuItem)
+     */
+    @Override
+    public boolean onContextItemSelected(final MenuItem item)
+    {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+        int index = info.position;
+        
+        if (item.getItemId() == R.id.dellistitem)
+        {
+            askForDeleteTrip(index);
+            
+        } else if (item.getItemId() == R.id.edttripitem)
+        {
+            String trpId  = ((Cursor)list.getItemAtPosition(index)).getString(0);
+            Intent intent = new Intent(this, getDetailActivityClass());
+            intent.putExtra(TripListActivity.ID_EXTRA, trpId);
+            startActivity(intent);
+            
+        } else if (item.getItemId() == R.id.cfgtripitem)
+        {
+            String trpId  = ((Cursor)list.getItemAtPosition(index)).getString(0);
+            Intent intent = new Intent(this, TripDetailActivity.class);
+            intent.putExtra(ID_EXTRA, trpId);
+            startActivity(intent);
+        }
+        return true;
+    }
+    
+    /**
+     * @param cursor
+     * @return
+     */
+    private String getNameFromCursor(final Object obj)
+    {
+        String tripName = "Unknown";
+        if (obj instanceof Cursor)
+        {
+            tripName = ((Cursor)obj).getString(1);
+        }
+        return tripName;
+    }
+
+    
+    /**
+     * @param v
+     * @param pos
+     * @param id
+     */
+    protected void askForDeleteTrip(final int index)
+    {
+        Log.i(TAG, "askForDeleteTrip id=" + index);
+        
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this).setPositiveButton(
+                R.string.alert_dialog_ok, new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int whichButton)
+                    {
+                        doDeleteItem(index);
+                    }
+                }).setNegativeButton(R.string.alert_dialog_cancel,
+                new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int whichButton)
+                    {
+                        
+                    }
+                });
+
+        builder.setTitle(String.format(getString(R.string.deletetrip), getNameFromCursor(list.getItemAtPosition(index))));
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+    
+    /**
+     * @param index
+     */
+    private void doDeleteItem(final int index)
+    {
+        String trpId = ((Cursor)list.getItemAtPosition(index)).getString(0); 
+        closeCursor();
+        
+        Trip.doDeleteTrip(getDB(), trpId);
+        
+        initList();
     }
 
     /* (non-Javadoc)
@@ -140,6 +259,11 @@ public class TripListActivity extends SpBaseActivity
     public void onResume()
     {
         super.onResume();
+        
+        if (cursorModel == null)
+        {
+            initList();
+        }
 
         isActive.set(true);
     }
@@ -191,16 +315,18 @@ public class TripListActivity extends SpBaseActivity
      */
     private void initList()
     {
+        if (isLoading.get())
+        {
+            return;
+        }
+        
+        isLoading.set(true);
+        
         Log.e("*** TripListActivity", "initList");
         
         closeCursor();
 
-        /*final ProgressDialog prgDlg = new ProgressDialog(this);
-        prgDlg.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        prgDlg.show();
-        */
-        
-        final ProgressDialog prgDlg = ProgressDialog.show(this, null, "Loading...", true);
+        final ProgressDialog prgDlg = ProgressDialog.show(this, null, getString(R.string.loading), true);
         prgDlg.show();
         
         new Thread() 
@@ -212,18 +338,10 @@ public class TripListActivity extends SpBaseActivity
                      String where = null;
                      if (tripType > 0)
                      {
-                         String type;
-                         if (tripType == TripListActivity.OBS_TRIP)
-                         {
-                             type = "observing";
-                         } else
-                         {
-                             type = "collecting"; // defaults to Collecting Trip
-                         }
-                         where = String.format("WHERE Type = '%s'", type);
+                         where = String.format("WHERE Type = %d", 
+                                 tripType == TripListActivity.OBS_TRIP ? SpecifyActivity.OBSERVATION : SpecifyActivity.COLLECTING);
                      }
-                     
-                     
+
                      cursorModel = Trip.getAll(getDB(), "trip", where, prefs.getString("sort_order", ""));
                      
                      runOnUiThread(new Runnable()
@@ -240,11 +358,15 @@ public class TripListActivity extends SpBaseActivity
                                                                            cursorModel, 
                                                                            new String[] {"Name", "TripDate", "Type"}, 
                                                                            new int[] {R.id.name, R.id.date, R.id.icon}));
+                                 isLoading.set(false);
                              }
                          }
                      });
                      
-                 } catch (Exception e) {  }
+                 } catch (Exception e) 
+                 { 
+                     e.printStackTrace();  
+                 }
                  // Dismiss the Dialog
                  prgDlg.dismiss();
             }

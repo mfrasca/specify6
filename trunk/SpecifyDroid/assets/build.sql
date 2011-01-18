@@ -2,7 +2,8 @@ DROP TABLE IF EXISTS `trip`;
 CREATE TABLE `trip` (
   `_id` INTEGER PRIMARY KEY AUTOINCREMENT,
   `Name` VAR CHAR(32),
-  `Type` VAR CHAR(16),
+  `Type` SHORT,
+  `Discipline` SHORT,
   `Notes` VAR CHAR(255) DEFAULT NULL,
   `TripDate` DATE NOT NULL,
   `FirstName1` VAR CHAR(32) DEFAULT NULL,

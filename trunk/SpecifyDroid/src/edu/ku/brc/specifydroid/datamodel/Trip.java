@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import edu.ku.brc.specifydroid.BaseDataObj;
+import edu.ku.brc.specifydroid.SQLUtils;
 
 import static edu.ku.brc.utils.XMLHelper.*;
 
@@ -26,7 +27,8 @@ public class Trip extends BaseDataObj<Trip>
 {
     protected Integer   id   = null;
     protected String    name = "";
-    protected String    type = "";
+    protected int       type = 0;
+    protected int       discipline = 0;
     protected String    notes = "";
     protected Date      tripDate = null;
     protected String    firstName1 = "";
@@ -60,7 +62,8 @@ public class Trip extends BaseDataObj<Trip>
     {
         id         = cursor.getInt(cursor.getColumnIndex("_id"));
         name       = cursor.getString(cursor.getColumnIndex("Name"));
-        type       = cursor.getString(cursor.getColumnIndex("Type"));
+        type       = cursor.getInt(cursor.getColumnIndex("Type"));
+        discipline = cursor.getInt(cursor.getColumnIndex("Discipline"));
         notes      = cursor.getString(cursor.getColumnIndex("Notes"));
         tripDate   = getDate(cursor, "TripDate");
         firstName1 = cursor.getString(cursor.getColumnIndex("FirstName1"));
@@ -81,6 +84,7 @@ public class Trip extends BaseDataObj<Trip>
     {
         cv.put("Name", name);
         cv.put("Type", type);
+        cv.put("Discipline", discipline);
         cv.put("Notes", notes);
         setDate(cv, tripDate, "TripDate");
         cv.put("FirstName1", firstName1);
@@ -176,13 +180,29 @@ public class Trip extends BaseDataObj<Trip>
         this.name = name;
     }
 
-    public String getType()
+    public int getType()
     {
         return type;
     }
-    public void setType(String type)
+    public void setType(int type)
     {
         this.type = type;
+    }
+    
+    /**
+     * @return the discipline
+     */
+    public int getDiscipline()
+    {
+        return discipline;
+    }
+
+    /**
+     * @param discipline the discipline to set
+     */
+    public void setDiscipline(int discipline)
+    {
+        this.discipline = discipline;
     }
 
     public String getNotes()
@@ -328,11 +348,26 @@ public class Trip extends BaseDataObj<Trip>
         return null;
     }
     
-    public void writeCVSHeader(final PrintWriter pw)
+    /**
+     * @param db
+     * @return
+     */
+    public static int getCount(final SQLiteDatabase db)
     {
-        pw.println("Id,Name,Type,Notes,TripDate,TimestampCreated");
+        return SQLUtils.getCount(db, "SELECT COUNT(*) FROM trip");
     }
     
+    /**
+     * @param pw
+     */
+    public void writeCVSHeader(final PrintWriter pw)
+    {
+        pw.println("Id,Name,Type,Discipline,Notes,TripDate,TimestampCreated");
+    }
+    
+    /**
+     * @param pw
+     */
     public void writeCVSValues(final PrintWriter pw)
     {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -352,6 +387,7 @@ public class Trip extends BaseDataObj<Trip>
         sb.append("<trip");
         addAttr(sb, "name", name);
         addAttr(sb, "type", type);
+        addAttr(sb, "discipline", discipline);
         addAttr(sb, "tripdate", sdf.format(tripDate));
         addAttr(sb, "timestampcreated", stsf.format(timestampCreated));
         sb.append(">\n");
@@ -412,7 +448,8 @@ public class Trip extends BaseDataObj<Trip>
             
         } catch  (Exception ex)
         {
-            ex.printStackTrace();
+            Log.e("Trip", ex.getMessage(), ex);
+            
         } finally
         {
             db.endTransaction();

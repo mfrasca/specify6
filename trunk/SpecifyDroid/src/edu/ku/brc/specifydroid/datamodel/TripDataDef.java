@@ -128,6 +128,33 @@ public class TripDataDef extends BaseDataObj<TripDataDef>
         this.tripID = tripID;
     }
 
+    /**
+     * @param db
+     * @param tripId
+     * @param tddId
+     * @return
+     */
+    public static boolean doDelete(final SQLiteDatabase db, final String tripId, final String tddId)
+    {
+        try
+        {
+            db.beginTransaction();
+            String[] args = new String[] {tripId, tddId};
+            db.delete("tripdatacell", "TripID = ? AND TripDataDefID = ?", args);
+            db.delete("tripdatadef", "TripID = ? AND _id = ?", args);
+            db.setTransactionSuccessful();
+            return true;
+            
+        } catch  (Exception ex)
+        {
+            Log.e("TripDataDef", ex.getMessage(), ex);
+            
+        } finally
+        {
+            db.endTransaction();
+        }
+        return false;
+    }
 
     /**
      * @param id

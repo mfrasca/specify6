@@ -2,6 +2,7 @@ package edu.ku.brc.specifydroid;
 import android.app.Activity;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 /* This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -42,14 +43,31 @@ public class SpBaseActivity extends Activity
         super();
     }
     
+    /**
+     * Gets a resource string by name.
+     * @param strResName the name of the string
+     * @return the localized string
+     */
+    protected String getStringResourceByName(String strResName)
+    {
+      String packageName = "edu.ku.brc.specifydroid";
+      int resId = getResources().getIdentifier(strResName, "string", packageName);
+      return resId == 0 ? strResName : getString(resId);
+    }
+    
     //------------------------------------------------------------------------
     //-- Database Access
     //------------------------------------------------------------------------
 
+    /**
+     * 
+     */
     protected void closeCursor()
     {
         if (cursorModel != null)
         {
+            Log.d(getClass().getName(), "closeCursor()");
+
             stopManagingCursor(cursorModel);
             cursorModel.close();
             cursorModel = null;
@@ -63,6 +81,8 @@ public class SpBaseActivity extends Activity
     {
         if (tripDBHelper == null)
         {
+            Log.d(getClass().getName(), "getDB()");
+
             tripDBHelper = new TripSQLiteHelper(this.getApplicationContext());
         }
         return tripDBHelper.getWritableDatabase();
@@ -73,9 +93,12 @@ public class SpBaseActivity extends Activity
      */
     protected void closeDB()
     {
-        if (tripDBHelper == null)
+        if (tripDBHelper != null)
         {
+            Log.d(getClass().getName(), "closeDB()");
+
             tripDBHelper.close();
+            tripDBHelper = null;
         }
         
     }

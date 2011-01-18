@@ -39,28 +39,27 @@ import android.widget.TextView;
 public class SpecifyMainPanelAdapter extends BaseAdapter
 {
     // references to our images
-    private static final Integer[] thumbs = 
+    private static Integer[] thumbs = 
     { 
         R.drawable.satellite48, R.drawable.compass48, R.drawable.collect48,
         R.drawable.hikerbig48, R.drawable.look48,
     };
     
-    private static final Integer[] titleIds = 
+    private static Integer[] titleIds = 
     { 
         R.string.satellites, R.string.compass, R.string.collecting,
         R.string.trips, R.string.observations,
     };
     
-    private SpecifyActivity anzaTrekActivity;
+    private SpecifyActivity specifyActivity;
 
     /**
-     * @param c
+     * @param activity
      */
     public SpecifyMainPanelAdapter(final SpecifyActivity activity)
     {
-        this.anzaTrekActivity = activity;
+        this.specifyActivity = activity;
     }
-
     /* (non-Javadoc)
      * @see android.widget.Adapter#getCount()
      */
@@ -103,14 +102,14 @@ public class SpecifyMainPanelAdapter extends BaseAdapter
         {
             if (convertView == null)
             { 
-                llCell    = new LinearLayout(anzaTrekActivity);
+                llCell    = new LinearLayout(specifyActivity);
                 llCell.setOrientation(LinearLayout.VERTICAL);
                 
-                imageView = new ImageView(anzaTrekActivity);
+                imageView = new ImageView(specifyActivity);
                 imageView.setFocusable(true);
                 imageView.setPadding(8, 8, 8, 8);
                 
-                textView = new TextView(anzaTrekActivity);
+                textView = new TextView(specifyActivity);
                 textView.setGravity(Gravity.CENTER_HORIZONTAL);
                 textView.setTextColor(R.color.black);
                 
@@ -128,7 +127,7 @@ public class SpecifyMainPanelAdapter extends BaseAdapter
         {
             if (convertView == null)
             { // if it's not recycled, initialize some attributes
-                imageView = new ImageView(anzaTrekActivity);
+                imageView = new ImageView(specifyActivity);
                 imageView.setFocusable(true);
                 //imageView.setLayoutParams(new GridView.LayoutParams(85, 85));
                 //imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -153,7 +152,7 @@ public class SpecifyMainPanelAdapter extends BaseAdapter
                   switch (position)
                   {
                       case 0:
-                          anzaTrekActivity.startActivity(new Intent(anzaTrekActivity, SatelliteActivity.class));
+                          specifyActivity.startActivity(new Intent(specifyActivity, SatelliteActivity.class));
                           break;
                           
                       case 1: // Compass
@@ -161,27 +160,27 @@ public class SpecifyMainPanelAdapter extends BaseAdapter
                           
                       case 2: // Collecting
                       {
-                          Intent intent = new Intent(anzaTrekActivity, TripListActivity.class);
+                          Intent intent = new Intent(specifyActivity, TripListActivity.class);
                           intent.putExtra(TripListActivity.TRIP_TYPE, TripListActivity.COLL_TRIP);
                           intent.putExtra(TripListActivity.DETAIL_CLASS, TripDataEntryDetailActivity.class.getName());
-                          anzaTrekActivity.startActivity(intent);
+                          specifyActivity.startActivity(intent);
                           break;
                       } 
                           
                       case 3: // Configure Trips
                       {
-                          Intent intent = new Intent(anzaTrekActivity, TripListActivity.class);
+                          Intent intent = new Intent(specifyActivity, TripListActivity.class);
                           intent.putExtra(TripListActivity.TRIP_TYPE, TripListActivity.CONFIG_TRIP);
-                          anzaTrekActivity.startActivity(intent);
+                          specifyActivity.startActivity(intent);
                           break;
                       }
                       
                       case 4: // Observations
                       {
-                          Intent intent = new Intent(anzaTrekActivity, TripListActivity.class);
+                          Intent intent = new Intent(specifyActivity, TripListActivity.class);
                           intent.putExtra(TripListActivity.TRIP_TYPE, TripListActivity.OBS_TRIP);
                           intent.putExtra(TripListActivity.DETAIL_CLASS, TripDataEntryDetailActivity.class.getName());
-                          anzaTrekActivity.startActivity(intent);
+                          specifyActivity.startActivity(intent);
                           break;
                       } 
                   }

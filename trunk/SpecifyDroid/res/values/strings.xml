@@ -14,8 +14,6 @@
     <string name="collecting">Collecting</string>
     <string name="trips">Trips</string>
     
-
-    
     <!--  Trip Detail -->
     <string name="trpnamelbl">Name:</string>
     <string name="trptypelbl">Type:</string>
@@ -24,7 +22,6 @@
     
     <!--  Trip Detail Menus -->
     <string name="tripconfig">Config</string>
-    
     
     <!--  Trip Data Def Detail Form -->
     <string name="tddname">Name:</string>
@@ -43,5 +40,57 @@
     <string name="tmgemail">EMail</string>
     <string name="tmggooglemaps">Map</string>
     
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="deletetrip">Delete \'%s\'?</string>
+    <string name="changedisp">Change</string>
+    <string name="trpfieldslbl">Fields</string>
+    <string name="close">Close</string>
+    <string name="loading">Loading...</string>
+    <string name="editfieldsbtn">Configure Fields</string>
     
+    <!-- Disciplines -->
+    <string name="choosedisp">Choose a Discipline</string>
+    <string name="fish">Ichthyology</string>
+    <string name="herpetology">Herpetology</string>
+    <string name="paleobotany">Paleobotany</string>
+    <string name="invertpaleo">Invertebrate Paleontology</string>
+    <string name="vertpaleo">Vertebrate Paleontology</string>
+    <string name="bird">Ornithology</string>
+    <string name="mammal">Mammalogy</string>
+    <string name="insect">Entomology</string>
+    <string name="botany">Botany</string>
+    <string name="invertebrate">Invertebrate Zoology</string>
+
+    <!-- Taxonomy -->
+    <string name="Kingdom">Kingdom</string>
+    <string name="Subkingdom">Subkingdom</string>
+    <string name="Division">Division</string>
+    <string name="Phylum">Phylum</string>
+    <string name="Subdivision">Subdivision</string>
+    <string name="Subphylum">Subphylum</string>
+    <string name="Superclass">Superclass</string>
+    <string name="Class">Class</string>
+    <string name="Subclass">Subclass</string>
+    <string name="Infraclass">Infraclass</string>
+    <string name="Superorder">Superorder</string>
+    <string name="Order">Order</string>
+    <string name="Suborder">Suborder</string>
+    <string name="Infraorder">Infraorder</string>
+    <string name="Parvorder">Parvorder</string>
+    <string name="Superfamily">Superfamily</string>
+    <string name="Family">Family</string>
+    <string name="Subfamily">Subfamily</string>
+    <string name="Tribe">Tribe</string>
+    <string name="Subtribe">Subtribe</string>
+    <string name="Genus">Genus</string>
+    <string name="Subgenus">Subgenus</string>
+    <string name="Section">Section</string>
+    <string name="Subsection">Subsection</string>
+    <string name="Species">Species</string>
+    <string name="Subspecies">Subspecies</string>
+    <string name="Variety">Variety</string>
+    <string name="Subvariety">Subvariety</string>
+    <string name="Forma">Forma</string>
+    <string name="Subforma">Subforma</string>
 </resources>

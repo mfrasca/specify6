@@ -19,7 +19,9 @@
 */
 package edu.ku.brc.specifydroid;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.GridView;
 import android.widget.TextView;
 import edu.ku.brc.specifydroid.datamodel.Trip;
@@ -66,7 +68,6 @@ public class TripMainActivity extends SpBaseActivity
         GridView gridview = (GridView)findViewById(R.id.tripgridview);
         gridview.setAdapter(new TripMainPanelAdapter(this, tripId));
         
-        
         titleView = (TextView)findViewById(R.id.tripmaintitle);
         if (tripId != null)
         {   
@@ -77,6 +78,47 @@ public class TripMainActivity extends SpBaseActivity
                 titleView.setText(baseTitle);
             }
             closeDB();
+        }
+    }
+    
+
+    /**
+     * 
+     */
+    public void doEmailExport()
+    {
+        try
+        {
+            Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+            emailIntent.setType("message/rfc822");
+            emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{ "rods@ku.edu"});
+            emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Your Export WB");
+            emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Your Export");
+    
+            Log.d("XXX", "About to send email");
+            startActivityForResult(Intent.createChooser(emailIntent, "Send mail..."), 0);
+            
+        } catch (Exception ex)
+        {
+            Log.e(getClass().getName(), "Mail failed.", ex);
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        Log.d("XXX", "About to send email");
+        
+        super.onActivityResult(requestCode, resultCode, data);
+        
+        Log.d("XXX", "CODE: "+requestCode);
+        
+        if (requestCode == 0)
+        {
+            Log.d("XXX", "CODE: "+requestCode);
         }
     }
 
@@ -121,6 +163,27 @@ public class TripMainActivity extends SpBaseActivity
         updateTitle();
     }
     
+    /* (non-Javadoc)
+     * @see android.app.Activity#onPause()
+     */
+    @Override
+    protected void onPause()
+    {
+        Log.d("XXX", "onPause");
+        super.onPause();
+    }
+
+    /* (non-Javadoc)
+     * @see android.app.Activity#onDestroy()
+     */
+    @Override
+    protected void onDestroy()
+    {
+        Log.d("XXX", "onDestroy");
+        super.onDestroy();
+        closeDB();
+    }
+
     /**
      * 
      */
@@ -130,7 +193,10 @@ public class TripMainActivity extends SpBaseActivity
         {
             String sql = String.format("select COUNT(*) AS count FROM (select TripRowIndex from tripdatacell where TripID = %s GROUP BY TripRowIndex)", tripId);
             int itemCount = SQLUtils.getCount(getDB(), sql);
-            titleView.setText(String.format("%s - %d items.", baseTitle, itemCount));
+            if (titleView != null)
+            {
+                titleView.setText(String.format("%s - %d items.", baseTitle, itemCount));
+            }
             closeDB();
         }
     }
