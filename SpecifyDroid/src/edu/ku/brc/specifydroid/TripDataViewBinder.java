@@ -35,7 +35,7 @@ import android.widget.SimpleCursorAdapter;
 public class TripDataViewBinder implements SimpleCursorAdapter.ViewBinder
 {
     /**
-     * 
+     * @param iconId
      */
     public TripDataViewBinder()
     {
@@ -52,9 +52,12 @@ public class TripDataViewBinder implements SimpleCursorAdapter.ViewBinder
         if (nImageIndex == columnIndex)
         {
             ImageView typeControl = (ImageView)view;
-            String    type        = cursor.getString(nImageIndex);
+            int       type        = cursor.getInt(nImageIndex);
 
-            typeControl.setImageResource( type.equals("collecting") ? R.drawable.collect32 :  R.drawable.look32);
+            Integer[] dispIcons = TripDetailActivity.getDiscpIcons();
+            int dispInx = cursor.getInt(cursor.getColumnIndex("Discipline"));
+            int id      = dispIcons[dispInx > dispIcons.length-1 ? 0 : dispInx];
+            typeControl.setImageResource( type == SpecifyActivity.COLLECTING ? id :  R.drawable.look32);
             return true;
         }
 

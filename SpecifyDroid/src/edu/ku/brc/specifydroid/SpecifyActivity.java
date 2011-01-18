@@ -43,7 +43,10 @@ import android.widget.GridView;
  */
 public class SpecifyActivity extends SpBaseActivity
 {
-    public static final String   TAXA_FILE_PREF = "TAXA_FILE_PREF";
+    public static final int      COLLECTING        = 0;
+    public static final int      OBSERVATION       = 1;
+    
+    public static final String   TAXA_FILE_PREF    = "TAXA_FILE_PREF";
     
     /**
      * 
@@ -61,15 +64,23 @@ public class SpecifyActivity extends SpBaseActivity
     {
         super.onCreate(savedInstanceState);
         
+        //DisplayMetrics metrics = new DisplayMetrics();
+        //getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        //Log.i("XXX", metrics.heightPixels+", "+metrics.widthPixels);
+        
+        SQLiteDatabase database = getDB();
+        
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         
-        setContentView(R.layout.anzatrek);
+        setContentView(R.layout.specify_main);
 
-        GridView gridview = (GridView)findViewById(R.id.anzagridview);
+        GridView gridview = (GridView)findViewById(R.id.spmaingridview);
         gridview.setBackgroundColor(Color.WHITE);
         gridview.setAdapter(new SpecifyMainPanelAdapter(this));
         
-        File root = Environment.getExternalStorageDirectory();
+        //this.setTitleColor(Color.parseColor("#53a1e5"))); // Sets the Text Color of the title
+        
+        File  root          = Environment.getExternalStorageDirectory();
         final File taxaFile = new File(root, "fish_taxa.csv");
         long  fileTime      = taxaFile.lastModified();
         
@@ -85,7 +96,7 @@ public class SpecifyActivity extends SpBaseActivity
         {
             final ProgressDialog prgDlg = new ProgressDialog( this );
             prgDlg.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-            prgDlg.setMessage("Loading...");
+            prgDlg.setMessage(getString(R.string.loading));
             prgDlg.setCancelable(false);
 
             prgDlg.show();
@@ -93,7 +104,6 @@ public class SpecifyActivity extends SpBaseActivity
             prgDlg.setMax((int)taxaFile.length());
             prgDlg.setProgress(0); 
             
-            SQLiteDatabase database = getDB();
             if (TaxonLoadThread.getInstance() == null)
             {
                 TaxonLoadThread tlt = new TaxonLoadThread(database, taxaFile);
@@ -105,10 +115,10 @@ public class SpecifyActivity extends SpBaseActivity
             {
                 TaxonLoadThread.getInstance().set(this, database, prgDlg);
             }
-            closeDB();
         }
+        
+        closeDB();
     }
-    
     
     /* (non-Javadoc)
      * @see android.app.Activity#onConfigurationChanged(android.content.res.Configuration)
@@ -129,84 +139,12 @@ public class SpecifyActivity extends SpBaseActivity
         Log.d("DBG", "onPause");
         super.onPause();
         
-        //database.close();
-        
         if (TaxonLoadThread.getInstance() != null && 
             TaxonLoadThread.getInstance().getPrgDlg() != null)
         {
             TaxonLoadThread.getInstance().getPrgDlg().dismiss();
             TaxonLoadThread.getInstance().set(null, null, null);
         }
-    }
-
-    /* (non-Javadoc)
-     * @see android.app.Activity#onPostCreate(android.os.Bundle)
-     */
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState)
-    {
-        Log.d("DBG", "onPostCreate");
-        super.onPostCreate(savedInstanceState);
-    }
-
-    /* (non-Javadoc)
-     * @see android.app.Activity#onPostResume()
-     */
-    @Override
-    protected void onPostResume()
-    {
-        Log.d("DBG", "onPostResume");
-        super.onPostResume();
-    }
-
-    /* (non-Javadoc)
-     * @see android.app.Activity#onRestart()
-     */
-    @Override
-    protected void onRestart()
-    {
-        Log.d("DBG", "onRestart");
-       super.onRestart();
-    }
-
-    /* (non-Javadoc)
-     * @see android.app.Activity#onResume()
-     */
-    @Override
-    protected void onResume()
-    {
-        Log.d("DBG", "onResume");
-        super.onResume();
-    }
-
-    /* (non-Javadoc)
-     * @see android.app.Activity#onStart()
-     */
-    @Override
-    protected void onStart()
-    {
-        Log.d("DBG", "onStart");
-       super.onStart();
-    }
-
-    /* (non-Javadoc)
-     * @see android.app.Activity#onStop()
-     */
-    @Override
-    protected void onStop()
-    {
-        Log.d("DBG", "onStop");
-        super.onStop();
-    }
-
-    /* (non-Javadoc)
-     * @see android.app.Activity#onDestroy()
-     */
-    @Override
-    public void onDestroy()
-    {
-        Log.d("DBG", "onDestroy");
-        super.onDestroy();
     }
     
     /*private void checkPath()
@@ -228,4 +166,5 @@ public class SpecifyActivity extends SpBaseActivity
         }
     }
 */
+
 }

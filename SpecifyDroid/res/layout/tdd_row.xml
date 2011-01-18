@@ -15,6 +15,7 @@
 			android:layout_weight="1"
 			android:gravity="center_vertical"
 			android:textStyle="bold"
+            android:textColor="#367CD9"
 			android:singleLine="true"
 			android:ellipsize="end"
 		/>

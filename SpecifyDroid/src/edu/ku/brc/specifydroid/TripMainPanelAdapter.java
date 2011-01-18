@@ -19,17 +19,6 @@
 */
 package edu.ku.brc.specifydroid;
 
-import java.io.InputStream;
-import java.util.Vector;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.NodeList;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -46,8 +35,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import edu.ku.brc.specifydroid.datamodel.Trip;
-import edu.ku.brc.specifydroid.datamodel.TripDataDef;
-import edu.ku.brc.specifydroid.datamodel.TripDataDef.TripDataDefType;
 
 /**
  * @author rods
@@ -63,19 +50,20 @@ public class TripMainPanelAdapter extends BaseAdapter
     { 
         R.drawable.mylocation, R.drawable.browsedb,
         R.drawable.camera,     R.drawable.exportdataset,
-        R.drawable.email,      R.drawable.googlemaps,
-        R.drawable.configstd,  R.drawable.config, 
-        R.drawable.delete,     
+        R.drawable.googlemaps,
+        R.drawable.config,     R.drawable.delete,     
     };
     
     private static final Integer[] titleIds = 
     {
         R.string.tmgmyloc, R.string.tmgbrowsedb,
         R.string.tmgcamera, R.string.tmgexportdataset,
-        R.string.tmgemail,  R.string.tmggooglemaps,
-        R.string.tmgconfig, R.string.tmgconfigstd,
-        R.string.tmgdeltrip,    
+        R.string.tmggooglemaps,
+        R.string.tmgconfig, R.string.tmgdeltrip,    
     };
+    
+    // R.drawable.email,      
+    // R.string.tmgemail,  
     
     // Data Members
     private TripMainActivity tripMainActivity;
@@ -83,7 +71,8 @@ public class TripMainPanelAdapter extends BaseAdapter
 
 
     /**
-     * @param activity
+     * @param activity the TripMainActivity
+     * @param tripId the id of the current trip
      */
     public TripMainPanelAdapter(final TripMainActivity activity,
                                 final String tripId)
@@ -115,7 +104,6 @@ public class TripMainPanelAdapter extends BaseAdapter
             //imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
             //imageView.setLayoutParams(new GridView.LayoutParams(48, 48));
 
-            
             titleView = new TextView(tripMainActivity);
             titleView.setText(titleIds[position]);
             titleView.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -129,10 +117,12 @@ public class TripMainPanelAdapter extends BaseAdapter
             imageView = (ImageView)llCell.getChildAt(0);
         }
         
-        if (position == 2 || position == 4)
+        final int id = titleIds[position];
+        if (id == R.string.tmgcamera)
         {
             imageView.setEnabled(false);
             titleView.setEnabled(false);
+            
         } else
         {
             try
@@ -143,16 +133,16 @@ public class TripMainPanelAdapter extends BaseAdapter
                     public void onClick(View view) 
                     {
                       //Log.d("onClick","position ["+position+"]");
-                      
-                      switch (position)
+                        
+                      switch (id)
                       {
-                          case 0: // My Location Lat/Lon
+                          case R.string.tmgmyloc: // My Location Lat/Lon
                           {
                               addLatLon();
                               break;
                           } 
                           
-                          case 1: // Browse
+                          case R.string.tmgbrowsedb: // Browse
                           {
                               Intent intent = new Intent(tripMainActivity, TripDataEntryDetailActivity.class);
                               intent.putExtra(TripListActivity.ID_EXTRA, tripId);
@@ -162,7 +152,7 @@ public class TripMainPanelAdapter extends BaseAdapter
                               break;
                           } 
          
-                          case 2: // Camera
+                          case R.string.tmgcamera: // Camera
                           {
                               //Intent intent = new Intent(tripMainActivity, TripListActivity.class);
                               //intent.putExtra(TripListActivity.TRIP_TYPE, TripListActivity.CONFIG_TRIP);
@@ -173,21 +163,23 @@ public class TripMainPanelAdapter extends BaseAdapter
                               break;
                           }
                           
-                          case 3: // Export as CSV
+                          case R.string.tmgexportdataset: // Export as CSV
                           {
                               TripSQLiteHelper dbHelper = new TripSQLiteHelper(tripMainActivity);
                               dbHelper.export(tripMainActivity, getDB(), tripId);
+                              closeDB();
                               break;
                           }
                           
-                          case 4: // Email exported file.
+                          case R.string.tmgemail: // Email exported file.
                           {
                               //TripSQLiteHelper dbHelper = new TripSQLiteHelper(tripMainActivity);
                               //dbHelper.export(tripMainActivity, getDB(), tripId);
+                              tripMainActivity.doEmailExport();
                               break;
                           }
                           
-                          case 5: // Maps
+                          case R.string.tmggooglemaps: // Maps
                           {
                               Intent intent = new Intent(tripMainActivity, TripMapLocationActivity.class);
                               intent.putExtra(TripListActivity.ID_EXTRA, tripId);
@@ -195,7 +187,7 @@ public class TripMainPanelAdapter extends BaseAdapter
                               break;
                           }
                           
-                          case 6: // Config
+                          case R.string.tmgconfig: // Config
                           {
                               Intent intent = new Intent(tripMainActivity, TripDetailActivity.class);
                               intent.putExtra(TripListActivity.ID_EXTRA, tripId);
@@ -203,11 +195,7 @@ public class TripMainPanelAdapter extends BaseAdapter
                               break;
                           }
                               
-                          case 7: // Config Std
-                              doStdConfig();
-                              break;
-                              
-                          case 8: // Delete Trip
+                          case R.string.tmgdeltrip: // Delete Trip
                               doDeleteTrip();
                               break;
                       }
@@ -231,6 +219,28 @@ public class TripMainPanelAdapter extends BaseAdapter
     /**
      * 
      */
+    @SuppressWarnings("unused")
+    private void doEmailExport()
+    {
+        try
+        {
+            Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+            emailIntent.setType("plain/text");
+            emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{ "rods@ku.edu"});
+            emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Your Export WB");
+            emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Your Export");
+    
+            tripMainActivity.startActivityForResult(Intent.createChooser(emailIntent, "Send mail..."), 0);
+            
+        } catch (Exception ex)
+        {
+            Log.e(getClass().getName(), "Mail failed.", ex);
+        }
+    }
+    
+    /**
+     * 
+     */
     private void addLatLon()
     {
         LocationManager locMgr = (LocationManager)tripMainActivity.getSystemService(Context.LOCATION_SERVICE);
@@ -245,80 +255,7 @@ public class TripMainPanelAdapter extends BaseAdapter
         tripMainActivity.startActivity(intent);
     }
     
-    /**
-     * 
-     */
-    private void doStdConfig()
-    {
-        final Vector<TripDataDef> tripDataDefs = new Vector<TripDataDef>();
-        if (!readStdFieldsXML(tripDataDefs))
-        {
-            return;
-        }
-        
-        final CharSequence[] items  = new CharSequence[tripDataDefs.size()];
-        final boolean[]      values = new boolean[tripDataDefs.size()];
-        
-        int i = 0;
-        for (TripDataDef tdd : tripDataDefs)
-        {
-            items[i]  = tdd.getTitle();
-            values[i] = true;
-            i++;
-        }
 
-        final AlertDialog.Builder builder = new AlertDialog.Builder(tripMainActivity)
-            .setPositiveButton(R.string.alert_dialog_ok, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    doStdPopulate(tripDataDefs, values);
-                }
-                })
-            .setNegativeButton(R.string.alert_dialog_cancel, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                }
-                });
-        builder.setTitle("Choose Fields");
-        builder.setMultiChoiceItems(items, values, new DialogInterface.OnMultiChoiceClickListener() {
-            @Override
-            public void onClick(DialogInterface dlg, int which, boolean isChecked)
-            {
-                values[which] = isChecked;
-            }
-        });
-        AlertDialog alert = builder.create();
-        alert.show();
-    }
-
-    /**
-     * 
-     */
-    private void doStdPopulate(final Vector<TripDataDef> tripDataDefs, final boolean[] selected)
-    {
-        String sql      = String.format("SELECT ColumnIndex FROM tripdatadef WHERE TripID = %s ORDER BY ColumnIndex DESC LIMIT 1", tripId);
-        int    colIndex = SQLUtils.getCount(getDB(), sql);
-        int    trpId    = Integer.parseInt(tripId);
-        
-        int i = 0;
-        for (TripDataDef tdd : tripDataDefs)
-        {
-            if (selected[i])
-            {
-                sql = String.format("SELECT COUNT(*) AS count FROM tripdatadef WHERE TripID = %s AND Name = '%s'", tripId, tdd.getName());
-                if (SQLUtils.getCount(getDB(), sql) < 1)
-                {
-                    colIndex++;
-                    
-                    tdd.setTripID(trpId);
-                    tdd.setColumnIndex(colIndex);
-                    
-                    long _id = tdd.insert(getDB());
-                    
-                    Log.d("POPULATE", "_id: ["+_id+"] trpId: " + tdd.getTripID() +"  colIndex["+tdd.getColumnIndex()+"] Name: "+ tdd.getName() + "  Type: "+tdd.getDataType());
-                }
-            }
-            i++;
-        }
-    }
     
     /**
      * 
@@ -341,9 +278,11 @@ public class TripMainPanelAdapter extends BaseAdapter
             public void onClick(DialogInterface dialog, int whichButton) {
             }
             });
-        builder.setTitle("Delete '"+tripName+"'?");
+        builder.setTitle(String.format(tripMainActivity.getString(R.string.deletetrip), tripName));
         AlertDialog alert = builder.create();
         alert.show();
+        
+        closeDB();
     }
     
     /* (non-Javadoc)
@@ -373,54 +312,24 @@ public class TripMainPanelAdapter extends BaseAdapter
         return 0;
     }
     
-    private boolean readStdFieldsXML(final Vector<TripDataDef> tripDataDefs)
-    {
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        try
-        {
-            DocumentBuilder docBldr = dbf.newDocumentBuilder();
-            InputStream     fis     = tripMainActivity.getAssets().open("stdfields.xml");
-            Document        doc     = docBldr.parse(fis);
-
-            Element topElement = doc.getDocumentElement();
-
-            NodeList tddElements = topElement.getElementsByTagName("field");
-
-            for (int elementIndex = 0; elementIndex < tddElements.getLength(); elementIndex++)
-            {
-                Element tddEle = (Element) tddElements.item(elementIndex);
-                TripDataDef tdd = new TripDataDef();
-
-                if (tddEle.hasAttributes())
-                {
-                    NamedNodeMap attributes = tddEle.getAttributes();
-                    String title = attributes.getNamedItem("title").getNodeValue();
-                    String name  = attributes.getNamedItem("name").getNodeValue();
-                    String type  = attributes.getNamedItem("type").getNodeValue();
-                    tdd.setTitle(title);
-                    tdd.setName(name);
-                    tdd.setDataType((short)TripDataDefType.valueOf(type).ordinal());
-                }
-                tripDataDefs.add(tdd);
-            }
-            
-            return true;
-            
-        } catch (Exception e)
-        {
-            Log.e("xml_perf", "DOM parser failed", e);
-        }
-        
-        return false;
-    }
-    
-    
     //------------------------------------------------------------------------
     //-- Database Access
     //------------------------------------------------------------------------
     private TripSQLiteHelper  tripDBHelper = null;
+    
+    protected void closeDB()
+    {
+        if (tripDBHelper != null)
+        {
+            Log.d(getClass().getName(), "close()");
+            tripDBHelper.close();
+            tripDBHelper = null;
+        }
+    }
+    
     private SQLiteDatabase getDB()
     {
+        Log.d(getClass().getName(), "getDB");
         if (tripDBHelper == null)
         {
             tripDBHelper = new TripSQLiteHelper(tripMainActivity.getApplicationContext());

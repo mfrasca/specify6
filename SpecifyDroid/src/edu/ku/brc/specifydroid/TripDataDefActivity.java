@@ -52,7 +52,7 @@ public class TripDataDefActivity extends SpBaseActivity
     {
         super.onCreate(savedInstanceState);
         
-        setContentView(R.layout.main);
+        setContentView(R.layout.trip_list_main);
         
         if (savedInstanceState != null)
         {
@@ -64,6 +64,8 @@ public class TripDataDefActivity extends SpBaseActivity
 
         list = (ListView) findViewById(R.id.trips); // use the same layout
         list.setOnItemClickListener(onListClick);
+        //list.getBackground().setDither(true);
+
         initList();
     }
 

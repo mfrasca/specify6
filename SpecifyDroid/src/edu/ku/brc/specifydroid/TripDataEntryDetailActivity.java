@@ -432,14 +432,10 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
      */
     protected void buildUI()
     {
-        //ProgressDialog prgDlg = new ProgressDialog(this);
-        //prgDlg.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        //prgDlg.setMessage("Loading...");
-        
-        ProgressDialog prgDlg = ProgressDialog.show(this, null, "Loading...", true);
+        ProgressDialog prgDlg = ProgressDialog.show(this, null, getString(R.string.loading), true);
         
         TableLayout tableLayout = (TableLayout)findViewById(R.id.uicontainer);
-        Cursor      cursor      = TripDataDef.getAll(getDB(), "tripdatadef", "WHERE TripId = " + tripId, "ORDER BY ColumnIndex ASC");
+        Cursor      cursor      = TripDataDef.getAll(getDB(), "tripdatadef", "WHERE TripId = " + tripId, " ColumnIndex ASC");
         if (cursor.moveToFirst())
         {
             int nmInx = cursor.getColumnIndex("Name");
@@ -459,7 +455,7 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
                 TextView label  = new TextView(this);
                 label.setText(cellTitle + ":");
                 label.setGravity(Gravity.RIGHT);
-
+                
                 EditText edtTxt = null;
                 View     view   = null;
                 switch (types[type])
@@ -490,6 +486,8 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
                         */
                         TextView txtView = new TextView(this);
                         view = txtView;
+                        txtView.setPadding(4, 6, 0, 6);
+                        //txtView.setHeight(defLabelHeight);
                         
                     } break;
                     
@@ -513,6 +511,7 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
                 {
                     edtTxt.addTextChangedListener(createTextWatcher(edtTxt));
                     edtTxt.setId(id);
+                    edtTxt.setSingleLine();
                 }
                
                 tblRow.addView(label, 0);
@@ -762,6 +761,7 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
         super.onDestroy();
         
         closeCursor();
+        closeDB();
     }
     
   //----------------------------------------------------------------
@@ -798,19 +798,25 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
         
         adapter2.setCursorToStringConverter(new HistoryCursorConverter());
         
-        adapter2.setFilterQueryProvider(new FilterQueryProvider()
+        if (SQLUtils.getCount(getDB(), "SELECT COUNT(*) FROM taxon") > 0)
         {
-            @Override
-            public Cursor runQuery(final CharSequence constraint)
+            adapter2.setFilterQueryProvider(new FilterQueryProvider()
             {
-                Log.d("debug", "Cnt: " + SQLUtils.getCount(getDB(), "SELECT COUNT(*) AS count FROM taxon"));
-                
-                String sql = "SELECT _id, Name FROM taxon WHERE Name LIKE '"+constraint+"%'";
-                Log.d("T", sql);
-                return getDB().rawQuery(sql, null);
-            }
-        });
-        autoCompTextField.setAdapter(adapter2);
+                @Override
+                public Cursor runQuery(final CharSequence constraint)
+                {
+                    //Log.d("debug", "Cnt: " + );
+                    if (constraint != null && constraint.length() > 0)
+                    {
+                        String sql = "SELECT _id, Name FROM taxon WHERE Name LIKE '"+constraint+"%'";
+                        Log.d("T", sql);
+                        return getDB().rawQuery(sql, null);
+                    }
+                    return null;
+                }
+            });
+            autoCompTextField.setAdapter(adapter2);
+        }
     }
 
     //--------------------------------------------------------------------

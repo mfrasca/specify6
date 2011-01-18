@@ -117,6 +117,9 @@ public class TripMapLocViewer extends MapLocationViewer
                     
                 } while (cursor.moveToNext());
                 
+                cursor.close();
+                tripDBHelper.close();
+                
                 String name = dataHash.get("LocalityName");
                 String desc = dataHash.get("GenusSpecies");
                 double lat  = Double.parseDouble(dataHash.get("Latitude"));
@@ -124,8 +127,6 @@ public class TripMapLocViewer extends MapLocationViewer
                 
                 MapLocation ml = new MapLocation(name, desc, lat, lon);
                 mapLocations.add(ml);
-                
-                cursor.close();
             }
             
         }

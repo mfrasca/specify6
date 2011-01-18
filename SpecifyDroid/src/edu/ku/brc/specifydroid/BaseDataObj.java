@@ -58,7 +58,7 @@ public abstract class BaseDataObj<T>
                                 final String  where,
                                 final String  orderBy)
     {
-        String sql = String.format("SELECT * FROM %s %s %s", tableName, where != null ? where : "", orderBy != null ? orderBy : "");
+        String sql = String.format("SELECT * FROM %s %s %s", tableName, where != null ? where : "", orderBy != null && orderBy.length() > 0 ? " ORDER BY " + orderBy : "");
         Log.d("Trip", sql);
         return db.rawQuery(sql, null);
     }

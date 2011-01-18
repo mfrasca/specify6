@@ -1,35 +1,58 @@
 package edu.ku.brc.specifydroid;
 
+import java.io.InputStream;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Vector;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.NodeList;
+
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
+import android.widget.ListAdapter;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import edu.ku.brc.specifydroid.datamodel.Trip;
 import edu.ku.brc.specifydroid.datamodel.TripDataDef;
+import edu.ku.brc.specifydroid.datamodel.TripDataDef.TripDataDefType;
 
 public class TripDetailActivity extends SpBaseActivity implements DatePickerDialog.OnDateSetListener
 {
     
+    public static final String   SPECIFYDROID_PREF = "SPECIFYDROID";
+    public static final String   DISP_KEY_PREF     = "DISP_TYPE_ID";
+ 
     public final static String ID_EXTRA = "edu.ku.brc.specifydroid._ID";
     
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -38,16 +61,11 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
     private String[]       txtEdtNames = {"name",       "notes"};
 
 
-    private ListView       tripDataDefList  = null;
     private TextView       dateLbl  = null;
     private RadioGroup     types    = null;
     private Trip           current  = null;
     private String         tripId   = null;
     private Calendar       tripDate = Calendar.getInstance();
-    
-    private ImageView      addBtn;
-    private ImageView      delBtn;
-    private Button         saveBtn;
     
     private boolean        hasChanged  = false;
     
@@ -84,25 +102,19 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
             editTexts.put(id, (EditText) findViewById(id));
         }
 
-        types           = (RadioGroup) findViewById(R.id.types);
-        dateLbl         = (TextView)findViewById(R.id.date);
-        tripDataDefList = (ListView)findViewById(R.id.tripdatadeflist);
-        
-        tripDataDefList.setOnItemClickListener(onListClick);
+        types   = (RadioGroup) findViewById(R.id.types);
+        dateLbl = (TextView)findViewById(R.id.date);
 
-        saveBtn = (Button) findViewById(R.id.save);
-        saveBtn.setOnClickListener(onSave);
-
-        if (tripId == null)
+        boolean isNew = tripId == null;
+        if (isNew)
         {
             current = new Trip();
             current.setTripDate(new java.sql.Date(Calendar.getInstance().getTime().getTime()));
+            current.setDiscipline(getDisciplineId());
         }
         
         load();
         
-        initTripDataDefList();
-
         if (savedInstanceState != null)
         {
             int i = 0;
@@ -128,17 +140,16 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
             public void onTextChanged(CharSequence s, int start, int before, int count)
             {
                 hasChanged = true;
-                updateUIState();
             }
         };
         
         editTexts.get(R.id.name).addTextChangedListener(textWatcher);
+        editTexts.get(R.id.name).setSingleLine();
         editTexts.get(R.id.notes).addTextChangedListener(textWatcher);
         
         View.OnClickListener rbListener = new View.OnClickListener() {
             public void onClick(View v) {
                 hasChanged = true;
-                updateUIState();
             }
         };
         
@@ -157,75 +168,24 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
             }
         });
         
-        addBtn = (ImageView) findViewById(R.id.addttd);
-        addBtn.setOnClickListener(new View.OnClickListener()
+        ImageView dispImgView = (ImageView)findViewById(R.id.trpdispicon);
+        dispImgView.setImageResource(current.getDiscipline());
+        
+        Button edtFieldsBtn = (Button)findViewById(R.id.editfieldsbtn);
+        edtFieldsBtn.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View v)
             {
-                doSave();
-                addTripDataDef();
+                Intent i = new Intent(TripDetailActivity.this, TripFieldsActivity.class);
+                i.putExtra(TripDetailActivity.ID_EXTRA, String.valueOf(tripId));
+                startActivity(i);
             }
         });
-        addBtn.setVisibility(tripId != null ? View.INVISIBLE : View.VISIBLE);
         
-        delBtn = (ImageView) findViewById(R.id.deltrip);
-        delBtn.setOnClickListener(new View.OnClickListener()
+        if (isNew)
         {
-            public void onClick(View v)
-            {
-                doDelTrip();
-            }
-        });
-        delBtn.setVisibility(View.GONE);
-        
-        updateUIState();
-    }
-
-    /**
-     * 
-     */
-    private void doDelTrip()
-    {
-        if (tripId == null)
-        {
-            finish(); // cancel
-            
-        } else
-        {
-            // delete
-        }
-    }
-    
-    /**
-     * 
-     */
-    private void addTripDataDef()
-    {
-        Intent intent = new Intent(this, TripDataDefDetailActivity.class);
-        intent.putExtra(ID_EXTRA, String.valueOf(tripId));
-        startActivity(intent);
-    }
-    
-    /**
-     * 
-     */
-    private void initTripDataDefList()
-    {
-        closeCursor();
-
-        String where = "WHERE TripId = " + tripId;
-        cursorModel = TripDataDef.getAll(getDB(), "tripdatadef", where, null);
-        
-        if (cursorModel != null)
-        {
-            startManagingCursor(cursorModel);
-    
-            tripDataDefList.setAdapter(new DataAdapterWithBinder(new TripDataDefDataViewBinder(),
-                                              this, 
-                                              R.layout.tdd_row, 
-                                              cursorModel, 
-                                              new String[] {"Name", "Title", "DataType"}, 
-                                              new int[] {R.id.tddrwname, R.id.tddrwtitle, R.id.tddrwdatatype}));
+            checkAndSave();
+            doChooseDiscipline();
         }
     }
     
@@ -236,12 +196,21 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
     protected Dialog onCreateDialog(int id) 
     {
         return new DatePickerDialog(this,
-                    this,
-                    tripDate.get(Calendar.YEAR), 
-                    tripDate.get(Calendar.MONTH), 
-                    tripDate.get(Calendar.DAY_OF_MONTH));
+                                    this,
+                                    tripDate.get(Calendar.YEAR), 
+                                    tripDate.get(Calendar.MONTH), 
+                                    tripDate.get(Calendar.DAY_OF_MONTH));
     }
-
+    
+    /* (non-Javadoc)
+     * @see android.app.Activity#onPause()
+     */
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+        checkAndSave();
+    }
 
     /* (non-Javadoc)
      * @see android.app.Activity#onStop()
@@ -250,9 +219,6 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
     protected void onStop()
     {
         super.onStop();
-        
-        closeCursor();
-        
         closeDB();
     }
 
@@ -307,26 +273,13 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
     /**
      * 
      */
-    private void updateUIState()
-    {
-        boolean enabled = editTexts.get(R.id.name).length() > 0;
-        if (addBtn != null)
-        {
-            addBtn.setEnabled(enabled);
-            saveBtn.setEnabled(enabled);
-        }
-        
-        saveBtn.setEnabled(hasChanged);
-    }
-
-    /**
-     * 
-     */
     private void load()
     {
         if (tripId != null)
         {   
-            current = Trip.getById(getDB(), tripId);
+            current      = Trip.getById(getDB(), tripId);
+            discpInx     = current.getType();
+            disciplineId = discpIcons[discpInx];
         }
 
         editTexts.get(R.id.name).setText(current.getName());
@@ -339,7 +292,7 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
         editTexts.get(R.id.firstName3).setText(current.getFirstName3());
         editTexts.get(R.id.lastName3).setText(current.getLastName3());*/
         
-        if (current.getType().equals("observing"))
+        if (current.getType() == SpecifyActivity.OBSERVATION)
         {
             types.check(R.id.observing);
         } else
@@ -375,9 +328,39 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
         dateLbl.setText(str, 0, str.length);
         
         hasChanged = true;
-        updateUIState();
     }
     
+    /**
+     * 
+     */
+    private void checkAndSave()
+    {
+        if (tripId == null || hasChanged)
+        {
+            doSave();
+        }
+    }
+    
+    /* (non-Javadoc)
+     * @see android.app.Activity#onDestroy()
+     */
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        checkAndSave();
+    }
+
+    /* (non-Javadoc)
+     * @see android.app.Activity#onBackPressed()
+     */
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        checkAndSave();
+    }
+
     /**
      * 
      */
@@ -407,18 +390,20 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
         switch (types.getCheckedRadioButtonId())
         {
             case R.id.collecting:
-                current.setType("collecting");
+                current.setType(SpecifyActivity.COLLECTING);
                 break;
 
             case R.id.observing:
-                current.setType("observing");
+                current.setType(SpecifyActivity.OBSERVATION);
                 break;
         }
-
+        
         if (tripId == null)
         {
+            current.setName("New Item");
             Long id = current.insert(getDB());
             tripId = id.toString();
+            doStdConfig(true); // true means do silently
             
         } else
         {
@@ -426,32 +411,297 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
         }
         
         hasChanged = false;
-        updateUIState();
+        
+        closeDB();
+    }
+    
+    /**
+     * @param doSilently
+     */
+    private void doStdConfig(final boolean doSilently)
+    {
+        final Vector<TripDataDef> tripDataDefs = new Vector<TripDataDef>();
+        if (!readStdFieldsXML(tripDataDefs))
+        {
+            if (!doSilently)
+            {
+                finish();
+            }
+            return;
+        }
+        
+        final CharSequence[] items  = new CharSequence[tripDataDefs.size()];
+        final boolean[]      values = new boolean[tripDataDefs.size()];
+        
+        int i = 0;
+        for (TripDataDef tdd : tripDataDefs)
+        {
+            items[i]  = tdd.getTitle();
+            values[i] = true;
+            i++;
+        }
+
+        if (!doSilently)
+        {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setPositiveButton(R.string.alert_dialog_ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) 
+                    {
+                        doStdPopulate(tripDataDefs, values);
+                        TripDetailActivity.this.finish();
+                        closeDB();
+                    }
+                    })
+                .setNegativeButton(R.string.alert_dialog_cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        TripDetailActivity.this.finish();
+                    }
+                    });
+            
+            builder.setTitle("Choose Fields");
+            builder.setMultiChoiceItems(items, values, new DialogInterface.OnMultiChoiceClickListener() {
+                @Override
+                public void onClick(DialogInterface dlg, int which, boolean isChecked)
+                {
+                    values[which] = isChecked;
+                }
+            });
+            AlertDialog alert = builder.create();
+            alert.show();
+            
+        } else
+        {
+            doStdPopulate(tripDataDefs, values);
+        }
     }
 
-    //----------------------------------------------------------------
-    private View.OnClickListener onSave = new View.OnClickListener()
+    /**
+     * @param tripDataDefs
+     * @param selected
+     */
+    private void doStdPopulate(final Vector<TripDataDef> tripDataDefs, final boolean[] selected)
     {
-        public void onClick(View v)
+        String sql      = String.format("SELECT ColumnIndex FROM tripdatadef WHERE TripID = %s ORDER BY ColumnIndex DESC LIMIT 1", tripId);
+        int    colIndex = SQLUtils.getCount(getDB(), sql);
+        int    trpId    = Integer.parseInt(tripId);
+        
+        int i = 0;
+        for (TripDataDef tdd : tripDataDefs)
         {
-            doSave();
-
-            finish();
+            if (selected[i])
+            {
+                sql = String.format("SELECT COUNT(*) AS count FROM tripdatadef WHERE TripID = %s AND Name = '%s'", tripId, tdd.getName());
+                if (SQLUtils.getCount(getDB(), sql) < 1)
+                {
+                    colIndex++;
+                    
+                    tdd.setTripID(trpId);
+                    tdd.setColumnIndex(colIndex);
+                    
+                    long _id = tdd.insert(getDB());
+                    
+                    Log.d("POPULATE", "_id: ["+_id+"] trpId: " + tdd.getTripID() +"  colIndex["+tdd.getColumnIndex()+"] Name: "+ tdd.getName() + "  Type: "+tdd.getDataType());
+                }
+            }
+            i++;
         }
-    };
+    }
     
-  //------------------------------------------------------------------------------
-    private AdapterView.OnItemClickListener onListClick  = new AdapterView.OnItemClickListener()
+    /**
+     * @param tripDataDefs
+     * @return
+     */
+    private boolean readStdFieldsXML(final Vector<TripDataDef> tripDataDefs)
     {
-        public void onItemClick(final AdapterView<?> parent,
-                                final View           view,
-                                final int            position,
-                                final long           id)
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        try
         {
-            Intent i = new Intent(TripDetailActivity.this, TripDataDefDetailActivity.class);
-            i.putExtra(TripDataDefActivity.ID_EXTRA, String.valueOf(id));
-            i.putExtra(TripListActivity.ID_EXTRA, String.valueOf(tripId));
-            startActivity(i);
+            DocumentBuilder docBldr = dbf.newDocumentBuilder();
+            InputStream     fis     = getAssets().open("stdfields.xml");
+            Document        doc     = docBldr.parse(fis);
+
+            Element topElement = doc.getDocumentElement();
+
+            NodeList tddElements = topElement.getElementsByTagName("field");
+
+            for (int elementIndex = 0; elementIndex < tddElements.getLength(); elementIndex++)
+            {
+                Element tddEle = (Element) tddElements.item(elementIndex);
+                TripDataDef tdd = new TripDataDef();
+
+                if (tddEle.hasAttributes())
+                {
+                    NamedNodeMap attributes = tddEle.getAttributes();
+                    String title = attributes.getNamedItem("title").getNodeValue();
+                    String name  = attributes.getNamedItem("name").getNodeValue();
+                    String type  = attributes.getNamedItem("type").getNodeValue();
+                    tdd.setTitle(title);
+                    tdd.setName(name);
+                    tdd.setDataType((short)TripDataDefType.valueOf(type).ordinal());
+                }
+                tripDataDefs.add(tdd);
+            }
+            
+            return true;
+            
+        } catch (Exception e)
+        {
+            Log.e("xml_perf", "DOM parser failed", e);
         }
-    };
+        
+        return false;
+    }
+
+    //------------------------------------------------------------------------------
+    //-- Choosing Discipline Code
+    //------------------------------------------------------------------------------
+    private Integer disciplineId = null;
+    private Integer discpInx     = null;
+    
+    private void doChooseDiscipline()
+    {
+        // Need handler for callbacks to the UI thread
+        final Handler mHandler = new Handler();
+
+        // Create runnable for posting
+        final Runnable mUpdateResults = new Runnable() {
+            public void run() 
+            {
+                chooseDiscipline();
+            }
+        };
+        
+        Thread t = new Thread() {
+            public void run() {
+                mHandler.post(mUpdateResults);
+            }
+        };
+        t.start();
+    }
+   
+    /**
+     * 
+     */
+    protected void chooseDiscipline()
+    {
+        ListAdapter adapter = new ArrayAdapter<Integer>(getApplicationContext(), R.layout.icon_title_row, discpIcons) 
+        {
+            ViewHolder holder;
+            
+            class ViewHolder 
+            {
+                ImageView icon;
+                TextView title;
+            }
+
+            /* (non-Javadoc)
+             * @see android.widget.ArrayAdapter#getView(int, android.view.View, android.view.ViewGroup)
+             */
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                final LayoutInflater inflater = (LayoutInflater) getApplicationContext()
+                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+                if (convertView == null) 
+                {
+                    convertView = inflater.inflate(R.layout.icon_title_row, null);
+
+                    holder       = new ViewHolder();
+                    holder.icon  = (ImageView) convertView.findViewById(R.id.icon);
+                    holder.title = (TextView) convertView.findViewById(R.id.title);
+                    convertView.setTag(holder);
+                    
+                } else 
+                {
+                    holder = (ViewHolder) convertView.getTag();
+                }       
+
+                Drawable tile = getResources().getDrawable(discpIcons[position]); //this is an image from the drawables discipline
+                
+                holder.title.setText(dispNames[position]);
+                holder.icon.setImageDrawable(tile);
+
+                return convertView;
+            }
+        };
+        
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.choosedisp);
+        builder.setAdapter(adapter,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int index)
+                    {
+                        SharedPreferences settings = getSharedPreferences(SPECIFYDROID_PREF, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = settings.edit();
+                        editor.putInt(DISP_KEY_PREF, index);
+                        editor.commit();
+                        dialog.dismiss();
+                        
+                        discpInx     = index;
+                        disciplineId = discpIcons[index];
+                        ImageView dispImgView = (ImageView)TripDetailActivity.this.findViewById(R.id.trpdispicon);
+                        TripDetailActivity.this.current.setDiscipline(index);
+                        dispImgView.setImageResource(disciplineId);
+                        
+                        Log.i(SpecifyActivity.class.getSimpleName(), "Disp:"+index);
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    /**
+     * @return the disciplineId
+     */
+    public int getDisciplineId()
+    {
+        if (disciplineId == null)
+        {
+            SharedPreferences settings = getSharedPreferences(SPECIFYDROID_PREF, MODE_PRIVATE);
+            discpInx     = settings.getInt(DISP_KEY_PREF, 0);
+            disciplineId = discpIcons[discpInx];
+            
+            Log.i(SpecifyActivity.class.getSimpleName(), "*Disp:"+discpInx+"  "+disciplineId);
+        }
+        return disciplineId;
+    }
+
+    /**
+     * @return the discpicons
+     */
+    public static Integer[] getDiscpIcons()
+    {
+        return discpIcons;
+    }
+
+    static final Integer[] discpIcons = {R.drawable.bird, R.drawable.bug,
+            R.drawable.fish, R.drawable.flower,
+            R.drawable.frog, R.drawable.lizard,
+            R.drawable.lower_plant,
+            R.drawable.mammal,
+            R.drawable.paleo_bot,
+            R.drawable.paleo_invert,
+            R.drawable.paleo_vert,
+            R.drawable.seahorse,
+            R.drawable.snake,
+            R.drawable.spider,
+            R.drawable.starfish,};
+
+    static final int[] dispNames = {R.string.bird, 
+                 R.string.insect, 
+                 R.string.fish, 
+                 R.string.botany,
+                 R.string.herpetology, 
+                 R.string.herpetology,
+                 R.string.botany,
+                 R.string.mammal,
+                 R.string.paleobotany,
+                 R.string.invertpaleo,
+                 R.string.vertpaleo,
+                 R.string.fish,
+                 R.string.herpetology,
+                 R.string.insect,
+                 R.string.invertebrate};
+
 }
