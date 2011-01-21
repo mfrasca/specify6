@@ -203,20 +203,6 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
         buildUI();
     }
     
-
-    /* (non-Javadoc)
-     * @see android.app.Activity#onStop()
-     */
-    @Override
-    protected void onStop()
-    {
-        super.onStop();
-        
-        closeCursor();
-        
-        closeDB();
-    }
-
     /* (non-Javadoc)
      * @see android.app.Activity#onSaveInstanceState(android.os.Bundle)
      */
@@ -364,7 +350,7 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
             
         } else
         {
-            int idInx = cursorModel.getColumnIndex("_id");
+            //int idInx = cursorModel.getColumnIndex("_id");
             for (View view : changedHash.keySet())
             {
                 Boolean changed = changedHash.get(view);
@@ -376,7 +362,7 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
                     tripDataCell.setTripID(trpId);
                     tripDataCell.setTripRowIndex(rowIndex);
                     
-                    Log.d("DBG", "Update Row: ID["+cursorModel.getString(idInx)+"] tripDataDefID["+tripDataCell.getTripDataDefID()+"] rowIndex["+tripDataCell.getTripRowIndex()+"] data["+tripDataCell.getData()+"] TripID["+tripDataCell.getTripID()+"]");
+                    //Log.d("DBG", "Update Row: ID["+cursorModel.getString(idInx)+"] tripDataDefID["+tripDataCell.getTripDataDefID()+"] rowIndex["+tripDataCell.getTripRowIndex()+"] data["+tripDataCell.getData()+"] TripID["+tripDataCell.getTripID()+"]");
                     
                     Integer recNo = recNumHash.get(view);
                     tripDataCell.update(recNo.toString(), getDB());          
@@ -751,20 +737,8 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
 
         isActive.set(true);
     }
-
-    /* (non-Javadoc)
-     * @see android.app.Activity#onDestroy()
-     */
-    @Override
-    public void onDestroy()
-    {
-        super.onDestroy();
-        
-        closeCursor();
-        closeDB();
-    }
     
-  //----------------------------------------------------------------
+    //----------------------------------------------------------------
     private View.OnClickListener onSave = new View.OnClickListener()
     {
         @Override
@@ -774,7 +748,7 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
         }
     };
     
-  //----------------------------------------------------------------
+    //----------------------------------------------------------------
     private View.OnClickListener onAdd = new View.OnClickListener()
     {
         @Override

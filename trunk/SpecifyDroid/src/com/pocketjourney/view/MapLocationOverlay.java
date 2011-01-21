@@ -107,7 +107,7 @@ public class MapLocationOverlay  extends Overlay {
     	return hitMapLocation; 
     }
     
-    private void drawMapLocations(Canvas canvas, MapView	mapView, boolean shadow) {
+    private void drawMapLocations(Canvas canvas, MapView mapView, boolean shadow) {
     	
 		Iterator<MapLocation> iterator = mapLocationViewer.getMapLocations().iterator();
 		Point screenCoords = new Point();
@@ -144,10 +144,11 @@ public class MapLocationOverlay  extends Overlay {
                 
                 float nameLen   = txtPaint.measureText(name);
                 
-    		    float strLen = hasDesc ? Math.max(nameLen, txtPaint.measureText(desc)) : nameLen;
-    		    int   ascent = (int)Math.abs(fm.ascent);
+    		    float strLen  = hasDesc ? Math.max(nameLen, txtPaint.measureText(desc)) : nameLen;
+                int   ascent  = (int)Math.abs(fm.ascent);
+                int   descent = (int)Math.abs(fm.descent);
     		    
-    		    int     lineHeight = (int)(ascent);
+    		    int     lineHeight = ascent + descent;
     		    int     lineSep    = (int)(Math.max(fm.leading, 2.0f) * 2.0);
     		    
 				//  First determine the screen coordinates of the selected MapLocation
@@ -210,6 +211,7 @@ public class MapLocationOverlay  extends Overlay {
 			textPaint = new Paint();
 			textPaint.setARGB(255, 255, 255, 255);
 			textPaint.setAntiAlias(true);
+			textPaint.setTextSize(20);
 		}
 		return textPaint;
 	}

@@ -34,11 +34,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnCreateContextMenuListener;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import edu.ku.brc.specifydroid.datamodel.Trip;
 /**
  * @author rods
@@ -63,6 +64,8 @@ public class TripListActivity extends SpBaseActivity
     private AtomicBoolean              isActive    = new AtomicBoolean(true);
     private SharedPreferences          prefs       = null;
     private ListView                   list        = null;
+    private TextView                   emptyTV     = null;
+    private LinearLayout               emptyLL     = null;
     
     private Integer                    tripType      = CONFIG_TRIP; // Default Trip type
     private Class<?>                   detailedClass = TripMainActivity.class;
@@ -113,6 +116,8 @@ public class TripListActivity extends SpBaseActivity
         
         //getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.window_title);
 
+        emptyTV  = (TextView) findViewById(R.id.listemptyid_tv);
+        emptyLL  = (LinearLayout) findViewById(R.id.listemptyid_ll);
         
         list  = (ListView) findViewById(R.id.trips);
         //list.getBackground().setDither(true);
@@ -182,12 +187,35 @@ public class TripListActivity extends SpBaseActivity
         }
         return tripName;
     }
-
     
     /**
-     * @param v
-     * @param pos
-     * @param id
+     * @param index
+     */
+    protected void notifyOfEmptyList()
+    {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this).setPositiveButton(
+                R.string.alert_dialog_ok, new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int whichButton)
+                    {
+                        startActivity(new Intent(TripListActivity.this, TripDetailActivity.class));
+                    }
+                }).setNegativeButton(R.string.alert_dialog_cancel,
+                new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int whichButton)
+                    {
+                        
+                    }
+                });
+
+        builder.setTitle(String.format(getString(R.string.emptytriplist)));
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+    
+    /**
+     * @param index
      */
     protected void askForDeleteTrip(final int index)
     {
@@ -333,6 +361,7 @@ public class TripListActivity extends SpBaseActivity
         {
             public void run() 
             {
+                 boolean isEmpty = false;
                  try
                  {
                      String where = null;
@@ -341,27 +370,37 @@ public class TripListActivity extends SpBaseActivity
                          where = String.format("WHERE Type = %d", 
                                  tripType == TripListActivity.OBS_TRIP ? SpecifyActivity.OBSERVATION : SpecifyActivity.COLLECTING);
                      }
-
-                     cursorModel = Trip.getAll(getDB(), "trip", where, prefs.getString("sort_order", ""));
                      
-                     runOnUiThread(new Runnable()
+                     int cnt = SQLUtils.getCount(getDB(), "SELECT COUNT(*) as count FROM trip " + (where != null ? where : ""));
+                     if (cnt < 1)
                      {
-                         public void run()
+                         isEmpty = true;
+                         isLoading.set(false);
+                         
+                     } else
+                     {
+                         
+                         cursorModel = Trip.getAll(getDB(), "trip", where, prefs.getString("sort_order", ""));
+                         
+                         runOnUiThread(new Runnable()
                          {
-                             if (cursorModel != null)
+                             public void run()
                              {
-                                 startManagingCursor(cursorModel);
-    
-                                 list.setAdapter(new DataAdapterWithBinder(new TripDataViewBinder(),
-                                                                           TripListActivity.this, 
-                                                                           R.layout.row, 
-                                                                           cursorModel, 
-                                                                           new String[] {"Name", "TripDate", "Type"}, 
-                                                                           new int[] {R.id.name, R.id.date, R.id.icon}));
-                                 isLoading.set(false);
+                                 if (cursorModel != null)
+                                 {
+                                     startManagingCursor(cursorModel);
+        
+                                     list.setAdapter(new DataAdapterWithBinder(new TripDataViewBinder(),
+                                                                               TripListActivity.this, 
+                                                                               R.layout.row, 
+                                                                               cursorModel, 
+                                                                               new String[] {"Name", "TripDate", "Type"}, 
+                                                                               new int[] {R.id.name, R.id.date, R.id.icon}));
+                                     isLoading.set(false);
+                                 }
                              }
-                         }
-                     });
+                         });
+                     }
                      
                  } catch (Exception e) 
                  { 
@@ -369,20 +408,32 @@ public class TripListActivity extends SpBaseActivity
                  }
                  // Dismiss the Dialog
                  prgDlg.dismiss();
+                 
+                 final boolean isEmty = isEmpty;
+                 runOnUiThread(new Runnable()
+                 {
+                     public void run()
+                     {
+                         if (isEmty)
+                         {
+                             //notifyOfEmptyList();
+                             emptyTV.setText("Click on the menu to add a new trip");
+                             emptyLL.setVisibility(View.VISIBLE);
+                             list.setVisibility(View.GONE);
+                         } else
+                         {
+                             emptyLL.setVisibility(View.GONE);
+                             list.setVisibility(View.VISIBLE);
+                         }
+                         LinearLayout mainLL  = (LinearLayout)TripListActivity.this.findViewById(R.id.mainlist_ll);
+                         mainLL.requestLayout();
+                         mainLL.invalidate();
+                     }
+                 });
+
+                 
             }
        }.start(); 
-    }
-
-    /* (non-Javadoc)
-     * @see android.app.Activity#onStop()
-     */
-    @Override
-    protected void onStop()
-    {
-        super.onStop();
-        
-        closeCursor();
-        closeDB();
     }
     
     /**

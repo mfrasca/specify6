@@ -211,7 +211,6 @@ public class TripDataDefDetailActivity extends SpBaseActivity implements Adapter
         
         short inx = current.getDataType();
         dataTypeSP.setSelection(inx);
-        closeDB();
     }
     
     //----------------------------------------------------------------

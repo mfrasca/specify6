@@ -1,4 +1,5 @@
 package edu.ku.brc.specifydroid;
+import edu.ku.brc.utils.ErrorDlgHelper;
 import android.app.Activity;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -43,6 +44,19 @@ public class SpBaseActivity extends Activity
         super();
     }
     
+    /* (non-Javadoc)
+     * @see android.app.Activity#onDestroy()
+     */
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        
+        closeCursor();
+        closeDB();
+    }
+    
+    
     /**
      * Gets a resource string by name.
      * @param strResName the name of the string
@@ -50,9 +64,7 @@ public class SpBaseActivity extends Activity
      */
     protected String getStringResourceByName(String strResName)
     {
-      String packageName = "edu.ku.brc.specifydroid";
-      int resId = getResources().getIdentifier(strResName, "string", packageName);
-      return resId == 0 ? strResName : getString(resId);
+        return ErrorDlgHelper.getStringResourceByName(this, strResName);
     }
     
     //------------------------------------------------------------------------
@@ -60,7 +72,7 @@ public class SpBaseActivity extends Activity
     //------------------------------------------------------------------------
 
     /**
-     * 
+     * Closes the cursor if it is open.
      */
     protected void closeCursor()
     {
@@ -75,7 +87,7 @@ public class SpBaseActivity extends Activity
     }
     
     /**
-     * @return
+     * @return opens the database and returns the database object.
      */
     protected SQLiteDatabase getDB()
     {
@@ -89,7 +101,7 @@ public class SpBaseActivity extends Activity
     }
     
     /**
-     * 
+     * Closes the database.
      */
     protected void closeDB()
     {
@@ -100,7 +112,6 @@ public class SpBaseActivity extends Activity
             tripDBHelper.close();
             tripDBHelper = null;
         }
-        
     }
 
 }

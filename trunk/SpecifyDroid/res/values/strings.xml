@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    
-    <string name="app_name">Specify</string>
-    <string name="save">Save</string>
+
+    <!-- Generic Terms -->
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="close">Close</string>
+    <string name="loading">Loading...</string>
+    <string name="exporting">Exporting...</string>
     
     <string name="alert_dialog_ok">OK</string>
     <string name="alert_dialog_cancel">Cancel</string>
+
+    <!--  Application -->
+    
+    <string name="app_name">Specify</string>
+    <string name="save">Save</string>
 
     <!--  App Main Grid -->
     <string name="satellites">Satellites</string>
@@ -40,14 +51,24 @@
     <string name="tmgemail">EMail</string>
     <string name="tmggooglemaps">Map</string>
     
-    <string name="edit">Edit</string>
-    <string name="delete">Delete</string>
     <string name="deletetrip">Delete \'%s\'?</string>
     <string name="changedisp">Change</string>
     <string name="trpfieldslbl">Fields</string>
-    <string name="close">Close</string>
-    <string name="loading">Loading...</string>
     <string name="editfieldsbtn">Configure Fields</string>
+    
+    <string name="emptytriplist">Click the menu button to create a new Trip</string>
+    
+    <!-- Exporting -->
+    <string name="extstrgnotavail">External Storage is not available.</string>
+    <string name="extstrgnotwrt">External Storage is not writable.</string>
+    <string name="no_wrt_file">Cannot write to file %s.</string>
+    <string name="err_load_trp">Cannot load Trip with Id: %s</string>
+    <string name="file_wrt">%s was saved.</string>
+    <string name="file_exp">File: %s</string>
+
+    <!-- GPS -->
+    <string name="no_gps">Your GPS seems to be disabled, do you want to enable it?</string>
+    <string name="srch_gps">Searching for satellites...</string>
     
     <!-- Disciplines -->
     <string name="choosedisp">Choose a Discipline</string>
@@ -61,7 +82,7 @@
     <string name="insect">Entomology</string>
     <string name="botany">Botany</string>
     <string name="invertebrate">Invertebrate Zoology</string>
-
+    
     <!-- Taxonomy -->
     <string name="Kingdom">Kingdom</string>
     <string name="Subkingdom">Subkingdom</string>

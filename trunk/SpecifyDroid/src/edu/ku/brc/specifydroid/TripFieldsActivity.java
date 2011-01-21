@@ -51,7 +51,7 @@ public class TripFieldsActivity extends SpBaseActivity
     
     private ImageView      addBtn;
     private Button         closeBtn;
-    private boolean        hasChanged      = false;
+    //private boolean        hasChanged      = false;
     
     /**
      * 
@@ -214,19 +214,6 @@ public class TripFieldsActivity extends SpBaseActivity
         Intent intent = new Intent(this, TripDataDefDetailActivity.class);
         intent.putExtra(ID_EXTRA, String.valueOf(tripId));
         startActivity(intent);
-    }
-
-    /* (non-Javadoc)
-     * @see android.app.Activity#onStop()
-     */
-    @Override
-    protected void onStop()
-    {
-        super.onStop();
-        
-        closeCursor();
-        
-        closeDB();
     }
     
     /**

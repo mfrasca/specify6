@@ -10,8 +10,10 @@
               android:layout_height="wrap_content" 
               android:layout_width="fill_parent"
               android:textStyle="bold"
+              android:background="@drawable/trip_banner"
+              android:padding="4px"
               />
-    <View android:layout_width="fill_parent" android:layout_height="2dip" android:background="#FF444444"/>
+    <!-- <View android:layout_width="fill_parent" android:layout_height="2dip" android:background="#FF444444"/>  -->
 	<GridView xmlns:android="http://schemas.android.com/apk/res/android" 
 	    android:id="@+id/tripgridview"
 	    android:layout_width="fill_parent" 
