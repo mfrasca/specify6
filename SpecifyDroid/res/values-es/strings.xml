@@ -47,16 +47,14 @@
   <string name="trpfieldslbl">Campos</string>  
   <string name="editfieldsbtn">Configurar los campos</string>  
   <string name="emptytriplist">Haga clic en el botón de menú para crear un nuevo viaje</string>  
-    
-    <!-- Exporting -->
-    <string name="extstrgnotavail">External Storage is not available.</string>
-    <string name="extstrgnotwrt">External Storage is not writable.</string>
-    <string name="no_wrt_file">Cannot write to file %s.</string>
-    <string name="err_load_trp">Cannot load Trip with Id: %s</string>
-    <string name="file_wrt">%s was saved.</string>
-    <string name="file_exp">File: %s</string>
-    
-      <!-- GPS -->  
+  <!-- Exporting -->  
+  <string name="extstrgnotavail">Almacenamiento externo no disponible esta.</string>  
+  <string name="extstrgnotwrt">Almacenamiento externo no SE PUEDE Escribir.</string>  
+  <string name="no_wrt_file">No SE PUEDE Escribir En El Archivo %s.</string>  
+  <string name="err_load_trp">No SE PUEDE Cargar de Viaje Con Id: %s</string>  
+  <string name="file_wrt">%s sí Salvo.</string>  
+  <string name="file_exp">Archivo: %s</string>  
+  <!-- GPS -->  
   <string name="no_gps">El receptor GPS parece estar desactivado, ¿quieres que pueda?</string>  
   <string name="srch_gps">La búsqueda de satélites ...</string>  
   <!-- Disciplines -->  

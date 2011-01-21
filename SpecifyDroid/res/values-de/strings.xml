@@ -47,15 +47,14 @@
   <string name="trpfieldslbl">Fields</string>  
   <string name="editfieldsbtn">Konfigurieren Fields</string>  
   <string name="emptytriplist">Klicken Sie auf die Menütaste, um eine neue Reise erstellen</string>  
-    
-    <!-- Exporting -->
-    <string name="extstrgnotavail">External Storage is not available.</string>
-    <string name="extstrgnotwrt">External Storage is not writable.</string>
-    <string name="no_wrt_file">Cannot write to file %s.</string>
-    <string name="err_load_trp">Cannot load Trip with Id: %s</string>
-    <string name="file_wrt">%s was saved.</string>
-    <string name="file_exp">File: %s</string>
-      <!-- GPS -->  
+  <!-- Exporting -->  
+  <string name="extstrgnotavail">Externer Speicher ist Nicht available.</string>  
+  <string name="extstrgnotwrt">Externer Speicher ist Nicht beschreibbar.</string>  
+  <string name="no_wrt_file">Kann Nicht schreiben bis %s-Datei.</string>  
+  <string name="err_load_trp">Kann Nicht Geladen Werden Trip mit Id: %s</string>  
+  <string name="file_wrt">%s Krieg gerettet.</string>  
+  <string name="file_exp">File: %s</string>  
+  <!-- GPS -->  
   <string name="no_gps">Ihr GPS scheint deaktiviert zu sein, wollen Sie es aktivieren?</string>  
   <string name="srch_gps">Auf der Suche nach Satelliten ...</string>  
   <!-- Disciplines -->  
