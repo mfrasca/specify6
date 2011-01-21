@@ -101,18 +101,6 @@ public class TripDataDefActivity extends SpBaseActivity
         isActive.set(true);
     }
 
-    /* (non-Javadoc)
-     * @see android.app.Activity#onDestroy()
-     */
-    @Override
-    public void onStop()
-    {
-        super.onStop();
-        
-        closeCursor();
-        closeDB();
-    }
-
     /**
      * 
      */

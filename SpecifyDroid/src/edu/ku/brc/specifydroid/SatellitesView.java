@@ -105,7 +105,7 @@ public class SatellitesView extends View
             iconHeight = bitmaps[i].getHeight();
         }
         
-        this.textPaint.setARGB(128, 255, 255, 255);
+        this.textPaint.setARGB(128, 0, 0, 0);
         this.textPaint.setAntiAlias(true);
         this.textPaint.setTextSize(20);
         this.textPaint.setFakeBoldText(true); 
@@ -113,9 +113,9 @@ public class SatellitesView extends View
         this.iconPaint.setARGB(80, 255, 255, 255);
         this.iconPaint.setStyle(Style.FILL); 
 
-        this.whitePaint.setARGB(255, 255, 255, 255);
+        this.whitePaint.setARGB(255, 0, 0, 0);
         this.whitePaint.setAntiAlias(true);
-        this.whitePaint.setTextSize(12);
+        this.whitePaint.setTextSize(16);
         this.whitePaint.setFakeBoldText(true); 
         this.whitePaint.setStyle(Style.STROKE);
 
@@ -132,7 +132,6 @@ public class SatellitesView extends View
         this.barOutlinePaint.setARGB(128, 255, 255, 255);
         this.barOutlinePaint.setAntiAlias(true);
         this.barOutlinePaint.setStyle(Style.STROKE); 
-
         
         this.textHeight = this.textPaint.getFontMetrics().ascent + this.textPaint.getFontMetrics().descent;
     }
@@ -171,42 +170,50 @@ public class SatellitesView extends View
         }
         this.textHeight = Math.abs(this.textPaint.getFontMetrics().ascent) + this.textPaint.getFontMetrics().descent;
         
-        calcXGap();
-        
-        float x = xGap;
-        float y = leading / 2;
-        int   r = 0;
-        for (int i=0;i<satList.size();i++)
+        if (satList.size() > 0)
         {
-            SatelliteInfo si        = satList.get(i);
-            String        text      = Integer.toString(si.getSatellite().getPrn());
-            float         textWidth = textPaint.measureText(text);
+            calcXGap();
             
-            float signalNoiseRatio  = Math.min(si.getSatellite().getSnr(), 50.0f) / 50.0f;
-            float barHeight         = signalNoiseRatio * iconHeight;
-            canvas.drawRect(x, y, x+barWidth, y + iconHeight, barOutlinePaint);
-            
-            canvas.save();
-            canvas.clipRect(x, y + (iconHeight - barHeight), x+barWidth, y + iconHeight);
-            canvas.drawRect(x, y, x+barWidth, y + iconHeight, barPaint);
-            canvas.restore();
-            
-            x += barWidth + barGap;
-            canvas.drawBitmap(bitmaps[0], x, y, null);
-            
-            canvas.drawText(text, x + ((iconWidth - textWidth) / 2), y + iconHeight + yGap + this.textHeight, textPaint);
-            
-            r++;
-            if (r >= cols)
+            float x = xGap;
+            float y = leading / 2;
+            int   r = 0;
+            for (int i=0;i<satList.size();i++)
             {
-                r = 0;
-                x = xGap;
-                y += iconHeight + yGap + leading + this.textHeight;
+                SatelliteInfo si        = satList.get(i);
+                String        text      = Integer.toString(si.getSatellite().getPrn());
+                float         textWidth = textPaint.measureText(text);
                 
-            } else
-            {
-                x += iconWidth + xGap;
+                float signalNoiseRatio  = Math.min(si.getSatellite().getSnr(), 50.0f) / 50.0f;
+                float barHeight         = signalNoiseRatio * iconHeight;
+                canvas.drawRect(x, y, x+barWidth, y + iconHeight, barOutlinePaint);
+                
+                canvas.save();
+                canvas.clipRect(x, y + (iconHeight - barHeight), x+barWidth, y + iconHeight);
+                canvas.drawRect(x, y, x+barWidth, y + iconHeight, barPaint);
+                canvas.restore();
+                
+                x += barWidth + barGap;
+                canvas.drawBitmap(bitmaps[0], x, y, null);
+                
+                canvas.drawText(text, x + ((iconWidth - textWidth) / 2), y + iconHeight + yGap + this.textHeight, textPaint);
+                
+                r++;
+                if (r >= cols)
+                {
+                    r = 0;
+                    x = xGap;
+                    y += iconHeight + yGap + leading + this.textHeight;
+                    
+                } else
+                {
+                    x += iconWidth + xGap;
+                }
             }
+        } else
+        {
+            String text      = getContext().getString(R.string.srch_gps);
+            float  textWidth = textPaint.measureText(text);
+            canvas.drawText(text, (getWidth() - textWidth) / 2, (getHeight() - this.textHeight) / 2, textPaint);
         }
     }
     

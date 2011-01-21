@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -16,6 +18,8 @@ import android.location.LocationManager;
 import android.location.GpsStatus.Listener;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -89,6 +93,72 @@ public class SatelliteActivity extends Activity
             }
         };
         locMgr.addGpsStatusListener(onGpsStatusChange);
+        
+        checkForGPS(this);
+    }
+    
+    /**
+     * @param activity
+     */
+    public static boolean checkForGPS(final Activity activity)
+    {
+        final LocationManager manager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
+
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER))
+        {
+            buildAlertMessageNoGps(activity);
+            return false;
+        }
+        return true;
+    }
+    
+    /**
+     * @param activity
+     */
+    private static void buildAlertMessageNoGps(final Activity activity)
+    {
+        String yes = activity.getString(R.string.yes);
+        String no  = activity.getString(R.string.no);
+        
+        final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setMessage(R.string.no_gps)
+                .setCancelable(false).setPositiveButton(yes,
+                        new DialogInterface.OnClickListener()
+                        {
+                            public void onClick(@SuppressWarnings("unused") final DialogInterface dialog,
+                                                @SuppressWarnings("unused") final int id)
+                            {
+                                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                activity.startActivityForResult(intent, 101);
+                            }
+                        }).setNegativeButton(no, new DialogInterface.OnClickListener()
+                {
+                    public void onClick(final DialogInterface dialog,
+                                        @SuppressWarnings("unused") final int id)
+                    {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
+    
+    /* (non-Javadoc)
+     * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        Log.d("XXX", "About to send email");
+        
+        super.onActivityResult(requestCode, resultCode, data);
+        
+        Log.d("XXX", "CODE: "+requestCode);
+        
+        if (requestCode == 0)
+        {
+            Log.d("XXX", "CODE: "+requestCode);
+        }
     }
 
     /**

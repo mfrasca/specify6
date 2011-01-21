@@ -10,9 +10,7 @@
     <application android:allowBackup="true" 
                  android:name="SpecifyDroidApp" 
                  android:icon="@drawable/specifydroid128" 
-                 android:label="SpecifyDroid" 
-                 android:debuggable="true"
-                 >
+                 android:label="SpecifyDroid" android:debuggable="true">
         <uses-library android:name="com.google.android.maps" />
         <activity android:name=".SpecifyActivity"
             android:configChanges="orientation|keyboardHidden"

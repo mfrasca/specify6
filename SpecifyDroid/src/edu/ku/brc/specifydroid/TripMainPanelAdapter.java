@@ -166,8 +166,7 @@ public class TripMainPanelAdapter extends BaseAdapter
                           case R.string.tmgexportdataset: // Export as CSV
                           {
                               TripSQLiteHelper dbHelper = new TripSQLiteHelper(tripMainActivity);
-                              dbHelper.export(tripMainActivity, getDB(), tripId);
-                              closeDB();
+                              dbHelper.exportToCSV(tripMainActivity, getDB(), tripId);
                               break;
                           }
                           
@@ -243,18 +242,20 @@ public class TripMainPanelAdapter extends BaseAdapter
      */
     private void addLatLon()
     {
-        LocationManager locMgr = (LocationManager)tripMainActivity.getSystemService(Context.LOCATION_SERVICE);
-        Location        loc    = locMgr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        
-        Intent intent = new Intent(tripMainActivity, TripDataEntryDetailActivity.class);
-        intent.putExtra(TripListActivity.ID_EXTRA, tripId);
-        
-        intent.putExtra(TripDataEntryDetailActivity.ID_ISCREATE, true);
-        intent.putExtra(TripDataEntryDetailActivity.LAT_VAL, loc != null ? loc.getLatitude()  : 38.9716689); // for debugging
-        intent.putExtra(TripDataEntryDetailActivity.LON_VAL, loc != null ? loc.getLongitude() : -95.2352501);
-        tripMainActivity.startActivity(intent);
+        if (SatelliteActivity.checkForGPS(tripMainActivity))
+        {
+            LocationManager locMgr = (LocationManager)tripMainActivity.getSystemService(Context.LOCATION_SERVICE);
+            Location        loc    = locMgr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            
+            Intent intent = new Intent(tripMainActivity, TripDataEntryDetailActivity.class);
+            intent.putExtra(TripListActivity.ID_EXTRA, tripId);
+            
+            intent.putExtra(TripDataEntryDetailActivity.ID_ISCREATE, true);
+            intent.putExtra(TripDataEntryDetailActivity.LAT_VAL, loc != null ? loc.getLatitude()  :  38.958654); // for debugging
+            intent.putExtra(TripDataEntryDetailActivity.LON_VAL, loc != null ? loc.getLongitude() : -95.243829);
+            tripMainActivity.startActivity(intent);
+        }
     }
-    
 
     
     /**

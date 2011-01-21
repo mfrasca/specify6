@@ -213,16 +213,6 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
     }
 
     /* (non-Javadoc)
-     * @see android.app.Activity#onStop()
-     */
-    @Override
-    protected void onStop()
-    {
-        super.onStop();
-        closeDB();
-    }
-
-    /* (non-Javadoc)
      * @see android.app.Activity#onSaveInstanceState(android.os.Bundle)
      */
     @Override
@@ -411,8 +401,6 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
         }
         
         hasChanged = false;
-        
-        closeDB();
     }
     
     /**

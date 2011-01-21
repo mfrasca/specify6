@@ -77,7 +77,6 @@ public class TripMainActivity extends SpBaseActivity
                 baseTitle = trip.getName();
                 titleView.setText(baseTitle);
             }
-            closeDB();
         }
     }
     
@@ -101,24 +100,6 @@ public class TripMainActivity extends SpBaseActivity
         } catch (Exception ex)
         {
             Log.e(getClass().getName(), "Mail failed.", ex);
-        }
-    }
-
-    /* (non-Javadoc)
-     * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
-     */
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        Log.d("XXX", "About to send email");
-        
-        super.onActivityResult(requestCode, resultCode, data);
-        
-        Log.d("XXX", "CODE: "+requestCode);
-        
-        if (requestCode == 0)
-        {
-            Log.d("XXX", "CODE: "+requestCode);
         }
     }
 
@@ -162,27 +143,6 @@ public class TripMainActivity extends SpBaseActivity
         super.onResume();
         updateTitle();
     }
-    
-    /* (non-Javadoc)
-     * @see android.app.Activity#onPause()
-     */
-    @Override
-    protected void onPause()
-    {
-        Log.d("XXX", "onPause");
-        super.onPause();
-    }
-
-    /* (non-Javadoc)
-     * @see android.app.Activity#onDestroy()
-     */
-    @Override
-    protected void onDestroy()
-    {
-        Log.d("XXX", "onDestroy");
-        super.onDestroy();
-        closeDB();
-    }
 
     /**
      * 
@@ -197,7 +157,6 @@ public class TripMainActivity extends SpBaseActivity
             {
                 titleView.setText(String.format("%s - %d items.", baseTitle, itemCount));
             }
-            closeDB();
         }
     }
 }

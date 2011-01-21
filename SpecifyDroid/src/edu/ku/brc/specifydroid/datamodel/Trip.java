@@ -1,5 +1,10 @@
 package edu.ku.brc.specifydroid.datamodel;
 
+import static edu.ku.brc.utils.XMLHelper.addAttr;
+import static edu.ku.brc.utils.XMLHelper.addNode;
+import static edu.ku.brc.utils.XMLHelper.indent;
+import static edu.ku.brc.utils.XMLHelper.xmlNode;
+
 import java.io.PrintWriter;
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -13,8 +18,6 @@ import android.util.Log;
 import edu.ku.brc.specifydroid.BaseDataObj;
 import edu.ku.brc.specifydroid.SQLUtils;
 
-import static edu.ku.brc.utils.XMLHelper.*;
-
 /**
  * @author rods
  *
@@ -25,6 +28,8 @@ import static edu.ku.brc.utils.XMLHelper.*;
  */
 public class Trip extends BaseDataObj<Trip>
 {
+    private static final String TAG = "Trip";
+    
     protected Integer   id   = null;
     protected String    name = "";
     protected int       type = 0;
@@ -339,7 +344,7 @@ public class Trip extends BaseDataObj<Trip>
             
         } catch (Exception ex)
         {
-            Log.e("Trip", "Error getting id: "+id, ex);
+            Log.e(TAG, "Error getting id: "+id, ex);
         } finally
         {
             if (c != null) c.close();
@@ -368,14 +373,91 @@ public class Trip extends BaseDataObj<Trip>
     /**
      * @param pw
      */
-    public void writeCVSValues(final PrintWriter pw)
+    public void writeCVSValues(final SQLiteDatabase db, final PrintWriter pw)
     {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat stsf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        pw.println(String.format("%d,%s,%d,\"%s\",\"%s\",\"%d\"", id,name,type,notes,sdf.format(tripDate),stsf.format(timestampCreated)));
+        //SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        //SimpleDateFormat stsf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        //pw.println(String.format("%d,%s,%d,\"%s\",\"%s\",\"%d\"", id,name,type,notes,sdf.format(tripDate),stsf.format(timestampCreated)));
+        
+        Cursor c = null;
+        try
+        {
+            int cnt = 0;
+            
+            String[] args = { id.toString() };
+            c = db.rawQuery("SELECT Name FROM tripdatadef WHERE TripID=? ORDER BY ColumnIndex", args);
+            if (c != null && c.moveToFirst())
+            {
+                do 
+                {
+                    if (cnt > 0) pw.print(',');
+                    pw.print(c.getString(0));
+                    cnt++;
+                } while (c.moveToNext());
+                pw.println();
+                c.close();
+            }
+            
+            String[] dataArray = new String[cnt];
+            clear(dataArray);
+            
+            String sql = "SELECT c.Data, c.TripRowIndex, ColumnIndex FROM tripdatacell AS c INNER JOIN tripdatadef AS d ON c.TripDataDefID = d.\"_id\" WHERE c.TripID = ? ORDER BY TripRowIndex, ColumnIndex";
+            c = db.rawQuery(sql, args);
+            if (c != null && c.moveToFirst())
+            {
+                int row     = -1;
+                Integer prevRow = null;
+                do 
+                {
+                    int col = c.getInt(2);
+                    row = c.getInt(1);
+                    if (prevRow == null) prevRow = row;
+                    if (row != prevRow)
+                    {
+                        write(pw, dataArray);
+                        prevRow = row;
+                    }
+                    dataArray[col] = c.getString(0);
+                    
+                } while (c.moveToNext());
+                write(pw, dataArray);
+                c.close();
+            }
+        } catch (Exception ex)
+        {
+            Log.e(TAG, "Error writing CSV", ex);
+        }
     }
     
     /**
+     * Nulls out the array.
+     * @param array the array
+     */
+    private void clear(final String[] array)
+    {
+        for (int i=0;i<array.length;i++)
+        {
+            array[i] = null;
+        }
+    }
+    
+    /**
+     * Write and array of comma separated strings.
+     * @param pw the PrintWriter
+     * @param array the array of strings
+     */
+    private void write(final PrintWriter pw, final String[] array)
+    {
+        for (int i=0;i<array.length;i++)
+        {
+            if (i > 0) pw.print(',');
+            pw.print(array[i] != null ? array[i] : "");
+        }
+        pw.println();
+    }
+    
+    /**
+     * @param db
      * @param pw
      */
     public void toXML(final SQLiteDatabase db, final PrintWriter pw)
@@ -400,7 +482,7 @@ public class Trip extends BaseDataObj<Trip>
             sb.append("\n");
             String[] args = { id.toString() };
             c = db.rawQuery("SELECT * FROM tripdatadef WHERE TripID=?", args);
-            if (c.moveToFirst())
+            if (c != null && c.moveToFirst())
             {
                 do 
                 {
@@ -416,7 +498,7 @@ public class Trip extends BaseDataObj<Trip>
             }
         } catch (Exception ex)
         {
-            Log.e("Trip", "Error writing xml", ex);
+            Log.e(TAG, "Error writing xml", ex);
         } finally
         {
             if (c != null)
@@ -441,14 +523,14 @@ public class Trip extends BaseDataObj<Trip>
             db.beginTransaction();
             String[] args = new String[] {tripId};
             db.delete("tripdatacell", "TripID = ?", args);
-            db.delete("tripdatadef", "TripID = ?", args);
-            db.delete("trip", "_id = ?", args);
+            db.delete("tripdatadef",  "TripID = ?", args);
+            db.delete("trip",         "_id = ?",    args);
             db.setTransactionSuccessful();
             return true;
             
         } catch  (Exception ex)
         {
-            Log.e("Trip", ex.getMessage(), ex);
+            Log.e(TAG, ex.getMessage(), ex);
             
         } finally
         {

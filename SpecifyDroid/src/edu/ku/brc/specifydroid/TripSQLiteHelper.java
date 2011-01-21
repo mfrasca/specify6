@@ -9,8 +9,11 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
@@ -18,8 +21,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Environment;
+import android.provider.Settings;
 import android.util.Log;
 import edu.ku.brc.specifydroid.datamodel.Trip;
+import edu.ku.brc.utils.ErrorDlgHelper;
 import edu.ku.brc.utils.ZipFileHelper;
 
 class TripSQLiteHelper extends SQLiteOpenHelper
@@ -169,67 +174,117 @@ class TripSQLiteHelper extends SQLiteOpenHelper
     }
     
     /**
+     * @param activity
      * @param db
+     * @param tripId
      */
-    public void export(final Activity activity, final SQLiteDatabase db, final String tripId)
+    public void exportToCSV(final Activity activity, 
+                            final SQLiteDatabase db, 
+                            final String tripId)
     {
-        PrintWriter pw = null;
-        try
-        {
-            final File root = Environment.getExternalStorageDirectory();
-            if (root.canWrite())
-            {
-                pw = new PrintWriter(new File(root, "test.xml"));
-                
-                final PrintWriter pwf = pw;
-                final ProgressDialog prgDlg = ProgressDialog.show(activity, null, "Exporting...", true); // I18N
-                prgDlg.show();
-                
-                new Thread() 
-                {
-                    public void run() 
-                    {
-                         try
-                         {
-                             Trip trip = Trip.getById(db, tripId);
-                             
-                             trip.toXML(db, pwf);
+        boolean isExternalStorageAvailable = false;
+        boolean isExternalStorageWriteable = false;
+        String  state = Environment.getExternalStorageState();
 
-                             Thread.sleep(2000);
-                             
-                         } catch (Exception e) {  }
-                         // Dismiss the Dialog
-                         prgDlg.dismiss();
-                    }
-               }.start();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            // We can read and write the media
+            isExternalStorageAvailable = isExternalStorageWriteable = true;
+            
+        } else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+            // We can only read the media
+            isExternalStorageAvailable = true;
+            isExternalStorageWriteable = false;
+            
+        } else {
+            // Something else is wrong. It may be one of many other states, but all we need
+            //  to know is we can neither read nor write
+            isExternalStorageAvailable = isExternalStorageWriteable = false;
+        }
+        
+        if (!isExternalStorageAvailable)
+        {
+            ErrorDlgHelper.showErrorDlg(activity, R.string.extstrgnotavail);
+            return;
+        }
+        
+        if (!isExternalStorageWriteable)
+        {
+            ErrorDlgHelper.showErrorDlg(activity, R.string.extstrgnotwrt);
+            return;
+        }
+        
+        final File root = Environment.getExternalStorageDirectory();
+        if (root.canWrite())
+        {
+            final Trip trip = Trip.getById(db, tripId);
+            if (trip != null)
+            {
+                String fileName = trip.getName();
+                if (fileName != null)
+                {
+                    fileName = fileName.replace(' ', '_').replace('/', '_');
+                } else
+                {
+                    fileName = "trip";
+                }
                 
-                /*trip.writeCVSValues(pw);
-                pw.println("---");
-                
-                Cursor c = db.execSQL("SELECT ");
-                
-                pw = new PrintWriter(new File("/sddata/test.csv"));
-                
-                Trip trip = Trip.getById(db, tripId);
-                trip.writeCVSHeader(pw);
-                trip.writeCVSValues(pw);
-                pw.println("---");
-                
-                Cursor c = db.execSQL("SELECT )*/
+                fileName += ".csv";
+                final File outFile = new File(root, fileName);
+                final String fName = fileName;
+                if (true)//outFile.canWrite())
+                {
+                    String title = activity.getString(R.string.exporting);
+                    String msg   = activity.getString(R.string.file_exp, fileName);
+                    final ProgressDialog prgDlg = ProgressDialog.show(activity, title, msg, true);
+                    prgDlg.show();
+                    
+                    new Thread() 
+                    {
+                        public void run() 
+                        {
+                            PrintWriter pw = null;
+                             try
+                             {
+                                 pw = new PrintWriter(outFile);
+                                 trip.writeCVSValues(db, pw);
+    
+                                 //Thread.sleep(2000);
+                                 
+                                 prgDlg.dismiss();
+                                 ErrorDlgHelper.showErrorDlg(activity, R.string.file_wrt, fName);
+                                 
+                             } catch (Exception e) 
+                             {  
+                                 prgDlg.dismiss();
+                                 Log.e("TripSQL", "Error", e); 
+                                 e.printStackTrace(); 
+                                 ErrorDlgHelper.showErrorDlg(activity, e.getMessage());
+                                 
+                             } finally 
+                             {
+                                 if (pw != null)
+                                 {
+                                     pw.flush();
+                                     pw.close();
+                                 }
+                             }
+                             // Dismiss the Dialog
+                             //prgDlg.dismiss();
+                        }
+                   }.start();
+                    
+                }/* else
+                {
+                    ErrorDlgHelper.showErrorDlg(activity, R.string.no_wrt_file, fileName);
+                }*/
             } else
             {
-                Log.d("TripSQL", "Can't write to sdcard");
+                
+                ErrorDlgHelper.showErrorDlg(activity, R.string.err_load_trp, tripId);
             }
-                    
-        } catch (IOException ex)
+        } else
         {
-            Log.e("", "Error export to CSV", ex);
-        } finally
-        {
-            if (pw != null)
-            {
-                pw.close();
-            }
+            ErrorDlgHelper.showErrorDlg(activity, R.string.extstrgnotwrt);
         }
     }
     

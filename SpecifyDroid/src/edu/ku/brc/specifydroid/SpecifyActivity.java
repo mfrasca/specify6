@@ -116,8 +116,6 @@ public class SpecifyActivity extends SpBaseActivity
                 TaxonLoadThread.getInstance().set(this, database, prgDlg);
             }
         }
-        
-        closeDB();
     }
     
     /* (non-Javadoc)
