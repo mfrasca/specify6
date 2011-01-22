@@ -1,4 +1,4 @@
-/* Copyright (C) 2009, University of Kansas Center for Research
+/* Copyright (C) 2011, University of Kansas Center for Research
  * 
  * Specify Software Project, specify@ku.edu, Biodiversity Institute,
  * 1345 Jayhawk Boulevard, Lawrence, Kansas, 66045, USA
@@ -35,11 +35,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import edu.ku.brc.specifydroid.datamodel.Trip;
+import edu.ku.brc.utils.DialogHelper;
 
 /**
  * @author rods
  *
- * @code_status Alpha
+ * @code_status Beta
  *
  * Oct 27, 2009
  *
@@ -118,90 +119,81 @@ public class TripMainPanelAdapter extends BaseAdapter
         }
         
         final int id = titleIds[position];
-        if (id == R.string.tmgcamera)
+        try
         {
-            imageView.setEnabled(false);
-            titleView.setEnabled(false);
-            
-        } else
-        {
-            try
+            imageView.setOnClickListener(new View.OnClickListener() 
             {
-                imageView.setOnClickListener(new View.OnClickListener() 
+                @Override
+                public void onClick(View view) 
                 {
-                    @Override
-                    public void onClick(View view) 
-                    {
-                      //Log.d("onClick","position ["+position+"]");
-                        
-                      switch (id)
+                  switch (id)
+                  {
+                      case R.string.tmgmyloc: // My Location Lat/Lon
                       {
-                          case R.string.tmgmyloc: // My Location Lat/Lon
-                          {
-                              addLatLon();
-                              break;
-                          } 
+                          addLatLon();
+                          break;
+                      } 
+                      
+                      case R.string.tmgbrowsedb: // Browse
+                      {
+                          Intent intent = new Intent(tripMainActivity, TripDataEntryDetailActivity.class);
+                          intent.putExtra(TripListActivity.ID_EXTRA, tripId);
+                          intent.putExtra(TripListActivity.TRIP_TYPE, TripListActivity.COLL_TRIP);
+                          intent.putExtra(TripListActivity.DETAIL_CLASS, TripDataEntryDetailActivity.class.getName());
+                          tripMainActivity.startActivity(intent);
+                          break;
+                      } 
+     
+                      case R.string.tmgcamera: // Camera
+                      {
+                          //Intent intent = new Intent(tripMainActivity, TripListActivity.class);
+                          //intent.putExtra(TripListActivity.TRIP_TYPE, TripListActivity.CONFIG_TRIP);
+                          //tripMainActivity.startActivity(intent);
                           
-                          case R.string.tmgbrowsedb: // Browse
-                          {
-                              Intent intent = new Intent(tripMainActivity, TripDataEntryDetailActivity.class);
-                              intent.putExtra(TripListActivity.ID_EXTRA, tripId);
-                              intent.putExtra(TripListActivity.TRIP_TYPE, TripListActivity.COLL_TRIP);
-                              intent.putExtra(TripListActivity.DETAIL_CLASS, TripDataEntryDetailActivity.class.getName());
-                              tripMainActivity.startActivity(intent);
-                              break;
-                          } 
-         
-                          case R.string.tmgcamera: // Camera
-                          {
-                              //Intent intent = new Intent(tripMainActivity, TripListActivity.class);
-                              //intent.putExtra(TripListActivity.TRIP_TYPE, TripListActivity.CONFIG_TRIP);
-                              //tripMainActivity.startActivity(intent);
-                              
-                              TripSQLiteHelper dbHelper = new TripSQLiteHelper(tripMainActivity);
-                              dbHelper.loadTestData(getDB());
-                              break;
-                          }
-                          
-                          case R.string.tmgexportdataset: // Export as CSV
-                          {
-                              TripSQLiteHelper dbHelper = new TripSQLiteHelper(tripMainActivity);
-                              dbHelper.exportToCSV(tripMainActivity, getDB(), tripId);
-                              break;
-                          }
-                          
-                          case R.string.tmgemail: // Email exported file.
-                          {
-                              //TripSQLiteHelper dbHelper = new TripSQLiteHelper(tripMainActivity);
-                              //dbHelper.export(tripMainActivity, getDB(), tripId);
-                              tripMainActivity.doEmailExport();
-                              break;
-                          }
-                          
-                          case R.string.tmggooglemaps: // Maps
-                          {
-                              Intent intent = new Intent(tripMainActivity, TripMapLocationActivity.class);
-                              intent.putExtra(TripListActivity.ID_EXTRA, tripId);
-                              tripMainActivity.startActivity(intent);
-                              break;
-                          }
-                          
-                          case R.string.tmgconfig: // Config
-                          {
-                              Intent intent = new Intent(tripMainActivity, TripDetailActivity.class);
-                              intent.putExtra(TripListActivity.ID_EXTRA, tripId);
-                              tripMainActivity.startActivity(intent);
-                              break;
-                          }
-                              
-                          case R.string.tmgdeltrip: // Delete Trip
-                              doDeleteTrip();
-                              break;
+                          //TripSQLiteHelper dbHelper = new TripSQLiteHelper(tripMainActivity);
+                          //dbHelper.loadTestData(getDB());
+                          DialogHelper.showDialog(tripMainActivity, R.string.notimpl);
+                          break;
                       }
-                    }
-                  });
-            } catch (Exception ex) {}
-        }
+                      
+                      case R.string.tmgexportdataset: // Export as CSV
+                      {
+                          TripSQLiteHelper dbHelper = new TripSQLiteHelper(tripMainActivity);
+                          dbHelper.exportToCSV(tripMainActivity, getDB(), tripId);
+                          break;
+                      }
+                      
+                      case R.string.tmgemail: // Email exported file.
+                      {
+                          //TripSQLiteHelper dbHelper = new TripSQLiteHelper(tripMainActivity);
+                          //dbHelper.export(tripMainActivity, getDB(), tripId);
+                          tripMainActivity.doEmailExport();
+                          break;
+                      }
+                      
+                      case R.string.tmggooglemaps: // Maps
+                      {
+                          Intent intent = new Intent(tripMainActivity, TripMapLocationActivity.class);
+                          intent.putExtra(TripListActivity.ID_EXTRA, tripId);
+                          tripMainActivity.startActivity(intent);
+                          break;
+                      }
+                      
+                      case R.string.tmgconfig: // Config
+                      {
+                          Intent intent = new Intent(tripMainActivity, TripDetailActivity.class);
+                          intent.putExtra(TripListActivity.ID_EXTRA, tripId);
+                          tripMainActivity.startActivity(intent);
+                          break;
+                      }
+                          
+                      case R.string.tmgdeltrip: // Delete Trip
+                          doDeleteTrip();
+                          break;
+                  }
+                }
+              });
+        } catch (Exception ex) {}
         
         /*imageView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override

@@ -1,4 +1,4 @@
-/* Copyright (C) 2009, University of Kansas Center for Research
+/* Copyright (C) 2011, University of Kansas Center for Research
  * 
  * Specify Software Project, specify@ku.edu, Biodiversity Institute,
  * 1345 Jayhawk Boulevard, Lawrence, Kansas, 66045, USA
@@ -19,6 +19,7 @@
 */
 package edu.ku.brc.specifydroid;
 
+import edu.ku.brc.utils.DialogHelper;
 import android.content.Intent;
 import android.view.Gravity;
 import android.view.View;
@@ -31,7 +32,7 @@ import android.widget.TextView;
 /**
  * @author rods
  *
- * @code_status Alpha
+ * @code_status Beta
  *
  * Oct 27, 2009
  *
@@ -156,6 +157,7 @@ public class SpecifyMainPanelAdapter extends BaseAdapter
                           break;
                           
                       case 1: // Compass
+                          DialogHelper.showDialog(specifyActivity, R.string.notimpl);
                           break;
                           
                       case 2: // Collecting

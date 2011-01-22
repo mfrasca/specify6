@@ -6,7 +6,7 @@ import android.preference.PreferenceActivity;
 /**
  * @author rods
  *
- * @code_status Alpha
+ * @code_status Beta
  *
  * Oct 27, 2009
  *

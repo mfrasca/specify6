@@ -1,5 +1,5 @@
 package edu.ku.brc.specifydroid;
-import edu.ku.brc.utils.ErrorDlgHelper;
+import edu.ku.brc.utils.DialogHelper;
 import android.app.Activity;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -26,7 +26,7 @@ import android.util.Log;
 /**
  * @author rods
  *
- * @code_status Alpha
+ * @code_status Beta
  *
  * Created Date: Jan 12, 2011
  *
@@ -64,7 +64,7 @@ public class SpBaseActivity extends Activity
      */
     protected String getStringResourceByName(String strResName)
     {
-        return ErrorDlgHelper.getStringResourceByName(this, strResName);
+        return DialogHelper.getStringResourceByName(this, strResName);
     }
     
     //------------------------------------------------------------------------

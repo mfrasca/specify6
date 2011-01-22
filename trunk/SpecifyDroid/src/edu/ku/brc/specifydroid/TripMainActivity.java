@@ -1,4 +1,4 @@
-/* Copyright (C) 2009, University of Kansas Center for Research
+/* Copyright (C) 2011, University of Kansas Center for Research
  * 
  * Specify Software Project, specify@ku.edu, Biodiversity Institute,
  * 1345 Jayhawk Boulevard, Lawrence, Kansas, 66045, USA
@@ -29,7 +29,7 @@ import edu.ku.brc.specifydroid.datamodel.Trip;
 /**
  * @author rods
  *
- * @code_status Alpha
+ * @code_status Beta
  *
  * Nov 15, 2009
  *
@@ -78,7 +78,7 @@ public class TripMainActivity extends SpBaseActivity
                 titleView.setText(baseTitle);
             }
         }
-    }
+     }
     
 
     /**
@@ -113,26 +113,6 @@ public class TripMainActivity extends SpBaseActivity
         
         outState.putString(tripId, TripListActivity.ID_EXTRA);
     }
-    
-    /* (non-Javadoc)
-     * @see android.app.Activity#onPostResume()
-     */
-    @Override
-    protected void onPostResume()
-    {
-        super.onPostResume();
-        updateTitle();
-    }
-
-    /* (non-Javadoc)
-     * @see android.app.Activity#onRestart()
-     */
-    @Override
-    protected void onRestart()
-    {
-        super.onRestart();
-        updateTitle();
-    }
 
     /* (non-Javadoc)
      * @see android.app.Activity#onResume()
@@ -153,9 +133,17 @@ public class TripMainActivity extends SpBaseActivity
         {
             String sql = String.format("select COUNT(*) AS count FROM (select TripRowIndex from tripdatacell where TripID = %s GROUP BY TripRowIndex)", tripId);
             int itemCount = SQLUtils.getCount(getDB(), sql);
+            
+            sql = String.format("SELECT Name FROM trip WHERE _id = %s", tripId);
+            String titleStr = SQLUtils.getStringObj(getDB(), sql);
+            if (titleStr != null)
+            {
+                baseTitle = titleStr;
+            }
+            
             if (titleView != null)
             {
-                titleView.setText(String.format("%s - %d items.", baseTitle, itemCount));
+                titleView.setText(String.format("%s %s", baseTitle, getString(R.string.tmgtitleitems, itemCount)));
             }
         }
     }

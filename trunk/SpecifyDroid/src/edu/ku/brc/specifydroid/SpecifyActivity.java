@@ -1,4 +1,4 @@
-/* Copyright (C) 2009, University of Kansas Center for Research
+/* Copyright (C) 2011, University of Kansas Center for Research
  * 
  * Specify Software Project, specify@ku.edu, Biodiversity Institute,
  * 1345 Jayhawk Boulevard, Lawrence, Kansas, 66045, USA
@@ -21,6 +21,8 @@ package edu.ku.brc.specifydroid;
 
 import java.io.File;
 
+import edu.ku.brc.utils.VersionChecker;
+
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
@@ -36,7 +38,7 @@ import android.widget.GridView;
 /**
  * @author rods
  *
- * @code_status Alpha
+ * @code_status Beta
  *
  * Oct 27, 2009
  *
@@ -46,7 +48,10 @@ public class SpecifyActivity extends SpBaseActivity
     public static final int      COLLECTING        = 0;
     public static final int      OBSERVATION       = 1;
     
-    public static final String   TAXA_FILE_PREF    = "TAXA_FILE_PREF";
+    public  static final String   TAXA_FILE_PREF    = "TAXA_FILE_PREF";
+    private static final String   HAS_NEW_VER       = "HAS_NEW_VER";
+    
+    private boolean hasAskedForNewVersion = false;
     
     /**
      * 
@@ -63,6 +68,11 @@ public class SpecifyActivity extends SpBaseActivity
     public void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        
+        if (savedInstanceState != null)
+        {
+            hasAskedForNewVersion = savedInstanceState.getBoolean(HAS_NEW_VER, false);
+        }
         
         //DisplayMetrics metrics = new DisplayMetrics();
         //getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -116,13 +126,20 @@ public class SpecifyActivity extends SpBaseActivity
                 TaxonLoadThread.getInstance().set(this, database, prgDlg);
             }
         }
+        
+        if (!hasAskedForNewVersion)
+        {
+            hasAskedForNewVersion = true;
+            VersionChecker versionChecker = new VersionChecker(this);
+            versionChecker.checkForNewVersion();
+        }
     }
     
     /* (non-Javadoc)
      * @see android.app.Activity#onConfigurationChanged(android.content.res.Configuration)
      */
     @Override
-    public void onConfigurationChanged(Configuration newConfig)
+    public void onConfigurationChanged(final Configuration newConfig)
     {
         Log.d("DBG", "onConfigurationChanged "+newConfig);
         super.onConfigurationChanged(newConfig);
@@ -144,7 +161,17 @@ public class SpecifyActivity extends SpBaseActivity
             TaxonLoadThread.getInstance().set(null, null, null);
         }
     }
-    
+
+    /* (non-Javadoc)
+     * @see android.app.Activity#onSaveInstanceState(android.os.Bundle)
+     */
+    @Override
+    protected void onSaveInstanceState(Bundle outState)
+    {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(HAS_NEW_VER, hasAskedForNewVersion);
+    }
+
     /*private void checkPath()
     {
         try

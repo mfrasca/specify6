@@ -9,6 +9,8 @@
     <string name="close">Close</string>
     <string name="loading">Loading...</string>
     <string name="exporting">Exporting...</string>
+    <string name="notimpl">Not Implemented yet.</string>
+    <string name="donelbl">Done</string>
     
     <string name="alert_dialog_ok">OK</string>
     <string name="alert_dialog_cancel">Cancel</string>
@@ -50,6 +52,7 @@
     <string name="tmgexportdataset">Export</string>
     <string name="tmgemail">EMail</string>
     <string name="tmggooglemaps">Map</string>
+    <string name="tmgtitleitems">- %d items.</string>
     
     <string name="deletetrip">Delete \'%s\'?</string>
     <string name="changedisp">Change</string>
@@ -69,6 +72,9 @@
     <!-- GPS -->
     <string name="no_gps">Your GPS seems to be disabled, do you want to enable it?</string>
     <string name="srch_gps">Searching for satellites...</string>
+
+    <!-- Download New Version -->
+    <string name="askdownloadapk">There is a newer version, do you wish to download it?</string>
     
     <!-- Disciplines -->
     <string name="choosedisp">Choose a Discipline</string>

@@ -182,6 +182,16 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
             }
         });
         
+        Button doneBtn = (Button)findViewById(R.id.donebtn);
+        doneBtn.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v)
+            {
+                checkAndSave();
+                TripDetailActivity.this.finish();
+            }
+        });
+        
         if (isNew)
         {
             checkAndSave();

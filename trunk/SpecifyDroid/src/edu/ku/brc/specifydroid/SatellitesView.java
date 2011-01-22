@@ -1,4 +1,4 @@
-/* Copyright (C) 2009, University of Kansas Center for Research
+/* Copyright (C) 2011, University of Kansas Center for Research
  * 
  * Specify Software Project, specify@ku.edu, Biodiversity Institute,
  * 1345 Jayhawk Boulevard, Lawrence, Kansas, 66045, USA
@@ -31,12 +31,15 @@ import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.location.GpsSatellite;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.View;
+import android.view.WindowManager;
 
 /**
  * @author rods
  *
- * @code_status Alpha
+ * @code_status Beta
  *
  * Oct 25, 2009
  *
@@ -395,7 +398,11 @@ public class SatellitesView extends View
     {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         
-        calColsRows(widthMeasureSpec, heightMeasureSpec);
+        //DisplayMetrics metrics = new DisplayMetrics();
+        //((Activity)getContext()).getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        //Log.i("XXX", metrics.heightPixels+", "+metrics.widthPixels);
+        Display display = ((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay(); 
+        calColsRows(display.getWidth(), display.getHeight());
     }
 
     /* (non-Javadoc)
