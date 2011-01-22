@@ -24,7 +24,7 @@ import android.os.Environment;
 import android.provider.Settings;
 import android.util.Log;
 import edu.ku.brc.specifydroid.datamodel.Trip;
-import edu.ku.brc.utils.ErrorDlgHelper;
+import edu.ku.brc.utils.DialogHelper;
 import edu.ku.brc.utils.ZipFileHelper;
 
 class TripSQLiteHelper extends SQLiteOpenHelper
@@ -203,13 +203,13 @@ class TripSQLiteHelper extends SQLiteOpenHelper
         
         if (!isExternalStorageAvailable)
         {
-            ErrorDlgHelper.showErrorDlg(activity, R.string.extstrgnotavail);
+            DialogHelper.showDialog(activity, R.string.extstrgnotavail);
             return;
         }
         
         if (!isExternalStorageWriteable)
         {
-            ErrorDlgHelper.showErrorDlg(activity, R.string.extstrgnotwrt);
+            DialogHelper.showDialog(activity, R.string.extstrgnotwrt);
             return;
         }
         
@@ -251,14 +251,14 @@ class TripSQLiteHelper extends SQLiteOpenHelper
                                  //Thread.sleep(2000);
                                  
                                  prgDlg.dismiss();
-                                 ErrorDlgHelper.showErrorDlg(activity, R.string.file_wrt, fName);
+                                 DialogHelper.showDialog(activity, R.string.file_wrt, fName);
                                  
                              } catch (Exception e) 
                              {  
                                  prgDlg.dismiss();
                                  Log.e("TripSQL", "Error", e); 
                                  e.printStackTrace(); 
-                                 ErrorDlgHelper.showErrorDlg(activity, e.getMessage());
+                                 DialogHelper.showDialog(activity, e.getMessage());
                                  
                              } finally 
                              {
@@ -280,11 +280,11 @@ class TripSQLiteHelper extends SQLiteOpenHelper
             } else
             {
                 
-                ErrorDlgHelper.showErrorDlg(activity, R.string.err_load_trp, tripId);
+                DialogHelper.showDialog(activity, R.string.err_load_trp, tripId);
             }
         } else
         {
-            ErrorDlgHelper.showErrorDlg(activity, R.string.extstrgnotwrt);
+            DialogHelper.showDialog(activity, R.string.extstrgnotwrt);
         }
     }
     

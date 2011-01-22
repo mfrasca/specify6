@@ -21,7 +21,7 @@ import edu.ku.brc.specifydroid.SQLUtils;
 /**
  * @author rods
  *
- * @code_status Alpha
+ * @code_status Beta
  *
  * Oct 28, 2009
  *

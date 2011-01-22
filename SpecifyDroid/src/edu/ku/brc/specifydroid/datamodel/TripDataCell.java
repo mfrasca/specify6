@@ -9,7 +9,7 @@ import edu.ku.brc.specifydroid.BaseDataObj;
 /**
  * @author rods
  *
- * @code_status Alpha
+ * @code_status Beta
  *
  * Oct 28, 2009
  *

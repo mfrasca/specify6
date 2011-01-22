@@ -1,4 +1,4 @@
-/* Copyright (C) 2009, Sandbox Software, Inc
+/* Copyright (C) 2011, Sandbox Software, Inc
  * 
  * Sandbox Software Inc,
  * 1601 Inverness Drive, Lawrence, Kansas, 66047, USA
@@ -28,7 +28,7 @@ import android.widget.TextView;
 /**
  * @author rods
  *
- * @code_status Alpha
+ * @code_status Beta
  *
  * Nov 10, 2009
  *

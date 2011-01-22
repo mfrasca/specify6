@@ -7,14 +7,11 @@ import android.view.Window;
 import com.google.android.maps.MapActivity;
 import com.pocketjourney.view.TransparentPanel;
 
-public class TripMapLocationActivity extends MapActivity {
-
-    //private String tripId;
-
+public class TripMapLocationActivity extends MapActivity 
+{
     /* (non-Javadoc)
      * @see com.google.android.maps.MapActivity#onCreate(android.os.Bundle)
      */
-    @SuppressWarnings("deprecation")
     @Override
     public void onCreate(Bundle savedInstanceState)
     {

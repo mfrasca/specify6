@@ -1,4 +1,4 @@
-/* Copyright (C) 2009, University of Kansas Center for Research
+/* Copyright (C) 2011, University of Kansas Center for Research
  * 
  * Specify Software Project, specify@ku.edu, Biodiversity Institute,
  * 1345 Jayhawk Boulevard, Lawrence, Kansas, 66045, USA
@@ -39,7 +39,7 @@ import edu.ku.brc.utils.ZipFileHelper;
 /**
  * @author rods
  *
- * @code_status Alpha
+ * @code_status Beta
  *
  * Nov 25, 2009
  *
