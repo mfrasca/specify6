@@ -11,6 +11,7 @@
     <string name="exporting">Exportera ...</string>
     <string name="notimpl">Inte implementerat än.</string>
     <string name="donelbl">Klar</string>
+    <string name="about">Om</string>
     
     <string name="alert_dialog_ok">OK</string>
     <string name="alert_dialog_cancel">Avbryt</string>
@@ -19,6 +20,7 @@
     
     <string name="app_name">SpecifyDroid</string>
     <string name="save">Spara</string>
+    <string name="about_title">Om SpecifyDroid</string>
 
     <!--  App Main Grid -->
     <string name="satellites">Satelliter</string>
