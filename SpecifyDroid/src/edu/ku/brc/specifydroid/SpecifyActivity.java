@@ -21,19 +21,29 @@ package edu.ku.brc.specifydroid;
 
 import java.io.File;
 
-import edu.ku.brc.utils.VersionChecker;
-
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.GridView;
+import android.widget.TextView;
+import edu.ku.brc.utils.VersionChecker;
 
 /**
  * @author rods
@@ -172,6 +182,87 @@ public class SpecifyActivity extends SpBaseActivity
         outState.putBoolean(HAS_NEW_VER, hasAskedForNewVersion);
     }
 
+    
+    /* (non-Javadoc)
+     * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        new MenuInflater(getApplication()).inflate(R.menu.maincontextmenu, menu);
+
+        return (super.onCreateOptionsMenu(menu));
+    }
+
+    /* (non-Javadoc)
+     * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        if (item.getItemId() == R.id.about_mi)
+        {
+            showDialog(0);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    
+    /* (non-Javadoc)
+     * @see android.app.Activity#onCreateDialog(int)
+     */
+    @Override
+    protected Dialog onCreateDialog(int id)
+    {
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.aboutdlg_layout);
+        dialog.setTitle(R.string.about_title);
+
+        TextView text = (TextView) dialog.findViewById(R.id.about_text);
+        String aboutText = "";
+        try
+        {
+            PackageInfo pi = getPackageManager().getPackageInfo(getApplicationInfo().packageName, 0);
+            aboutText = getAboutText("SpecifyDroid", pi.versionName);
+            
+        } catch (NameNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+        text.setText(Html.fromHtml(aboutText));
+        text.setMovementMethod(LinkMovementMethod.getInstance());
+        
+        Button closeBtn = (Button)dialog.findViewById(R.id.aboutclose_btn);
+        closeBtn.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                dialog.dismiss();
+            }
+        });
+        
+        return dialog;
+    }
+    
+    private static String getAboutText(final String appNameArg, 
+                                      final String appVersionArg)
+    {
+        return "<html><font face=\"sans-serif\" size=\"11pt\">"+appNameArg+" " + appVersionArg +  //$NON-NLS-1$ //$NON-NLS-2$
+        "<br><br>Specify Software Project<br>" +//$NON-NLS-1$
+        "Biodiversity Institute<br>University of Kansas<br>1345 Jayhawk Blvd.<br>Lawrence, KS  USA 66045<br><br>" +  //$NON-NLS-1$
+        "<a href=\"http://www.specifysoftware .org\">www.specifysoftware.org</a>"+ //$NON-NLS-1$
+        "<br><a href=\"mailto:specify@ku.edu\">specify@ku.edu</a><br>" +  //$NON-NLS-1$
+        "<p>The Specify Software Project is "+ //$NON-NLS-1$
+        "funded by the Advances in Biological Informatics Program, " + //$NON-NLS-1$
+        "U.S. National Science Foundation  (Award DBI-0446544 and earlier awards).<br><br>" + //$NON-NLS-1$
+        appNameArg + " Copyright \u00A9 2011 University of Kansas Center for Research. " + 
+        "Specify comes with ABSOLUTELY NO WARRANTY.<br><br>" + //$NON-NLS-1$
+        "This is free software licensed under GNU General Public License 2 (GPL2).</P></font></html>"; //$NON-NLS-1$
+
+    }
+
+    
     /*private void checkPath()
     {
         try

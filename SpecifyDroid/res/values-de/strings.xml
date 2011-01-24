@@ -11,6 +11,7 @@
     <string name="exporting">Exportieren ...</string>
     <string name="notimpl">Noch nicht implementiert.</string>
     <string name="donelbl">Geschehen</string>
+    <string name="about">Über</string>
     
     <string name="alert_dialog_ok">OK</string>
     <string name="alert_dialog_cancel">Abbrechen</string>
@@ -19,6 +20,7 @@
     
     <string name="app_name">SpecifyDroid</string>
     <string name="save">Speichern</string>
+    <string name="about_title">Über SpecifyDroid</string>
 
     <!--  App Main Grid -->
     <string name="satellites">Satellites</string>

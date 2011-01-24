@@ -11,14 +11,16 @@
     <string name="exporting">Exporting...</string>
     <string name="notimpl">Not Implemented yet.</string>
     <string name="donelbl">Done</string>
+    <string name="about">About</string>
     
     <string name="alert_dialog_ok">OK</string>
     <string name="alert_dialog_cancel">Cancel</string>
 
     <!--  Application -->
     
-    <string name="app_name">Specify</string>
+    <string name="app_name">SpecifyDroid</string>
     <string name="save">Save</string>
+    <string name="about_title">About SpecifyDroid</string>
 
     <!--  App Main Grid -->
     <string name="satellites">Satellites</string>
