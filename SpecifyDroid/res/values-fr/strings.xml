@@ -34,6 +34,8 @@
     <string name="trptypelbl">Type:</string>
     <string name="trpdatelbl">Date:</string>
     <string name="trpnoteslbl">Notes:</string>
+    <string name="chooseflds">Choisissez les champs</string>
+    <string name="trpclcknew">Cliquez sur le menu pour ajouter un nouveau voyage</string>
     
     <!--  Trip Detail Menus -->
     <string name="tripconfig">Config</string>
@@ -61,7 +63,9 @@
     <string name="trpfieldslbl">Domaines</string>
     <string name="editfieldsbtn">Configurer les champs</string>
     
-    <string name="emptytriplist">Cliquez sur le bouton de menu pour créer un nouveau voyage</string>
+    <!-- Mapping -->
+    <string name="map">Carte</string>
+    <string name="satellite">Satellite</string>
     
     <!-- Exporting -->
     <string name="extstrgnotavail">Stockage externe n\'est not available.</string>

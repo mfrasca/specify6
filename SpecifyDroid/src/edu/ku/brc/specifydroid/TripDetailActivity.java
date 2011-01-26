@@ -456,7 +456,7 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
                     }
                     });
             
-            builder.setTitle("Choose Fields");
+            builder.setTitle(R.string.chooseflds);
             builder.setMultiChoiceItems(items, values, new DialogInterface.OnMultiChoiceClickListener() {
                 @Override
                 public void onClick(DialogInterface dlg, int which, boolean isChecked)
@@ -673,33 +673,40 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
         return discpIcons;
     }
 
-    static final Integer[] discpIcons = {R.drawable.bird, R.drawable.bug,
-            R.drawable.fish, R.drawable.flower,
-            R.drawable.frog, R.drawable.lizard,
-            R.drawable.lower_plant,
-            R.drawable.mammal,
-            R.drawable.paleo_bot,
-            R.drawable.paleo_invert,
-            R.drawable.paleo_vert,
-            R.drawable.seahorse,
-            R.drawable.snake,
-            R.drawable.spider,
-            R.drawable.starfish,};
+    static final Integer[] discpIcons = {
+        R.drawable.flower, // B
+        R.drawable.lower_plant, // B
+        R.drawable.bug,   // E
+        R.drawable.spider, // E
+        R.drawable.frog, // H
+        R.drawable.lizard, // H
+        R.drawable.snake, // H
+        R.drawable.fish,  // I
+        R.drawable.seahorse, // I
+        R.drawable.starfish, // Invert
+        R.drawable.mammal, // M
+        R.drawable.bird,  // O
+        R.drawable.paleo_bot, // P
+        R.drawable.paleo_invert, // P
+        R.drawable.paleo_vert, // P
+    };
 
-    static final int[] dispNames = {R.string.bird, 
-                 R.string.insect, 
-                 R.string.fish, 
-                 R.string.botany,
-                 R.string.herpetology, 
-                 R.string.herpetology,
-                 R.string.botany,
-                 R.string.mammal,
-                 R.string.paleobotany,
-                 R.string.invertpaleo,
-                 R.string.vertpaleo,
-                 R.string.fish,
-                 R.string.herpetology,
-                 R.string.insect,
-                 R.string.invertebrate};
+    static final int[] dispNames = {
+        R.string.botany,
+        R.string.botany,
+        R.string.insect, 
+        R.string.insect,
+        R.string.herpetology, 
+        R.string.herpetology,
+        R.string.herpetology,
+        R.string.fish, 
+        R.string.fish,
+        R.string.invertebrate,
+        R.string.mammal,
+        R.string.bird, 
+        R.string.paleobotany,
+        R.string.invertpaleo,
+        R.string.vertpaleo,
+        };
 
 }

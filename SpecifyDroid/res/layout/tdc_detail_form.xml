@@ -31,10 +31,10 @@
              android:layout_span="2"
             >
             <TableRow>
-                <ImageButton android:id="@+id/tdcadd" 
+                <ImageButton android:id="@+id/tdc_del" 
                              android:layout_width="wrap_content" 
                              android:layout_height="wrap_content" 
-                             android:src="@drawable/android:ic_input_add"/>
+                             android:src="@drawable/android:ic_delete"/>
                                           
                 <View android:layout_width="fill_parent" 
                       android:layout_height="2dip" 

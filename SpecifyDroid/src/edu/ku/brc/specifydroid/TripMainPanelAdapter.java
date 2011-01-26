@@ -20,12 +20,9 @@
 package edu.ku.brc.specifydroid;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.location.Location;
-import android.location.LocationManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -69,7 +66,6 @@ public class TripMainPanelAdapter extends BaseAdapter
     // Data Members
     private TripMainActivity tripMainActivity;
     private String           tripId;
-
 
     /**
      * @param activity the TripMainActivity
@@ -130,7 +126,7 @@ public class TripMainPanelAdapter extends BaseAdapter
                   {
                       case R.string.tmgmyloc: // My Location Lat/Lon
                       {
-                          addLatLon();
+                          tripMainActivity.addLatLon();
                           break;
                       } 
                       
@@ -232,24 +228,6 @@ public class TripMainPanelAdapter extends BaseAdapter
     /**
      * 
      */
-    private void addLatLon()
-    {
-        if (SatelliteActivity.checkForGPS(tripMainActivity))
-        {
-            LocationManager locMgr = (LocationManager)tripMainActivity.getSystemService(Context.LOCATION_SERVICE);
-            Location        loc    = locMgr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            
-            Intent intent = new Intent(tripMainActivity, TripDataEntryDetailActivity.class);
-            intent.putExtra(TripListActivity.ID_EXTRA, tripId);
-            
-            intent.putExtra(TripDataEntryDetailActivity.ID_ISCREATE, true);
-            intent.putExtra(TripDataEntryDetailActivity.LAT_VAL, loc != null ? loc.getLatitude()  :  38.958654); // for debugging
-            intent.putExtra(TripDataEntryDetailActivity.LON_VAL, loc != null ? loc.getLongitude() : -95.243829);
-            tripMainActivity.startActivity(intent);
-        }
-    }
-
-    
     /**
      * 
      */
