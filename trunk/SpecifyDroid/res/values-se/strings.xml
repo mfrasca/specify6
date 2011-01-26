@@ -34,6 +34,8 @@
     <string name="trptypelbl">Typ:</string>
     <string name="trpdatelbl">Datum:</string>
     <string name="trpnoteslbl">Anteckningar:</string>
+    <string name="chooseflds">Välj fält</string>
+    <string name="trpclcknew">Klicka på menyn för att lägga till en ny resa</string>
     
     <!--  Trip Detail Menus -->
     <string name="tripconfig">Config</string>
@@ -61,7 +63,9 @@
     <string name="trpfieldslbl">Fält</string>
     <string name="editfieldsbtn">Konfigurera Fält</string>
     
-    <string name="emptytriplist">Klicka på menyknappen för att skapa en ny resa</string>
+    <!-- Mapping -->
+    <string name="map">Karta</string>
+    <string name="satellite">Satellit</string>
     
     <!-- Exporting -->
     <string name="extstrgnotavail">Extern Lagring Känner jag mig sminkad integ tillgänglig.</string>

@@ -209,7 +209,7 @@ public class TripListActivity extends SpBaseActivity
                     }
                 });
 
-        builder.setTitle(String.format(getString(R.string.emptytriplist)));
+        builder.setTitle(String.format(getString(R.string.trpclcknew)));
         AlertDialog alert = builder.create();
         alert.show();
     }
@@ -416,8 +416,7 @@ public class TripListActivity extends SpBaseActivity
                      {
                          if (isEmty)
                          {
-                             //notifyOfEmptyList();
-                             emptyTV.setText("Click on the menu to add a new trip");
+                             emptyTV.setText(R.string.trpclcknew);
                              emptyLL.setVisibility(View.VISIBLE);
                              list.setVisibility(View.GONE);
                          } else

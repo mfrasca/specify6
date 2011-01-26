@@ -20,9 +20,11 @@
 package edu.ku.brc.specifydroid;
 
 import java.io.File;
+import java.util.HashMap;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
@@ -30,6 +32,8 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -143,6 +147,22 @@ public class SpecifyActivity extends SpBaseActivity
             VersionChecker versionChecker = new VersionChecker(this);
             versionChecker.checkForNewVersion();
         }
+        
+        initSounds();
+        
+        Thread t = new Thread() {
+            public void run() {
+                try
+                {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
+                playSound(SOUND_EXPLOSION);
+            }
+        };
+        t.start();
     }
     
     /* (non-Javadoc)
@@ -255,14 +275,49 @@ public class SpecifyActivity extends SpBaseActivity
         "<br><a href=\"mailto:specify@ku.edu\">specify@ku.edu</a><br>" +  //$NON-NLS-1$
         "<p>The Specify Software Project is "+ //$NON-NLS-1$
         "funded by the Advances in Biological Informatics Program, " + //$NON-NLS-1$
-        "U.S. National Science Foundation  (Award DBI-0446544 and earlier awards).<br><br>" + //$NON-NLS-1$
+        "U.S. National Science Foundation  (Award DBI-0960913 and earlier awards).<br><br>" + //$NON-NLS-1$
         appNameArg + " Copyright \u00A9 2011 University of Kansas Center for Research. " + 
         "Specify comes with ABSOLUTELY NO WARRANTY.<br><br>" + //$NON-NLS-1$
         "This is free software licensed under GNU General Public License 2 (GPL2).</P></font></html>"; //$NON-NLS-1$
 
     }
-
     
+    public static final int SOUND_EXPLOSION = 1;
+
+    private SoundPool soundPool;
+    private HashMap<Integer, Integer> soundPoolMap;
+
+
+    private void initSounds()
+    {
+        try
+        {
+            soundPool = new SoundPool(4, AudioManager.STREAM_MUSIC, 100);
+            soundPoolMap = new HashMap<Integer, Integer>();
+            soundPoolMap.put(SOUND_EXPLOSION, soundPool.load(this, R.raw.specifydroid, 1));
+            
+            Log.d("DBG", "*** Played sound. ");
+            
+        } catch (Exception ex)
+        {
+            Log.e("XXX", "No Sound", ex);
+        }
+    }
+         
+              
+    public void playSound(int sound)
+    {
+        /* Updated: The next 4 lines calculate the current volume in a scale of 0.0 to 1.0 */
+        AudioManager mgr = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        float streamVolumeCurrent = mgr.getStreamVolume(AudioManager.STREAM_MUSIC);
+        float streamVolumeMax = mgr.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        float volume = 15.0F;// streamVolumeCurrent / streamVolumeMax;
+
+        /* Play the sound with the correct volume */
+        soundPool.play(soundPoolMap.get(sound), volume, volume, 1, 0, 1f);
+
+    }
+
     /*private void checkPath()
     {
         try

@@ -77,7 +77,7 @@ public class TripDataDefActivity extends SpBaseActivity
     {
         super.onSaveInstanceState(outState);
         
-        outState.putString(tripId, TripListActivity.ID_EXTRA);
+        outState.putString(TripListActivity.ID_EXTRA, tripId);
     }
 
     /* (non-Javadoc)

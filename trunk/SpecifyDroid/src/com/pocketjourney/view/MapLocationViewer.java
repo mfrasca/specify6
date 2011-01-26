@@ -59,8 +59,8 @@ public class MapLocationViewer extends LinearLayout {
 		setOrientation(VERTICAL);
 		setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
 
-        //mapView = new MapView(getContext(),"0JCMEdmz3F_ggW_XsZILSwgwJm4CyKrEwksYBGg");
-        mapView = new MapView(getContext(),"0JCMEdmz3F_jjwD-dDDwr9rb_fzQN-kn9Aj3bkQ");
+        mapView = new MapView(getContext(),"0JCMEdmz3F_ggW_XsZILSwgwJm4CyKrEwksYBGg"); // debug
+        //mapView = new MapView(getContext(),"0JCMEdmz3F_jjwD-dDDwr9rb_fzQN-kn9Aj3bkQ");
 		mapView.setEnabled(true);
 		mapView.setClickable(true);
 		addView(mapView);
@@ -81,20 +81,20 @@ public class MapLocationViewer extends LinearLayout {
     	}
 	}
 	
+	/**
+	 * @param isSat
+	 */
 	protected void setSatellite(final boolean isSat)
 	{
 	    isSatellite = isSat;
-        if (isSatellite)
-        {
-            satBtn.setText("  Map  ");
-            mapView.setSatellite(true);
-        } else
-        {
-            satBtn.setText("Satellite");
-            mapView.setSatellite(false);
-        }
+        satBtn.setText(isSatellite ? String.format("   %s   ", getContext().getString(R.string.map)) :
+                                     String.format("%s", getContext().getString(R.string.satellite)));
+        mapView.setSatellite(isSatellite);
 	}
 	
+	/**
+	 * 
+	 */
 	protected void initUI()
 	{
         if (satBtn == null)

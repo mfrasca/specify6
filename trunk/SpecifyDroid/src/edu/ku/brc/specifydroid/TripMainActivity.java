@@ -19,7 +19,15 @@
 */
 package edu.ku.brc.specifydroid;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import android.content.Context;
 import android.content.Intent;
+import android.location.GpsStatus;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.location.GpsStatus.Listener;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.GridView;
@@ -36,9 +44,17 @@ import edu.ku.brc.specifydroid.datamodel.Trip;
  */
 public class TripMainActivity extends SpBaseActivity
 {
+    private static final String ID_PNTWASCPT = "ID_PNTWASCPT";
+    
     private String    tripId;
     private TextView  titleView;
     private String    baseTitle;
+    
+    private LocationManager  locMgr    = null;
+    //private GpsStatus        gpsStatus = null;
+    private Location         loc       = null;
+    private AtomicBoolean    pointWasCaptured = new AtomicBoolean(false);
+
     /**
      * 
      */
@@ -58,9 +74,11 @@ public class TripMainActivity extends SpBaseActivity
         if (savedInstanceState != null)
         {
             tripId = savedInstanceState.getString(TripListActivity.ID_EXTRA);
+            pointWasCaptured = new AtomicBoolean(savedInstanceState.getBoolean(ID_PNTWASCPT));
         } else
         {
             tripId = getIntent().getStringExtra(TripListActivity.ID_EXTRA);
+            pointWasCaptured = new AtomicBoolean(getIntent().getBooleanExtra(ID_PNTWASCPT, false));
         }
 
         setContentView(R.layout.tripmain);
@@ -111,7 +129,8 @@ public class TripMainActivity extends SpBaseActivity
     {
         super.onSaveInstanceState(outState);
         
-        outState.putString(tripId, TripListActivity.ID_EXTRA);
+        outState.putString(TripListActivity.ID_EXTRA, tripId);
+        outState.putBoolean(ID_PNTWASCPT, pointWasCaptured.get());
     }
 
     /* (non-Javadoc)
@@ -122,6 +141,29 @@ public class TripMainActivity extends SpBaseActivity
     {
         super.onResume();
         updateTitle();
+        
+        if (pointWasCaptured.get())
+        {
+            if (locMgr != null && onLocationChange != null)
+            {
+                locMgr.removeUpdates(onLocationChange);
+            }
+            locMgr = null;
+            loc    = null;
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see edu.ku.brc.specifydroid.SpBaseActivity#onDestroy()
+     */
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        if (locMgr != null && onLocationChange != null)
+        {
+            locMgr.removeUpdates(onLocationChange);
+        }
     }
 
     /**
@@ -147,4 +189,122 @@ public class TripMainActivity extends SpBaseActivity
             }
         }
     }
+    
+    /**
+     * 
+     */
+    protected void addLatLon()
+    {
+        if (SatelliteActivity.checkForGPS(this))
+        {
+            if (locMgr == null)
+            {
+                locMgr = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+                
+                //locMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 10.0f, onLocationChange);
+    
+                // Listener for GPS Status...
+    
+                final Listener onGpsStatusChange = new GpsStatus.Listener()
+                {
+                    public void onGpsStatusChanged(int event)
+                    {
+                        switch (event)
+                        {
+                            case GpsStatus.GPS_EVENT_STARTED:
+                                Log.v("TEST", "GPS_EVENT_STARTED");
+                                // Started...
+                                break;
+    
+                            case GpsStatus.GPS_EVENT_FIRST_FIX:
+                                Log.v("TEST", "GPS_EVENT_FIRST_FIX");
+                                // First Fix...
+                                break;
+    
+                            case GpsStatus.GPS_EVENT_STOPPED:
+                                Log.v("TEST", "GPS_EVENT_STOPPED");
+                                // Stopped...
+                                break;
+    
+                            case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
+                                Log.v("TEST", "GPS_EVENT_SATELLITE_STATUS");
+                                doCapturePoint();
+                                break;
+                        }
+                    }
+                };
+                locMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 10.0f, onLocationChange);
+                locMgr.addGpsStatusListener(onGpsStatusChange);
+            }
+        }
+    }
+    
+    /**
+     * 
+     */
+    private void doCapturePoint()
+    {
+        if (loc == null)
+        {
+            /*gpsStatus = locMgr.getGpsStatus(gpsStatus);
+            int maxSats = gpsStatus.getMaxSatellites();
+            Log.i("DBG", "Max Stats: "+ maxSats);
+            
+            Iterable<GpsSatellite> iSatellites = gpsStatus.getSatellites();
+            Iterator<GpsSatellite> it = iSatellites.iterator();
+            int cnt = 0;
+            while (it.hasNext())
+            {
+                it.next();
+                cnt++;
+            }
+            Log.d("DBG", "Num Stats: "+ gpsStatus.getTimeToFirstFix()+"  "+cnt);*/
+            
+            if (locMgr.isProviderEnabled(LocationManager.GPS_PROVIDER))
+            {
+                loc = locMgr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            }
+            
+            if (loc != null)
+            {
+                Intent intent = new Intent(this, TripDataEntryDetailActivity.class);
+                intent.putExtra(TripListActivity.ID_EXTRA, tripId);
+                
+                Log.i("DBG", String.format("%8.5f, %8.5f", loc != null ? loc.getLatitude() : 0.0f, loc != null ? loc.getLongitude() : 0.0f));
+                
+                intent.putExtra(TripDataEntryDetailActivity.ID_ISCREATE, true);
+                intent.putExtra(TripDataEntryDetailActivity.LAT_VAL, loc != null ? loc.getLatitude()  :  38.958654); // for debugging
+                intent.putExtra(TripDataEntryDetailActivity.LON_VAL, loc != null ? loc.getLongitude() : -95.243829);
+                pointWasCaptured.set(true);
+                startActivity(intent);
+            }
+        }
+    }
+
+    LocationListener onLocationChange=new LocationListener() {
+        public void onLocationChanged(Location location) 
+        {
+            // required for interface, not used
+            Log.v("TEST", "onLocationChanged");
+        }
+        
+        public void onProviderDisabled(String provider) 
+        {
+            // required for interface, not used
+            Log.v("TEST", "onProviderDisabled");
+        }
+        
+        public void onProviderEnabled(String provider) 
+        {
+            // required for interface, not used
+            Log.v("TEST", "onProviderEnabled");
+        }
+        
+        public void onStatusChanged(String provider, int status, Bundle extras) 
+        {
+            // required for interface, not used
+            Log.v("TEST", "onStatusChanged");
+        }
+    };
+
 }

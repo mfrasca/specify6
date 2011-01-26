@@ -68,6 +68,7 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
     
     private AtomicBoolean              isActive = new AtomicBoolean(true);
     private String                     tripId      = null;
+    private Integer                    ttdId       = null;
     private boolean                    isNewRec    = false;
     private boolean                    isCreateRec = false;
     private boolean                    isChanged   = false;
@@ -79,7 +80,8 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
     private ImageButton                posLastBtn;
     private ImageButton                posPrevBtn;
     private ImageButton                posNextBtn;
-    private ImageButton                addBtn;
+    private ImageButton                addBtn      = null;
+    private ImageButton                delBtn;
     private Button                     saveBtn;
     private TextView                   recLabel;
     
@@ -123,7 +125,7 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
         }
         
         
-        isNewRec    = isCreateRec;
+        isNewRec = isCreateRec;
         
         String sql = String.format("SELECT TripRowIndex AS count FROM tripdatacell WHERE TripID = %s ORDER BY TripRowIndex DESC LIMIT 1", tripId);
         numRows = SQLUtils.getCount(getDB(), sql);
@@ -133,8 +135,17 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
         saveBtn.setOnClickListener(onSave);
         saveBtn.setEnabled(false);
 
-        addBtn = (ImageButton) findViewById(R.id.tdcadd);
-        addBtn.setOnClickListener(onAdd);
+        //addBtn = (ImageButton) findViewById(R.id.tdcadd);
+        if (addBtn != null)
+        {
+            addBtn.setOnClickListener(onAdd);
+        }
+        
+        delBtn = (ImageButton) findViewById(R.id.tdc_del);
+        if (delBtn != null)
+        {
+            delBtn.setOnClickListener(onDel);
+        }
         
         if (!isCreateRec)
         {
@@ -211,7 +222,7 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
     {
         super.onSaveInstanceState(outState);
         
-        outState.putString(tripId, TripListActivity.ID_EXTRA);
+        outState.putString(TripListActivity.ID_EXTRA, tripId);
         outState.putBoolean(ID_ISCREATE, isCreateRec);
     }
     
@@ -506,7 +517,7 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
                 int rows = tableLayout.getChildCount();
                 tableLayout.addView(tblRow, rows-2);
                 
-                int ttdId = cursor.getInt(cursor.getColumnIndex("_id"));
+                ttdId = cursor.getInt(cursor.getColumnIndex("_id"));
                 
                 Log.d("BUILDUI", "ttdId: " + ttdId +"  colIndex["+cursor.getInt(cursor.getColumnIndex("ColumnIndex"))+"] Name: "+ cellName + "  Type: "+type);
                 
@@ -704,6 +715,13 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
             ((TextView)view).setText(data);
         }
     }
+    
+    private void doDelete()
+    {
+        closeCursor();
+        
+        String sql = "DELETE FROM tripdatacell WHERE TripRowIndex = " + rowIndex;
+    }
 
     /**
      * 
@@ -756,6 +774,17 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
         {
             isNewRec = true;
             clearForm();
+        }
+    };
+    
+    private View.OnClickListener onDel = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View v)
+        {
+            clearForm();
+            doDelete();
+            
         }
     };
     

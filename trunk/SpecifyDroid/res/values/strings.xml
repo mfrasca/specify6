@@ -34,6 +34,8 @@
     <string name="trptypelbl">Type:</string>
     <string name="trpdatelbl">Date:</string>
     <string name="trpnoteslbl">Notes:</string>
+    <string name="chooseflds">Choose Fields</string>
+    <string name="trpclcknew">Click on the menu to add a new trip</string>
     
     <!--  Trip Detail Menus -->
     <string name="tripconfig">Config</string>
@@ -61,7 +63,9 @@
     <string name="trpfieldslbl">Fields</string>
     <string name="editfieldsbtn">Configure Fields</string>
     
-    <string name="emptytriplist">Click the menu button to create a new Trip</string>
+    <!-- Mapping -->
+    <string name="map">Map</string>
+    <string name="satellite">Satellite</string>
     
     <!-- Exporting -->
     <string name="extstrgnotavail">External Storage is not available.</string>

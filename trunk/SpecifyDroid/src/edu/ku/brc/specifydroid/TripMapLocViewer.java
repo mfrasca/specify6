@@ -98,8 +98,26 @@ public class TripMapLocViewer extends MapLocationViewer
                     {
                         String name = dataHash.get("LocalityName");
                         String desc = dataHash.get("GenusSpecies");
-                        double lat  = Double.parseDouble(dataHash.get("Latitude"));
-                        double lon  = Double.parseDouble(dataHash.get("Longitude"));
+                        
+                        String latStr = dataHash.get("Latitude");
+                        String lonStr = dataHash.get("Longitude");
+                        if (latStr == null || latStr.length() == 0 ||
+                            lonStr == null || lonStr.length() == 0 )
+                        {
+                            continue;
+                        }
+                        
+                        double lat;
+                        double lon;
+                        try
+                        {
+                            lat  = Double.parseDouble(latStr);
+                            lon  = Double.parseDouble(lonStr);
+                            
+                        } catch (NumberFormatException ex)
+                        {
+                            continue;
+                        }
                         
                         Log.d("debug", lat+ " = "+lon);
                         
@@ -113,7 +131,6 @@ public class TripMapLocViewer extends MapLocationViewer
                     Log.d("debug", cursor.getString(nInx)+ " = "+cursor.getString(dInx));
                     
                     dataHash.put(cursor.getString(nInx), cursor.getString(dInx));
-                    
                     
                 } while (cursor.moveToNext());
                 
