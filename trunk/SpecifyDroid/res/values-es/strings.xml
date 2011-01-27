@@ -3,7 +3,7 @@
 
     <!-- Generic Terms -->
     <string name="yes">Sí</string>
-    <string name="no">N</string>
+    <string name="no">No</string>
     <string name="edit">Editar</string>
     <string name="delete">Eliminar</string>
     <string name="close">Cerrar</string>
@@ -69,9 +69,9 @@
     
     <!-- Exporting -->
     <string name="extstrgnotavail">Almacenamiento externo no disponible.</string>
-    <string name="extstrgnotwrt">Almacenamiento externo no PERMITE GRABACIÓN.</string>
-    <string name="no_wrt_file">No SE PUEDE grabar en el archivo %s.</string>
-    <string name="err_load_trp">No SE PUEDE Cargar Viaje con id: %s</string>
+    <string name="extstrgnotwrt">Almacenamiento externo NO PERMITE GRABACIÓN.</string>
+    <string name="no_wrt_file">NO SE PUEDE grabar en el archivo %s.</string>
+    <string name="err_load_trp">NO SE PUEDE cargar viaje con id: %s</string>
     <string name="file_wrt">%s síguardo.</string>
     <string name="file_exp">Archivo: %s</string>
 
