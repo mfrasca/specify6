@@ -13,6 +13,8 @@
     <string name="donelbl">Hecho</string>
     <string name="about">Acerca de</string>
     <string name="add">Agregar</string>
+    <string name="settings">Configuración</string>
+    <string name="preferences">Preferencias</string>
     
     <string name="alert_dialog_ok">Aceptar</string>
     <string name="alert_dialog_cancel">Cancelar</string>
@@ -22,6 +24,8 @@
     <string name="app_name">SpecifyDroid</string>
     <string name="save">Guardar</string>
     <string name="about_title">Acerca de SpecifyDroid</string>
+    <string name="startup_sound">Sonido de inicio</string>
+    <string name="ss_summary">Reproduce el sonido de apertura.</string>
 
     <!--  App Main Grid -->
     <string name="satellites">Satélites</string>
