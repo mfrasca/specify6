@@ -30,17 +30,18 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnCreateContextMenuListener;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import edu.ku.brc.specifydroid.datamodel.Trip;
+import edu.ku.brc.utils.SQLUtils;
 /**
  * @author rods
  * 
@@ -325,7 +326,7 @@ public class TripListActivity extends SpBaseActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        if (item.getItemId() == R.id.add)
+        if (item.getItemId() == R.id.add_trip_mi)
         {
             startActivity(new Intent(this, TripDetailActivity.class));
             return true;
@@ -335,6 +336,7 @@ public class TripListActivity extends SpBaseActivity
             startActivity(new Intent(this, EditPreferences.class));
             return true;
         }
+        
         return super.onOptionsItemSelected(item);
     }
 

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.ImageButton;
 import edu.ku.brc.specifydroid.R;
@@ -62,7 +61,7 @@ public class ImageOnlyButton extends ImageButton {
 	@Override
 	public boolean onTouchEvent(MotionEvent	event)
 	{
-		Log.d("TextOnlyButton",event.getAction()+"");
+		//Log.d("TextOnlyButton",event.getAction()+"");
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
 			//  Request a redraw to update the button color
 			isButtonPressed = true;

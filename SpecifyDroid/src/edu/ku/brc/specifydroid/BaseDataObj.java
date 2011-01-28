@@ -182,37 +182,93 @@ public abstract class BaseDataObj<T>
      */
     public long insert(final SQLiteDatabase db)
     {
+        long rv = -1;
         ContentValues cv = new ContentValues();
-        
         putContentValues(cv);
+        try
+        {
+            db.beginTransaction();
+            rv = db.insertOrThrow(tableName, "", cv);
+            if (rv != -1)
+            {
+                db.setTransactionSuccessful();
+            }
+            
+        } catch  (Exception ex)
+        {
+            Log.e(getClass().getSimpleName(), ex.getMessage(), ex);
+            
+        } finally
+        {
+            db.endTransaction();
+        }
         
-        return db.insert(tableName, "name", cv);
+        return rv;
     }
     
     /**
      * @param db
      */
-    public int update(final SQLiteDatabase db, final String whereClause, final String[] whereArgs)
+    public long update(final SQLiteDatabase db, 
+                       final String whereClause, 
+                       final String[] whereArgs)
     {
         ContentValues cv = new ContentValues();
-        
         putContentValues(cv);
         
-        return db.update(tableName, cv, whereClause, whereArgs);
+        long rv = -1;
+        try
+        {
+            db.beginTransaction();
+            rv = db.update(tableName, cv, whereClause, whereArgs);
+            if (rv > 0)
+            {
+                db.setTransactionSuccessful();
+            }
+            
+        } catch  (Exception ex)
+        {
+            Log.e(getClass().getSimpleName(), ex.getMessage(), ex);
+            
+        } finally
+        {
+            db.endTransaction();
+        }
+        
+        return rv;
     }
     
     /**
      * @param id
      * @param db
      */
-    public int update(final String id, final SQLiteDatabase db)
+    public long update(final String id, final SQLiteDatabase db)
     {
         ContentValues cv = new ContentValues();
         String[] args = { id };
 
         putContentValues(cv);
         
-        return db.update(tableName, cv, "_id=?", args);
+        long rv = -1;
+        try
+        {
+            db.beginTransaction();
+            rv = db.update(tableName, cv, "_id=?", args);
+            if (rv > 0)
+            {
+                db.setTransactionSuccessful();
+            }
+            
+        } catch  (Exception ex)
+        {
+            Log.e(getClass().getSimpleName(), ex.getMessage(), ex);
+            
+        } finally
+        {
+            db.endTransaction();
+        }
+        
+        return rv;
     }
     
 }

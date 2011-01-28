@@ -1,7 +1,10 @@
 package edu.ku.brc.specifydroid.datamodel;
 
+import java.util.ArrayList;
+
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import edu.ku.brc.specifydroid.BaseDataObj;
@@ -138,4 +141,63 @@ public class TripDataCell extends BaseDataObj<TripDataCell>
         return null;
     }
     
+
+    /**
+     * Renumbers the row indexes from startingRow+1 to the highest row number. 'startingRow' should be
+     * the index of the row that was removed.
+     * @param db the database connection
+     * @param startingRow The index of the row that was removed.
+     * @param trpId the trip id
+     */
+    public static void renumberRowIndexes(final SQLiteDatabase db, 
+                                          final int    startingRow, 
+                                          final String trpId)
+    {
+        try
+        {
+            String sql = String.format("SELECT _id, TripRowIndex FROM tripdatacell WHERE TripID=%s AND TripRowIndex > %d ORDER BY TripRowIndex", trpId, startingRow);
+            ArrayList<Integer> ids     = new ArrayList<Integer>();
+            ArrayList<Integer> rowInxs = new ArrayList<Integer>();
+            Cursor          cursor = db.rawQuery(sql, null);
+            if (cursor.moveToFirst())
+            {
+                do
+                {
+                    ids.add(cursor.getInt(0));
+                    rowInxs.add(cursor.getInt(1));
+                    
+                } while (cursor.moveToNext());
+                cursor.close();
+            }
+            
+            db.beginTransaction();
+            
+            String[] args = {" "};
+            
+            boolean isOK = true;
+            ContentValues cv = new ContentValues();
+            for (int i=0;i<ids.size();i++)
+            {
+                int id     = ids.get(i);
+                int rowInx = rowInxs.get(i);
+                
+                args[0] = Integer.toString(id);
+                cv.put("TripRowIndex", rowInx-1);
+                int rv = db.update("tripdatacell", cv, "_id=?", args);
+                if (rv != 1)
+                {
+                    isOK = false;
+                    break;
+                }
+            }
+        
+            if (isOK)
+            {
+                db.setTransactionSuccessful();
+            }
+        } catch (SQLException ex)
+        {
+        }
+        db.endTransaction();
+    }
 }

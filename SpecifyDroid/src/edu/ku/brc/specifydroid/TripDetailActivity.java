@@ -46,9 +46,13 @@ import android.widget.TextView;
 import edu.ku.brc.specifydroid.datamodel.Trip;
 import edu.ku.brc.specifydroid.datamodel.TripDataDef;
 import edu.ku.brc.specifydroid.datamodel.TripDataDef.TripDataDefType;
+import edu.ku.brc.utils.DialogHelper;
+import edu.ku.brc.utils.SQLUtils;
 
 public class TripDetailActivity extends SpBaseActivity implements DatePickerDialog.OnDateSetListener
 {
+    private static final String ERR_INS = "Error inserting a new trip";
+    private static final String ERR_UPD = "Error updating a new trip";
     
     public static final String   SPECIFYDROID_PREF = "SPECIFYDROID";
     public static final String   DISP_KEY_PREF     = "DISP_TYPE_ID";
@@ -402,12 +406,21 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
         {
             current.setName("New Item");
             Long id = current.insert(getDB());
+            if (id == -1)
+            {
+                DialogHelper.showDialog(TripDetailActivity.this, ERR_INS);
+            }
+
             tripId = id.toString();
             doStdConfig(true); // true means do silently
             
         } else
         {
-            current.update(tripId, getDB());
+            long rv = current.update(tripId, getDB());
+            if (rv != 1)
+            {
+                DialogHelper.showDialog(TripDetailActivity.this, ERR_UPD);
+            }
         }
         
         hasChanged = false;
@@ -497,6 +510,11 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
                     tdd.setColumnIndex(colIndex);
                     
                     long _id = tdd.insert(getDB());
+                    if (_id == -1)
+                    {
+                        DialogHelper.showDialog(TripDetailActivity.this, ERR_INS);
+                        break;
+                    }
                     
                     Log.d("POPULATE", "_id: ["+_id+"] trpId: " + tdd.getTripID() +"  colIndex["+tdd.getColumnIndex()+"] Name: "+ tdd.getName() + "  Type: "+tdd.getDataType());
                 }

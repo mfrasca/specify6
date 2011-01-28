@@ -34,6 +34,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import edu.ku.brc.utils.SQLUtils;
 import edu.ku.brc.utils.ZipFileHelper;
 
 /**

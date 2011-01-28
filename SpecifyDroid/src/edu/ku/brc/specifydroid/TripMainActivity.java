@@ -20,19 +20,22 @@
 package edu.ku.brc.specifydroid;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 
 import android.content.Context;
 import android.content.Intent;
 import android.location.GpsStatus;
+import android.location.GpsStatus.Listener;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.location.GpsStatus.Listener;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.GridView;
 import android.widget.TextView;
 import edu.ku.brc.specifydroid.datamodel.Trip;
+import edu.ku.brc.utils.DialogHelper;
+import edu.ku.brc.utils.SQLUtils;
 
 /**
  * @author rods
@@ -49,11 +52,14 @@ public class TripMainActivity extends SpBaseActivity
     private String    tripId;
     private TextView  titleView;
     private String    baseTitle;
+    private int       itemCount = 0;
     
-    private LocationManager  locMgr    = null;
-    //private GpsStatus        gpsStatus = null;
-    private Location         loc       = null;
-    private AtomicBoolean    pointWasCaptured = new AtomicBoolean(false);
+    //private GpsStatus            gpsStatus = null;
+    private LocationManager      locMgr           = null;
+    private Location             loc              = null;
+    private AtomicBoolean        pointWasCaptured = new AtomicBoolean(false);
+    private AtomicLong           milliseconds     = new AtomicLong(0); 
+    private TripMainPanelAdapter adapter ;
 
     /**
      * 
@@ -83,8 +89,9 @@ public class TripMainActivity extends SpBaseActivity
 
         setContentView(R.layout.tripmain);
 
+        adapter = new TripMainPanelAdapter(this, tripId);
         GridView gridview = (GridView)findViewById(R.id.tripgridview);
-        gridview.setAdapter(new TripMainPanelAdapter(this, tripId));
+        gridview.setAdapter(adapter);
         
         titleView = (TextView)findViewById(R.id.tripmaintitle);
         if (tripId != null)
@@ -96,8 +103,16 @@ public class TripMainActivity extends SpBaseActivity
                 titleView.setText(baseTitle);
             }
         }
+        updateTitle();
      }
     
+    /**
+     * @return the itemCount
+     */
+    public int getItemCount()
+    {
+        return itemCount;
+    }
 
     /**
      * 
@@ -142,6 +157,14 @@ public class TripMainActivity extends SpBaseActivity
         super.onResume();
         updateTitle();
         
+        resetLocationManager();
+    }
+    
+    /**
+     * 
+     */
+    private void resetLocationManager()
+    {
         if (pointWasCaptured.get())
         {
             if (locMgr != null && onLocationChange != null)
@@ -160,10 +183,8 @@ public class TripMainActivity extends SpBaseActivity
     protected void onDestroy()
     {
         super.onDestroy();
-        if (locMgr != null && onLocationChange != null)
-        {
-            locMgr.removeUpdates(onLocationChange);
-        }
+        
+        resetLocationManager();
     }
 
     /**
@@ -174,7 +195,7 @@ public class TripMainActivity extends SpBaseActivity
         if (tripId != null)
         {
             String sql = String.format("select COUNT(*) AS count FROM (select TripRowIndex from tripdatacell where TripID = %s GROUP BY TripRowIndex)", tripId);
-            int itemCount = SQLUtils.getCount(getDB(), sql);
+            itemCount = SQLUtils.getCount(getDB(), sql);
             
             sql = String.format("SELECT Name FROM trip WHERE _id = %s", tripId);
             String titleStr = SQLUtils.getStringObj(getDB(), sql);
@@ -187,6 +208,8 @@ public class TripMainActivity extends SpBaseActivity
             {
                 titleView.setText(String.format("%s %s", baseTitle, getString(R.string.tmgtitleitems, itemCount)));
             }
+            
+            adapter.setEnabled(itemCount != 0);
         }
     }
     
@@ -199,6 +222,8 @@ public class TripMainActivity extends SpBaseActivity
         {
             if (locMgr == null)
             {
+                milliseconds.set(System.currentTimeMillis());
+                
                 locMgr = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
                 
                 //locMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 10.0f, onLocationChange);
@@ -267,6 +292,8 @@ public class TripMainActivity extends SpBaseActivity
             
             if (loc != null)
             {
+                resetLocationManager();
+                
                 Intent intent = new Intent(this, TripDataEntryDetailActivity.class);
                 intent.putExtra(TripListActivity.ID_EXTRA, tripId);
                 
@@ -277,11 +304,20 @@ public class TripMainActivity extends SpBaseActivity
                 intent.putExtra(TripDataEntryDetailActivity.LON_VAL, loc != null ? loc.getLongitude() : -95.243829);
                 pointWasCaptured.set(true);
                 startActivity(intent);
+                
+            } else
+            {
+                long delta = (System.currentTimeMillis() - milliseconds.get()) / 1000;
+                if (delta > 15)
+                {
+                    resetLocationManager();
+                    DialogHelper.showDialog(this, "Timed out.");
+                }
             }
         }
     }
 
-    LocationListener onLocationChange=new LocationListener() {
+    LocationListener onLocationChange = new LocationListener() {
         public void onLocationChanged(Location location) 
         {
             // required for interface, not used

@@ -19,6 +19,8 @@
 */
 package edu.ku.brc.specifydroid;
 
+import java.util.ArrayList;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -33,6 +35,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import edu.ku.brc.specifydroid.datamodel.Trip;
 import edu.ku.brc.utils.DialogHelper;
+import edu.ku.brc.utils.SQLUtils;
 
 /**
  * @author rods
@@ -44,11 +47,25 @@ import edu.ku.brc.utils.DialogHelper;
  */
 public class TripMainPanelAdapter extends BaseAdapter
 {
+    private static final int BROWSE_INX = 1;
+    private static final int EXPORT_INX = 3;
+    private static final int MAP_INX    = 4;
+    
+    private static final int[] DISABLE_ICONS_INX = {BROWSE_INX, EXPORT_INX, MAP_INX};
+    
     private static final Integer[] iconIds = 
     { 
         R.drawable.mylocation, R.drawable.browsedb,
         R.drawable.camera,     R.drawable.exportdataset,
         R.drawable.googlemaps,
+        R.drawable.config,     R.drawable.delete,     
+    };
+    
+    private static final Integer[] iconFadedIds = 
+    { 
+        R.drawable.mylocation, R.drawable.browsedb_faded,
+        R.drawable.camera,     R.drawable.exportdataset_faded,
+        R.drawable.googlemaps_faded,
         R.drawable.config,     R.drawable.delete,     
     };
     
@@ -64,8 +81,11 @@ public class TripMainPanelAdapter extends BaseAdapter
     // R.string.tmgemail,  
     
     // Data Members
-    private TripMainActivity tripMainActivity;
-    private String           tripId;
+    private TripMainActivity     tripMainActivity;
+    private String               tripId;
+    
+    private ArrayList<ImageView> imgViews = new ArrayList<ImageView>();
+    private ArrayList<TextView>  txtViews = new ArrayList<TextView>();
 
     /**
      * @param activity the TripMainActivity
@@ -108,6 +128,9 @@ public class TripMainPanelAdapter extends BaseAdapter
             llCell.addView(imageView);
             llCell.addView(titleView);
             
+            imgViews.add(imageView);
+            txtViews.add(titleView);
+            
         } else
         {
             llCell = (LinearLayout)convertView;
@@ -146,8 +169,6 @@ public class TripMainPanelAdapter extends BaseAdapter
                           //intent.putExtra(TripListActivity.TRIP_TYPE, TripListActivity.CONFIG_TRIP);
                           //tripMainActivity.startActivity(intent);
                           
-                          //TripSQLiteHelper dbHelper = new TripSQLiteHelper(tripMainActivity);
-                          //dbHelper.loadTestData(getDB());
                           DialogHelper.showDialog(tripMainActivity, R.string.notimpl);
                           break;
                       }
@@ -199,8 +220,26 @@ public class TripMainPanelAdapter extends BaseAdapter
                 return false;
             }
         });*/
+        
+        setEnabled(tripMainActivity.getItemCount() > 0);
 
         return llCell;
+    }
+    
+    /**
+     * @param enabled
+     */
+    public void setEnabled(final boolean enabled)
+    {
+        Integer[] ids = enabled ? iconIds : iconFadedIds;
+        for (int inx : DISABLE_ICONS_INX)
+        {
+            if (inx < imgViews.size())
+            {
+                imgViews.get(inx).setImageResource(ids[inx]);
+                txtViews.get(inx).setEnabled(enabled);
+            }
+        }
     }
     
     /**
@@ -225,9 +264,6 @@ public class TripMainPanelAdapter extends BaseAdapter
         }
     }
     
-    /**
-     * 
-     */
     /**
      * 
      */
