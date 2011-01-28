@@ -7,13 +7,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.Calendar;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
@@ -21,14 +21,17 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Environment;
-import android.provider.Settings;
 import android.util.Log;
 import edu.ku.brc.specifydroid.datamodel.Trip;
+import edu.ku.brc.specifydroid.datamodel.TripDataDef;
+import edu.ku.brc.specifydroid.datamodel.TripDataDef.TripDataDefType;
 import edu.ku.brc.utils.DialogHelper;
+import edu.ku.brc.utils.SQLUtils;
 import edu.ku.brc.utils.ZipFileHelper;
 
 class TripSQLiteHelper extends SQLiteOpenHelper
 {
+    private static final String  TAG  = "TRP_HELPER";
     private static final String  DATABASE_NAME  = "trip.db";
     private static final int     SCHEMA_VERSION = 1;
     
@@ -162,7 +165,7 @@ class TripSQLiteHelper extends SQLiteOpenHelper
         } catch (IOException ex)
         {
             ex.printStackTrace();
-            android.util.Log.e("Trip", "Error building DBs", ex);
+            android.util.Log.e(TAG, "Error building DBs", ex);
             
         } finally
         {
@@ -256,7 +259,7 @@ class TripSQLiteHelper extends SQLiteOpenHelper
                              } catch (Exception e) 
                              {  
                                  prgDlg.dismiss();
-                                 Log.e("TripSQL", "Error", e); 
+                                 Log.e(TAG, "Error", e); 
                                  e.printStackTrace(); 
                                  DialogHelper.showDialog(activity, e.getMessage());
                                  
@@ -290,68 +293,122 @@ class TripSQLiteHelper extends SQLiteOpenHelper
     
     /**
      * @param db
+     * @param tableName
+     * @return
      */
-    public void loadTestData(final SQLiteDatabase db)
+    public static int getHighestID(final SQLiteDatabase db, final String tableName)
     {
-        int tripId = 1;
-        int bInx   = 1; // base index
-        
-        String[] values= {
-                "Little Pigeon River", "-83.53372824519164", "35.69161799381586", "Catostomus commersoni",
-                "Little Pigeon River", "-83.5334314327779",  "35.69182845399097",  "Hypentelium nigricans",
-                "Little Pigeon River", "-83.53709797155", "35.69043458326836", "Moxostoma carinatum",
-                "Small Falls",         "-83.49230859919675", "35.68309906312557", "Moxostoma duquesnei",
-        };
-
-        for (int i=3;i<values.length;i+=4)
+        int cnt = SQLUtils.getCount(db, String.format("SELECT COUNT(*) as count FROM %s", tableName));
+        if (cnt > 0)
         {
-            Cursor c = db.rawQuery("SELECT Name FROM taxon WHERE Name='"+values[i]+"'", null);
-            if (!c.moveToFirst())
+            cnt = SQLUtils.getCount(db, String.format("SELECT _id as count FROM %s ORDER BY _id DESC LIMIT 0,1", tableName));
+        }
+        return cnt;
+    }
+    
+    /**
+     * REmoves all current records and loads data to WHERE TripId = 1
+     * @param db the database
+     */
+    public static void loadTestData(final SQLiteDatabase db)
+    {
+        try
+        {
+            String tripName = "Great Smoky Mountains";
+            db.beginTransaction();
+            
+            Integer tripIdInt = SQLUtils.getCount(db, String.format("SELECT _id as count FROM trip WHERE Name = '%s'", tripName));
+            if (tripIdInt != -1)
             {
-                String sql = "INSERT INTO taxon (ParentID, Name, RankID) VALUES(0,'"+values[i]+"', 220)";
-                db.execSQL(sql);
+                Trip.doDeleteTrip(db, tripIdInt.toString());
             }
-            c.close();
-        }
-        
-        int rowIndex = SQLUtils.getCount(db, "SELECT TripRowIndex AS count FROM tripdatacell WHERE TripID = " +tripId+" ORDER BY TripRowIndex DESC LIMIT 1");
-        
-        String insertStr = "INSERT INTO tripdatacell (TripDataDefID, TripID, TripRowIndex, Data) VALUES(%d, %d, %d, '%s')";
-        
-        // Do Locality Name
-        int row = rowIndex + 1;
-        for (int i=0;i<values.length;i+=4)
-        {
-            String sql = String.format(insertStr, bInx, tripId, row, values[i]);
-            db.execSQL(sql);
-            row++;
-        }
+            
+            String[]          titleStrs  = {"Locality Name", "Latitude", "Longitude", "Genus Species", };
+            String[]          colDefStrs = {"LocalityName", "Latitude1", "Longitude1", "GenusSpecies1", };
+            TripDataDefType[] defTypes   = {TripDataDefType.strType, TripDataDefType.doubleType, TripDataDefType.doubleType, TripDataDefType.strType, };
+            String[] values= {
+                    "Little Pigeon River", "-83.53372824519164", "35.69161799381586", "Catostomus commersoni",
+                    "Little Pigeon River", "-83.5334314327779",  "35.69182845399097", "Hypentelium nigricans",
+                    "Little Pigeon River", "-83.53709797155",    "35.69043458326836", "Moxostoma carinatum",
+                    "Small Falls",         "-83.49230859919675", "35.68309906312557", "Moxostoma duquesnei",
+            };
+            
+            Timestamp tsCreated = new Timestamp(Calendar.getInstance().getTime().getTime());
+            Trip trip = new Trip();
+            trip.setTripDate(new Date(111,0,1));
+            trip.setName(tripName);
+            trip.setDiscipline(1);
+            trip.setTimestampCreated(tsCreated);
+            trip.setTimestampModified(tsCreated);
+            
+            tripIdInt = (int)trip.insert(db);
+            if (tripIdInt == -1)
+            {
+                Log.e(TAG, "Error writing trip");
+                return;
+            }
+            String   tripId = tripIdInt.toString();
+            String[] args   = new String[] {tripId};
+            
+            int         numColumns = colDefStrs.length;
+            int[]       tddRecIds = new int[numColumns];
+            TripDataDef tdd = new TripDataDef();
+            for (int i=0;i<numColumns;i++)
+            {
+                tdd.setColumnIndex(i);
+                tdd.setDataType((short)defTypes[i].ordinal());
+                tdd.setName(colDefStrs[i]);
+                tdd.setTitle(titleStrs[i]);
+                tdd.setTripID(tripIdInt);
 
-        // Do Lat
-        row = rowIndex + 1;
-        for (int i=1;i<values.length;i+=4)
+                int id = (int)tdd.insert(db);
+                if (id != -1)
+                {
+                    tddRecIds[i] = id;
+                } else
+                {
+                    Log.e(TAG, "Error writing tripdatadef " +i);
+                    return;
+                }
+            }
+            
+            int numNewRows = values.length / numColumns; 
+            
+            // Fill Taxon Table with Names from Records
+            for (int i=(numColumns-1);i<values.length;i+=numColumns)
+            {
+                args[0] = values[i];
+                Cursor c = db.rawQuery("SELECT Name FROM taxon WHERE Name=?", args);
+                if (!c.moveToFirst())
+                {
+                    args[0] = values[i];
+                    String sql = "INSERT INTO taxon (ParentID, Name, RankID) VALUES(0, ?, 220)";
+                    db.execSQL(sql, args);
+                }
+                c.close();
+            }
+            
+            String insertStr = "INSERT INTO tripdatacell (TripDataDefID, TripID, TripRowIndex, Data) VALUES(%d, %d, %d, '%s')";
+            
+            int valInx = 0;
+            for (int rowIndex=0;rowIndex<numNewRows;rowIndex++)
+            {
+                for (int col=0;col<numColumns;col++)
+                {
+                    String sql = String.format(insertStr, tddRecIds[col], tripIdInt, rowIndex, values[valInx++]);
+                    db.execSQL(sql);
+                }
+            }
+            
+            db.setTransactionSuccessful();
+            
+        } catch  (Exception ex)
         {
-            String sql = String.format(insertStr, bInx+3, tripId, row, values[i]);
-            db.execSQL(sql);
-            row++;
-        }
-        
-        // Do Lon
-        row = rowIndex + 1;
-        for (int i=2;i<values.length;i+=4)
+            Log.e(TAG, ex.getMessage(), ex);
+            
+        } finally
         {
-            String sql = String.format(insertStr, bInx+2, tripId, row, values[i]);
-            db.execSQL(sql);
-            row++;
-        }
-        
-        // Do Lon
-        row = rowIndex + 1;
-        for (int i=3;i<values.length;i+=4)
-        {
-            String sql = String.format(insertStr, bInx+4, tripId, row, values[i]);
-            db.execSQL(sql);
-            row++;
+            db.endTransaction();
         }
     }
     

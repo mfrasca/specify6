@@ -26,7 +26,6 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
@@ -94,8 +93,6 @@ public class SpecifyActivity extends SpBaseActivity
         
         SQLiteDatabase database = getDB();
         
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        
         setContentView(R.layout.specify_main);
 
         GridView gridview = (GridView)findViewById(R.id.spmaingridview);
@@ -159,7 +156,7 @@ public class SpecifyActivity extends SpBaseActivity
                 {
                     e.printStackTrace();
                 }
-                playSound(SOUND_EXPLOSION);
+                //playSound(SOUND_EXPLOSION);
             }
         };
         t.start();
@@ -223,6 +220,11 @@ public class SpecifyActivity extends SpBaseActivity
         if (item.getItemId() == R.id.about_mi)
         {
             showDialog(0);
+            return true;
+            
+        }  else if (item.getItemId() == R.id.addtestdata_mi)
+        {
+            TripSQLiteHelper.loadTestData(getDB());
             return true;
         }
         return super.onOptionsItemSelected(item);

@@ -12,6 +12,7 @@
     <string name="notimpl">Inte implementerat än.</string>
     <string name="donelbl">Klar</string>
     <string name="about">Om</string>
+    <string name="add">Lägg till</string>
     
     <string name="alert_dialog_ok">OK</string>
     <string name="alert_dialog_cancel">Avbryt</string>

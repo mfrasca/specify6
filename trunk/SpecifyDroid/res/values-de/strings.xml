@@ -12,6 +12,7 @@
     <string name="notimpl">Noch nicht implementiert.</string>
     <string name="donelbl">fertig</string>
     <string name="about">Über</string>
+    <string name="add">Hinzufügen</string>
     
     <string name="alert_dialog_ok">OK</string>
     <string name="alert_dialog_cancel">Abbrechen</string>

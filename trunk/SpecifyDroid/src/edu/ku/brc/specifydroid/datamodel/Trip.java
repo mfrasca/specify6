@@ -16,7 +16,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import edu.ku.brc.specifydroid.BaseDataObj;
-import edu.ku.brc.specifydroid.SQLUtils;
+import edu.ku.brc.utils.SQLUtils;
 
 /**
  * @author rods
@@ -100,32 +100,6 @@ public class Trip extends BaseDataObj<Trip>
         cv.put("LastName3", lastName3);
         setTimestamp(cv, timestampCreated, "TimestampCreated");
         setTimestamp(cv, timestampModified, "TimestampModified");
-    }
-
-    /**
-     * @param db
-     */
-    public void renumberColumnIndexes(final SQLiteDatabase db)
-    {
-        Vector<Integer> ids    = new Vector<Integer>();
-        Cursor          cursor = db.rawQuery("SELECT _id FROM tripdatadef WHERE TripID = " + id, null);
-        if (cursor.moveToFirst())
-        {
-            int inx = cursor.getColumnIndex("_id");
-            do
-            {
-                ids.add(cursor.getInt(inx));
-                
-            } while (cursor.moveToNext());
-            cursor.close();
-        }
-        
-        int inx = 0;
-        for (Integer id : ids)
-        {
-            db.rawQuery("UPDATE tripdatadef SET ColumnIndex=" + inx + " WHERE TripDataDefID=" + id, null);
-            inx++;
-        }   
     }
 
     /**
@@ -537,6 +511,39 @@ public class Trip extends BaseDataObj<Trip>
             db.endTransaction();
         }
         return false;
+    }
+    
+    /**
+     * Delete a row (a marked point) from a trip.
+     * @param db
+     * @param tripId
+     * @param rowIndex
+     * @return true on success
+     */
+    public static boolean doDeleteTripRow(final SQLiteDatabase db, 
+                                          final String tripId, 
+                                          final String rowIndex)
+    {
+        long rv = -1;
+        try
+        {
+            db.beginTransaction();
+            String[] args = new String[] {tripId, rowIndex};
+            rv = db.delete("tripdatacell", "TripID = ? AND TripRowIndex = ?", args);
+            if (rv > 0)
+            {
+                db.setTransactionSuccessful();
+            }
+            
+        } catch  (Exception ex)
+        {
+            Log.e(TAG, ex.getMessage(), ex);
+            
+        } finally
+        {
+            db.endTransaction();
+        }
+        return rv > 0;
     }
     
 }

@@ -33,6 +33,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import edu.ku.brc.specifydroid.datamodel.TripDataDef;
+import edu.ku.brc.utils.DialogHelper;
+import edu.ku.brc.utils.SQLUtils;
 
 /**
  * @author rods
@@ -230,10 +232,17 @@ public class TripDataDefDetailActivity extends SpBaseActivity implements Adapter
                 {
                     current.setTripID(Integer.parseInt(tripId));
                     current.setColumnIndex(count);
-                    current.insert(getDB());
+                    long rv = current.insert(getDB());
+                    if (rv == -1)
+                    {
+                        DialogHelper.showDialog(TripDataDefDetailActivity.this, "Error inserting "+TripDataDefDetailActivity.this.getClass().getSimpleName());
+                    }
                 } else
                 {
-                    current.update(tripDataDefId, getDB());
+                    if (current.update(tripDataDefId, getDB()) == 0)
+                    {
+                        DialogHelper.showDialog(TripDataDefDetailActivity.this, "Error updating "+TripDataDefDetailActivity.this.getClass().getSimpleName());
+                    }
                 }
             }
             closeDB();

@@ -12,6 +12,7 @@
     <string name="notimpl">Pas encore implanté.</string>
     <string name="donelbl">Fait</string>
     <string name="about">A propos</string>
+    <string name="add">Ajouter</string>
     
     <string name="alert_dialog_ok">OK</string>
     <string name="alert_dialog_cancel">Annulation</string>

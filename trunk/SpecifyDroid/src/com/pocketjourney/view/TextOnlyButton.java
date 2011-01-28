@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.Button;
 import edu.ku.brc.specifydroid.R;
@@ -59,7 +58,7 @@ public class TextOnlyButton extends Button {
 	@Override
 	public boolean onTouchEvent(MotionEvent	event)
 	{
-		Log.d("TextOnlyButton",event.getAction()+"");
+		//Log.d("TextOnlyButton",event.getAction()+"");
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
 			isTextPressed = true;
 			

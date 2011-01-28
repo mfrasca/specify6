@@ -19,7 +19,6 @@
 */
 package edu.ku.brc.specifydroid;
 
-import edu.ku.brc.utils.DialogHelper;
 import android.content.Intent;
 import android.view.Gravity;
 import android.view.View;
@@ -28,6 +27,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import edu.ku.brc.utils.DialogHelper;
 
 /**
  * @author rods

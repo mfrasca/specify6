@@ -41,12 +41,15 @@ import android.widget.FilterQueryProvider;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.SimpleCursorAdapter;
+import android.widget.SimpleCursorAdapter.CursorToStringConverter;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.SimpleCursorAdapter.CursorToStringConverter;
+import edu.ku.brc.specifydroid.datamodel.Trip;
 import edu.ku.brc.specifydroid.datamodel.TripDataCell;
 import edu.ku.brc.specifydroid.datamodel.TripDataDef;
+import edu.ku.brc.utils.DialogHelper;
+import edu.ku.brc.utils.SQLUtils;
 
 /**
  * @author rods
@@ -127,10 +130,6 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
         
         isNewRec = isCreateRec;
         
-        String sql = String.format("SELECT TripRowIndex AS count FROM tripdatacell WHERE TripID = %s ORDER BY TripRowIndex DESC LIMIT 1", tripId);
-        numRows = SQLUtils.getCount(getDB(), sql);
-        numRows++;
-        
         saveBtn = (Button) findViewById(R.id.tdcsave);
         saveBtn.setOnClickListener(onSave);
         saveBtn.setEnabled(false);
@@ -195,7 +194,7 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
         {
             LinearLayout recController = (LinearLayout)findViewById(R.id.reccontroller);
             recController.setVisibility(View.INVISIBLE);
-            addBtn.setVisibility(View.INVISIBLE);
+            delBtn.setVisibility(View.INVISIBLE);
             
             saveBtn.setOnClickListener(new View.OnClickListener()
             {
@@ -306,7 +305,9 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
         if (!isCreateRec)
         {
             if (cursorModel != null)
+            {
                 Log.d("rec", "Pos: "+cursorModel.getPosition()+", Cnt: "+cursorModel.getCount());
+            }
             
             String lblStr = String.format("%3d of %3d", (rowIndex != null ? rowIndex : 0)+1, numRows);
             recLabel.setText(lblStr);
@@ -340,6 +341,7 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
             
             numRows++;
             
+            long rv = -1;
             for (View view : viewToTTDId.keySet())
             {
                 String value = getValue(view);
@@ -348,9 +350,13 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
                 tripDataCell.setTripID(trpId);
                 tripDataCell.setTripRowIndex(rowIndex);
                 tripDataCell.setData(value);
-                tripDataCell.insert(getDB());
-                
-                Log.d("DBG", "New Row: V["+value+"] tripDataDefID["+tripDataCell.getTripDataDefID()+"] rowIndex["+tripDataCell.getTripRowIndex()+"] data["+tripDataCell.getData()+"] TripID["+tripDataCell.getTripID()+"]");
+                rv = tripDataCell.insert(getDB());
+                if (rv == -1)
+                {
+                    DialogHelper.showDialog(TripDataEntryDetailActivity.this, "Error inserting "+TripDataEntryDetailActivity.this.getClass().getSimpleName());
+                    break;
+                }
+                //Log.d("DBG", "New Row: V["+value+"] tripDataDefID["+tripDataCell.getTripDataDefID()+"] rowIndex["+tripDataCell.getTripRowIndex()+"] data["+tripDataCell.getData()+"] TripID["+tripDataCell.getTripID()+"]");
             }
             isNewRec = false;
             if (cursorModel != null)
@@ -361,7 +367,7 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
             
         } else
         {
-            //int idInx = cursorModel.getColumnIndex("_id");
+            long rv = -1;
             for (View view : changedHash.keySet())
             {
                 Boolean changed = changedHash.get(view);
@@ -376,7 +382,12 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
                     //Log.d("DBG", "Update Row: ID["+cursorModel.getString(idInx)+"] tripDataDefID["+tripDataCell.getTripDataDefID()+"] rowIndex["+tripDataCell.getTripRowIndex()+"] data["+tripDataCell.getData()+"] TripID["+tripDataCell.getTripID()+"]");
                     
                     Integer recNo = recNumHash.get(view);
-                    tripDataCell.update(recNo.toString(), getDB());          
+                    rv = tripDataCell.update(recNo.toString(), getDB());
+                    if (rv != 1)
+                    {
+                        DialogHelper.showDialog(TripDataEntryDetailActivity.this, "Error updating "+TripDataEntryDetailActivity.this.getClass().getSimpleName());
+                        break;
+                    }
                     cursorModel.requery();
                 }
             }
@@ -412,7 +423,9 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
             boolean isFirstOrBefore = rowIndex == null ? true : rowIndex == 0;
             
             if (cursorModel != null)
+            {
                 Log.d("updateUIState ", "Pos: "+cursorModel.getPosition());
+            }
             
             posFirstBtn.setEnabled(!isFirstOrBefore);
             posPrevBtn.setEnabled(!isFirstOrBefore);
@@ -535,7 +548,27 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
         cursor.close();
         
         closeCursor();
-
+        
+        startBrowse(prgDlg);
+    }
+    
+    /**
+     * 
+     */
+    private void startBrowse(final ProgressDialog prgDlg)
+    {
+        String sql = String.format("SELECT COUNT(*) AS count FROM tripdatacell WHERE TripID = %s", tripId);
+        numRows = SQLUtils.getCount(getDB(), sql);
+        if (numRows == 0)
+        {
+            finish();
+            return;
+        }
+        
+        sql = String.format("SELECT TripRowIndex AS count FROM tripdatacell WHERE TripID = %s ORDER BY TripRowIndex DESC LIMIT 1", tripId);
+        numRows = SQLUtils.getCount(getDB(), sql);
+        numRows++;
+        
         rowIndex = null;
         
         boolean doFill = true;
@@ -549,7 +582,7 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
                 
             } else
             {
-                String sql = String.format("SELECT tc._id, tc.Data, tc.TripRowIndex, td.ColumnIndex FROM tripdatacell tc INNER JOIN tripdatadef td ON tc.TripDataDefID = td._id WHERE tc.TripID = %s ORDER BY tc.TripRowIndex, td.ColumnIndex", tripId);
+                sql = String.format("SELECT tc._id, tc.Data, tc.TripRowIndex, td.ColumnIndex FROM tripdatacell tc INNER JOIN tripdatadef td ON tc.TripDataDefID = td._id WHERE tc.TripID = %s ORDER BY tc.TripRowIndex, td.ColumnIndex", tripId);
                 		
                 cursorModel = getDB().rawQuery(sql, null);
                 
@@ -574,7 +607,10 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
             fillInTransientValues();
         }
         
-        prgDlg.dismiss();
+        if (prgDlg != null)
+        {
+            prgDlg.dismiss();
+        }
         
         if (cursorModel != null)
         {
@@ -716,12 +752,22 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
         }
     }
     
-    private void doDelete()
+    /**
+     * 
+     */
+    private void doDeleteTripRow()
     {
         closeCursor();
         
-        String sql = "DELETE FROM tripdatacell WHERE TripRowIndex = " + rowIndex;
-    }
+        if (rowIndex != null)
+        {
+            ProgressDialog prgDlg = ProgressDialog.show(this, null, getString(R.string.loading), true);
+            
+            Trip.doDeleteTripRow(getDB(), tripId, rowIndex.toString());
+            TripDataCell.renumberRowIndexes(getDB(), rowIndex, tripId);
+            startBrowse(prgDlg);
+        }
+    }   
 
     /**
      * 
@@ -783,7 +829,7 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
         public void onClick(View v)
         {
             clearForm();
-            doDelete();
+            doDeleteTripRow();
             
         }
     };

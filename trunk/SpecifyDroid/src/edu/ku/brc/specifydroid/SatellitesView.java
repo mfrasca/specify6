@@ -31,7 +31,6 @@ import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.location.GpsSatellite;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;

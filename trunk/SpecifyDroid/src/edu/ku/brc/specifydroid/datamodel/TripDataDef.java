@@ -1,5 +1,7 @@
 package edu.ku.brc.specifydroid.datamodel;
 
+import java.util.Vector;
+
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -53,11 +55,11 @@ public class TripDataDef extends BaseDataObj<TripDataDef>
     @Override
     protected void putContentValues(final ContentValues cv)
     {
-        cv.put("Name", name);
-        cv.put("Title", title);
-        cv.put("DataType", dataType);
+        cv.put("Name",        name);
+        cv.put("Title",       title);
+        cv.put("DataType",    dataType);
         cv.put("ColumnIndex", columnIndex);
-        cv.put("TripID", tripID);
+        cv.put("TripID",      tripID);
     }
 
     /**
@@ -186,4 +188,32 @@ public class TripDataDef extends BaseDataObj<TripDataDef>
         return null;
     }
     
+    /**
+     * @param db
+     * @param trpId
+     */
+    public static void renumberColumnIndexes(final SQLiteDatabase db, final String trpId)
+    {
+        Vector<Integer> ids    = new Vector<Integer>();
+        Cursor          cursor = db.rawQuery("SELECT _id FROM tripdatadef WHERE TripID = " + trpId, null);
+        if (cursor.moveToFirst())
+        {
+            int inx = cursor.getColumnIndex("_id");
+            do
+            {
+                ids.add(cursor.getInt(inx));
+                
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+        
+        int inx = 0;
+        for (Integer id : ids)
+        {
+            db.rawQuery("UPDATE tripdatadef SET ColumnIndex=" + inx + " WHERE TripDataDefID=" + id, null);
+            inx++;
+        }   
+    }
+
+
 }
