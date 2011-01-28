@@ -25,6 +25,7 @@ import java.util.HashMap;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -58,6 +59,11 @@ import edu.ku.brc.utils.VersionChecker;
  */
 public class SpecifyActivity extends SpBaseActivity
 {
+    private static final int SOUND_EXPLOSION = 1;
+    private SoundPool                 soundPool;
+    private HashMap<Integer, Integer> soundPoolMap;
+
+
     public static final int      COLLECTING        = 0;
     public static final int      OBSERVATION       = 1;
     
@@ -147,19 +153,22 @@ public class SpecifyActivity extends SpBaseActivity
         
         initSounds();
         
-        Thread t = new Thread() {
-            public void run() {
-                try
-                {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e)
-                {
-                    e.printStackTrace();
+        if (prefs.getBoolean("useStartupSound", true))
+        {
+            Thread t = new Thread() {
+                public void run() {
+                    try
+                    {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e)
+                    {
+                        e.printStackTrace();
+                    }
+                    playSound(SOUND_EXPLOSION);
                 }
-                //playSound(SOUND_EXPLOSION);
-            }
-        };
-        t.start();
+            };
+            t.start();
+        }
     }
     
     /* (non-Javadoc)
@@ -226,7 +235,13 @@ public class SpecifyActivity extends SpBaseActivity
         {
             TripSQLiteHelper.loadTestData(getDB());
             return true;
-        }
+            
+        } else if (item.getItemId() == R.id.prefs)
+        {
+            startActivity(new Intent(this, EditPreferences.class));
+            return true;
+            
+        } 
         return super.onOptionsItemSelected(item);
     }
     
@@ -281,15 +296,12 @@ public class SpecifyActivity extends SpBaseActivity
         appNameArg + " Copyright \u00A9 2011 University of Kansas Center for Research. " + 
         "Specify comes with ABSOLUTELY NO WARRANTY.<br><br>" + //$NON-NLS-1$
         "This is free software licensed under GNU General Public License 2 (GPL2).</P></font></html>"; //$NON-NLS-1$
-
     }
     
-    public static final int SOUND_EXPLOSION = 1;
 
-    private SoundPool soundPool;
-    private HashMap<Integer, Integer> soundPoolMap;
-
-
+    /**
+     * 
+     */
     private void initSounds()
     {
         try
@@ -307,17 +319,19 @@ public class SpecifyActivity extends SpBaseActivity
     }
          
               
+    /**
+     * @param sound
+     */
     public void playSound(int sound)
     {
         /* Updated: The next 4 lines calculate the current volume in a scale of 0.0 to 1.0 */
         AudioManager mgr = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         float streamVolumeCurrent = mgr.getStreamVolume(AudioManager.STREAM_MUSIC);
-        float streamVolumeMax = mgr.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-        float volume = 15.0F;// streamVolumeCurrent / streamVolumeMax;
+        //float streamVolumeMax     = mgr.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        //float volume = 15.0F;// streamVolumeCurrent / streamVolumeMax;
 
         /* Play the sound with the correct volume */
-        soundPool.play(soundPoolMap.get(sound), volume, volume, 1, 0, 1f);
-
+        soundPool.play(soundPoolMap.get(sound), streamVolumeCurrent, streamVolumeCurrent, 1, 0, 1f);
     }
 
     /*private void checkPath()
