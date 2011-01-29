@@ -262,6 +262,8 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
         {
             rowIndex = numRows-1;
             cursorModel.moveToLast();
+            
+            cursorModel.move(-numDataColumns + 1);
         }
         
         fillForm();
@@ -544,6 +546,13 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
             } while (cursor.moveToNext());
             
             numDataColumns = id;
+            
+            for (int i=0;i<comps.size()-1;i++)
+            {
+                comps.get(i).setNextFocusDownId(comps.get(i+1).getId());
+            }
+            //comps.get(comps.size()-1).setNextFocusDownId(R.id.ttdsave);
+
         }
         cursor.close();
         

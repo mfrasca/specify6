@@ -137,13 +137,20 @@ public class TripMapLocViewer extends MapLocationViewer
                 cursor.close();
                 tripDBHelper.close();
                 
-                String name = dataHash.get("LocalityName");
-                String desc = dataHash.get("GenusSpecies");
-                double lat  = Double.parseDouble(dataHash.get("Latitude"));
-                double lon  = Double.parseDouble(dataHash.get("Longitude"));
+                String name   = dataHash.get("LocalityName");
+                String desc   = dataHash.get("GenusSpecies");
+                String latStr = dataHash.get("Latitude");
+                String lonStr = dataHash.get("Longitude");
                 
-                MapLocation ml = new MapLocation(name, desc, lat, lon);
-                mapLocations.add(ml);
+                if (latStr != null && latStr.length() > 0 &&
+                    lonStr != null && lonStr.length() > 0)
+                {
+                    double lat  = Double.parseDouble(latStr);
+                    double lon  = Double.parseDouble(lonStr);
+                    
+                    MapLocation ml = new MapLocation(name, desc, lat, lon);
+                    mapLocations.add(ml);
+                }
             }
             
         }

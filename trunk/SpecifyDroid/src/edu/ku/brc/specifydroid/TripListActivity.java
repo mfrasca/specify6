@@ -69,8 +69,6 @@ public class TripListActivity extends SpBaseActivity
     private LinearLayout               emptyLL     = null;
     
     private Integer                    tripType      = CONFIG_TRIP; // Default Trip type
-    private Class<?>                   detailedClass = TripMainActivity.class;
-    
     private AtomicBoolean              isLoading     = new AtomicBoolean(false);
     
     /**
@@ -89,26 +87,12 @@ public class TripListActivity extends SpBaseActivity
     {
         super.onCreate(savedInstanceState);
         
-        String detailedClsName = null;
         if (savedInstanceState != null)
         {
-            tripType        = savedInstanceState.getInt(TRIP_TYPE, CONFIG_TRIP);
-            detailedClsName = savedInstanceState.getString(DETAIL_CLASS);
+            tripType = savedInstanceState.getInt(TRIP_TYPE, CONFIG_TRIP);
         } else
         {
-            tripType        = getIntent().getIntExtra(TRIP_TYPE, CONFIG_TRIP);
-            detailedClsName = getIntent().getStringExtra(DETAIL_CLASS);
-        }
-        
-        if (detailedClsName != null)
-        {
-            try
-            {
-                detailedClass = Class.forName(detailedClsName);
-            } catch (ClassNotFoundException ex) 
-            {
-                detailedClass = TripMainActivity.class;
-            }
+            tripType = getIntent().getIntExtra(TRIP_TYPE, CONFIG_TRIP);
         }
         
         //requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
@@ -117,8 +101,8 @@ public class TripListActivity extends SpBaseActivity
         
         //getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.window_title);
 
-        emptyTV  = (TextView) findViewById(R.id.listemptyid_tv);
-        emptyLL  = (LinearLayout) findViewById(R.id.listemptyid_ll);
+        emptyTV = (TextView) findViewById(R.id.listemptyid_tv);
+        emptyLL = (LinearLayout) findViewById(R.id.listemptyid_ll);
         
         list  = (ListView) findViewById(R.id.trips);
         //list.getBackground().setDither(true);
@@ -161,7 +145,7 @@ public class TripListActivity extends SpBaseActivity
         } else if (item.getItemId() == R.id.edttripitem)
         {
             String trpId  = ((Cursor)list.getItemAtPosition(index)).getString(0);
-            Intent intent = new Intent(this, getDetailActivityClass());
+            Intent intent = new Intent(this, TripMainActivity.class);
             intent.putExtra(TripListActivity.ID_EXTRA, trpId);
             startActivity(intent);
             
@@ -187,32 +171,6 @@ public class TripListActivity extends SpBaseActivity
             tripName = ((Cursor)obj).getString(1);
         }
         return tripName;
-    }
-    
-    /**
-     * @param index
-     */
-    protected void notifyOfEmptyList()
-    {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this).setPositiveButton(
-                R.string.alert_dialog_ok, new DialogInterface.OnClickListener()
-                {
-                    public void onClick(DialogInterface dialog, int whichButton)
-                    {
-                        startActivity(new Intent(TripListActivity.this, TripDetailActivity.class));
-                    }
-                }).setNegativeButton(R.string.alert_dialog_cancel,
-                new DialogInterface.OnClickListener()
-                {
-                    public void onClick(DialogInterface dialog, int whichButton)
-                    {
-                        
-                    }
-                });
-
-        builder.setTitle(String.format(getString(R.string.trpclcknew)));
-        AlertDialog alert = builder.create();
-        alert.show();
     }
     
     /**
@@ -306,7 +264,7 @@ public class TripListActivity extends SpBaseActivity
         super.onSaveInstanceState(savedInstanceState);
 
         savedInstanceState.putInt(TRIP_TYPE, tripType);
-        savedInstanceState.putString(DETAIL_CLASS, detailedClass.getName());
+        savedInstanceState.putString(DETAIL_CLASS, TripMainActivity.class.getName());
     }
     
     /* (non-Javadoc)
@@ -328,7 +286,10 @@ public class TripListActivity extends SpBaseActivity
     {
         if (item.getItemId() == R.id.add_trip_mi)
         {
-            startActivity(new Intent(this, TripDetailActivity.class));
+            Intent intent = new Intent(this, TripDetailActivity.class);
+            intent.putExtra(TripDetailActivity.ISNEW_EXTRA, true);
+            intent.putExtra(TRIP_TYPE, tripType);
+            startActivity(intent);
             return true;
             
         } else if (item.getItemId() == R.id.prefs)
@@ -438,14 +399,6 @@ public class TripListActivity extends SpBaseActivity
     }
     
     /**
-     * @return the class of the Detailed Activity to be launched when an item in the list is clicked
-     */
-    protected Class<?> getDetailActivityClass()
-    {
-        return detailedClass;
-    }
-    
-    /**
      * @return
      */
     protected AdapterView.OnItemClickListener createItemClickListener()
@@ -457,7 +410,7 @@ public class TripListActivity extends SpBaseActivity
                                     final int position,
                                     final long id)
             {
-                Intent i = new Intent(TripListActivity.this, getDetailActivityClass());
+                Intent i = new Intent(TripListActivity.this, TripMainActivity.class);
                 i.putExtra(ID_EXTRA, String.valueOf(id));
                 startActivity(i);
             }
