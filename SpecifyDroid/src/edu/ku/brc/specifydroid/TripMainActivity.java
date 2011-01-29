@@ -22,6 +22,7 @@ package edu.ku.brc.specifydroid;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.location.GpsStatus;
@@ -59,7 +60,8 @@ public class TripMainActivity extends SpBaseActivity
     private Location             loc              = null;
     private AtomicBoolean        pointWasCaptured = new AtomicBoolean(false);
     private AtomicLong           milliseconds     = new AtomicLong(0); 
-    private TripMainPanelAdapter adapter ;
+    private TripMainPanelAdapter adapter;
+    private ProgressDialog       prgDlg           = null;
 
     /**
      * 
@@ -149,6 +151,17 @@ public class TripMainActivity extends SpBaseActivity
     }
 
     /* (non-Javadoc)
+     * @see android.app.Activity#onPause()
+     */
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+        
+        resetLocationManager();
+    }
+
+    /* (non-Javadoc)
      * @see android.app.Activity#onResume()
      */
     @Override
@@ -159,32 +172,27 @@ public class TripMainActivity extends SpBaseActivity
         
         resetLocationManager();
     }
-    
+
     /**
      * 
      */
     private void resetLocationManager()
     {
-        if (pointWasCaptured.get())
+        if (prgDlg != null)
         {
+            prgDlg.dismiss();
+            prgDlg = null;
+        }
+        
+        //if (pointWasCaptured.get())
+        //{
             if (locMgr != null && onLocationChange != null)
             {
                 locMgr.removeUpdates(onLocationChange);
             }
+            loc = null;
             locMgr = null;
-            loc    = null;
-        }
-    }
-
-    /* (non-Javadoc)
-     * @see edu.ku.brc.specifydroid.SpBaseActivity#onDestroy()
-     */
-    @Override
-    protected void onDestroy()
-    {
-        super.onDestroy();
-        
-        resetLocationManager();
+        //}
     }
 
     /**
@@ -222,6 +230,9 @@ public class TripMainActivity extends SpBaseActivity
         {
             if (locMgr == null)
             {
+                prgDlg = ProgressDialog.show(this, null, getString(R.string.srch_gps), true);
+                prgDlg.show();
+                
                 milliseconds.set(System.currentTimeMillis());
                 
                 locMgr = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
@@ -285,7 +296,7 @@ public class TripMainActivity extends SpBaseActivity
             }
             Log.d("DBG", "Num Stats: "+ gpsStatus.getTimeToFirstFix()+"  "+cnt);*/
             
-            if (locMgr.isProviderEnabled(LocationManager.GPS_PROVIDER))
+            if (locMgr != null && locMgr.isProviderEnabled(LocationManager.GPS_PROVIDER))
             {
                 loc = locMgr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             }

@@ -324,7 +324,7 @@ class TripSQLiteHelper extends SQLiteOpenHelper
             }
             
             String[]          titleStrs  = {"Locality Name", "Latitude", "Longitude", "Genus Species", };
-            String[]          colDefStrs = {"LocalityName", "Latitude1", "Longitude1", "GenusSpecies1", };
+            String[]          colDefStrs = {"LocalityName", "Latitude", "Longitude",  "GenusSpecies", };
             TripDataDefType[] defTypes   = {TripDataDefType.strType, TripDataDefType.doubleType, TripDataDefType.doubleType, TripDataDefType.strType, };
             String[] values= {
                     "Little Pigeon River", "-83.53372824519164", "35.69161799381586", "Catostomus commersoni",

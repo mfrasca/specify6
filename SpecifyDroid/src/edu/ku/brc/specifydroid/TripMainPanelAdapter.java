@@ -200,6 +200,7 @@ public class TripMainPanelAdapter extends BaseAdapter
                       {
                           Intent intent = new Intent(tripMainActivity, TripDetailActivity.class);
                           intent.putExtra(TripListActivity.ID_EXTRA, tripId);
+                          intent.putExtra(TripDetailActivity.ISNEW_EXTRA, false);
                           tripMainActivity.startActivity(intent);
                           break;
                       }

@@ -15,6 +15,7 @@
     <string name="add">Aggiungi</string>
     <string name="settings">Impostazioni</string>
     <string name="preferences">Preferenze</string>
+    <string name="save">Salva</string>
     
     <string name="alert_dialog_ok">OK</string>
     <string name="alert_dialog_cancel">Annulla</string>
@@ -22,7 +23,7 @@
     <!--  Application -->
     
     <string name="app_name">SpecifyDroid</string>
-    <string name="save">Salva</string>
+    <string name="app_desc">Assiste nella raccolta di dati biologici.</string>
     <string name="about_title">A proposito di SpecifyDroid</string>
     <string name="startup_sound">Suono di avvio</string>
     <string name="ss_summary">Riproduce l\'apertura del suono.</string>

@@ -54,9 +54,12 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
     private static final String ERR_INS = "Error inserting a new trip";
     private static final String ERR_UPD = "Error updating a new trip";
     
-    public static final String   SPECIFYDROID_PREF = "SPECIFYDROID";
-    public static final String   DISP_KEY_PREF     = "DISP_TYPE_ID";
- 
+    public static final String   SPECIFYDROID_PREF = "edu.ku.brc.specifydroid.SPECIFYDROID";
+    public static final String   DISP_KEY_PREF     = "edu.ku.brc.specifydroid.DISP_TYPE_ID";
+    public final static String   ISNEW_EXTRA       = "edu.ku.brc.specifydroid.ISNEW_TRIP";
+    
+    private final static String  HAS_STARTED_NEW   = "edu.ku.brc.specifydroid.HASSTARTEDNEW";
+
     public final static String ID_EXTRA = "edu.ku.brc.specifydroid._ID";
     
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -71,7 +74,10 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
     private String         tripId   = null;
     private Calendar       tripDate = Calendar.getInstance();
     
-    private boolean        hasChanged  = false;
+    private boolean        hasChanged    = false;
+    private boolean        hasStartedNew;
+    private boolean        isNew;
+    private Integer        tripType      = null;
     
     private HashMap<Integer, EditText> editTexts = new HashMap<Integer, EditText>();
 
@@ -93,28 +99,40 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
         
         if (savedInstanceState != null)
         {
-            tripId = savedInstanceState.getString(TripListActivity.ID_EXTRA);
+            tripId        = savedInstanceState.getString(TripListActivity.ID_EXTRA);
+            isNew         = savedInstanceState.getBoolean(TripDetailActivity.ISNEW_EXTRA, false);
+            hasStartedNew = savedInstanceState.getBoolean(TripDetailActivity.HAS_STARTED_NEW, false);
+            tripType      = savedInstanceState.getInt(TripListActivity.TRIP_TYPE, -1);
+            discpInx      = savedInstanceState.getInt("discpInx", 0);
+            
         } else
         {
-            tripId = getIntent().getStringExtra(TripListActivity.ID_EXTRA);
+            tripId        = getIntent().getStringExtra(TripListActivity.ID_EXTRA);
+            isNew         = getIntent().getBooleanExtra(TripDetailActivity.ISNEW_EXTRA, false);
+            hasStartedNew = getIntent().getBooleanExtra(TripDetailActivity.HAS_STARTED_NEW, false);
+            tripType      = getIntent().getIntExtra(TripListActivity.TRIP_TYPE, -1);
+            discpInx      = 0;
         }
+        
+        disciplineId = discpIcons[discpInx];
         
         setContentView(R.layout.detail_form);
         
         for (Integer id : txtEdtIds)
         {
-            editTexts.put(id, (EditText) findViewById(id));
+            editTexts.put(id, (EditText)findViewById(id));
         }
 
-        types   = (RadioGroup) findViewById(R.id.types);
+        types   = (RadioGroup)findViewById(R.id.types);
         dateLbl = (TextView)findViewById(R.id.date);
 
-        boolean isNew = tripId == null;
-        if (isNew)
+        if (isNew && tripId == null)
         {
             current = new Trip();
             current.setTripDate(new java.sql.Date(Calendar.getInstance().getTime().getTime()));
-            current.setDiscipline(getDisciplineId());
+            
+            getDisciplineId(); // retrieves the both the index and the sets the discipline id
+            current.setDiscipline(discpInx);
         }
         
         load();
@@ -127,7 +145,7 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
                 editTexts.get(id).setText(savedInstanceState.getString(txtEdtNames[i]));
                 i++;
             }
-            types.check(savedInstanceState.getInt("type"));
+            
             char[] str = savedInstanceState.getCharArray("date");
             if (str != null && str.length > 0)
             {
@@ -173,7 +191,14 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
         });
         
         ImageView dispImgView = (ImageView)findViewById(R.id.trpdispicon);
-        dispImgView.setImageResource(current.getDiscipline());
+        
+        dispImgView.setImageResource(discpIcons[discpInx]);
+        
+        Button changeDispBtn = (Button)findViewById(R.id.changedisp);
+        if (changeDispBtn != null)
+        {
+            changeDispBtn.setVisibility(View.GONE);
+        }
         
         Button edtFieldsBtn = (Button)findViewById(R.id.editfieldsbtn);
         edtFieldsBtn.setOnClickListener(new View.OnClickListener()
@@ -196,10 +221,26 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
             }
         });
         
-        if (isNew)
+        if (isNew && !hasStartedNew)
         {
             checkAndSave();
             doChooseDiscipline();
+            hasStartedNew = true;
+            
+            if (tripType > -1)
+            {
+                if (tripType == TripListActivity.OBS_TRIP)
+                {
+                    types.check(R.id.observing);
+                } else
+                {
+                    types.check(R.id.collecting);
+                }
+            }
+            
+        } else if (savedInstanceState != null)
+        {
+            types.check(savedInstanceState.getInt("type"));
         }
     }
     
@@ -233,8 +274,16 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
     public void onSaveInstanceState(Bundle savedInstanceState)
     {
         super.onSaveInstanceState(savedInstanceState);
+        
+        if (tripId != null)
+        {
+            savedInstanceState.putString(TripListActivity.ID_EXTRA, tripId);
+        }
 
         savedInstanceState.putInt("type", types.getCheckedRadioButtonId());
+        savedInstanceState.putInt("discipline", disciplineId);
+        savedInstanceState.putBoolean(TripDetailActivity.ISNEW_EXTRA, isNew);
+        savedInstanceState.putBoolean(TripDetailActivity.HAS_STARTED_NEW, hasStartedNew);
         
         int i = 0;
         for (Integer id : txtEdtIds)
@@ -242,7 +291,6 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
             savedInstanceState.putString(txtEdtNames[i], editTexts.get(id).getText().toString());
             i++;
         }
-        types.check(savedInstanceState.getInt("type"));
     }
     
     /* (non-Javadoc)
@@ -282,7 +330,7 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
         if (tripId != null)
         {   
             current      = Trip.getById(getDB(), tripId);
-            discpInx     = current.getType();
+            discpInx     = current.getDiscipline();
             disciplineId = discpIcons[discpInx];
         }
 
@@ -401,6 +449,8 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
                 current.setType(SpecifyActivity.OBSERVATION);
                 break;
         }
+        
+        current.setDiscipline(discpInx);
         
         if (tripId == null)
         {
@@ -574,6 +624,9 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
     private Integer disciplineId = null;
     private Integer discpInx     = null;
     
+    /**
+     * 
+     */
     private void doChooseDiscipline()
     {
         // Need handler for callbacks to the UI thread
