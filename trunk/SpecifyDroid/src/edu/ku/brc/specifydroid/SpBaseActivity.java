@@ -5,7 +5,6 @@ import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import edu.ku.brc.utils.DialogHelper;
 
 /* This library is free software; you can redistribute it and/or
@@ -92,8 +91,6 @@ public class SpBaseActivity extends Activity
     {
         if (cursorModel != null)
         {
-            Log.d(getClass().getName(), "closeCursor()");
-
             stopManagingCursor(cursorModel);
             cursorModel.close();
             cursorModel = null;
@@ -107,8 +104,6 @@ public class SpBaseActivity extends Activity
     {
         if (tripDBHelper == null)
         {
-            Log.d(getClass().getName(), "getDB()");
-
             tripDBHelper = new TripSQLiteHelper(this.getApplicationContext());
         }
         return tripDBHelper.getWritableDatabase();
@@ -121,11 +116,8 @@ public class SpBaseActivity extends Activity
     {
         if (tripDBHelper != null)
         {
-            Log.d(getClass().getName(), "closeDB()");
-
             tripDBHelper.close();
             tripDBHelper = null;
         }
     }
-
 }

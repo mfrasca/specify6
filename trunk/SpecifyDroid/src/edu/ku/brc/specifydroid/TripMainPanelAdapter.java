@@ -25,7 +25,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,10 +62,10 @@ public class TripMainPanelAdapter extends BaseAdapter
     
     private static final Integer[] iconFadedIds = 
     { 
-        R.drawable.mylocation, R.drawable.browsedb_faded,
-        R.drawable.camera,     R.drawable.exportdataset_faded,
-        R.drawable.email,      R.drawable.googlemaps_faded,
-        R.drawable.config,     R.drawable.delete,     
+        R.drawable.mylocation,  R.drawable.browsedb_faded,
+        R.drawable.camera,      R.drawable.exportdataset_faded,
+        R.drawable.email_faded, R.drawable.googlemaps_faded,
+        R.drawable.config,      R.drawable.delete,     
     };
     
     private static final Integer[] titleIds = 
@@ -303,7 +302,7 @@ public class TripMainPanelAdapter extends BaseAdapter
     {
         if (tripDBHelper != null)
         {
-            Log.d(getClass().getName(), "close()");
+            //Log.d(getClass().getName(), "close()");
             tripDBHelper.close();
             tripDBHelper = null;
         }
@@ -311,7 +310,7 @@ public class TripMainPanelAdapter extends BaseAdapter
     
     private SQLiteDatabase getDB()
     {
-        Log.d(getClass().getName(), "getDB");
+        //Log.d(getClass().getName(), "getDB");
         if (tripDBHelper == null)
         {
             tripDBHelper = new TripSQLiteHelper(tripMainActivity.getApplicationContext());

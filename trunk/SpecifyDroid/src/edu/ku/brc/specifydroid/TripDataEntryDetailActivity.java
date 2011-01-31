@@ -284,7 +284,7 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
         int rowInx = cursorModel.getColumnIndex("TripRowIndex");
         int rowNum = cursorModel.getInt(rowInx);
         
-        Log.d("moveToPrevious", "Pos: "+cursorModel.getPosition()+", rowNum: "+rowNum+", rowIndex: "+rowIndex);
+        //Log.d("moveToPrevious", "Pos: "+cursorModel.getPosition()+", rowNum: "+rowNum+", rowIndex: "+rowIndex);
         
         while (rowNum >= rowIndex && !cursorModel.isBeforeFirst())
         {
@@ -293,7 +293,7 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
                 break;
             }
             rowNum = cursorModel.getInt(rowInx);
-            Log.d("moveToPrevious", "Pos: "+cursorModel.getPosition()+", rowNum: "+rowNum+", rowIndex: "+rowIndex);
+            //Log.d("moveToPrevious", "Pos: "+cursorModel.getPosition()+", rowNum: "+rowNum+", rowIndex: "+rowIndex);
         }
         cursorModel.moveToNext();
         //fillForm();
@@ -306,11 +306,6 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
     {
         if (!isCreateRec)
         {
-            if (cursorModel != null)
-            {
-                Log.d("rec", "Pos: "+cursorModel.getPosition()+", Cnt: "+cursorModel.getCount());
-            }
-            
             String lblStr = String.format("%3d of %3d", (rowIndex != null ? rowIndex : 0)+1, numRows);
             recLabel.setText(lblStr);
         }
@@ -327,7 +322,7 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
         {
             if (rowIndex == null)
             {
-                int count = SQLUtils.getCount(getDB(), "SELECT COUNT(*) AS count FROM tripdatacell WHERE TripID = " + tripId);
+                int count = SQLUtils.getCount(getDB(), "SELECT COUNT(*) FROM tripdatacell WHERE TripID = " + tripId);
                 if (count == 0)
                 {
                     rowIndex = 0;
@@ -423,11 +418,6 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
         {
             boolean isLastOrPast    = rowIndex == null ? true : rowIndex == numRows-1;
             boolean isFirstOrBefore = rowIndex == null ? true : rowIndex == 0;
-            
-            if (cursorModel != null)
-            {
-                Log.d("updateUIState ", "Pos: "+cursorModel.getPosition());
-            }
             
             posFirstBtn.setEnabled(!isFirstOrBefore);
             posPrevBtn.setEnabled(!isFirstOrBefore);
@@ -534,9 +524,6 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
                 
                 ttdId = cursor.getInt(cursor.getColumnIndex("_id"));
                 
-                Log.d("BUILDUI", "ttdId: " + ttdId +"  colIndex["+cursor.getInt(cursor.getColumnIndex("ColumnIndex"))+"] Name: "+ cellName + "  Type: "+type);
-                
-                
                 viewToTTDId.put(view, ttdId);
                 compHash.put(cellName, view);
                 compTDD.put(cellName, ttdId);
@@ -566,15 +553,23 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
      */
     private void startBrowse(final ProgressDialog prgDlg)
     {
-        String sql = String.format("SELECT COUNT(*) AS count FROM tripdatacell WHERE TripID = %s", tripId);
-        numRows = SQLUtils.getCount(getDB(), sql);
-        if (numRows == 0)
+        if (!isCreateRec)
         {
-            finish();
-            return;
+            String sql = String.format("SELECT COUNT(*) FROM tripdatacell WHERE TripID = %s", tripId);
+            numRows = SQLUtils.getCount(getDB(), sql);
+            if (numRows == 0)
+            {
+                if (prgDlg != null)
+                {
+                    prgDlg.dismiss();
+                }
+                
+                finish();
+                return;
+            }
         }
         
-        sql = String.format("SELECT TripRowIndex AS count FROM tripdatacell WHERE TripID = %s ORDER BY TripRowIndex DESC LIMIT 1", tripId);
+        String sql = String.format("SELECT TripRowIndex AS count FROM tripdatacell WHERE TripID = %s ORDER BY TripRowIndex DESC LIMIT 1", tripId);
         numRows = SQLUtils.getCount(getDB(), sql);
         numRows++;
         
@@ -583,7 +578,7 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
         boolean doFill = true;
         if (!isCreateRec)
         {
-            int count = SQLUtils.getCount(getDB(), "SELECT COUNT(*) as count FROM tripdatacell WHERE TripID = " + tripId);
+            int count = SQLUtils.getCount(getDB(), "SELECT COUNT(*) FROM tripdatacell WHERE TripID = " + tripId);
             if (count == 0)
             {
                 isNewRec = true;
@@ -685,9 +680,9 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
      */
     private void fillForm()
     {
-        Log.d("fillForm", "isBefore: "+cursorModel.isBeforeFirst());
-        Log.d("fillForm", "isFirst:  "+cursorModel.isFirst());
-        Log.d("fillForm", "Position: "+cursorModel.getPosition());
+        //Log.d("fillForm", "isBefore: "+cursorModel.isBeforeFirst());
+        //Log.d("fillForm", "isFirst:  "+cursorModel.isFirst());
+        //Log.d("fillForm", "Position: "+cursorModel.getPosition());
         
         if (cursorModel.isBeforeFirst())
         {
@@ -704,12 +699,12 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
         for (int i=0;i<numDataColumns;i++)
         {
             int rowInx = cursorModel.getInt(dataRowInx);
-            Log.d("DEBUG", "id: " + cursorModel.getInt(cursorModel.getColumnIndex("_id")) +"  rowInx: "+rowInx +"  rowIndex: "+rowIndex);
+            //Log.d("DEBUG", "id: " + cursorModel.getInt(cursorModel.getColumnIndex("_id")) +"  rowInx: "+rowInx +"  rowIndex: "+rowIndex);
 
             if (rowInx != rowIndex)
             {
                 //cursorModel.moveToPrevious();
-                Log.d("DEBUG", "id: " + cursorModel.getInt(cursorModel.getColumnIndex("_id")) +"  rowInx: "+rowInx +"  rowIndex: "+rowIndex);
+                //Log.d("DEBUG", "id: " + cursorModel.getInt(cursorModel.getColumnIndex("_id")) +"  rowInx: "+rowInx +"  rowIndex: "+rowIndex);
                 break;
             }
             
@@ -719,7 +714,7 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
             
             recNumHash.put(comps.get(i), recNum);
             
-            Log.d("DEBUG", "id: " + cursorModel.getInt(cursorModel.getColumnIndex("_id")) +"  data["+data+"] Col: "+ column + "  Row: "+rowInx);
+            //Log.d("DEBUG", "id: " + cursorModel.getInt(cursorModel.getColumnIndex("_id")) +"  data["+data+"] Col: "+ column + "  Row: "+rowInx);
             
             valueHash.put(column, data);
             
@@ -756,7 +751,6 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
             ((AutoCompleteTextView)view).setText(data);
         } else
         {
-            //Log.d("xxx", view.getClass().getName());
             ((TextView)view).setText(data);
         }
     }
@@ -863,11 +857,10 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
                 @Override
                 public Cursor runQuery(final CharSequence constraint)
                 {
-                    //Log.d("debug", "Cnt: " + );
                     if (constraint != null && constraint.length() > 0)
                     {
                         String sql = "SELECT _id, Name FROM taxon WHERE Name LIKE '"+constraint+"%'";
-                        Log.d("T", sql);
+                        //Log.d("T", sql);
                         return getDB().rawQuery(sql, null);
                     }
                     return null;
@@ -882,7 +875,6 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
     {
         public CharSequence convertToString(final Cursor theCursor)
         {
-            // if (debug) Log.d(TAG,"convertToString()");
             // Return the first column of the database cursor
             String aColumnString = theCursor.getString(1);
             return aColumnString;

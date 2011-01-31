@@ -28,7 +28,6 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -178,8 +177,6 @@ public class TripListActivity extends SpBaseActivity
      */
     protected void askForDeleteTrip(final int index)
     {
-        Log.i(TAG, "askForDeleteTrip id=" + index);
-        
         final AlertDialog.Builder builder = new AlertDialog.Builder(this).setPositiveButton(
                 R.string.alert_dialog_ok, new DialogInterface.OnClickListener()
                 {
@@ -312,8 +309,6 @@ public class TripListActivity extends SpBaseActivity
         }
         
         isLoading.set(true);
-        
-        Log.e("*** TripListActivity", "initList");
         
         closeCursor();
 

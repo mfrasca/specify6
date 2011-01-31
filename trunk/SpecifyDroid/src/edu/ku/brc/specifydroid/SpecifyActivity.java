@@ -29,7 +29,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.media.AudioManager;
@@ -39,7 +38,6 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -172,22 +170,11 @@ public class SpecifyActivity extends SpBaseActivity
     }
     
     /* (non-Javadoc)
-     * @see android.app.Activity#onConfigurationChanged(android.content.res.Configuration)
-     */
-    @Override
-    public void onConfigurationChanged(final Configuration newConfig)
-    {
-        Log.d("DBG", "onConfigurationChanged "+newConfig);
-        super.onConfigurationChanged(newConfig);
-    }
-
-    /* (non-Javadoc)
      * @see android.app.Activity#onPause()
      */
     @Override
     protected void onPause()
     {
-        Log.d("DBG", "onPause");
         super.onPause();
         
         if (TaxonLoadThread.getInstance() != null && 
@@ -310,11 +297,9 @@ public class SpecifyActivity extends SpBaseActivity
             soundPoolMap = new HashMap<Integer, Integer>();
             soundPoolMap.put(SOUND_EXPLOSION, soundPool.load(this, R.raw.specifydroid, 1));
             
-            Log.d("DBG", "*** Played sound. ");
-            
         } catch (Exception ex)
         {
-            Log.e("XXX", "No Sound", ex);
+            //Log.e("XXX", "No Sound", ex);
         }
     }
          
@@ -333,25 +318,4 @@ public class SpecifyActivity extends SpBaseActivity
         /* Play the sound with the correct volume */
         soundPool.play(soundPoolMap.get(sound), streamVolumeCurrent, streamVolumeCurrent, 1, 0, 1f);
     }
-
-    /*private void checkPath()
-    {
-        try
-        {
-            ContentValues values = new ContentValues();
-            values.put(Media.TITLE, "MyImage");
-            values.put(Media.DESCRIPTION, "Image capture by camera");
-
-            Uri uri = getContentResolver().insert(Media.EXTERNAL_CONTENT_URI, values);
-            
-            Log.d("ZZZ", uri.getPath());
-            
-        } catch (Exception ex)
-        {
-            ex.printStackTrace();
-            Log.e(getClass().getSimpleName(), ex.getMessage(), ex);
-        }
-    }
-*/
-
 }
