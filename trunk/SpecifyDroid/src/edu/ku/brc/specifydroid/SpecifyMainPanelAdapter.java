@@ -19,6 +19,8 @@
 */
 package edu.ku.brc.specifydroid;
 
+import java.util.HashMap;
+
 import android.content.Intent;
 import android.view.Gravity;
 import android.view.View;
@@ -53,6 +55,7 @@ public class SpecifyMainPanelAdapter extends BaseAdapter
     };
     
     private SpecifyActivity specifyActivity;
+    private HashMap<View, Integer> viewToIndex = new HashMap<View, Integer>();
 
     /**
      * @param activity
@@ -97,109 +100,34 @@ public class SpecifyMainPanelAdapter extends BaseAdapter
         ImageView    imageView;
         LinearLayout llCell;
         TextView     textView;
-        boolean      isNew = false;
         
-        if (true)
+        if (convertView == null)
+        { 
+            llCell    = new LinearLayout(specifyActivity);
+            llCell.setOrientation(LinearLayout.VERTICAL);
+            
+            imageView = new ImageView(specifyActivity);
+            imageView.setFocusable(true);
+            imageView.setPadding(8, 8, 8, 8);
+            
+            textView = new TextView(specifyActivity);
+            textView.setGravity(Gravity.CENTER_HORIZONTAL);
+            textView.setTextColor(R.color.black);
+            
+            llCell.addView(imageView);
+            llCell.addView(textView);
+            
+        } else
         {
-            if (convertView == null)
-            { 
-                llCell    = new LinearLayout(specifyActivity);
-                llCell.setOrientation(LinearLayout.VERTICAL);
-                
-                imageView = new ImageView(specifyActivity);
-                imageView.setFocusable(true);
-                imageView.setPadding(8, 8, 8, 8);
-                
-                textView = new TextView(specifyActivity);
-                textView.setGravity(Gravity.CENTER_HORIZONTAL);
-                textView.setTextColor(R.color.black);
-                
-                llCell.addView(imageView);
-                llCell.addView(textView);
-                isNew = true;
-                
-            } else
-            {
-                llCell    = (LinearLayout)convertView;
-                imageView = (ImageView)llCell.getChildAt(0);
-                textView  = (TextView)llCell.getChildAt(1);
-            }
-        }/* else
-        {
-            if (convertView == null)
-            { // if it's not recycled, initialize some attributes
-                imageView = new ImageView(specifyActivity);
-                imageView.setFocusable(true);
-                //imageView.setLayoutParams(new GridView.LayoutParams(85, 85));
-                //imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                imageView.setPadding(8, 8, 8, 8);
-                isNew = true;
-                
-            } else
-            {
-                imageView = (ImageView) convertView;
-            }
-        }*/
-        
-        textView.setText(titleIds[position]);
-
-        if (isNew)
-        {
-            imageView.setOnClickListener(new View.OnClickListener() {
-    
-                @Override
-                public void onClick(View view) 
-                {
-                  switch (position)
-                  {
-                      case 0:
-                          specifyActivity.startActivity(new Intent(specifyActivity, SatelliteActivity.class));
-                          break;
-                          
-                      case 1: // Compass
-                          DialogHelper.showDialog(specifyActivity, R.string.notimpl);
-                          break;
-                          
-                      case 2: // Collecting
-                      {
-                          Intent intent = new Intent(specifyActivity, TripListActivity.class);
-                          intent.putExtra(TripListActivity.TRIP_TYPE, TripListActivity.COLL_TRIP);
-                          intent.putExtra(TripListActivity.DETAIL_CLASS, TripDataEntryDetailActivity.class.getName());
-                          specifyActivity.startActivity(intent);
-                          break;
-                      } 
-                          
-                      case 3: // Configure Trips
-                      {
-                          Intent intent = new Intent(specifyActivity, TripListActivity.class);
-                          intent.putExtra(TripListActivity.TRIP_TYPE, TripListActivity.CONFIG_TRIP);
-                          specifyActivity.startActivity(intent);
-                          break;
-                      }
-                      
-                      case 4: // Observations
-                      {
-                          Intent intent = new Intent(specifyActivity, TripListActivity.class);
-                          intent.putExtra(TripListActivity.TRIP_TYPE, TripListActivity.OBS_TRIP);
-                          intent.putExtra(TripListActivity.DETAIL_CLASS, TripDataEntryDetailActivity.class.getName());
-                          specifyActivity.startActivity(intent);
-                          break;
-                      } 
-                  }
-                }
-              });
+            llCell    = (LinearLayout)convertView;
+            imageView = (ImageView)llCell.getChildAt(0);
+            textView  = (TextView)llCell.getChildAt(1);
         }
         
-        /*imageView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v)
-            {
-                Log.d("onClick","long position ["+position+"]");
-                return false;
-            }
-        });*/
-
+        imageView.setOnClickListener(new ClickedViewListener(position));
+        textView.setText(titleIds[position]);
         imageView.setImageResource(thumbs[position]);
+        
         return llCell;
     }
 
@@ -231,5 +159,62 @@ public class SpecifyMainPanelAdapter extends BaseAdapter
         startActivity(Intent.createChooser(sendIntent, "MySendMail"));
 
     }*/
+    
+    class ClickedViewListener implements View.OnClickListener
+    {
+        private int inx;
+
+        /**
+         * @param inx
+         */
+        public ClickedViewListener(final int inx)
+        {
+            this.inx = inx;
+        }
+
+        @Override
+        public void onClick(View view)
+        {
+            switch (inx)
+            {
+                case 0:
+                    specifyActivity.startActivity(new Intent(specifyActivity,
+                            SatelliteActivity.class));
+                    break;
+
+                case 1: // Compass
+                    DialogHelper.showDialog(specifyActivity, R.string.notimpl);
+                    break;
+
+                case 2: // Collecting
+                {
+                    Intent intent = new Intent(specifyActivity, TripListActivity.class);
+                    intent.putExtra(TripListActivity.TRIP_TYPE, TripListActivity.COLL_TRIP);
+                    intent.putExtra(TripListActivity.DETAIL_CLASS,
+                            TripDataEntryDetailActivity.class.getName());
+                    specifyActivity.startActivity(intent);
+                    break;
+                }
+
+                case 3: // Configure Trips
+                {
+                    Intent intent = new Intent(specifyActivity, TripListActivity.class);
+                    intent.putExtra(TripListActivity.TRIP_TYPE, TripListActivity.CONFIG_TRIP);
+                    specifyActivity.startActivity(intent);
+                    break;
+                }
+
+                case 4: // Observations
+                {
+                    Intent intent = new Intent(specifyActivity, TripListActivity.class);
+                    intent.putExtra(TripListActivity.TRIP_TYPE, TripListActivity.OBS_TRIP);
+                    intent.putExtra(TripListActivity.DETAIL_CLASS,
+                            TripDataEntryDetailActivity.class.getName());
+                    specifyActivity.startActivity(intent);
+                    break;
+                }
+            }
+        }
+    }
 }
 

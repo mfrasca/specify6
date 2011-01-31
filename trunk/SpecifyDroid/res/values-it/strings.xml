@@ -63,6 +63,7 @@
     <string name="tmgemail">EMail</string>
     <string name="tmggooglemaps">Mappa</string>
     <string name="tmgtitleitems">- %d articoli.</string>
+    <string name="sendingemail">Invio di e-mail ...</string>
     
     <string name="deletetrip">Elimina \'%s\'?</string>
     <string name="changedisp">Cambia</string>

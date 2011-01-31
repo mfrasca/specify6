@@ -29,7 +29,7 @@ import edu.ku.brc.utils.DialogHelper;
 import edu.ku.brc.utils.SQLUtils;
 import edu.ku.brc.utils.ZipFileHelper;
 
-class TripSQLiteHelper extends SQLiteOpenHelper
+public class TripSQLiteHelper extends SQLiteOpenHelper
 {
     private static final String  TAG  = "TRP_HELPER";
     private static final String  DATABASE_NAME  = "trip.db";
@@ -183,7 +183,8 @@ class TripSQLiteHelper extends SQLiteOpenHelper
      */
     public void exportToCSV(final Activity activity, 
                             final SQLiteDatabase db, 
-                            final String tripId)
+                            final String tripId,
+                            final CSVExportIFace exportIFace)
     {
         boolean isExternalStorageAvailable = false;
         boolean isExternalStorageWriteable = false;
@@ -254,7 +255,18 @@ class TripSQLiteHelper extends SQLiteOpenHelper
                                  //Thread.sleep(2000);
                                  
                                  prgDlg.dismiss();
-                                 DialogHelper.showDialog(activity, R.string.file_wrt, fName);
+                                 
+                                 if (exportIFace != null)
+                                 {
+                                     activity.runOnUiThread(new Runnable() {
+                                         public void run() {
+                                             exportIFace.done(outFile);
+                                         }
+                                     });
+                                 } else
+                                 {
+                                     DialogHelper.showDialog(activity, R.string.file_wrt, fName);
+                                 }
                                  
                              } catch (Exception e) 
                              {  
@@ -327,10 +339,10 @@ class TripSQLiteHelper extends SQLiteOpenHelper
             String[]          colDefStrs = {"LocalityName", "Latitude", "Longitude",  "GenusSpecies", };
             TripDataDefType[] defTypes   = {TripDataDefType.strType, TripDataDefType.doubleType, TripDataDefType.doubleType, TripDataDefType.strType, };
             String[] values= {
-                    "Little Pigeon River", "-83.53372824519164", "35.69161799381586", "Catostomus commersoni",
-                    "Little Pigeon River", "-83.5334314327779",  "35.69182845399097", "Hypentelium nigricans",
-                    "Little Pigeon River", "-83.53709797155",    "35.69043458326836", "Moxostoma carinatum",
-                    "Small Falls",         "-83.49230859919675", "35.68309906312557", "Moxostoma duquesnei",
+                    "Little Pigeon River", "35.69161799381586", "-83.53372824519164", "Catostomus commersoni",
+                    "Little Pigeon River", "35.69182845399097", "-83.5334314327779",  "Hypentelium nigricans",
+                    "Little Pigeon River", "35.69043458326836", "-83.53709797155",    "Moxostoma carinatum",
+                    "Small Falls",         "35.68309906312557", "-83.49230859919675", "Moxostoma duquesnei",
             };
             
             Timestamp tsCreated = new Timestamp(Calendar.getInstance().getTime().getTime());
@@ -541,4 +553,9 @@ class TripSQLiteHelper extends SQLiteOpenHelper
         return false;
     }
 
+    //--------------------------------------------------------------    
+    public interface CSVExportIFace
+    {
+        public abstract void done(File file);
+    }
 }

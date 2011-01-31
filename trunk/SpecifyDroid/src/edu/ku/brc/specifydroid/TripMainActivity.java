@@ -19,6 +19,7 @@
 */
 package edu.ku.brc.specifydroid;
 
+import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -30,7 +31,9 @@ import android.location.GpsStatus.Listener;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.widget.GridView;
 import android.widget.TextView;
@@ -46,7 +49,7 @@ import edu.ku.brc.utils.SQLUtils;
  * Nov 15, 2009
  *
  */
-public class TripMainActivity extends SpBaseActivity
+public class TripMainActivity extends SpBaseActivity implements TripSQLiteHelper.CSVExportIFace
 {
     private static final String ID_PNTWASCPT = "ID_PNTWASCPT";
     
@@ -119,22 +122,26 @@ public class TripMainActivity extends SpBaseActivity
     /**
      * 
      */
-    public void doEmailExport()
+    public void doEmailExport(final File file)
     {
         try
         {
+            String path = "file://"+Environment.getExternalStorageDirectory()+"/" + file.getName();
+            
             Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
-            emailIntent.setType("message/rfc822");
-            emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{ "rods@ku.edu"});
-            emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Your Export WB");
-            emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Your Export");
-    
-            Log.d("XXX", "About to send email");
-            startActivityForResult(Intent.createChooser(emailIntent, "Send mail..."), 0);
+            emailIntent.setType("text/csv");
+            //emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{ "rods@ku.edu"});
+            emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, file.getName());
+            //emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Your Export");
+            //emailIntent.putExtra(Intent.EXTRA_STREAM, file.toURI());// Uri.parse("file://sdcard/dcim/Camera/filename.jpg"));
+            emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(path)); 
+
+            String msg = getString(R.string.sendingemail);
+            startActivityForResult(Intent.createChooser(emailIntent, msg), 0);
             
         } catch (Exception ex)
         {
-            Log.e(getClass().getName(), "Mail failed.", ex);
+            DialogHelper.showDialog(this, "Mail could not be started.");
         }
     }
 
@@ -326,6 +333,15 @@ public class TripMainActivity extends SpBaseActivity
                 }
             }
         }
+    }
+
+    /* (non-Javadoc)
+     * @see edu.ku.brc.specifydroid.TripSQLiteHelper.CSVExportIFace#done(java.io.File)
+     */
+    @Override
+    public void done(File file)
+    {
+        doEmailExport(file);
     }
 
     LocationListener onLocationChange = new LocationListener() {

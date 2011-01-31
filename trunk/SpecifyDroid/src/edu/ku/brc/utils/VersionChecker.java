@@ -28,8 +28,10 @@ import edu.ku.brc.specifydroid.R;
 import static edu.ku.brc.utils.DialogHelper.*;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.net.Uri;
 import android.util.Log;
@@ -102,7 +104,12 @@ public class VersionChecker
             PackageInfo pi = activity.getPackageManager().getPackageInfo(activity.getApplicationInfo().packageName, 0);
             //int    versionCode = pi.versionCode;
             String appVersion  = pi.versionName;
+            
+            int     flag         = activity.getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE;
+            boolean isDebuggable = (activity.getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE) == ApplicationInfo.FLAG_DEBUGGABLE; 
 
+            Log.d("*******", flag+" "+isDebuggable+"  "+ ApplicationInfo.FLAG_DEBUGGABLE+"  "+activity.getApplicationInfo().flags);
+            
             URL           url     = new URL(baseURL + "version.xml");
             URLConnection conn    = url.openConnection();
             
@@ -147,5 +154,15 @@ public class VersionChecker
     {
         Intent viewIntent = new Intent(Intent.ACTION_VIEW,  Uri.parse(baseURL + appPckName));
         activity.startActivity(viewIntent); 
+    }
+    
+    /**
+     * Check the context's ApplicationInfo flag to see if it is in debug mode.
+     * @param context the context
+     * @return true if in debug
+     */
+    public static boolean isInDebugMode(final Context context)
+    {
+        return (context.getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE) == ApplicationInfo.FLAG_DEBUGGABLE; 
     }
 }
