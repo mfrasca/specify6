@@ -139,7 +139,7 @@ public class TaxonLoadThread extends Thread
                 
                 final double maxSize = inFile.length();
                 
-                Log.d("LOAD", "Size: "+maxSize);
+                //Log.d("LOAD", "Size: "+maxSize);
                 
                 BufferedInputStream bis    = null;
                 DataInputStream     dis    = null;
@@ -165,7 +165,7 @@ public class TaxonLoadThread extends Thread
                         
                         if (cnt % 100 == 0)
                         {
-                            Log.d("load", "Cnt: "+cnt);
+                            //Log.d("load", "Cnt: "+cnt);
                             
                             final double tot   = total;
                             if (activity != null && prgDlg != null)

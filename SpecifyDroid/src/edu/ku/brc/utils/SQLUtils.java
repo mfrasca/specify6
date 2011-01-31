@@ -21,7 +21,6 @@ package edu.ku.brc.utils;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 /**
  * @author rods
@@ -48,13 +47,11 @@ public class SQLUtils
             if (c.moveToFirst())
             {
                 int countColumn = c.getColumnIndex("count");
-                if (countColumn > -1)
+                if (countColumn < 0)
                 {
-                    cnt =  c.getInt(countColumn);
-                } else
-                {
-                    Log.e("getCount", "You must have a 'count' column");
+                    countColumn = 0;
                 }
+                cnt =  c.getInt(countColumn);
             }
         } catch (Exception ex)
         {

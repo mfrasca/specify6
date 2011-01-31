@@ -566,7 +566,7 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
                         break;
                     }
                     
-                    Log.d("POPULATE", "_id: ["+_id+"] trpId: " + tdd.getTripID() +"  colIndex["+tdd.getColumnIndex()+"] Name: "+ tdd.getName() + "  Type: "+tdd.getDataType());
+                    //Log.d("POPULATE", "_id: ["+_id+"] trpId: " + tdd.getTripID() +"  colIndex["+tdd.getColumnIndex()+"] Name: "+ tdd.getName() + "  Type: "+tdd.getDataType());
                 }
             }
             i++;
@@ -713,7 +713,7 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
                         TripDetailActivity.this.current.setDiscipline(index);
                         dispImgView.setImageResource(disciplineId);
                         
-                        Log.i(SpecifyActivity.class.getSimpleName(), "Disp:"+index);
+                        //Log.i(SpecifyActivity.class.getSimpleName(), "Disp:"+index);
                     }
                 });
         AlertDialog alert = builder.create();
@@ -731,7 +731,7 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
             discpInx     = settings.getInt(DISP_KEY_PREF, 0);
             disciplineId = discpIcons[discpInx];
             
-            Log.i(SpecifyActivity.class.getSimpleName(), "*Disp:"+discpInx+"  "+disciplineId);
+            //Log.i(SpecifyActivity.class.getSimpleName(), "*Disp:"+discpInx+"  "+disciplineId);
         }
         return disciplineId;
     }

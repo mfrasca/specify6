@@ -19,7 +19,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -149,16 +148,7 @@ public class SatelliteActivity extends Activity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        Log.d("XXX", "About to send email");
-        
         super.onActivityResult(requestCode, resultCode, data);
-        
-        Log.d("XXX", "CODE: "+requestCode);
-        
-        if (requestCode == 0)
-        {
-            Log.d("XXX", "CODE: "+requestCode);
-        }
     }
 
     /**

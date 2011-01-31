@@ -28,7 +28,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.AttributeSet;
-import android.util.Log;
 
 import com.pocketjourney.view.MapLocation;
 import com.pocketjourney.view.MapLocationViewer;
@@ -93,7 +92,7 @@ public class TripMapLocViewer extends MapLocationViewer
                         
                     } 
                         
-                    Log.d("debug", "rowIndex: "+rowIndex+ "   rowNum: "+rowNum);
+                    //Log.d("debug", "rowIndex: "+rowIndex+ "   rowNum: "+rowNum);
                     if (rowIndex != rowNum)
                     {
                         String name = dataHash.get("LocalityName");
@@ -119,7 +118,7 @@ public class TripMapLocViewer extends MapLocationViewer
                             continue;
                         }
                         
-                        Log.d("debug", lat+ " = "+lon);
+                        //Log.d("debug", lat+ " = "+lon);
                         
                         MapLocation ml = new MapLocation(name, desc, lat, lon);
                         mapLocations.add(ml);
@@ -128,7 +127,7 @@ public class TripMapLocViewer extends MapLocationViewer
                         rowIndex = rowNum;
                     } 
                     
-                    Log.d("debug", cursor.getString(nInx)+ " = "+cursor.getString(dInx));
+                    //Log.d("debug", cursor.getString(nInx)+ " = "+cursor.getString(dInx));
                     
                     dataHash.put(cursor.getString(nInx), cursor.getString(dInx));
                     

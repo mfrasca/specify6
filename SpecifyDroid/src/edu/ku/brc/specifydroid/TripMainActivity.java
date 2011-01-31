@@ -34,7 +34,6 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.widget.GridView;
 import android.widget.TextView;
 import edu.ku.brc.specifydroid.datamodel.Trip;
@@ -65,6 +64,7 @@ public class TripMainActivity extends SpBaseActivity implements TripSQLiteHelper
     private AtomicLong           milliseconds     = new AtomicLong(0); 
     private TripMainPanelAdapter adapter;
     private ProgressDialog       prgDlg           = null;
+    private Listener             onGpsStatusChange = null;
 
     /**
      * 
@@ -193,9 +193,17 @@ public class TripMainActivity extends SpBaseActivity implements TripSQLiteHelper
         
         //if (pointWasCaptured.get())
         //{
-            if (locMgr != null && onLocationChange != null)
+            if (locMgr != null)
             {
-                locMgr.removeUpdates(onLocationChange);
+                if (onLocationChange != null)
+                {
+                    locMgr.removeUpdates(onLocationChange);
+                }
+                
+                if (onGpsStatusChange != null)
+                {
+                    locMgr.removeGpsStatusListener(onGpsStatusChange);
+                }
             }
             loc = null;
             locMgr = null;
@@ -248,34 +256,37 @@ public class TripMainActivity extends SpBaseActivity implements TripSQLiteHelper
     
                 // Listener for GPS Status...
     
-                final Listener onGpsStatusChange = new GpsStatus.Listener()
+                if (onGpsStatusChange == null)
                 {
-                    public void onGpsStatusChanged(int event)
+                    onGpsStatusChange = new GpsStatus.Listener()
                     {
-                        switch (event)
+                        public void onGpsStatusChanged(int event)
                         {
-                            case GpsStatus.GPS_EVENT_STARTED:
-                                Log.v("TEST", "GPS_EVENT_STARTED");
-                                // Started...
-                                break;
-    
-                            case GpsStatus.GPS_EVENT_FIRST_FIX:
-                                Log.v("TEST", "GPS_EVENT_FIRST_FIX");
-                                // First Fix...
-                                break;
-    
-                            case GpsStatus.GPS_EVENT_STOPPED:
-                                Log.v("TEST", "GPS_EVENT_STOPPED");
-                                // Stopped...
-                                break;
-    
-                            case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
-                                Log.v("TEST", "GPS_EVENT_SATELLITE_STATUS");
-                                doCapturePoint();
-                                break;
+                            switch (event)
+                            {
+                                case GpsStatus.GPS_EVENT_STARTED:
+                                    //Log.v("TEST", "GPS_EVENT_STARTED");
+                                    // Started...
+                                    break;
+        
+                                case GpsStatus.GPS_EVENT_FIRST_FIX:
+                                    //Log.v("TEST", "GPS_EVENT_FIRST_FIX");
+                                    // First Fix...
+                                    break;
+        
+                                case GpsStatus.GPS_EVENT_STOPPED:
+                                    //Log.v("TEST", "GPS_EVENT_STOPPED");
+                                    // Stopped...
+                                    break;
+        
+                                case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
+                                    //Log.v("TEST", "GPS_EVENT_SATELLITE_STATUS");
+                                    doCapturePoint();
+                                    break;
+                            }
                         }
-                    }
-                };
+                    };
+                }
                 locMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 10.0f, onLocationChange);
                 locMgr.addGpsStatusListener(onGpsStatusChange);
             }
@@ -289,20 +300,6 @@ public class TripMainActivity extends SpBaseActivity implements TripSQLiteHelper
     {
         if (loc == null)
         {
-            /*gpsStatus = locMgr.getGpsStatus(gpsStatus);
-            int maxSats = gpsStatus.getMaxSatellites();
-            Log.i("DBG", "Max Stats: "+ maxSats);
-            
-            Iterable<GpsSatellite> iSatellites = gpsStatus.getSatellites();
-            Iterator<GpsSatellite> it = iSatellites.iterator();
-            int cnt = 0;
-            while (it.hasNext())
-            {
-                it.next();
-                cnt++;
-            }
-            Log.d("DBG", "Num Stats: "+ gpsStatus.getTimeToFirstFix()+"  "+cnt);*/
-            
             if (locMgr != null && locMgr.isProviderEnabled(LocationManager.GPS_PROVIDER))
             {
                 loc = locMgr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -310,20 +307,22 @@ public class TripMainActivity extends SpBaseActivity implements TripSQLiteHelper
             
             if (loc != null)
             {
+                pointWasCaptured.set(true);
+                
                 resetLocationManager();
                 
                 Intent intent = new Intent(this, TripDataEntryDetailActivity.class);
                 intent.putExtra(TripListActivity.ID_EXTRA, tripId);
                 
-                Log.i("DBG", String.format("%8.5f, %8.5f", loc != null ? loc.getLatitude() : 0.0f, loc != null ? loc.getLongitude() : 0.0f));
+                //Log.i("DBG", String.format("%8.5f, %8.5f", loc != null ? loc.getLatitude() : 0.0f, loc != null ? loc.getLongitude() : 0.0f));
                 
                 intent.putExtra(TripDataEntryDetailActivity.ID_ISCREATE, true);
                 intent.putExtra(TripDataEntryDetailActivity.LAT_VAL, loc != null ? loc.getLatitude()  :  38.958654); // for debugging
                 intent.putExtra(TripDataEntryDetailActivity.LON_VAL, loc != null ? loc.getLongitude() : -95.243829);
-                pointWasCaptured.set(true);
+                
                 startActivity(intent);
                 
-            } else
+            } else if (!pointWasCaptured.get())
             {
                 long delta = (System.currentTimeMillis() - milliseconds.get()) / 1000;
                 if (delta > 15)
@@ -339,7 +338,7 @@ public class TripMainActivity extends SpBaseActivity implements TripSQLiteHelper
      * @see edu.ku.brc.specifydroid.TripSQLiteHelper.CSVExportIFace#done(java.io.File)
      */
     @Override
-    public void done(File file)
+    public void done(final File file)
     {
         doEmailExport(file);
     }
@@ -348,25 +347,25 @@ public class TripMainActivity extends SpBaseActivity implements TripSQLiteHelper
         public void onLocationChanged(Location location) 
         {
             // required for interface, not used
-            Log.v("TEST", "onLocationChanged");
+            //Log.v("TEST", "onLocationChanged");
         }
         
         public void onProviderDisabled(String provider) 
         {
             // required for interface, not used
-            Log.v("TEST", "onProviderDisabled");
+            //Log.v("TEST", "onProviderDisabled");
         }
         
         public void onProviderEnabled(String provider) 
         {
             // required for interface, not used
-            Log.v("TEST", "onProviderEnabled");
+            //Log.v("TEST", "onProviderEnabled");
         }
         
         public void onStatusChanged(String provider, int status, Bundle extras) 
         {
             // required for interface, not used
-            Log.v("TEST", "onStatusChanged");
+            //Log.v("TEST", "onStatusChanged");
         }
     };
 
