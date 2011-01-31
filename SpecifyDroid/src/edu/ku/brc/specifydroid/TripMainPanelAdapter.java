@@ -57,7 +57,7 @@ public class TripMainPanelAdapter extends BaseAdapter
     { 
         R.drawable.mylocation, R.drawable.browsedb,
         R.drawable.camera,     R.drawable.exportdataset,
-        R.drawable.googlemaps,
+        R.drawable.email,      R.drawable.googlemaps,
         R.drawable.config,     R.drawable.delete,     
     };
     
@@ -65,7 +65,7 @@ public class TripMainPanelAdapter extends BaseAdapter
     { 
         R.drawable.mylocation, R.drawable.browsedb_faded,
         R.drawable.camera,     R.drawable.exportdataset_faded,
-        R.drawable.googlemaps_faded,
+        R.drawable.email,      R.drawable.googlemaps_faded,
         R.drawable.config,     R.drawable.delete,     
     };
     
@@ -73,12 +73,9 @@ public class TripMainPanelAdapter extends BaseAdapter
     {
         R.string.tmgmyloc, R.string.tmgbrowsedb,
         R.string.tmgcamera, R.string.tmgexportdataset,
-        R.string.tmggooglemaps,
+        R.string.tmgemail,  R.string.tmggooglemaps,
         R.string.tmgconfig, R.string.tmgdeltrip,    
     };
-    
-    // R.drawable.email,      
-    // R.string.tmgemail,  
     
     // Data Members
     private TripMainActivity     tripMainActivity;
@@ -137,91 +134,7 @@ public class TripMainPanelAdapter extends BaseAdapter
             imageView = (ImageView)llCell.getChildAt(0);
         }
         
-        final int id = titleIds[position];
-        try
-        {
-            imageView.setOnClickListener(new View.OnClickListener() 
-            {
-                @Override
-                public void onClick(View view) 
-                {
-                  switch (id)
-                  {
-                      case R.string.tmgmyloc: // My Location Lat/Lon
-                      {
-                          tripMainActivity.addLatLon();
-                          break;
-                      } 
-                      
-                      case R.string.tmgbrowsedb: // Browse
-                      {
-                          Intent intent = new Intent(tripMainActivity, TripDataEntryDetailActivity.class);
-                          intent.putExtra(TripListActivity.ID_EXTRA, tripId);
-                          intent.putExtra(TripListActivity.TRIP_TYPE, TripListActivity.COLL_TRIP);
-                          intent.putExtra(TripListActivity.DETAIL_CLASS, TripDataEntryDetailActivity.class.getName());
-                          tripMainActivity.startActivity(intent);
-                          break;
-                      } 
-     
-                      case R.string.tmgcamera: // Camera
-                      {
-                          //Intent intent = new Intent(tripMainActivity, TripListActivity.class);
-                          //intent.putExtra(TripListActivity.TRIP_TYPE, TripListActivity.CONFIG_TRIP);
-                          //tripMainActivity.startActivity(intent);
-                          
-                          DialogHelper.showDialog(tripMainActivity, R.string.notimpl);
-                          break;
-                      }
-                      
-                      case R.string.tmgexportdataset: // Export as CSV
-                      {
-                          TripSQLiteHelper dbHelper = new TripSQLiteHelper(tripMainActivity);
-                          dbHelper.exportToCSV(tripMainActivity, getDB(), tripId);
-                          break;
-                      }
-                      
-                      case R.string.tmgemail: // Email exported file.
-                      {
-                          //TripSQLiteHelper dbHelper = new TripSQLiteHelper(tripMainActivity);
-                          //dbHelper.export(tripMainActivity, getDB(), tripId);
-                          tripMainActivity.doEmailExport();
-                          break;
-                      }
-                      
-                      case R.string.tmggooglemaps: // Maps
-                      {
-                          Intent intent = new Intent(tripMainActivity, TripMapLocationActivity.class);
-                          intent.putExtra(TripListActivity.ID_EXTRA, tripId);
-                          tripMainActivity.startActivity(intent);
-                          break;
-                      }
-                      
-                      case R.string.tmgconfig: // Config
-                      {
-                          Intent intent = new Intent(tripMainActivity, TripDetailActivity.class);
-                          intent.putExtra(TripListActivity.ID_EXTRA, tripId);
-                          intent.putExtra(TripDetailActivity.ISNEW_EXTRA, false);
-                          tripMainActivity.startActivity(intent);
-                          break;
-                      }
-                          
-                      case R.string.tmgdeltrip: // Delete Trip
-                          doDeleteTrip();
-                          break;
-                  }
-                }
-              });
-        } catch (Exception ex) {}
-        
-        /*imageView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v)
-            {
-                Log.d("onClick","long position ["+position+"]");
-                return false;
-            }
-        });*/
-        
+        imageView.setOnClickListener(new ClickedViewListener(position));
         setEnabled(tripMainActivity.getItemCount() > 0);
 
         return llCell;
@@ -240,28 +153,6 @@ public class TripMainPanelAdapter extends BaseAdapter
                 imgViews.get(inx).setImageResource(ids[inx]);
                 txtViews.get(inx).setEnabled(enabled);
             }
-        }
-    }
-    
-    /**
-     * 
-     */
-    @SuppressWarnings("unused")
-    private void doEmailExport()
-    {
-        try
-        {
-            Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
-            emailIntent.setType("plain/text");
-            emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{ "rods@ku.edu"});
-            emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Your Export WB");
-            emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Your Export");
-    
-            tripMainActivity.startActivityForResult(Intent.createChooser(emailIntent, "Send mail..."), 0);
-            
-        } catch (Exception ex)
-        {
-            Log.e(getClass().getName(), "Mail failed.", ex);
         }
     }
     
@@ -318,6 +209,89 @@ public class TripMainPanelAdapter extends BaseAdapter
     public long getItemId(int position)
     {
         return 0;
+    }
+    
+    //------------------------------------------------------------
+    class ClickedViewListener implements View.OnClickListener
+    {
+        private int inx;
+
+        /**
+         * @param inx
+         */
+        public ClickedViewListener(final int inx)
+        {
+            this.inx = inx;
+        }
+
+        @Override
+        public void onClick(View view)
+        {
+            switch (inx)
+            {
+                case 0: // My Location Lat/Lon
+                {
+                    tripMainActivity.addLatLon();
+                    break;
+                } 
+                
+                case 1: // Browse
+                {
+                    Intent intent = new Intent(tripMainActivity, TripDataEntryDetailActivity.class);
+                    intent.putExtra(TripListActivity.ID_EXTRA, tripId);
+                    intent.putExtra(TripListActivity.TRIP_TYPE, TripListActivity.COLL_TRIP);
+                    intent.putExtra(TripListActivity.DETAIL_CLASS, TripDataEntryDetailActivity.class.getName());
+                    tripMainActivity.startActivity(intent);
+                    break;
+                } 
+
+                case 2: // Camera
+                {
+                    //Intent intent = new Intent(tripMainActivity, TripListActivity.class);
+                    //intent.putExtra(TripListActivity.TRIP_TYPE, TripListActivity.CONFIG_TRIP);
+                    //tripMainActivity.startActivity(intent);
+                    
+                    DialogHelper.showDialog(tripMainActivity, R.string.notimpl);
+                    break;
+                }
+                
+                case 3: // Export as CSV
+                {
+                    TripSQLiteHelper dbHelper = new TripSQLiteHelper(tripMainActivity);
+                    dbHelper.exportToCSV(tripMainActivity, getDB(), tripId, null);
+                    break;
+                }
+                
+                case 4: // Email exported file.
+                {
+                    TripSQLiteHelper dbHelper = new TripSQLiteHelper(tripMainActivity);
+                    dbHelper.exportToCSV(tripMainActivity, getDB(), tripId, tripMainActivity);
+                    break;
+                }
+                
+                case 5: // Maps
+                {
+                    Intent intent = new Intent(tripMainActivity, TripMapLocationActivity.class);
+                    intent.putExtra(TripListActivity.ID_EXTRA, tripId);
+                    tripMainActivity.startActivity(intent);
+                    break;
+                }
+                
+                case 6: // Config
+                {
+                    Intent intent = new Intent(tripMainActivity, TripDetailActivity.class);
+                    intent.putExtra(TripListActivity.ID_EXTRA, tripId);
+                    intent.putExtra(TripDetailActivity.ISNEW_EXTRA, false);
+                    tripMainActivity.startActivity(intent);
+                    break;
+                }
+                    
+                case 7: // Delete Trip
+                    doDeleteTrip();
+                    break;
+                    
+            } 
+        }
     }
     
     //------------------------------------------------------------------------

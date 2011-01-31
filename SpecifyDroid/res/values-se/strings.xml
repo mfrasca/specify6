@@ -63,6 +63,7 @@
     <string name="tmgemail">EMail</string>
     <string name="tmggooglemaps">Karta</string>
     <string name="tmgtitleitems">- %d poster.</string>
+    <string name="sendingemail">Skicka e-post ...</string>
     
     <string name="deletetrip">Ta bort \'%s\'?</string>
     <string name="changedisp">Ändra</string>
