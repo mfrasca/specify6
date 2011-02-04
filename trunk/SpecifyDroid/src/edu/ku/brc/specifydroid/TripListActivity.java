@@ -51,7 +51,7 @@ import edu.ku.brc.utils.SQLUtils;
  */
 public class TripListActivity extends SpBaseActivity
 {
-    private static final String  TAG               = "TripListActivity";
+    //private static final String  TAG               = "TripListActivity";
     
     public final static int CONFIG_TRIP = 0; // Configure Trip
     public final static int COLL_TRIP   = 1; // Collection Trip

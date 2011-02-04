@@ -26,6 +26,8 @@ import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -33,12 +35,17 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FilterQueryProvider;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SimpleCursorAdapter;
 import android.widget.SimpleCursorAdapter.CursorToStringConverter;
@@ -61,6 +68,8 @@ import edu.ku.brc.utils.SQLUtils;
  */
 public class TripDataEntryDetailActivity extends SpBaseActivity
 {
+    private final static int CAL_DLG = 0;
+    
     public final static String ID_EXTRA    = "edu.ku.brc.specifydroid._TripDataDefID";
     public final static String ID_ISCREATE = "edu.ku.brc.specifydroid._ISNEW";
     public final static String LAT_VAL     = "edu.ku.brc.specifydroid._LAT_VAL";
@@ -83,8 +92,6 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
     private ImageButton                posLastBtn;
     private ImageButton                posPrevBtn;
     private ImageButton                posNextBtn;
-    private ImageButton                addBtn      = null;
-    private ImageButton                delBtn;
     private Button                     saveBtn;
     private TextView                   recLabel;
     
@@ -98,6 +105,8 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
     private HashMap<String, View>      compHash    = new HashMap<String, View>();
     private HashMap<String, Integer >  compTDD     = new HashMap<String, Integer>();
     private ArrayList<View>            comps       = new ArrayList<View>();
+    
+    private TextView                   calTextView = null;
     
     /**
      * 
@@ -127,33 +136,19 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
             isCreateRec = getIntent().getBooleanExtra(ID_ISCREATE, false);
         }
         
-        
         isNewRec = isCreateRec;
         
         saveBtn = (Button) findViewById(R.id.tdcsave);
-        saveBtn.setOnClickListener(onSave);
         saveBtn.setEnabled(false);
 
-        //addBtn = (ImageButton) findViewById(R.id.tdcadd);
-        if (addBtn != null)
-        {
-            addBtn.setOnClickListener(onAdd);
-        }
-        
-        delBtn = (ImageButton) findViewById(R.id.tdc_del);
-        if (delBtn != null)
-        {
-            delBtn.setOnClickListener(onDel);
-        }
-        
+        posFirstBtn = (ImageButton)findViewById(R.id.posfirst);
+        posLastBtn  = (ImageButton)findViewById(R.id.poslast);
+        posNextBtn  = (ImageButton)findViewById(R.id.posnext);
+        posPrevBtn  = (ImageButton)findViewById(R.id.posprev);
+        recLabel    = (TextView)findViewById(R.id.reclabel);
+
         if (!isCreateRec)
         {
-            posFirstBtn = (ImageButton)findViewById(R.id.posfirst);
-            posLastBtn  = (ImageButton)findViewById(R.id.poslast);
-            posNextBtn  = (ImageButton)findViewById(R.id.posnext);
-            posPrevBtn  = (ImageButton)findViewById(R.id.posprev);
-            recLabel    = (TextView)findViewById(R.id.reclabel);
-            
             posFirstBtn.setOnClickListener(new View.OnClickListener()
             {
                 @Override
@@ -192,23 +187,26 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
             
         } else
         {
-            LinearLayout recController = (LinearLayout)findViewById(R.id.reccontroller);
-            recController.setVisibility(View.INVISIBLE);
-            delBtn.setVisibility(View.INVISIBLE);
-            
-            saveBtn.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    if (isChanged)
-                    {
-                        doSave();
-                    }
-                    finish();
-                }
-            });
+            posFirstBtn.setVisibility(View.INVISIBLE);
+            posLastBtn.setVisibility(View.INVISIBLE);
+            posNextBtn.setVisibility(View.INVISIBLE);
+            posPrevBtn.setVisibility(View.INVISIBLE);
+            recLabel.setVisibility(View.INVISIBLE);
+            recLabel.setText(" ");
         }
+        
+        saveBtn.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (isChanged)
+                {
+                    doSave();
+                }
+                //finish();
+            }
+        });
 
         buildUI();
     }
@@ -223,6 +221,66 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
         
         outState.putString(TripListActivity.ID_EXTRA, tripId);
         outState.putBoolean(ID_ISCREATE, isCreateRec);
+    }
+    
+    
+    /* (non-Javadoc)
+     * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        new MenuInflater(getApplication()).inflate(R.menu.tdc_menu, menu);
+        return (super.onCreateOptionsMenu(menu));
+    }
+    
+    /* (non-Javadoc)
+     * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        if (item.getItemId() == R.id.delitem)
+        {
+            clearForm();
+            doDeleteTripRow();
+            return true;
+        } 
+        return super.onOptionsItemSelected(item);
+    }
+    
+    /* (non-Javadoc)
+     * @see android.app.Activity#onCreateDialog(int)
+     */
+    @Override
+    protected Dialog onCreateDialog(int id) 
+    {
+        if (id == CAL_DLG)
+        {
+            DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener()
+            {
+                @Override
+                public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth)
+                {
+                    Calendar tripDate = Calendar.getInstance();
+                    tripDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                    tripDate.set(Calendar.MONTH, monthOfYear);
+                    tripDate.set(Calendar.YEAR, year);
+                    
+                    char[] str = (new String(sdf.format(tripDate.getTime()))).toCharArray();
+                    calTextView.setText(str, 0, str.length);
+                    isChanged = true;
+                    updateUIState();
+                }
+            };
+            Calendar tripDate = Calendar.getInstance();
+            return new DatePickerDialog(this,
+                                        listener,
+                                        tripDate.get(Calendar.YEAR), 
+                                        tripDate.get(Calendar.MONTH), 
+                                        tripDate.get(Calendar.DAY_OF_MONTH));
+        }
+        return null;
     }
     
     /**
@@ -391,6 +449,7 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
         }
         isChanged = false;
         changedHash.clear();
+        updateUIState();
     }
     
     /**
@@ -458,8 +517,9 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
                 label.setText(cellTitle + ":");
                 label.setGravity(Gravity.RIGHT);
                 
-                EditText edtTxt = null;
-                View     view   = null;
+                EditText edtTxt     = null;
+                View     view       = null;
+                View     layoutView = null;  // The Layout View
                 switch (types[type])
                 {
                     case intType:
@@ -467,30 +527,37 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
                     case doubleType:
                     {
                         edtTxt = new EditText(this);
-                        view   = edtTxt;
+                        view = layoutView = edtTxt;
                     } break;
                     
                     case dateType:
                     {
-                        /*ImageView calBtn = (ImageView) findViewById(R.id.calendarbtn);
-                        calBtn.setOnClickListener(new View.OnClickListener()
+                        boolean doDate = true;
+                        if (doDate)
                         {
-                            public void onClick(View v)
-                            {
-                                showDialog(0);
-                            }
-                        });
-                        TextView     txtView   = new TextView(this);
-                        LinearLayout container = new LinearLayout(this);
-                        container.setOrientation(LinearLayout.HORIZONTAL);
-                        container.addView(txtView);
-                        container.addView(calBtn);
-                        */
-                        TextView txtView = new TextView(this);
-                        view = txtView;
-                        txtView.setPadding(4, 6, 0, 6);
-                        //txtView.setHeight(defLabelHeight);
-                        
+                            TextView  txtView = new TextView(this);
+                            ImageView calBtn  = new ImageView(this);
+                            calBtn.setImageResource(R.drawable.calendar);
+                            calBtn.setOnClickListener(new CalClickListener(txtView));
+                            
+                            char[] str = (new String(sdf.format(Calendar.getInstance().getTime()))).toCharArray();
+                            txtView.setText(str, 0, str.length);
+                            
+                            LinearLayout container = new LinearLayout(this);
+                            container.setOrientation(LinearLayout.HORIZONTAL);
+                            container.addView(txtView);
+                            container.addView(calBtn);
+                            
+                            view       = txtView;
+                            layoutView = container;
+                            txtView.setPadding(4, 6, 0, 6);
+                        } else
+                        {
+                            TextView txtView = new TextView(this);
+                            view       = txtView;
+                            layoutView = txtView;
+                            txtView.setPadding(4, 6, 0, 6);
+                        }
                     } break;
                     
                     case strType:
@@ -506,6 +573,7 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
                             edtTxt = new EditText(this);
                             view   = edtTxt;
                         }
+                        layoutView = view;
                     } break;
                 }
                 
@@ -517,10 +585,10 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
                 }
                
                 tblRow.addView(label, 0);
-                tblRow.addView(view, 1);
+                tblRow.addView(layoutView, 1);
                 
                 int rows = tableLayout.getChildCount();
-                tableLayout.addView(tblRow, rows-2);
+                tableLayout.addView(tblRow, rows);
                 
                 ttdId = cursor.getInt(cursor.getColumnIndex("_id"));
                 
@@ -805,38 +873,6 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
         isActive.set(true);
     }
     
-    //----------------------------------------------------------------
-    private View.OnClickListener onSave = new View.OnClickListener()
-    {
-        @Override
-        public void onClick(View v)
-        {
-            doSave();
-        }
-    };
-    
-    //----------------------------------------------------------------
-    private View.OnClickListener onAdd = new View.OnClickListener()
-    {
-        @Override
-        public void onClick(View v)
-        {
-            isNewRec = true;
-            clearForm();
-        }
-    };
-    
-    private View.OnClickListener onDel = new View.OnClickListener()
-    {
-        @Override
-        public void onClick(View v)
-        {
-            clearForm();
-            doDeleteTripRow();
-            
-        }
-    };
-    
     /**
      * @param activity
      * @param autoCompTextField
@@ -867,6 +903,31 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
                 }
             });
             autoCompTextField.setAdapter(adapter2);
+        }
+    }
+    
+    //-----------------------------------------------------------
+    class CalClickListener implements View.OnClickListener
+    {
+        private TextView txtView;
+        
+        /**
+         * @param txtView
+         */
+        public CalClickListener(final TextView txtView)
+        {
+            super();
+            this.txtView = txtView;
+        }
+
+        /* (non-Javadoc)
+         * @see android.view.View.OnClickListener#onClick(android.view.View)
+         */
+        @Override
+        public void onClick(View v)
+        {
+            calTextView = txtView;
+            showDialog(0);
         }
     }
 

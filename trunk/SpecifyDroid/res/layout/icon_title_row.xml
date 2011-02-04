@@ -4,16 +4,14 @@
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:padding="4px"
-        >
+        android:padding="4px">
         <ImageView
                 android:id="@+id/icon"
                 android:layout_width="48px"
                 android:layout_height="48px"
                 android:layout_gravity="left"
-                android:layout_marginRight="8px" 
-                />
- 
+                android:layout_marginRight="8px"/>
+
         <TextView
                 android:id="@+id/title"
                 android:textColor="#0000FF"
@@ -21,5 +19,5 @@
                 android:paddingLeft="10dip"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"/>
 </LinearLayout>
