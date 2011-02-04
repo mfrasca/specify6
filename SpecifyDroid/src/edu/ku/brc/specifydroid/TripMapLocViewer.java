@@ -42,6 +42,11 @@ import com.pocketjourney.view.MapLocationViewer;
  */
 public class TripMapLocViewer extends MapLocationViewer
 {
+    private static final String LONGITUDE     = "Longitude";
+    private static final String LATITUDE      = "Latitude";
+    private static final String GENUSSPECIES  = "GenusSpecies";
+    private static final String LOCALITYNAME  = "LocalityName";
+    
     private String tripId = null;
     
     /**
@@ -95,11 +100,11 @@ public class TripMapLocViewer extends MapLocationViewer
                     //Log.d("debug", "rowIndex: "+rowIndex+ "   rowNum: "+rowNum);
                     if (rowIndex != rowNum)
                     {
-                        String name = dataHash.get("LocalityName");
-                        String desc = dataHash.get("GenusSpecies");
+                        String name = dataHash.get(LOCALITYNAME);
+                        String desc = dataHash.get(GENUSSPECIES);
                         
-                        String latStr = dataHash.get("Latitude");
-                        String lonStr = dataHash.get("Longitude");
+                        String latStr = dataHash.get(LATITUDE);
+                        String lonStr = dataHash.get(LONGITUDE);
                         if (latStr == null || latStr.length() == 0 ||
                             lonStr == null || lonStr.length() == 0 )
                         {
@@ -136,10 +141,10 @@ public class TripMapLocViewer extends MapLocationViewer
                 cursor.close();
                 tripDBHelper.close();
                 
-                String name   = dataHash.get("LocalityName");
-                String desc   = dataHash.get("GenusSpecies");
-                String latStr = dataHash.get("Latitude");
-                String lonStr = dataHash.get("Longitude");
+                String name   = dataHash.get(LOCALITYNAME);
+                String desc   = dataHash.get(GENUSSPECIES);
+                String latStr = dataHash.get(LATITUDE);
+                String lonStr = dataHash.get(LONGITUDE);
                 
                 if (latStr != null && latStr.length() > 0 &&
                     lonStr != null && lonStr.length() > 0)

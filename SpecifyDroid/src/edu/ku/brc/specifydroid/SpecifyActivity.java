@@ -202,7 +202,7 @@ public class SpecifyActivity extends SpBaseActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        new MenuInflater(getApplication()).inflate(R.menu.maincontextmenu, menu);
+        new MenuInflater(getApplication()).inflate(R.menu.main_menu, menu);
 
         return (super.onCreateOptionsMenu(menu));
     }
