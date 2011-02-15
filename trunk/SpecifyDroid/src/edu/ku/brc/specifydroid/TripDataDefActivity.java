@@ -24,6 +24,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import edu.ku.brc.specifydroid.datamodel.TripDataDef;
@@ -52,8 +53,10 @@ public class TripDataDefActivity extends SpBaseActivity
     {
         super.onCreate(savedInstanceState);
         
+        requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.trip_list_main);
-        
+        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.window_title);
+
         if (savedInstanceState != null)
         {
             tripId = savedInstanceState.getString(TripListActivity.ID_EXTRA);
@@ -114,12 +117,12 @@ public class TripDataDefActivity extends SpBaseActivity
         {
             startManagingCursor(cursorModel);
     
-            list.setAdapter(new DataAdapterWithBinder(new TripDataDefDataViewBinder(),
+            list.setAdapter(new DataAdapterWithBinder(new TripDataDefDataViewBinder(list, 0, 3),
                                                       this, 
                                                       R.layout.row, 
                                                       cursorModel, 
-                                                      new String[] {"Name", "Title", "DataType"}, 
-                                                      new int[] {R.id.tddname, R.id.tddtitle, R.id.tdddatatype}));
+                                                      new String[] {"Title", "Name", "DataType"}, 
+                                                      new int[] {R.id.tddrwtitle, R.id.tddrwname, R.id.tddrwdatatype}));
         }
     }
 

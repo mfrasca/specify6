@@ -11,6 +11,39 @@
 			android:background="#FFFFFFFF"
 			android:layout_span="3"/>
 	</TableRow>
+    <TableRow>
+			<LinearLayout
+				 xmlns:android="http://schemas.android.com/apk/res/android"
+				 android:layout_height="wrap_content"
+				 android:layout_width="fill_parent"
+				 android:orientation="horizontal"
+				 android:layout_span="3"
+				 android:weightSum="1.0"
+				 android:background="@drawable/fields_header"
+		    >  
+		        <TextView
+		            android:text="@string/tddtitle"
+		            android:layout_width="0dip"
+		            android:layout_height="wrap_content"
+		            android:layout_weight=".38"
+		            android:textAppearance="@style/FieldsHeaderTextAppearance"
+		            />
+		        <TextView
+		            android:text="@string/tddname"
+		            android:layout_width="0dip"
+		            android:layout_height="wrap_content"
+		            android:layout_weight=".38"
+                    android:textAppearance="@style/FieldsHeaderTextAppearance"
+		            />      
+		        <TextView
+		            android:text="@string/tdddatatype"
+		            android:layout_width="0dip"
+		            android:layout_height="wrap_content"
+		            android:layout_weight=".24"
+                    android:textAppearance="@style/FieldsHeaderTextAppearance"
+		            />
+		</LinearLayout>
+    </TableRow>
 	<TableRow
 		android:layout_height="fill_parent"
 		android:layout_gravity="fill_vertical|fill"

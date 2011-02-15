@@ -39,6 +39,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -124,7 +125,10 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
     {
         super.onCreate(savedInstanceState);
         
+        requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.tdc_detail_form);
+        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.window_title);
+
         
         if (savedInstanceState != null)
         {

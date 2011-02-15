@@ -9,7 +9,11 @@
     <application android:allowBackup="true" 
                  android:name="SpecifyDroidApp" 
                  android:icon="@drawable/specifydroid128" 
-                 android:label="SpecifyDroid" android:description="@string/app_desc" android:debuggable="false">
+                 android:label="SpecifyDroid" 
+                 android:description="@string/app_desc" 
+                 android:debuggable="false"
+                 android:theme="@style/CustomTheme"
+                 >
         <uses-library android:name="com.google.android.maps" />
         <activity android:name=".SpecifyActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -41,5 +45,5 @@
         <activity android:name=".TripMapLocationActivity"/>
         <activity android:name=".TripFieldsActivity"/>
     </application>
-    <uses-sdk android:targetSdkVersion="8" android:minSdkVersion="4"/>
+    <uses-sdk android:targetSdkVersion="8" android:minSdkVersion="8"/>
 </manifest> 

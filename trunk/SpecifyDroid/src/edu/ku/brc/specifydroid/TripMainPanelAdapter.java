@@ -79,6 +79,7 @@ public class TripMainPanelAdapter extends BaseAdapter
     // Data Members
     private TripMainActivity     tripMainActivity;
     private String               tripId;
+    private String               tripTitle;
     
     private ArrayList<ImageView> imgViews = new ArrayList<ImageView>();
     private ArrayList<TextView>  txtViews = new ArrayList<TextView>();
@@ -88,10 +89,12 @@ public class TripMainPanelAdapter extends BaseAdapter
      * @param tripId the id of the current trip
      */
     public TripMainPanelAdapter(final TripMainActivity activity,
-                                final String tripId)
+                                final String tripId,
+                                final String tripTitle)
     {
         this.tripMainActivity = activity;
         this.tripId           = tripId;
+        this.tripTitle        = tripTitle;
     }
 
     /* (non-Javadoc)
@@ -238,6 +241,7 @@ public class TripMainPanelAdapter extends BaseAdapter
                 {
                     Intent intent = new Intent(tripMainActivity, TripDataEntryDetailActivity.class);
                     intent.putExtra(TripListActivity.ID_EXTRA, tripId);
+                    intent.putExtra(TripListActivity.TRIP_TITLE, tripTitle);
                     intent.putExtra(TripListActivity.TRIP_TYPE, TripListActivity.COLL_TRIP);
                     intent.putExtra(TripListActivity.DETAIL_CLASS, TripDataEntryDetailActivity.class.getName());
                     tripMainActivity.startActivity(intent);
@@ -272,6 +276,7 @@ public class TripMainPanelAdapter extends BaseAdapter
                 {
                     Intent intent = new Intent(tripMainActivity, TripMapLocationActivity.class);
                     intent.putExtra(TripListActivity.ID_EXTRA, tripId);
+                    intent.putExtra(TripListActivity.TRIP_TITLE, tripTitle);
                     tripMainActivity.startActivity(intent);
                     break;
                 }
@@ -281,6 +286,7 @@ public class TripMainPanelAdapter extends BaseAdapter
                     Intent intent = new Intent(tripMainActivity, TripDetailActivity.class);
                     intent.putExtra(TripListActivity.ID_EXTRA, tripId);
                     intent.putExtra(TripDetailActivity.ISNEW_EXTRA, false);
+                    intent.putExtra(TripListActivity.TRIP_TITLE, tripTitle);
                     tripMainActivity.startActivity(intent);
                     break;
                 }

@@ -34,6 +34,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.view.Window;
 import android.widget.GridView;
 import android.widget.TextView;
 import edu.ku.brc.specifydroid.datamodel.Trip;
@@ -92,13 +93,11 @@ public class TripMainActivity extends SpBaseActivity implements TripSQLiteHelper
             pointWasCaptured = new AtomicBoolean(getIntent().getBooleanExtra(ID_PNTWASCPT, false));
         }
 
+        requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.tripmain);
+        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.window_title);
 
-        adapter = new TripMainPanelAdapter(this, tripId);
-        GridView gridview = (GridView)findViewById(R.id.tripgridview);
-        gridview.setAdapter(adapter);
-        
-        titleView = (TextView)findViewById(R.id.tripmaintitle);
+        titleView = (TextView)findViewById(R.id.headertitle);
         if (tripId != null)
         {   
             Trip trip = Trip.getById(getDB(), tripId);
@@ -108,6 +107,11 @@ public class TripMainActivity extends SpBaseActivity implements TripSQLiteHelper
                 titleView.setText(baseTitle);
             }
         }
+        
+        adapter = new TripMainPanelAdapter(this, tripId, baseTitle);
+        GridView gridview = (GridView)findViewById(R.id.tripgridview);
+        gridview.setAdapter(adapter);
+
         updateTitle();
      }
     

@@ -20,7 +20,9 @@
 package edu.ku.brc.specifydroid;
 
 import android.database.Cursor;
+import android.util.Log;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -35,12 +37,21 @@ import android.widget.TextView;
  */
 public class TripDataDefDataViewBinder implements SimpleCursorAdapter.ViewBinder
 {
+    private int      padding;
+    private int      numColumns;
+    private ListView list;
+    
     /**
      * 
      */
-    public TripDataDefDataViewBinder()
+    public TripDataDefDataViewBinder(final ListView list, 
+                                     final int padding,
+                                     final int numColumns)
     {
         super();
+        this.list       = list;
+        this.padding    = padding;
+        this.numColumns = numColumns;
     }
 
     /* (non-Javadoc)
@@ -49,6 +60,11 @@ public class TripDataDefDataViewBinder implements SimpleCursorAdapter.ViewBinder
     @Override
     public boolean setViewValue(View view, Cursor cursor, int columnIndex)
     {
+        float percentage = columnIndex == 3 ? 0.24f : 0.38f;
+        int width = Math.round((list.getWidth() - padding) * percentage);
+        Log.d("XXX", "width: "+width+" percentage: "+ percentage+" columnIndex: "+ columnIndex+" list.getWidth(): "+ list.getWidth()+" txt: "+ ((TextView)view).getText());
+        
+        
         int nImageIndex = cursor.getColumnIndex("DataType");
         if (nImageIndex == columnIndex)
         {
@@ -60,12 +76,15 @@ public class TripDataDefDataViewBinder implements SimpleCursorAdapter.ViewBinder
             } else
             {
                 TextView txtView = (TextView)view;
+                txtView.setWidth(width);
                 Short   dataType  = ((Integer)cursor.getInt(nImageIndex)).shortValue();
                 String typeStr = TripDataDefDetailActivity.dataTypeItems[dataType];
                 txtView.setText(typeStr.toCharArray(), 0, typeStr.length());
             }
             return true;
         }
+        TextView txtView = (TextView)view;
+        txtView.setWidth(width);
         return false; 
     }
 

@@ -10,24 +10,31 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:stretchColumns="1">
+        android:stretchColumns="2">
         <TableRow>
             <TextView
-                android:text="@string/tddname"/>
+                android:text="@string/tddname" android:gravity="center_vertical|right"/>
+            <TextView
+                android:text=":" android:gravity="center_vertical"/>
             <EditText
                 android:id="@+id/tddname"/>
         </TableRow>
         <TableRow>
             <TextView
-                android:text="@string/tddtitle"/>
+                android:text="@string/tddtitle" android:gravity="center_vertical|right"/>
+            <TextView
+                android:text=":" android:gravity="center_vertical"/>
             <EditText
                 android:id="@+id/tddtitle"/>
         </TableRow>
         <TableRow>
             <TextView
                 android:text="@string/tdddatatype"
-                android:layout_height="fill_parent"
-                android:gravity="center_vertical"/>
+                android:layout_height="fill_parent" 
+                android:gravity="center_vertical|right"
+            />
+            <TextView
+                android:text=":" android:gravity="center_vertical"/>
             <Spinner
                 android:id="@+id/tdddatatype"
                 android:layout_width="wrap_content"

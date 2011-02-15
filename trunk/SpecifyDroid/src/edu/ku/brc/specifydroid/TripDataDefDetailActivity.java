@@ -27,6 +27,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -85,7 +86,9 @@ public class TripDataDefDetailActivity extends SpBaseActivity implements Adapter
             tripDataDefId = getIntent().getStringExtra(TripDataDefActivity.ID_EXTRA);
         }
         
+        requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.tdd_detail_form);
+        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.window_title);
         
         int i = 0;
         for (Integer id : txtEdtIds)
