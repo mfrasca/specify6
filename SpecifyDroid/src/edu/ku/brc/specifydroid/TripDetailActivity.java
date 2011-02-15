@@ -34,6 +34,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -78,6 +79,7 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
     private boolean        hasStartedNew;
     private boolean        isNew;
     private Integer        tripType      = null;
+    private String         tripTitle     = null;
     
     private HashMap<Integer, EditText> editTexts = new HashMap<Integer, EditText>();
 
@@ -103,6 +105,7 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
             isNew         = savedInstanceState.getBoolean(TripDetailActivity.ISNEW_EXTRA, false);
             hasStartedNew = savedInstanceState.getBoolean(TripDetailActivity.HAS_STARTED_NEW, false);
             tripType      = savedInstanceState.getInt(TripListActivity.TRIP_TYPE, -1);
+            tripTitle     = savedInstanceState.getString(TripListActivity.TRIP_TITLE);
             discpInx      = savedInstanceState.getInt("discpInx", 0);
             
         } else
@@ -111,13 +114,18 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
             isNew         = getIntent().getBooleanExtra(TripDetailActivity.ISNEW_EXTRA, false);
             hasStartedNew = getIntent().getBooleanExtra(TripDetailActivity.HAS_STARTED_NEW, false);
             tripType      = getIntent().getIntExtra(TripListActivity.TRIP_TYPE, -1);
+            tripTitle     = getIntent().getStringExtra(TripListActivity.TRIP_TITLE);
             discpInx      = 0;
         }
         
         disciplineId = discpIcons[discpInx];
         
+        requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.detail_form);
+        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.window_title);
         
+        ((TextView)findViewById(R.id.headertitle)).setText(tripTitle);
+
         for (Integer id : txtEdtIds)
         {
             editTexts.put(id, (EditText)findViewById(id));
@@ -207,6 +215,7 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
             {
                 Intent i = new Intent(TripDetailActivity.this, TripFieldsActivity.class);
                 i.putExtra(TripDetailActivity.ID_EXTRA, String.valueOf(tripId));
+                i.putExtra(TripListActivity.TRIP_TITLE, tripTitle);
                 startActivity(i);
             }
         });

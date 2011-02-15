@@ -35,6 +35,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnCreateContextMenuListener;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -58,6 +59,7 @@ public class TripListActivity extends SpBaseActivity
     public final static int OBS_TRIP    = 2; // Observation
     
     public final static String         ID_EXTRA     = "edu.ku.brc.specifydroid._ID";
+    public final static String         TRIP_TITLE   = "edu.ku.brc.specifydroid.TRIP_TITLE";
     public final static String         TRIP_TYPE    = "edu.ku.brc.specifydroid.TRIP_TYPE";
     public final static String         DETAIL_CLASS = "edu.ku.brc.specifydroid.DETAIL_CLASS";
     
@@ -86,6 +88,7 @@ public class TripListActivity extends SpBaseActivity
     {
         super.onCreate(savedInstanceState);
         
+        
         if (savedInstanceState != null)
         {
             tripType = savedInstanceState.getInt(TRIP_TYPE, CONFIG_TRIP);
@@ -94,11 +97,26 @@ public class TripListActivity extends SpBaseActivity
             tripType = getIntent().getIntExtra(TRIP_TYPE, CONFIG_TRIP);
         }
         
-        //requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+        int titleId = 0;
+        switch (tripType)
+        {
+            case COLL_TRIP : 
+                titleId = R.string.collecting;
+                break;
+            case OBS_TRIP : 
+                titleId = R.string.observations;
+                break;
+            default:
+                titleId = R.string.trips;
+                break;
+        }
         
+        requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.trip_list_main);
+        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.window_title);
         
-        //getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.window_title);
+        ((TextView)findViewById(R.id.headertitle)).setText(titleId);
+        
 
         emptyTV = (TextView) findViewById(R.id.listemptyid_tv);
         emptyLL = (LinearLayout) findViewById(R.id.listemptyid_ll);

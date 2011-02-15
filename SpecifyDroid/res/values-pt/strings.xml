@@ -42,14 +42,15 @@
     <string name="trpnoteslbl">Notas:</string>
     <string name="chooseflds">Escolha os campos</string>
     <string name="trpclcknew">Clique no menu para adicionar uma nova viagem</string>
+    <string name="observing">Observando</string>
     
     <!--  Trip Detail Menus -->
     <string name="tripconfig">Config</string>
     
     <!--  Trip Data Def Detail Form -->
-    <string name="tddname">Nome:</string>
-    <string name="tddtitle">Título:</string>
-    <string name="tdddatatype">Tipo de dados:</string>
+    <string name="tddname">Nome</string>
+    <string name="tddtitle">Título</string>
+    <string name="tdddatatype">Tipo de dados</string>
     
     <!-- Trip Main Grid -->
     <string name="tmgconfig">Config Viagem</string>

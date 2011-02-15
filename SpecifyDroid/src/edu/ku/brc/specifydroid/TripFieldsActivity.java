@@ -19,6 +19,7 @@
 */
 package edu.ku.brc.specifydroid;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -28,10 +29,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnCreateContextMenuListener;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import edu.ku.brc.specifydroid.datamodel.TripDataDef;
 
 /**
@@ -70,15 +74,22 @@ public class TripFieldsActivity extends SpBaseActivity
     {
         super.onCreate(savedInstanceState);
 
+        String tripTitle;
         if (savedInstanceState != null)
         {
-            tripId = savedInstanceState.getString(TripDetailActivity.ID_EXTRA);
+            tripId    = savedInstanceState.getString(TripDetailActivity.ID_EXTRA);
+            tripTitle = savedInstanceState.getString(TripListActivity.TRIP_TITLE);
         } else
         {
-            tripId = getIntent().getStringExtra(TripDetailActivity.ID_EXTRA);
+            tripId    = getIntent().getStringExtra(TripDetailActivity.ID_EXTRA);
+            tripTitle = getIntent().getStringExtra(TripListActivity.TRIP_TITLE);
         }
         
+        requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.fields_form);
+        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.window_title);
+        
+        ((TextView)findViewById(R.id.headertitle)).setText(tripTitle);
         
         list = (ListView)findViewById(R.id.tripdatadeflist);
         list.setOnItemClickListener(onListClick);
@@ -197,12 +208,12 @@ public class TripFieldsActivity extends SpBaseActivity
         {
             startManagingCursor(cursorModel);
     
-            list.setAdapter(new DataAdapterWithBinder(new TripDataDefDataViewBinder(),
+            list.setAdapter(new DataAdapterWithBinder(new TripDataDefDataViewBinder(list, 0, 3),
                                           this, 
                                           R.layout.tdd_row, 
                                           cursorModel, 
-                                          new String[] {"Name", "Title", "DataType"}, 
-                                          new int[] {R.id.tddrwname, R.id.tddrwtitle, R.id.tddrwdatatype}));
+                                          new String[] {"Title", "Name", "DataType"}, 
+                                          new int[] {R.id.tddrwtitle, R.id.tddrwname, R.id.tddrwdatatype}));
         }
     }
 
@@ -222,6 +233,33 @@ public class TripFieldsActivity extends SpBaseActivity
     private void updateUIState()
     {
         //closeBtn.setEnabled(hasChanged);
+    }
+    
+    class TripDataAdaptor extends DataAdapterWithBinder
+    {
+        /**
+         * @param viewBinder
+         * @param context
+         * @param layout
+         * @param c
+         * @param from
+         * @param to
+         */
+        public TripDataAdaptor(ViewBinder viewBinder, Context context, int layout, Cursor c, String[] from,
+                               int[] to)
+        {
+            super(viewBinder, context, layout, c, from, to);
+        }
+
+        /* (non-Javadoc)
+         * @see android.widget.CursorAdapter#getView(int, android.view.View, android.view.ViewGroup)
+         */
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent)
+        {
+            return super.getView(position, convertView, parent);
+        }
+        
     }
     
     //------------------------------------------------------------------------------

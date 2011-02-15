@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.view.MenuItem;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -49,14 +50,16 @@ public class SatelliteActivity extends Activity
     {
         super.onCreate(savedInstanceState);
         
+        requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.sat_main);
+        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.window_title);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         prefs.registerOnSharedPreferenceChangeListener(prefListener);
 
         satView = (SatellitesView)findViewById(R.id.satellites);
         satView.init(new int[] {R.drawable.satellite48});
-        satView.setBackgroundColor(Color.WHITE);
+        satView.setBackgroundColor(Color.BLACK);
 
         locMgr = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 10.0f, onLocationChange);

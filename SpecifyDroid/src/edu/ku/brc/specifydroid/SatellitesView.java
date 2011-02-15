@@ -107,15 +107,15 @@ public class SatellitesView extends View
             iconHeight = bitmaps[i].getHeight();
         }
         
-        this.textPaint.setARGB(128, 0, 0, 0);
+        this.textPaint.setARGB(128, 0, 255, 0);
         this.textPaint.setAntiAlias(true);
         this.textPaint.setTextSize(20);
         this.textPaint.setFakeBoldText(true); 
 
-        this.iconPaint.setARGB(80, 255, 255, 255);
+        this.iconPaint.setARGB(80, 255, 0, 0);
         this.iconPaint.setStyle(Style.FILL); 
 
-        this.whitePaint.setARGB(255, 0, 0, 0);
+        this.whitePaint.setARGB(255, 255, 255, 255);
         this.whitePaint.setAntiAlias(true);
         this.whitePaint.setTextSize(16);
         this.whitePaint.setFakeBoldText(true); 

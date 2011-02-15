@@ -42,14 +42,15 @@
     <string name="trpnoteslbl">Anteckningar:</string>
     <string name="chooseflds">Välj fält</string>
     <string name="trpclcknew">Klicka på menyn för att lägga till en ny resa</string>
+    <string name="observing">Observation</string>
     
     <!--  Trip Detail Menus -->
     <string name="tripconfig">Config</string>
     
     <!--  Trip Data Def Detail Form -->
-    <string name="tddname">Namn:</string>
-    <string name="tddtitle">Titel:</string>
-    <string name="tdddatatype">Datatyp:</string>
+    <string name="tddname">Namn</string>
+    <string name="tddtitle">Titel</string>
+    <string name="tdddatatype">Datatyp</string>
     
     <!-- Trip Main Grid -->
     <string name="tmgconfig">Config Trip</string>

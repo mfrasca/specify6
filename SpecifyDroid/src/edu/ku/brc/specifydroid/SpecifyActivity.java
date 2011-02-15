@@ -30,7 +30,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
@@ -42,8 +41,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
-import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import edu.ku.brc.utils.VersionChecker;
 
@@ -97,13 +97,58 @@ public class SpecifyActivity extends SpBaseActivity
         
         SQLiteDatabase database = getDB();
         
+        requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.specify_main);
-
-        GridView gridview = (GridView)findViewById(R.id.spmaingridview);
-        gridview.setBackgroundColor(Color.WHITE);
-        gridview.setAdapter(new SpecifyMainPanelAdapter(this));
+        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.window_title);
         
+        ((TextView)findViewById(R.id.headersep)).setText("");
+
         //this.setTitleColor(Color.parseColor("#53a1e5"))); // Sets the Text Color of the title
+        
+        ImageView btn = (ImageView)findViewById(R.id.tripsbtn);
+        btn.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(SpecifyActivity.this, TripListActivity.class);
+                intent.putExtra(TripListActivity.TRIP_TYPE, TripListActivity.CONFIG_TRIP);
+                startActivity(intent);
+            }
+        });
+        
+        btn = (ImageView)findViewById(R.id.collectingbtn);
+        btn.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(SpecifyActivity.this, TripListActivity.class);
+                intent.putExtra(TripListActivity.TRIP_TYPE, TripListActivity.COLL_TRIP);
+                intent.putExtra(TripListActivity.DETAIL_CLASS, TripDataEntryDetailActivity.class.getName());
+                startActivity(intent);
+            }
+        });
+        
+        btn = (ImageView)findViewById(R.id.observationsbtn);
+        btn.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(SpecifyActivity.this, TripListActivity.class);
+                intent.putExtra(TripListActivity.TRIP_TYPE, TripListActivity.OBS_TRIP);
+                intent.putExtra(TripListActivity.DETAIL_CLASS,
+                        TripDataEntryDetailActivity.class.getName());
+                startActivity(intent);
+            }
+        });
+        
+        btn = (ImageView)findViewById(R.id.satellitebtn);
+        btn.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v)
+            {
+                startActivity(new Intent(SpecifyActivity.this, SatelliteActivity.class));
+            }
+        });
         
         File  root          = Environment.getExternalStorageDirectory();
         final File taxaFile = new File(root, "fish_taxa.csv");
