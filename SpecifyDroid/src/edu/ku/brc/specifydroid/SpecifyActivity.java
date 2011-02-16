@@ -61,10 +61,6 @@ public class SpecifyActivity extends SpBaseActivity
     private SoundPool                 soundPool;
     private HashMap<Integer, Integer> soundPoolMap;
 
-
-    public static final int      COLLECTING        = 0;
-    public static final int      OBSERVATION       = 1;
-    
     public  static final String   TAXA_FILE_PREF    = "TAXA_FILE_PREF";
     private static final String   HAS_NEW_VER       = "HAS_NEW_VER";
     

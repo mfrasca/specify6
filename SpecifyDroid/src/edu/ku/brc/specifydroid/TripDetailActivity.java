@@ -247,9 +247,9 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
                 }
             }
             
-        } else if (savedInstanceState != null)
+        } else
         {
-            types.check(savedInstanceState.getInt("type"));
+            types.check(tripType);
         }
     }
     
@@ -289,7 +289,7 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
             savedInstanceState.putString(TripListActivity.ID_EXTRA, tripId);
         }
 
-        savedInstanceState.putInt("type", types.getCheckedRadioButtonId());
+        savedInstanceState.putInt("type", types.getCheckedRadioButtonId() == R.id.observing ? TripListActivity.OBS_TRIP : TripListActivity.COLL_TRIP);
         savedInstanceState.putInt("discipline", disciplineId);
         savedInstanceState.putBoolean(TripDetailActivity.ISNEW_EXTRA, isNew);
         savedInstanceState.putBoolean(TripDetailActivity.HAS_STARTED_NEW, hasStartedNew);
@@ -353,7 +353,7 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
         editTexts.get(R.id.firstName3).setText(current.getFirstName3());
         editTexts.get(R.id.lastName3).setText(current.getLastName3());*/
         
-        if (current.getType() == SpecifyActivity.OBSERVATION)
+        if (current.getType() == TripListActivity.OBS_TRIP)
         {
             types.check(R.id.observing);
         } else
@@ -451,11 +451,11 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
         switch (types.getCheckedRadioButtonId())
         {
             case R.id.collecting:
-                current.setType(SpecifyActivity.COLLECTING);
+                current.setType(TripListActivity.COLL_TRIP);
                 break;
 
             case R.id.observing:
-                current.setType(SpecifyActivity.OBSERVATION);
+                current.setType(TripListActivity.OBS_TRIP);
                 break;
         }
         

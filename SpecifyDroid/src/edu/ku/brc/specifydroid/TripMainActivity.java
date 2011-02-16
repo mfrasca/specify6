@@ -66,6 +66,7 @@ public class TripMainActivity extends SpBaseActivity implements TripSQLiteHelper
     private TripMainPanelAdapter adapter;
     private ProgressDialog       prgDlg           = null;
     private Listener             onGpsStatusChange = null;
+    private int                  tripType;
 
     /**
      * 
@@ -82,15 +83,17 @@ public class TripMainActivity extends SpBaseActivity implements TripSQLiteHelper
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
+        
         if (savedInstanceState != null)
         {
             tripId = savedInstanceState.getString(TripListActivity.ID_EXTRA);
             pointWasCaptured = new AtomicBoolean(savedInstanceState.getBoolean(ID_PNTWASCPT));
+            tripType = savedInstanceState.getInt(TripListActivity.TRIP_TYPE, TripListActivity.CONFIG_TRIP);
         } else
         {
             tripId = getIntent().getStringExtra(TripListActivity.ID_EXTRA);
             pointWasCaptured = new AtomicBoolean(getIntent().getBooleanExtra(ID_PNTWASCPT, false));
+            tripType = getIntent().getIntExtra(TripListActivity.TRIP_TYPE, TripListActivity.CONFIG_TRIP);
         }
 
         requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
@@ -108,7 +111,7 @@ public class TripMainActivity extends SpBaseActivity implements TripSQLiteHelper
             }
         }
         
-        adapter = new TripMainPanelAdapter(this, tripId, baseTitle);
+        adapter = new TripMainPanelAdapter(this, tripId, tripType, baseTitle);
         GridView gridview = (GridView)findViewById(R.id.tripgridview);
         gridview.setAdapter(adapter);
 
@@ -158,6 +161,7 @@ public class TripMainActivity extends SpBaseActivity implements TripSQLiteHelper
         super.onSaveInstanceState(outState);
         
         outState.putString(TripListActivity.ID_EXTRA, tripId);
+        outState.putInt(TripListActivity.TRIP_TYPE, tripType);
         outState.putBoolean(ID_PNTWASCPT, pointWasCaptured.get());
     }
 
