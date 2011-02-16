@@ -70,7 +70,7 @@ public class TripMainPanelAdapter extends BaseAdapter
     
     private static final Integer[] titleIds = 
     {
-        R.string.tmgmyloc, R.string.tmgbrowsedb,
+        R.string.tmgcollect, R.string.tmgbrowsedb,
         R.string.tmgcamera, R.string.tmgexportdataset,
         R.string.tmgemail,  R.string.tmggooglemaps,
         R.string.tmgconfig, R.string.tmgdeltrip,    
@@ -90,11 +90,14 @@ public class TripMainPanelAdapter extends BaseAdapter
      */
     public TripMainPanelAdapter(final TripMainActivity activity,
                                 final String tripId,
+                                final int    tripType,
                                 final String tripTitle)
     {
         this.tripMainActivity = activity;
         this.tripId           = tripId;
         this.tripTitle        = tripTitle;
+        
+        this.titleIds[0]      = tripType == TripListActivity.OBS_TRIP ? R.string.tmgobserve : R.string.tmgcollect;
     }
 
     /* (non-Javadoc)

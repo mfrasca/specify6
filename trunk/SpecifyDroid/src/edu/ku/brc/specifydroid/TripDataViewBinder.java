@@ -57,7 +57,7 @@ public class TripDataViewBinder implements SimpleCursorAdapter.ViewBinder
             Integer[] dispIcons = TripDetailActivity.getDiscpIcons();
             int dispInx = cursor.getInt(cursor.getColumnIndex("Discipline"));
             int id      = dispIcons[dispInx > dispIcons.length-1 ? 0 : dispInx];
-            typeControl.setImageResource( type == SpecifyActivity.COLLECTING ? id :  R.drawable.look32);
+            typeControl.setImageResource(id);
             return true;
         }
 

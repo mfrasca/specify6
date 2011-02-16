@@ -88,7 +88,6 @@ public class TripListActivity extends SpBaseActivity
     {
         super.onCreate(savedInstanceState);
         
-        
         if (savedInstanceState != null)
         {
             tripType = savedInstanceState.getInt(TRIP_TYPE, CONFIG_TRIP);
@@ -164,6 +163,8 @@ public class TripListActivity extends SpBaseActivity
             String trpId  = ((Cursor)list.getItemAtPosition(index)).getString(0);
             Intent intent = new Intent(this, TripMainActivity.class);
             intent.putExtra(TripListActivity.ID_EXTRA, trpId);
+            int trpType = tripType == CONFIG_TRIP ? getTripType(trpId) : tripType;
+            intent.putExtra(TripListActivity.TRIP_TYPE, trpType);
             startActivity(intent);
             
         } else if (item.getItemId() == R.id.cfgtripitem)
@@ -343,8 +344,7 @@ public class TripListActivity extends SpBaseActivity
                      String where = null;
                      if (tripType > 0)
                      {
-                         where = String.format("WHERE Type = %d", 
-                                 tripType == TripListActivity.OBS_TRIP ? SpecifyActivity.OBSERVATION : SpecifyActivity.COLLECTING);
+                         where = String.format("WHERE Type = %d", tripType);
                      }
                      
                      int cnt = SQLUtils.getCount(getDB(), "SELECT COUNT(*) as count FROM trip " + (where != null ? where : ""));
@@ -423,11 +423,24 @@ public class TripListActivity extends SpBaseActivity
                                     final int position,
                                     final long id)
             {
-                Intent i = new Intent(TripListActivity.this, TripMainActivity.class);
-                i.putExtra(ID_EXTRA, String.valueOf(id));
-                startActivity(i);
+            	String tripId = String.valueOf(id);
+                Intent intent = new Intent(TripListActivity.this, TripMainActivity.class);
+                intent.putExtra(ID_EXTRA, tripId);
+                int trpType = tripType == CONFIG_TRIP ? getTripType(tripId) : tripType;
+                intent.putExtra(TripListActivity.TRIP_TYPE, trpType);
+                startActivity(intent);
             }
         };
+    }
+    
+    /**
+     * @param tripId
+     * @return
+     */
+    private int getTripType(final String tripId)
+    {
+    	int trpTyp = SQLUtils.getCount(getDB(), "SELECT Type FROM trip WHERE _id = "+tripId);
+    	return trpTyp == -1 ? tripType : trpTyp;
     }
 
     //------------------------------------------------------------------------------
