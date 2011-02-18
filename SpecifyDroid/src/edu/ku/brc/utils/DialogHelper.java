@@ -210,7 +210,10 @@ public class DialogHelper
         String msg = resId != null ? activity.getString(resId) : text;
         
         InputMethodManager inputManager = (InputMethodManager)activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS); 
+        if (inputManager != null && activity.getCurrentFocus() != null && activity.getCurrentFocus().getWindowToken() != null)
+        {
+            inputManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS); 
+        }
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setMessage(msg);
