@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
+        <!--  android:xlargeScreens="true" -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.ku.brc.specifydroid"
-    android:versionName="1.6" android:versionCode="6">
+    android:versionName="1.7" android:versionCode="7">
+    <supports-screens
+        android:smallScreens="false"
+        android:normalScreens="true"
+        android:largeScreens="true"
+        android:anyDensity="false" 
+    />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/> 
@@ -11,12 +18,9 @@
                  android:icon="@drawable/specifydroid128" 
                  android:label="SpecifyDroid" 
                  android:description="@string/app_desc" 
-                 android:debuggable="false"
-                 android:theme="@style/CustomTheme"
-                 >
+                 android:theme="@style/CustomTheme" android:debuggable="false">
         <uses-library android:name="com.google.android.maps" />
         <activity android:name=".SpecifyActivity"
-            android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

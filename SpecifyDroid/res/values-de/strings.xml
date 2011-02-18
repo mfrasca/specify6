@@ -58,13 +58,14 @@
     <string name="tmgaddpnt">Standort hinzufügen</string>
     <string name="tmgdeltrip">Löschen </string>
     <string name="tmgcamera">Foto aufnehmen</string>
-    <string name="tmgmyloc">Lage markieren</string>
     <string name="tmgbrowsedb">Stöbern</string>
     <string name="tmgexportdataset">Export</string>
     <string name="tmgemail">EMail</string>
     <string name="tmggooglemaps">Karte</string>
     <string name="tmgtitleitems">- %d Elemente.</string>
     <string name="sendingemail">E-Mails senden ...</string>
+    <string name="tmgobserve">Beachten Sie</string>
+    <string name="tmgcollect">Sammeln</string>
     
     <string name="deletetrip">Reise löschen \'%s\'?</string>
     <string name="changedisp">Ändern</string>

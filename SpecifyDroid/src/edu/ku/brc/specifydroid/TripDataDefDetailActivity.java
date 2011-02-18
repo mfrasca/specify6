@@ -110,7 +110,14 @@ public class TripDataDefDetailActivity extends SpBaseActivity implements Adapter
         dataTypeSP.setAdapter(dataTypeAdapter);
         
         Button save = (Button) findViewById(R.id.ttdsave);
-        save.setOnClickListener(onSave);
+        save.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                doSave();
+            }
+        });
 
         if (tripDataDefId == null)
         {
@@ -218,38 +225,33 @@ public class TripDataDefDetailActivity extends SpBaseActivity implements Adapter
         dataTypeSP.setSelection(inx);
     }
     
-    //----------------------------------------------------------------
-    private View.OnClickListener onSave = new View.OnClickListener()
+    private void doSave()
     {
-        @Override
-        public void onClick(View v)
+        int count = SQLUtils.getCount(getDB(), "SELECT COUNT(*) AS count FROM tripdatadef WHERE TripID = " + tripId);
+        if (count > -1)
         {
-            int count = SQLUtils.getCount(getDB(), "SELECT COUNT(*) AS count FROM tripdatadef WHERE TripID = " + tripId);
-            if (count > -1)
+            current.setName(editTexts.get(R.id.tddname).getText().toString());
+            current.setTitle(editTexts.get(R.id.tddtitle).getText().toString());
+            current.setDataType(((Integer)dataTypeSP.getSelectedItemPosition()).shortValue());
+            
+            if (tripDataDefId == null)
             {
-                current.setName(editTexts.get(R.id.tddname).getText().toString());
-                current.setTitle(editTexts.get(R.id.tddtitle).getText().toString());
-                current.setDataType(((Integer)dataTypeSP.getSelectedItemPosition()).shortValue());
-                
-                if (tripDataDefId == null)
+                current.setTripID(Integer.parseInt(tripId));
+                current.setColumnIndex(count);
+                long rv = current.insert(getDB());
+                if (rv == -1)
                 {
-                    current.setTripID(Integer.parseInt(tripId));
-                    current.setColumnIndex(count);
-                    long rv = current.insert(getDB());
-                    if (rv == -1)
-                    {
-                        DialogHelper.showDialog(TripDataDefDetailActivity.this, "Error inserting "+TripDataDefDetailActivity.this.getClass().getSimpleName());
-                    }
-                } else
+                    DialogHelper.showDialog(TripDataDefDetailActivity.this, "Error inserting "+TripDataDefDetailActivity.this.getClass().getSimpleName());
+                }
+            } else
+            {
+                if (current.update(tripDataDefId, getDB()) == 0)
                 {
-                    if (current.update(tripDataDefId, getDB()) == 0)
-                    {
-                        DialogHelper.showDialog(TripDataDefDetailActivity.this, "Error updating "+TripDataDefDetailActivity.this.getClass().getSimpleName());
-                    }
+                    DialogHelper.showDialog(TripDataDefDetailActivity.this, "Error updating "+TripDataDefDetailActivity.this.getClass().getSimpleName());
                 }
             }
-            closeDB();
-            finish();
         }
-    };
+        closeDB();
+        finish();
+    }
 }

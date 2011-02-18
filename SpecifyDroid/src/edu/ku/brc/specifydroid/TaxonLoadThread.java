@@ -137,8 +137,7 @@ public class TaxonLoadThread extends Thread
                     database.execSQL(tblStr);
                 }
                 
-                final double maxSize = inFile.length();
-                
+                //final double maxSize = inFile.length();
                 //Log.d("LOAD", "Size: "+maxSize);
                 
                 BufferedInputStream bis    = null;

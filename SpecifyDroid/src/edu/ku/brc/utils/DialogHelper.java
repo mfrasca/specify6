@@ -21,7 +21,10 @@ package edu.ku.brc.utils;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.view.inputmethod.InputMethodManager;
 import edu.ku.brc.specifydroid.R;
 
 /**
@@ -167,6 +170,76 @@ public class DialogHelper
             public void run() {
                 alert.show();
             }});
+    }
+    
+    /**
+     * @param activity
+     * @param secondsDelay
+     * @param resId
+     */
+    public static void showTimedDialog(final Activity activity,
+                                       final double secondsDelay,
+                                       final Integer resId)
+    {
+        showTimedDialog(activity, secondsDelay, resId, null);
+    }
+    
+    /**
+     * @param activity
+     * @param secondsDelay
+     * @param text
+     */
+    public static void showTimedDialog(final Activity activity,
+                                       final double secondsDelay, 
+                                       final String text)
+    {
+        showTimedDialog(activity, secondsDelay, null, text);
+    }
+    
+    /**
+     * @param activity
+     * @param secondsDelay
+     * @param resId
+     * @param text
+     */
+    public static void showTimedDialog(final Activity activity,
+                                       final double secondsDelay, 
+                                       final Integer resId, 
+                                       final String text)
+    {
+        String msg = resId != null ? activity.getString(resId) : text;
+        
+        InputMethodManager inputManager = (InputMethodManager)activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS); 
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setMessage(msg);
+        builder.setCancelable(false);
+        
+        final AlertDialog dlg = builder.create();
+        dlg.show();
+        
+        new Thread() 
+        {
+            public void run() 
+            {
+                 try
+                 {
+                     Thread.sleep((int)Math.round(secondsDelay * 1000.0));
+                     
+                 } catch (Exception e) 
+                 {  
+                 } finally
+                 {
+                     activity.runOnUiThread(new Runnable() {
+                         public void run() {
+                             dlg.dismiss();
+                             }
+                         });
+                 }
+            }
+       }.start();
+
     }
 
 }
