@@ -203,7 +203,7 @@ public class SpecifyActivity extends SpBaseActivity
                     {
                         e.printStackTrace();
                     }
-                    playSound(SOUND_EXPLOSION);
+                    //playSound(SOUND_EXPLOSION);
                 }
             };
             t.start();

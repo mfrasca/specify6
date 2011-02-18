@@ -14,7 +14,6 @@ import java.util.Calendar;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -31,7 +30,7 @@ import edu.ku.brc.utils.ZipFileHelper;
 
 public class TripSQLiteHelper extends SQLiteOpenHelper
 {
-    private static final String  TAG  = "TRP_HELPER";
+    private static final String  TAG            = "TRP_HELPER";
     private static final String  DATABASE_NAME  = "trip.db";
     private static final int     SCHEMA_VERSION = 1;
     
@@ -347,6 +346,7 @@ public class TripSQLiteHelper extends SQLiteOpenHelper
             
             Timestamp tsCreated = new Timestamp(Calendar.getInstance().getTime().getTime());
             Trip trip = new Trip();
+            trip.setType(1); // Collecting Trip
             trip.setTripDate(new Date(111,0,1));
             trip.setName(tripName);
             trip.setDiscipline(1);
@@ -491,7 +491,7 @@ public class TripSQLiteHelper extends SQLiteOpenHelper
             
             Log.d("LOAD", "Size: "+maxSize);
             
-            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            //activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             
             BufferedInputStream bis    = null;
             DataInputStream     dis    = null;

@@ -208,7 +208,7 @@ public class TripFieldsActivity extends SpBaseActivity
         {
             startManagingCursor(cursorModel);
     
-            list.setAdapter(new DataAdapterWithBinder(new TripDataDefDataViewBinder(list, 0, 3),
+            list.setAdapter(new DataAdapterWithBinder(new TripDataDefDataViewBinder(list, 0),
                                           this, 
                                           R.layout.tdd_row, 
                                           cursorModel, 

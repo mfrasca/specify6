@@ -1,10 +1,7 @@
 package edu.ku.brc.specifydroid;
 import android.app.Activity;
-import android.app.Dialog;
-import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Bundle;
 import edu.ku.brc.utils.DialogHelper;
 
 /* This library is free software; you can redistribute it and/or
@@ -44,17 +41,6 @@ public class SpBaseActivity extends Activity
     public SpBaseActivity()
     {
         super();
-    }
-    
-    /* (non-Javadoc)
-     * @see android.app.Activity#onCreateDialog(int, android.os.Bundle)
-     */
-    @Override
-    protected Dialog onCreateDialog(int id, Bundle args)
-    {
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        
-        return super.onCreateDialog(id, args);
     }
 
     /* (non-Javadoc)

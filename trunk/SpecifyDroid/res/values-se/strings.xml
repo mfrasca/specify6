@@ -58,13 +58,14 @@
     <string name="tmgaddpnt">Lägg till plats</string>
     <string name="tmgdeltrip">Radera</string>
     <string name="tmgcamera">Ta Photo</string>
-    <string name="tmgmyloc">Mark Läge</string>
     <string name="tmgbrowsedb">Bläddra</string>
     <string name="tmgexportdataset">Export</string>
     <string name="tmgemail">EMail</string>
     <string name="tmggooglemaps">Karta</string>
     <string name="tmgtitleitems">- %d poster.</string>
     <string name="sendingemail">Skicka e-post ...</string>
+    <string name="tmgobserve">Observera</string>
+    <string name="tmgcollect">Samla</string>
     
     <string name="deletetrip">Ta bort \'%s\'?</string>
     <string name="changedisp">Ändra</string>

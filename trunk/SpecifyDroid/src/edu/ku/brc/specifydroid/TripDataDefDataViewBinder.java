@@ -20,7 +20,6 @@
 package edu.ku.brc.specifydroid;
 
 import android.database.Cursor;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -38,20 +37,17 @@ import android.widget.TextView;
 public class TripDataDefDataViewBinder implements SimpleCursorAdapter.ViewBinder
 {
     private int      padding;
-    private int      numColumns;
     private ListView list;
     
     /**
      * 
      */
     public TripDataDefDataViewBinder(final ListView list, 
-                                     final int padding,
-                                     final int numColumns)
+                                     final int padding)
     {
         super();
         this.list       = list;
         this.padding    = padding;
-        this.numColumns = numColumns;
     }
 
     /* (non-Javadoc)
@@ -62,8 +58,7 @@ public class TripDataDefDataViewBinder implements SimpleCursorAdapter.ViewBinder
     {
         float percentage = columnIndex == 3 ? 0.24f : 0.38f;
         int width = Math.round((list.getWidth() - padding) * percentage);
-        Log.d("XXX", "width: "+width+" percentage: "+ percentage+" columnIndex: "+ columnIndex+" list.getWidth(): "+ list.getWidth()+" txt: "+ ((TextView)view).getText());
-        
+        //Log.d("XXX", "width: "+width+" percentage: "+ percentage+" columnIndex: "+ columnIndex+" list.getWidth(): "+ list.getWidth()+" txt: "+ ((TextView)view).getText());
         
         int nImageIndex = cursor.getColumnIndex("DataType");
         if (nImageIndex == columnIndex)

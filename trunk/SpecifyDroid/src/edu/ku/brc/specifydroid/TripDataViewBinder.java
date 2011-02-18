@@ -52,7 +52,7 @@ public class TripDataViewBinder implements SimpleCursorAdapter.ViewBinder
         if (nImageIndex == columnIndex)
         {
             ImageView typeControl = (ImageView)view;
-            int       type        = cursor.getInt(nImageIndex);
+            //int       type        = cursor.getInt(nImageIndex);
 
             Integer[] dispIcons = TripDetailActivity.getDiscpIcons();
             int dispInx = cursor.getInt(cursor.getColumnIndex("Discipline"));

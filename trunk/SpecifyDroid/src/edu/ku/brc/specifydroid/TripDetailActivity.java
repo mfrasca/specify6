@@ -52,6 +52,7 @@ import edu.ku.brc.utils.SQLUtils;
 
 public class TripDetailActivity extends SpBaseActivity implements DatePickerDialog.OnDateSetListener
 {
+    //private static final String ERR_SAV = "Error saving a new trip";
     private static final String ERR_INS = "Error inserting a new trip";
     private static final String ERR_UPD = "Error updating a new trip";
     
@@ -421,7 +422,7 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
         super.onBackPressed();
         checkAndSave();
     }
-
+    
     /**
      * 
      */

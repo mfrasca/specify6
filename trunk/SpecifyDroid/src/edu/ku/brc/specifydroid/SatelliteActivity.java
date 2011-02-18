@@ -22,6 +22,7 @@ import android.provider.Settings;
 import android.view.MenuItem;
 import android.view.Window;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -53,6 +54,8 @@ public class SatelliteActivity extends Activity
         requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.sat_main);
         getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.window_title);
+        
+        ((TextView)findViewById(R.id.headertitle)).setText(R.string.satellites);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         prefs.registerOnSharedPreferenceChangeListener(prefListener);

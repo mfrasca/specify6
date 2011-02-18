@@ -378,7 +378,19 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
      */
     private void doSave()
     {
-        Integer trpId = Integer.parseInt(tripId);
+        if (doSaveToDB())
+        {
+            DialogHelper.showTimedDialog(this, 1.5, R.string.save);
+        }
+    }
+    
+    /**
+     * 
+     */
+    private boolean doSaveToDB()
+    {
+        boolean isError = false;
+        Integer trpId   = Integer.parseInt(tripId);
         
         if (isNewRec)
         {
@@ -412,6 +424,7 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
                 rv = tripDataCell.insert(getDB());
                 if (rv == -1)
                 {
+                    isError = true;
                     DialogHelper.showDialog(TripDataEntryDetailActivity.this, "Error inserting "+TripDataEntryDetailActivity.this.getClass().getSimpleName());
                     break;
                 }
@@ -444,6 +457,7 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
                     rv = tripDataCell.update(recNo.toString(), getDB());
                     if (rv != 1)
                     {
+                        isError = true;
                         DialogHelper.showDialog(TripDataEntryDetailActivity.this, "Error updating "+TripDataEntryDetailActivity.this.getClass().getSimpleName());
                         break;
                     }
@@ -454,6 +468,8 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
         isChanged = false;
         changedHash.clear();
         updateUIState();
+        
+        return isError;
     }
     
     /**
