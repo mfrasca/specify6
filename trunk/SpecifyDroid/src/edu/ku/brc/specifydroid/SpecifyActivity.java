@@ -87,9 +87,14 @@ public class SpecifyActivity extends SpBaseActivity
             hasAskedForNewVersion = savedInstanceState.getBoolean(HAS_NEW_VER, false);
         }
         
-        //DisplayMetrics metrics = new DisplayMetrics();
-        //getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        //Log.i("XXX", metrics.heightPixels+", "+metrics.widthPixels);
+        /*
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        String str = metrics.heightPixels+", "+metrics.widthPixels+"  d:"+metrics.density+
+        "  Dpi:"+metrics.densityDpi+"  sc:"+metrics.scaledDensity+
+        "  xdpi:"+metrics.xdpi+"  ydpi:"+metrics.ydpi;
+        Log.i("XXX", str);
+        */
         
         SQLiteDatabase database = getDB();
         
@@ -120,6 +125,7 @@ public class SpecifyActivity extends SpBaseActivity
                 Intent intent = new Intent(SpecifyActivity.this, TripListActivity.class);
                 intent.putExtra(TripListActivity.TRIP_TYPE, TripListActivity.COLL_TRIP);
                 intent.putExtra(TripListActivity.DETAIL_CLASS, TripDataEntryDetailActivity.class.getName());
+                //intent.putExtra(TripListActivity.TRIP_TITLE, null); // do not send title causing it to be null
                 startActivity(intent);
             }
         });
@@ -131,8 +137,8 @@ public class SpecifyActivity extends SpBaseActivity
             {
                 Intent intent = new Intent(SpecifyActivity.this, TripListActivity.class);
                 intent.putExtra(TripListActivity.TRIP_TYPE, TripListActivity.OBS_TRIP);
-                intent.putExtra(TripListActivity.DETAIL_CLASS,
-                        TripDataEntryDetailActivity.class.getName());
+                intent.putExtra(TripListActivity.DETAIL_CLASS, TripDataEntryDetailActivity.class.getName());
+                //intent.putExtra(TripListActivity.TRIP_TITLE, null); // do not send title causing it to be null
                 startActivity(intent);
             }
         });

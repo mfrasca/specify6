@@ -21,9 +21,9 @@ package edu.ku.brc.utils;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import edu.ku.brc.specifydroid.R;
 
@@ -179,9 +179,10 @@ public class DialogHelper
      */
     public static void showTimedDialog(final Activity activity,
                                        final double secondsDelay,
-                                       final Integer resId)
+                                       final Integer resId,
+                                       final TimedDialogListener listener)
     {
-        showTimedDialog(activity, secondsDelay, resId, null);
+        showTimedDialog(activity, secondsDelay, resId, null, listener);
     }
     
     /**
@@ -191,9 +192,10 @@ public class DialogHelper
      */
     public static void showTimedDialog(final Activity activity,
                                        final double secondsDelay, 
-                                       final String text)
+                                       final String text,
+                                       final TimedDialogListener listener)
     {
-        showTimedDialog(activity, secondsDelay, null, text);
+        showTimedDialog(activity, secondsDelay, null, text, listener);
     }
     
     /**
@@ -205,7 +207,8 @@ public class DialogHelper
     public static void showTimedDialog(final Activity activity,
                                        final double secondsDelay, 
                                        final Integer resId, 
-                                       final String text)
+                                       final String text,
+                                       final TimedDialogListener listener)
     {
         String msg = resId != null ? activity.getString(resId) : text;
         
@@ -228,7 +231,9 @@ public class DialogHelper
             {
                  try
                  {
-                     Thread.sleep((int)Math.round(secondsDelay * 1000.0));
+                     int milliSecsSleep = (int)Math.round(secondsDelay * 1000.0);
+                     Log.d("XXX", "Sleeping "+milliSecsSleep);
+                     Thread.sleep(milliSecsSleep);
                      
                  } catch (Exception e) 
                  {  
@@ -236,13 +241,25 @@ public class DialogHelper
                  {
                      activity.runOnUiThread(new Runnable() {
                          public void run() {
+                             if (listener != null)
+                             {
+                                 Log.d("XXX", "closing dialog.");
+                                 listener.dialogClosed();
+                             }
                              dlg.dismiss();
                              }
                          });
                  }
             }
        }.start();
-
+    }
+    
+    /**
+     *
+     */
+    public interface TimedDialogListener
+    {
+        public void dialogClosed();
     }
 
 }

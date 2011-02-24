@@ -29,9 +29,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -119,6 +116,17 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
             discpInx      = 0;
         }
         
+        if (tripTitle == null)
+        {
+            if (tripType == -1)
+            {
+                tripTitle = TripMainActivity.createTitle(this, TripListActivity.CONFIG_TRIP); // Shouldn't happen 
+            } else
+            {
+                tripTitle = TripMainActivity.createTitle(this, tripType);
+            }
+        }
+        
         disciplineId = discpIcons[discpInx];
         
         requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
@@ -144,7 +152,7 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
             current.setDiscipline(discpInx);
         }
         
-        load();
+        setDataIntoUI();
         
         if (savedInstanceState != null)
         {
@@ -247,10 +255,6 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
                     types.check(R.id.collecting);
                 }
             }
-            
-        } else
-        {
-            types.check(tripType);
         }
     }
     
@@ -303,39 +307,10 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
         }
     }
     
-    /* (non-Javadoc)
-     * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
-     */
-    @Override
-    public boolean onCreateOptionsMenu(final Menu menu)
-    {
-        new MenuInflater(getApplication()).inflate(R.menu.tripdetailmenus, menu);
-
-        return (super.onCreateOptionsMenu(menu));
-    }
-
-    /* (non-Javadoc)
-     * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
-     */
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item)
-    {
-        if (item.getItemId() == R.id.tripconfig)
-        {
-            Intent intent = new Intent(this, TripDataDefActivity.class);
-            intent.putExtra(ID_EXTRA, String.valueOf(tripId));
-            startActivity(intent);
-
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-    
     /**
      * 
      */
-    private void load()
+    private void setDataIntoUI()
     {
         if (tripId != null)
         {   
@@ -464,7 +439,7 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
         
         if (tripId == null)
         {
-            current.setName("New Item");
+            current.setName(getString(R.string.new_trip));
             Long id = current.insert(getDB());
             if (id == -1)
             {
@@ -472,7 +447,7 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
             }
 
             tripId = id.toString();
-            doStdConfig(true); // true means do silently
+            doStdConfig(true, current.getType()); // true means do silently
             
         } else
         {
@@ -489,10 +464,11 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
     /**
      * @param doSilently
      */
-    private void doStdConfig(final boolean doSilently)
+    private void doStdConfig(final boolean doSilently, final int tripType)
     {
+        String fileName = (tripType == TripListActivity.COLL_TRIP ? "trip" : "obs") + "_stdfields.xml";
         final Vector<TripDataDef> tripDataDefs = new Vector<TripDataDef>();
-        if (!readStdFieldsXML(tripDataDefs))
+        if (!readStdFieldsXML(fileName, tripDataDefs))
         {
             if (!doSilently)
             {
@@ -587,13 +563,13 @@ public class TripDetailActivity extends SpBaseActivity implements DatePickerDial
      * @param tripDataDefs
      * @return
      */
-    private boolean readStdFieldsXML(final Vector<TripDataDef> tripDataDefs)
+    private boolean readStdFieldsXML(final String fileName, final Vector<TripDataDef> tripDataDefs)
     {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         try
         {
             DocumentBuilder docBldr = dbf.newDocumentBuilder();
-            InputStream     fis     = getAssets().open("stdfields.xml");
+            InputStream     fis     = getAssets().open(fileName);
             Document        doc     = docBldr.parse(fis);
 
             Element topElement = doc.getDocumentElement();

@@ -158,20 +158,18 @@ public class TripListActivity extends SpBaseActivity
         {
             askForDeleteTrip(index);
             
-        } else if (item.getItemId() == R.id.edttripitem)
+        } else if (item.getItemId() == R.id.cfgtripitem || 
+                   item.getItemId() == R.id.edttripitem)
         {
-            String trpId  = ((Cursor)list.getItemAtPosition(index)).getString(0);
-            Intent intent = new Intent(this, TripMainActivity.class);
-            intent.putExtra(TripListActivity.ID_EXTRA, trpId);
-            int trpType = tripType == CONFIG_TRIP ? getTripType(trpId) : tripType;
-            intent.putExtra(TripListActivity.TRIP_TYPE, trpType);
-            startActivity(intent);
+            Cursor cursor   = (Cursor)list.getItemAtPosition(index);
+            String trpId    = cursor.getString(0);
+            int    trpType  = cursor.getInt(cursor.getColumnIndex("Type"));
             
-        } else if (item.getItemId() == R.id.cfgtripitem)
-        {
-            String trpId  = ((Cursor)list.getItemAtPosition(index)).getString(0);
-            Intent intent = new Intent(this, TripDetailActivity.class);
+            String trpTitle = cursor.getString(cursor.getColumnIndex("Name")) + " " + getString(R.string.trip);
+            Intent intent = new Intent(this, item.getItemId() == R.id.cfgtripitem ? TripMainActivity.class : TripDetailActivity.class);
             intent.putExtra(ID_EXTRA, trpId);
+            intent.putExtra(TRIP_TYPE, trpType);
+            intent.putExtra(TRIP_TITLE, trpTitle);
             startActivity(intent);
         }
         return true;
@@ -305,6 +303,7 @@ public class TripListActivity extends SpBaseActivity
             Intent intent = new Intent(this, TripDetailActivity.class);
             intent.putExtra(TripDetailActivity.ISNEW_EXTRA, true);
             intent.putExtra(TRIP_TYPE, tripType);
+            // TRIP_TITLE will be null
             startActivity(intent);
             return true;
             
@@ -428,6 +427,7 @@ public class TripListActivity extends SpBaseActivity
                 intent.putExtra(ID_EXTRA, tripId);
                 int trpType = tripType == CONFIG_TRIP ? getTripType(tripId) : tripType;
                 intent.putExtra(TripListActivity.TRIP_TYPE, trpType);
+                // Not sending title for new object (TRIP_TITLE will be null)
                 startActivity(intent);
             }
         };

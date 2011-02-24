@@ -193,6 +193,19 @@ public class TripFieldsActivity extends SpBaseActivity
         }
     }
     
+    /* (non-Javadoc)
+     * @see android.app.Activity#onSaveInstanceState(android.os.Bundle)
+     */
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState)
+    {
+        super.onSaveInstanceState(savedInstanceState);
+        
+        String tripTitle = ((TextView)findViewById(R.id.headertitle)).getText().toString();
+        
+        savedInstanceState.putString(TripListActivity.ID_EXTRA, tripId);
+        savedInstanceState.putString(TripListActivity.TRIP_TITLE, tripTitle);
+    }
     
     /**
      * 
@@ -224,6 +237,7 @@ public class TripFieldsActivity extends SpBaseActivity
     {
         Intent intent = new Intent(this, TripDataDefDetailActivity.class);
         intent.putExtra(ID_EXTRA, String.valueOf(tripId));
+        intent.putExtra(TripListActivity.TRIP_TITLE, ((TextView)findViewById(R.id.headertitle)).getText().toString());
         startActivity(intent);
     }
     
@@ -235,6 +249,8 @@ public class TripFieldsActivity extends SpBaseActivity
         //closeBtn.setEnabled(hasChanged);
     }
     
+    
+    //------------------------------------------------------------------------------
     class TripDataAdaptor extends DataAdapterWithBinder
     {
         /**
@@ -270,10 +286,11 @@ public class TripFieldsActivity extends SpBaseActivity
                                 final int            position,
                                 final long           id)
         {
-            Intent i = new Intent(TripFieldsActivity.this, TripDataDefDetailActivity.class);
-            i.putExtra(TripDataDefActivity.ID_EXTRA, String.valueOf(id));
-            i.putExtra(TripListActivity.ID_EXTRA,    String.valueOf(tripId));
-            startActivity(i);
+            Intent intent = new Intent(TripFieldsActivity.this, TripDataDefDetailActivity.class);
+            intent.putExtra(TripDataDefDetailActivity.ID_EXTRA, String.valueOf(id));
+            intent.putExtra(TripListActivity.ID_EXTRA,    String.valueOf(tripId));
+            intent.putExtra(TripListActivity.TRIP_TITLE, ((TextView)findViewById(R.id.headertitle)).getText().toString());
+            startActivity(intent);
         }
     };
 }

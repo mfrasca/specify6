@@ -80,6 +80,7 @@ public class TripMainPanelAdapter extends BaseAdapter
     private TripMainActivity     tripMainActivity;
     private String               tripId;
     private String               tripTitle;
+    private int                  tripType;
     
     private ArrayList<ImageView> imgViews = new ArrayList<ImageView>();
     private ArrayList<TextView>  txtViews = new ArrayList<TextView>();
@@ -96,6 +97,7 @@ public class TripMainPanelAdapter extends BaseAdapter
         this.tripMainActivity = activity;
         this.tripId           = tripId;
         this.tripTitle        = tripTitle;
+        this.tripType         = tripType;
         
         this.titleIds[0]      = tripType == TripListActivity.OBS_TRIP ? R.string.tmgobserve : R.string.tmgcollect;
     }
@@ -145,6 +147,14 @@ public class TripMainPanelAdapter extends BaseAdapter
         return llCell;
     }
     
+    /**
+     * @param tripTitle the tripTitle to set
+     */
+    public void setTripTitle(String tripTitle)
+    {
+        this.tripTitle = tripTitle;
+    }
+
     /**
      * @param enabled
      */
@@ -245,7 +255,7 @@ public class TripMainPanelAdapter extends BaseAdapter
                     Intent intent = new Intent(tripMainActivity, TripDataEntryDetailActivity.class);
                     intent.putExtra(TripListActivity.ID_EXTRA, tripId);
                     intent.putExtra(TripListActivity.TRIP_TITLE, tripTitle);
-                    intent.putExtra(TripListActivity.TRIP_TYPE, TripListActivity.COLL_TRIP);
+                    intent.putExtra(TripListActivity.TRIP_TYPE, tripType);
                     intent.putExtra(TripListActivity.DETAIL_CLASS, TripDataEntryDetailActivity.class.getName());
                     tripMainActivity.startActivity(intent);
                     break;
@@ -279,6 +289,7 @@ public class TripMainPanelAdapter extends BaseAdapter
                 {
                     Intent intent = new Intent(tripMainActivity, TripMapLocationActivity.class);
                     intent.putExtra(TripListActivity.ID_EXTRA, tripId);
+                    intent.putExtra(TripListActivity.TRIP_TYPE, tripType);
                     intent.putExtra(TripListActivity.TRIP_TITLE, tripTitle);
                     tripMainActivity.startActivity(intent);
                     break;
@@ -288,6 +299,7 @@ public class TripMainPanelAdapter extends BaseAdapter
                 {
                     Intent intent = new Intent(tripMainActivity, TripDetailActivity.class);
                     intent.putExtra(TripListActivity.ID_EXTRA, tripId);
+                    intent.putExtra(TripListActivity.TRIP_TYPE, tripType);
                     intent.putExtra(TripDetailActivity.ISNEW_EXTRA, false);
                     intent.putExtra(TripListActivity.TRIP_TITLE, tripTitle);
                     tripMainActivity.startActivity(intent);

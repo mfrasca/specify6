@@ -334,14 +334,14 @@ public class TripSQLiteHelper extends SQLiteOpenHelper
                 Trip.doDeleteTrip(db, tripIdInt.toString());
             }
             
-            String[]          titleStrs  = {"Locality Name", "Latitude", "Longitude", "Genus Species",};// "X1", "X2", "X3", "X4", "X5", "X6", "X7", "X8", };
-            String[]          colDefStrs = {"LocalityName", "Latitude", "Longitude",  "GenusSpecies", };//"X1", "X2", "X3", "X4", "X5", "X6", "X7", "X8", };
+            String[]          titleStrs  = {"Locality Name", "Latitude1", "Longitude1", "Genus", "Species",};// "X1", "X2", "X3", "X4", "X5", "X6", "X7", "X8", };
+            String[]          colDefStrs = {"LocalityName", "Latitude1", "Longitude1",  "Genus1", "Species1", };//"X1", "X2", "X3", "X4", "X5", "X6", "X7", "X8", };
             TripDataDefType[] defTypes   = {TripDataDefType.strType, TripDataDefType.doubleType, TripDataDefType.doubleType, TripDataDefType.strType, TripDataDefType.strType, TripDataDefType.strType, TripDataDefType.strType, TripDataDefType.strType, TripDataDefType.strType, TripDataDefType.strType, TripDataDefType.strType, TripDataDefType.strType, };
             String[] values= {
-                    "Little Pigeon River", "35.69161799381586", "-83.53372824519164", "Catostomus commersoni",// "X1", "X2", "X3", "X4", "X5", "X6", "X7", "X8",
-                    "Little Pigeon River", "35.69182845399097", "-83.5334314327779",  "Hypentelium nigricans",// "X1", "X2", "X3", "X4", "X5", "X6", "X7", "X8",
-                    "Little Pigeon River", "35.69043458326836", "-83.53709797155",    "Moxostoma carinatum",// "X1", "X2", "X3", "X4", "X5", "X6", "X7", "X8",
-                    "Small Falls",         "35.68309906312557", "-83.49230859919675", "Moxostoma duquesnei",// "X1", "X2", "X3", "X4", "X5", "X6", "X7", "X8",
+                    "Little Pigeon River", "35.69161799381586", "-83.53372824519164", "Catostomus", "commersoni",// "X1", "X2", "X3", "X4", "X5", "X6", "X7", "X8",
+                    "Little Pigeon River", "35.69182845399097", "-83.5334314327779",  "Hypentelium", "nigricans",// "X1", "X2", "X3", "X4", "X5", "X6", "X7", "X8",
+                    "Little Pigeon River", "35.69043458326836", "-83.53709797155",    "Moxostoma", "carinatum",// "X1", "X2", "X3", "X4", "X5", "X6", "X7", "X8",
+                    "Small Falls",         "35.68309906312557", "-83.49230859919675", "Moxostoma", "duquesnei",// "X1", "X2", "X3", "X4", "X5", "X6", "X7", "X8",
             };
             
             Timestamp tsCreated = new Timestamp(Calendar.getInstance().getTime().getTime());
