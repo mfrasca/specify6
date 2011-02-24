@@ -16,6 +16,7 @@
     <string name="settings">Impostazioni</string>
     <string name="preferences">Preferenze</string>
     <string name="save">Salva</string>
+    <string name="saved">Salvato record.</string>
     
     <string name="alert_dialog_ok">OK</string>
     <string name="alert_dialog_cancel">Annulla</string>
@@ -25,8 +26,14 @@
     <string name="app_name">SpecifyDroid</string>
     <string name="app_desc">Assiste nella raccolta di dati biologici.</string>
     <string name="about_title">A proposito di SpecifyDroid</string>
-    <string name="startup_sound">Suono di avvio</string>
-    <string name="ss_summary">Riproduce l\'apertura del suono.</string>
+    
+    <!--  Preferences -->
+    
+    <string name="startup_sound_pref">Suono di avvio</string>
+    <string name="ss_summary_pref">Riproduce il suono di apertura</string>
+    
+    <string name="gps_off_pref">Usa GPS</string>
+    <string name="gps_off_sum_pref">SpecifyDroid non si consulta con il GPS, quando la marcatura di una posizione.</string>
 
     <!--  App Main Grid -->
     <string name="satellites">Satelliti</string>
@@ -34,6 +41,8 @@
     <string name="observations">Osservazioni</string>
     <string name="collecting">Raccolta</string>
     <string name="trips">Escursioni</string>
+    <string name="trip">Sortita</string>
+    <string name="new_trip">Nuovo Sortie</string>
     
     <!--  Trip Detail -->
     <string name="trpnamelbl">Nome:</string>
@@ -43,6 +52,10 @@
     <string name="chooseflds">Scegli i campi</string>
     <string name="trpclcknew">Fare clic sul menu per aggiungere un nuovo viaggio</string>
     <string name="observing">Osservando</string>
+    <string name="newcollsortie">Nuova raccolta Sortie</string>
+    <string name="newobssortie">Nuova osservazione Sortie</string>
+    <string name="newsortie">Nuovo Sortie</string>
+    
     
     <!--  Trip Detail Menus -->
     <string name="tripconfig">Config</string>

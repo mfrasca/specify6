@@ -16,6 +16,7 @@
     <string name="settings">Settings</string>
     <string name="preferences">Preferences</string>
     <string name="save">Save</string>
+    <string name="saved">Saved record.</string>
     
     <string name="alert_dialog_ok">OK</string>
     <string name="alert_dialog_cancel">Cancel</string>
@@ -25,15 +26,23 @@
     <string name="app_name">SpecifyDroid</string>
     <string name="app_desc">Assists in collecting biological data.</string>
     <string name="about_title">About SpecifyDroid</string>
-    <string name="startup_sound">Startup Sound</string>
-    <string name="ss_summary">Plays opening sund</string>
+    
+    <!--  Preferences -->
+    
+    <string name="startup_sound_pref">Startup Sound</string>
+    <string name="ss_summary_pref">Plays opening sound</string>
+    
+    <string name="gps_notuse_pref">Ignore GPS</string>
+    <string name="gps_notuse_sum_pref">SpecifyDroid will not consult the GPS when marking a location.</string>
 
     <!--  App Main Grid -->
     <string name="satellites">Satellites</string>
     <string name="compass">Compass</string>
     <string name="observations">Observations</string>
     <string name="collecting">Collecting</string>
-    <string name="trips">Trips</string>
+    <string name="trips">Sorties</string>
+    <string name="trip">Sortie</string>
+    <string name="new_trip">New Sortie</string>
     
     <!--  Trip Detail -->
     <string name="trpnamelbl">Name:</string>
@@ -43,6 +52,10 @@
     <string name="chooseflds">Choose Fields</string>
     <string name="trpclcknew">Click on the menu to add a new trip</string>
     <string name="observing">Observing</string>
+    <string name="newcollsortie">New Collecting Sortie</string>
+    <string name="newobssortie">New Observation Sortie</string>
+    <string name="newsortie">New Sortie</string>
+    
     
     <!--  Trip Detail Menus -->
     <string name="tripconfig">Config</string>
@@ -53,7 +66,7 @@
     <string name="tdddatatype">Data Type</string>
     
     <!-- Trip Main Grid -->
-    <string name="tmgconfig">Config Trip</string>
+    <string name="tmgconfig">Config Sortie</string>
     <string name="tmgconfigstd">Config Std</string>
     <string name="tmgaddpnt">Add Location</string>
     <string name="tmgdeltrip">Delete</string>
@@ -80,7 +93,7 @@
     <string name="extstrgnotavail">External Storage is not available.</string>
     <string name="extstrgnotwrt">External Storage is not writable.</string>
     <string name="no_wrt_file">Cannot write to file %s.</string>
-    <string name="err_load_trp">Cannot load Trip with Id: %s</string>
+    <string name="err_load_trp">Cannot load Sortie with Id: %s</string>
     <string name="file_wrt">%s was saved.</string>
     <string name="file_exp">File: %s</string>
 

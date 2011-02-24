@@ -16,6 +16,7 @@
     <string name="settings">Inställningar</string>
     <string name="preferences">Inställningar</string>
     <string name="save">Spara</string>
+    <string name="saved">Sparade post.</string>
     
     <string name="alert_dialog_ok">OK</string>
     <string name="alert_dialog_cancel">Avbryt</string>
@@ -25,8 +26,14 @@
     <string name="app_name">SpecifyDroid</string>
     <string name="app_desc">Hjälper vid insamling av biologiska data.</string>
     <string name="about_title">Om SpecifyDroid</string>
-    <string name="startup_sound">Startljudet</string>
-    <string name="ss_summary">Spelar öppning ljud.</string>
+    
+    <!--  Preferences -->
+    
+    <string name="startup_sound_pref">Startljudet</string>
+    <string name="ss_summary_pref">Spelar öppning ljud</string>
+    
+    <string name="gps_off_pref">Använd GPS</string>
+    <string name="gps_off_sum_pref">SpecifyDroid kommer inte att samråda med GPS när märkningen en plats.</string>
 
     <!--  App Main Grid -->
     <string name="satellites">Satelliter</string>
@@ -34,6 +41,8 @@
     <string name="observations">Observationer</string>
     <string name="collecting">Samla</string>
     <string name="trips">Resor</string>
+    <string name="trip">Sortie</string>
+    <string name="new_trip">Nya Sortie</string>
     
     <!--  Trip Detail -->
     <string name="trpnamelbl">Namn:</string>
@@ -43,6 +52,10 @@
     <string name="chooseflds">Välj fält</string>
     <string name="trpclcknew">Klicka på menyn för att lägga till en ny resa</string>
     <string name="observing">Observation</string>
+    <string name="newcollsortie">Nya Samla Sortie</string>
+    <string name="newobssortie">Ny observation Sortie</string>
+    <string name="newsortie">Nya Sortie</string>
+    
     
     <!--  Trip Detail Menus -->
     <string name="tripconfig">Config</string>

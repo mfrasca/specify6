@@ -21,11 +21,7 @@ package edu.ku.brc.specifydroid;
 
 import java.util.HashMap;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -33,6 +29,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import edu.ku.brc.specifydroid.datamodel.TripDataDef;
 import edu.ku.brc.utils.DialogHelper;
 import edu.ku.brc.utils.SQLUtils;
@@ -47,6 +44,8 @@ import edu.ku.brc.utils.SQLUtils;
  */
 public class TripDataDefDetailActivity extends SpBaseActivity implements AdapterView.OnItemSelectedListener
 {
+    public final static String ID_EXTRA     = "edu.ku.brc.specifydroid.TripDataDefDetailActivity._ID";
+    
     public static final String[] dataTypeItems = new String[] {"Integer", "Double", "Float", "String", "Date"};
     
     private int[]          txtEdtIds   = {R.id.tddname, R.id.tddtitle,};
@@ -75,20 +74,25 @@ public class TripDataDefDetailActivity extends SpBaseActivity implements Adapter
     {
         super.onCreate(savedInstanceState);
         
+        String tripTitle;
         if (savedInstanceState != null)
         {
             tripId        = savedInstanceState.getString(TripListActivity.ID_EXTRA);
-            tripDataDefId = savedInstanceState.getString(TripDataDefActivity.ID_EXTRA);
+            tripDataDefId = savedInstanceState.getString(TripDataDefDetailActivity.ID_EXTRA);
+            tripTitle = savedInstanceState.getString(TripListActivity.TRIP_TITLE);
 
         } else
         {
             tripId        = getIntent().getStringExtra(TripListActivity.ID_EXTRA);
-            tripDataDefId = getIntent().getStringExtra(TripDataDefActivity.ID_EXTRA);
+            tripDataDefId = getIntent().getStringExtra(TripDataDefDetailActivity.ID_EXTRA);
+            tripTitle = getIntent().getStringExtra(TripListActivity.TRIP_TITLE);
         }
         
         requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.tdd_detail_form);
         getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.window_title);
+        
+        ((TextView)findViewById(R.id.headertitle)).setText(tripTitle);
         
         int i = 0;
         for (Integer id : txtEdtIds)
@@ -158,7 +162,8 @@ public class TripDataDefDetailActivity extends SpBaseActivity implements Adapter
         savedInstanceState.putShort("datatype", ((Integer)dataTypeSP.getSelectedItemPosition()).shortValue());
         
         savedInstanceState.putString(TripListActivity.ID_EXTRA, tripId);
-        savedInstanceState.putString(TripDataDefActivity.ID_EXTRA, tripDataDefId);
+        savedInstanceState.putString(TripDataDefDetailActivity.ID_EXTRA, tripDataDefId);
+        savedInstanceState.putString(TripListActivity.TRIP_TITLE, ((TextView)findViewById(R.id.headertitle)).getText().toString());
         
         int i = 0;
         for (Integer id : txtEdtIds)
@@ -166,33 +171,6 @@ public class TripDataDefDetailActivity extends SpBaseActivity implements Adapter
             savedInstanceState.putString(txtEdtNames[i], editTexts.get(id).getText().toString());
             i++;
         }
-    }
-    
-    /* (non-Javadoc)
-     * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
-     */
-    @Override
-    public boolean onCreateOptionsMenu(final Menu menu)
-    {
-        new MenuInflater(getApplication()).inflate(R.menu.tripdetailmenus, menu);
-
-        return (super.onCreateOptionsMenu(menu));
-    }
-
-    /* (non-Javadoc)
-     * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
-     */
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item)
-    {
-        if (item.getItemId() == R.id.tripconfig)
-        {
-            startActivity(new Intent(this, TripDataDefDetailActivity.class));
-
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     /* (non-Javadoc)

@@ -81,6 +81,8 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
     
     private AtomicBoolean              isActive = new AtomicBoolean(true);
     private String                     tripId      = null;
+    private Integer                    tripType    = null;
+    private String                     tripTitle   = null;
     private Integer                    ttdId       = null;
     private boolean                    isNewRec    = false;
     private boolean                    isCreateRec = false;
@@ -129,16 +131,22 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
         setContentView(R.layout.tdc_detail_form);
         getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.window_title);
 
-        
         if (savedInstanceState != null)
         {
             tripId      = savedInstanceState.getString(TripListActivity.ID_EXTRA);
             isCreateRec = savedInstanceState.getBoolean(ID_ISCREATE, false);
+            tripType    = savedInstanceState.getInt(TripListActivity.TRIP_TYPE);
+            tripTitle   = savedInstanceState.getString(TripListActivity.TRIP_TITLE);
+
         } else
         {
             tripId      = getIntent().getStringExtra(TripListActivity.ID_EXTRA);
             isCreateRec = getIntent().getBooleanExtra(ID_ISCREATE, false);
+            tripType    = getIntent().getIntExtra(TripListActivity.TRIP_TYPE, TripListActivity.CONFIG_TRIP);
+            tripTitle   = getIntent().getStringExtra(TripListActivity.TRIP_TITLE);
         }
+        
+        ((TextView)findViewById(R.id.headertitle)).setText(tripTitle == null ? TripMainActivity.createTitle(this, tripType) : tripTitle);
         
         isNewRec = isCreateRec;
         
@@ -208,7 +216,6 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
                 {
                     doSave();
                 }
-                //finish();
             }
         });
 
@@ -224,7 +231,9 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
         super.onSaveInstanceState(outState);
         
         outState.putString(TripListActivity.ID_EXTRA, tripId);
+        outState.putString(TripListActivity.TRIP_TITLE, tripTitle);
         outState.putBoolean(ID_ISCREATE, isCreateRec);
+        outState.putInt(TripListActivity.ID_EXTRA, tripType);
     }
     
     
@@ -358,7 +367,6 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
             //Log.d("moveToPrevious", "Pos: "+cursorModel.getPosition()+", rowNum: "+rowNum+", rowIndex: "+rowIndex);
         }
         cursorModel.moveToNext();
-        //fillForm();
     }
     
     /**
@@ -378,9 +386,15 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
      */
     private void doSave()
     {
-        if (doSaveToDB())
+        if (!doSaveToDB())
         {
-            DialogHelper.showTimedDialog(this, 1.5, R.string.save);
+            DialogHelper.showTimedDialog(this, 1.5, R.string.saved, new DialogHelper.TimedDialogListener() {
+                @Override
+                public void dialogClosed()
+                {
+                    TripDataEntryDetailActivity.this.finish();
+                }
+            });
         }
     }
     
@@ -469,6 +483,7 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
         changedHash.clear();
         updateUIState();
         
+        Log.d("SAVE", "isError "+isError);
         return isError;
     }
     
@@ -582,17 +597,17 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
                     
                     case strType:
                     {
-                        if (cellName.equals("GenusSpecies"))
+                        /*if (cellName.equals("Genus1") || cellName.equals("Species1"))
                         {
                             AutoCompleteTextView actv = new AutoCompleteTextView(this);
                             hookupAutoCompTextField(this, actv);
                             edtTxt = actv;
                             view   = edtTxt;
                         } else
-                        {
+                        {*/
                             edtTxt = new EditText(this);
                             view   = edtTxt;
-                        }
+                        //}
                         layoutView = view;
                     } break;
                 }
@@ -696,7 +711,7 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
         
         if (doFill)  
         {
-            fillInTransientValues();
+            fillInGPSValues();
         }
         
         if (prgDlg != null)
@@ -713,32 +728,39 @@ public class TripDataEntryDetailActivity extends SpBaseActivity
     /**
      * 
      */
-    private void fillInTransientValues()
+    private void fillInGPSValues()
     {
-        double lat = getIntent().getDoubleExtra(LAT_VAL, -1000.0);
-        if (lat != -1000.0)
+        String latStr = "";
+        String lonStr = "";
+        
+        Double lat = getIntent().getDoubleExtra(LAT_VAL, -1000.0);
+        Double lon = getIntent().getDoubleExtra(LON_VAL, -1000.0);
+        
+        if (lat != null && lat != -1000.0 && lon != null && lon != 1000.0)
         {
-            EditText latEdtTxt = (EditText)compHash.get("Latitude");
-            if (latEdtTxt != null)
-            {
-                latEdtTxt.setText(Double.toString(lat));
-            }
-            
-            EditText lonEdtTxt = (EditText)compHash.get("Longitude");
-            double   lon       = getIntent().getDoubleExtra(LON_VAL, -1000.0);
-            if (latEdtTxt != null && lon != 1000.0)
-            {
-                lonEdtTxt.setText(Double.toString(lon));
-            }
-            
-            TextView dateTF = (TextView)compHash.get("Date");
-            if (dateTF != null)
-            {
-                dateTF.setText(sdf.format(Calendar.getInstance().getTime()));
-            } else
-            {
-                Log.e("DatEntry", "Couldn't find Date Component.");
-            }
+            latStr = Double.toString(lat);
+            lonStr = Double.toString(lon);
+        }
+        
+        EditText latEdtTxt = (EditText)compHash.get("Latitude1");
+        if (latEdtTxt != null)
+        {
+            latEdtTxt.setText(latStr);
+        }
+        
+        EditText lonEdtTxt = (EditText)compHash.get("Longitude1");
+        if (latEdtTxt != null)
+        {
+            lonEdtTxt.setText(lonStr);
+        }
+        
+        TextView dateTF = (TextView)compHash.get("CollectedDate");
+        if (dateTF != null)
+        {
+            dateTF.setText(sdf.format(Calendar.getInstance().getTime()));
+        } else
+        {
+            Log.e("DatEntry", "Couldn't find Date Component.");
         }
     }
     

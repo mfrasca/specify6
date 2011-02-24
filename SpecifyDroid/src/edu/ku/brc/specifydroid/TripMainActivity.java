@@ -26,6 +26,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.GpsStatus;
 import android.location.GpsStatus.Listener;
 import android.location.Location;
@@ -34,10 +35,10 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.view.Window;
 import android.widget.GridView;
 import android.widget.TextView;
-import edu.ku.brc.specifydroid.datamodel.Trip;
 import edu.ku.brc.utils.DialogHelper;
 import edu.ku.brc.utils.SQLUtils;
 
@@ -54,8 +55,8 @@ public class TripMainActivity extends SpBaseActivity implements TripSQLiteHelper
     private static final String ID_PNTWASCPT = "ID_PNTWASCPT";
     
     private String    tripId;
+    private String    tripTitle;
     private TextView  titleView;
-    private String    baseTitle;
     private int       itemCount = 0;
     
     //private GpsStatus            gpsStatus = null;
@@ -86,14 +87,15 @@ public class TripMainActivity extends SpBaseActivity implements TripSQLiteHelper
         
         if (savedInstanceState != null)
         {
-            tripId = savedInstanceState.getString(TripListActivity.ID_EXTRA);
+            tripId           = savedInstanceState.getString(TripListActivity.ID_EXTRA);
             pointWasCaptured = new AtomicBoolean(savedInstanceState.getBoolean(ID_PNTWASCPT));
-            tripType = savedInstanceState.getInt(TripListActivity.TRIP_TYPE, TripListActivity.CONFIG_TRIP);
+            tripType         = savedInstanceState.getInt(TripListActivity.TRIP_TYPE, TripListActivity.CONFIG_TRIP);
+            
         } else
         {
-            tripId = getIntent().getStringExtra(TripListActivity.ID_EXTRA);
+            tripId           = getIntent().getStringExtra(TripListActivity.ID_EXTRA);
             pointWasCaptured = new AtomicBoolean(getIntent().getBooleanExtra(ID_PNTWASCPT, false));
-            tripType = getIntent().getIntExtra(TripListActivity.TRIP_TYPE, TripListActivity.CONFIG_TRIP);
+            tripType         = getIntent().getIntExtra(TripListActivity.TRIP_TYPE, TripListActivity.CONFIG_TRIP);
         }
 
         requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
@@ -101,22 +103,39 @@ public class TripMainActivity extends SpBaseActivity implements TripSQLiteHelper
         getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.window_title);
 
         titleView = (TextView)findViewById(R.id.headertitle);
-        if (tripId != null)
-        {   
-            Trip trip = Trip.getById(getDB(), tripId);
-            if (trip != null)
-            {
-                baseTitle = trip.getName();
-                titleView.setText(baseTitle);
-            }
-        }
-        
-        adapter = new TripMainPanelAdapter(this, tripId, tripType, baseTitle);
+
+        adapter = new TripMainPanelAdapter(this, tripId, tripType, tripTitle);
         GridView gridview = (GridView)findViewById(R.id.tripgridview);
         gridview.setAdapter(adapter);
 
-        updateTitle();
+        updateTitle(); // sets the title with all the data
+        
      }
+    
+    /**
+     * @param context
+     * @param tripType
+     * @return
+     */
+    public static String createTitle(final Context context, final int tripType)
+    {
+        int resId;
+        switch (tripType)
+        {
+            case TripListActivity.COLL_TRIP:
+                resId = R.string.newcollsortie;
+                break;
+                
+            case TripListActivity.OBS_TRIP:
+                resId = R.string.newobssortie;
+                break;
+                
+             default:
+                 resId = R.string.newsortie;
+                 break;
+        }
+        return context.getString(resId);
+    }
     
     /**
      * @return the itemCount
@@ -230,17 +249,17 @@ public class TripMainActivity extends SpBaseActivity implements TripSQLiteHelper
             
             sql = String.format("SELECT Name FROM trip WHERE _id = %s", tripId);
             String titleStr = SQLUtils.getStringObj(getDB(), sql);
-            if (titleStr != null)
-            {
-                baseTitle = titleStr;
-            }
-            
             if (titleView != null)
             {
-                titleView.setText(String.format("%s %s", baseTitle, getString(R.string.tmgtitleitems, itemCount)));
+                tripTitle = String.format("%s: %s %s", getString(R.string.trip), titleStr, getString(R.string.tmgtitleitems, itemCount));
+                titleView.setText(tripTitle);
             }
             
-            adapter.setEnabled(itemCount != 0);
+            if (adapter != null)
+            {
+                adapter.setEnabled(itemCount != 0);
+                adapter.setTripTitle(tripTitle);
+            }
         }
     }
     
@@ -249,6 +268,13 @@ public class TripMainActivity extends SpBaseActivity implements TripSQLiteHelper
      */
     protected void addLatLon()
     {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        if (prefs.getBoolean("NotUseGPS", false))
+        {
+            showMarkLocActivity(null, null);
+            return;
+        }
+        
         if (SatelliteActivity.checkForGPS(this))
         {
             if (locMgr == null)
@@ -260,8 +286,6 @@ public class TripMainActivity extends SpBaseActivity implements TripSQLiteHelper
                 
                 locMgr = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
                 
-                //locMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 10.0f, onLocationChange);
-    
                 // Listener for GPS Status...
     
                 if (onGpsStatusChange == null)
@@ -302,6 +326,29 @@ public class TripMainActivity extends SpBaseActivity implements TripSQLiteHelper
     }
     
     /**
+     * Start the Activity for entering a record with lat, lon.
+     * @param lat latitude (can be null)
+     * @param lon longitude (can be null)
+     */
+    private void showMarkLocActivity(final Double lat, final Double lon)
+    {
+        Intent intent = new Intent(this, TripDataEntryDetailActivity.class);
+        intent.putExtra(TripListActivity.ID_EXTRA, tripId);
+        intent.putExtra(TripListActivity.TRIP_TYPE, tripType);
+        
+        //Log.i("DBG", String.format("%8.5f, %8.5f", loc != null ? loc.getLatitude() : 0.0f, loc != null ? loc.getLongitude() : 0.0f));
+        
+        intent.putExtra(TripDataEntryDetailActivity.ID_ISCREATE, true);
+        if (lat != null && lon != null)
+        {
+            intent.putExtra(TripDataEntryDetailActivity.LAT_VAL, lat);
+            intent.putExtra(TripDataEntryDetailActivity.LON_VAL, lon);
+        }
+        
+        startActivity(intent);
+    }
+    
+    /**
      * 
      */
     private void doCapturePoint()
@@ -316,19 +363,11 @@ public class TripMainActivity extends SpBaseActivity implements TripSQLiteHelper
             if (loc != null)
             {
                 pointWasCaptured.set(true);
-                
+
+                showMarkLocActivity(loc != null ? loc.getLatitude()  :  38.958654,
+                                    loc != null ? loc.getLongitude() : -95.243829);
+    
                 resetLocationManager();
-                
-                Intent intent = new Intent(this, TripDataEntryDetailActivity.class);
-                intent.putExtra(TripListActivity.ID_EXTRA, tripId);
-                
-                //Log.i("DBG", String.format("%8.5f, %8.5f", loc != null ? loc.getLatitude() : 0.0f, loc != null ? loc.getLongitude() : 0.0f));
-                
-                intent.putExtra(TripDataEntryDetailActivity.ID_ISCREATE, true);
-                intent.putExtra(TripDataEntryDetailActivity.LAT_VAL, loc != null ? loc.getLatitude()  :  38.958654); // for debugging
-                intent.putExtra(TripDataEntryDetailActivity.LON_VAL, loc != null ? loc.getLongitude() : -95.243829);
-                
-                startActivity(intent);
                 
             } else if (!pointWasCaptured.get())
             {

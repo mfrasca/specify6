@@ -42,9 +42,11 @@ import com.pocketjourney.view.MapLocationViewer;
  */
 public class TripMapLocViewer extends MapLocationViewer
 {
-    private static final String LONGITUDE     = "Longitude";
-    private static final String LATITUDE      = "Latitude";
-    private static final String GENUSSPECIES  = "GenusSpecies";
+    private static final String LONGITUDE     = "Longitude1";
+    private static final String LATITUDE      = "Latitude1";
+    private static final String GENUS         = "Genus1";
+    private static final String SPECIES       = "Species1";
+    private static final String VARIETY       = "Variety1";
     private static final String LOCALITYNAME  = "LocalityName";
     
     private String tripId = null;
@@ -100,8 +102,10 @@ public class TripMapLocViewer extends MapLocationViewer
                     //Log.d("debug", "rowIndex: "+rowIndex+ "   rowNum: "+rowNum);
                     if (rowIndex != rowNum)
                     {
-                        String name = dataHash.get(LOCALITYNAME);
-                        String desc = dataHash.get(GENUSSPECIES);
+                        String name    = dataHash.get(LOCALITYNAME);
+                        String genus   = dataHash.get(GENUS);
+                        String species = dataHash.get(SPECIES);
+                        String variety = dataHash.get(VARIETY);
                         
                         String latStr = dataHash.get(LATITUDE);
                         String lonStr = dataHash.get(LONGITUDE);
@@ -124,7 +128,7 @@ public class TripMapLocViewer extends MapLocationViewer
                         }
                         
                         //Log.d("debug", lat+ " = "+lon);
-                        
+                        String desc = getDesc(genus, species, variety);
                         MapLocation ml = new MapLocation(name, desc, lat, lon);
                         mapLocations.add(ml);
                         
@@ -141,10 +145,14 @@ public class TripMapLocViewer extends MapLocationViewer
                 cursor.close();
                 tripDBHelper.close();
                 
-                String name   = dataHash.get(LOCALITYNAME);
-                String desc   = dataHash.get(GENUSSPECIES);
-                String latStr = dataHash.get(LATITUDE);
-                String lonStr = dataHash.get(LONGITUDE);
+                String name    = dataHash.get(LOCALITYNAME);
+                String genus   = dataHash.get(GENUS);
+                String species = dataHash.get(SPECIES);
+                String variety = dataHash.get(VARIETY);
+                String latStr  = dataHash.get(LATITUDE);
+                String lonStr  = dataHash.get(LONGITUDE);
+                
+                String desc = getDesc(genus, species, variety);
                 
                 if (latStr != null && latStr.length() > 0 &&
                     lonStr != null && lonStr.length() > 0)
@@ -159,6 +167,47 @@ public class TripMapLocViewer extends MapLocationViewer
             
         }
         return mapLocations;
+    }
+    
+    /**
+     * @param genus
+     * @param species
+     * @param variety
+     * @return
+     */
+    private String getDesc(final String genus, 
+                           final String species,
+                           final String variety)
+    {
+        boolean addSp = false;
+        StringBuilder sb = new StringBuilder();
+        if (genus != null && genus.length() > 0)
+        {
+            sb.append(genus);
+            if (species != null && species.length() > 0)
+            {
+                sb.append(' ');
+                addSp = true;
+            }
+        }
+        
+        boolean addVar = false;
+        if (addSp)
+        {
+            sb.append(species);
+            if (variety != null && variety.length() > 0)
+            {
+                sb.append(' ');
+                addVar = true;
+            }
+        }
+        
+        if (addVar)
+        {
+            sb.append(variety);
+        }
+        
+        return sb.toString();
     }
     
     //------------------------------------------------------------------------
