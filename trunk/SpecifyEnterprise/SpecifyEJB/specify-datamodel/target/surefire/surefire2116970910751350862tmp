@@ -1,0 +1,34 @@
+#surefire
+#Mon Oct 31 15:29:48 CET 2011
+testClassesDirectory=/Users/idali/netbeansProject/specify/specify-datamodel/target/test-classes
+classPathUrl.4=/Users/idali/.m2/repository/org/eclipse/persistence/org.eclipse.persistence.jpa.modelgen.processor/2.2.0/org.eclipse.persistence.jpa.modelgen.processor-2.2.0.jar
+classPathUrl.3=/Users/idali/.m2/repository/org/eclipse/persistence/javax.persistence/2.0.3/javax.persistence-2.0.3.jar
+classPathUrl.2=/Users/idali/.m2/repository/org/eclipse/persistence/eclipselink/2.2.0/eclipselink-2.2.0.jar
+useManifestOnlyJar=true
+classPathUrl.1=/Users/idali/netbeansProject/specify/specify-datamodel/target/classes
+reportsDirectory=/Users/idali/netbeansProject/specify/specify-datamodel/target/surefire-reports
+classPathUrl.0=/Users/idali/netbeansProject/specify/specify-datamodel/target/test-classes
+dirscanner.0=directoryScannerOptions
+providerConfiguration=org.apache.maven.surefire.junit4.JUnit4Provider
+testSuiteDefinitionTestSourceDirectory=/Users/idali/netbeansProject/specify/specify-datamodel/src/test/java
+surefireClassPathUrl.1=/Users/idali/.m2/repository/org/apache/maven/surefire/surefire-api/2.7.1/surefire-api-2.7.1.jar
+surefireClassPathUrl.0=/Users/idali/.m2/repository/org/apache/maven/surefire/surefire-junit4/2.7.1/surefire-junit4-2.7.1.jar
+report.2=org.apache.maven.surefire.report.XMLReporter
+useSystemClassLoader=true
+report.1=org.apache.maven.surefire.report.BriefFileReporter
+report.0=org.apache.maven.surefire.report.ForkingConsoleReporter
+excludes0=**/*$*
+isTrimStackTrace=true
+dirscanner.0.params=/Users/idali/netbeansProject/specify/specify-datamodel/target/test-classes|[**/Test*.java, **/*Test.java, **/*TestCase.java]|[**/*$*]
+includes2=**/*TestCase.java
+enableAssertions=true
+includes1=**/*Test.java
+failIfNoTests=false
+includes0=**/Test*.java
+dirscanner.0.types=java.io.File|java.util.ArrayList|java.util.ArrayList
+classPathUrl.9=/Users/idali/.m2/repository/org/mockito/mockito-all/1.8.5/mockito-all-1.8.5.jar
+classPathUrl.8=/Users/idali/.m2/repository/org/slf4j/slf4j-simple/1.6.1/slf4j-simple-1.6.1.jar
+classPathUrl.7=/Users/idali/.m2/repository/org/slf4j/slf4j-api/1.6.1/slf4j-api-1.6.1.jar
+childDelegation=false
+classPathUrl.6=/Users/idali/.m2/repository/junit/junit/4.8.1/junit-4.8.1.jar
+classPathUrl.5=/Users/idali/.m2/repository/javax/javaee-api/6.0/javaee-api-6.0.jar
