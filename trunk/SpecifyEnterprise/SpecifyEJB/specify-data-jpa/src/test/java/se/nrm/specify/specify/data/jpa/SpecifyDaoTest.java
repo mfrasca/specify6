@@ -1,11 +1,15 @@
 package se.nrm.specify.specify.data.jpa;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ArrayList; 
+import java.util.HashSet;
+import java.util.List; 
+import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;   
 import javax.persistence.OptimisticLockException;
-import javax.persistence.Query;  
+import javax.persistence.Query;     
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import org.junit.After; 
 import org.junit.Before;
 
@@ -99,6 +103,22 @@ public class SpecifyDaoTest {
         testInstance.createEntity(address);
         
         verify(entityManager).persist(address);
+    }
+    
+    /**
+     * Test of ConstrainViolationException when perisiting
+     */
+    @Test
+    public void testConstraintViolationExceptionWhenCreateEntity() {
+        
+        logger.info("testConstraintViolationExceptionWhenCreateEntity");
+        
+        ConstraintViolationException e = mock(ConstraintViolationException.class);
+          
+        when(e.getConstraintViolations()).thenReturn(new HashSet());
+        doThrow(new ConstraintViolationException(e.getConstraintViolations())).when(entityManager).persist(address);
+        
+        verifyZeroInteractions(entityManager);  
     }
     
     /**

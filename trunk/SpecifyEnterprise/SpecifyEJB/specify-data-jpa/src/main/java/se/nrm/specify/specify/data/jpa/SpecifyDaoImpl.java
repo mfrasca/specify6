@@ -1,12 +1,15 @@
 package se.nrm.specify.specify.data.jpa;
  
 import java.util.List;
+import java.util.Set;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query; 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory; 
 import se.nrm.specify.datamodel.Dnasequence;
@@ -52,12 +55,13 @@ public class SpecifyDaoImpl implements SpecifyDao {
      */
     public void createEntity(SpecifyBean sBean) {
         
-        logger.info("Persisting: {}", sBean);
-         
-        entityManager.persist(sBean);
- 
-        
-        logger.info("{} persisted", sBean);
+        try {
+            entityManager.persist(sBean);
+            
+            logger.info("{} persisted", sBean);
+        } catch (ConstraintViolationException e) {
+            handleConstraintViolation(e);   
+        } 
     }
 
     /**
@@ -82,11 +86,13 @@ public class SpecifyDaoImpl implements SpecifyDao {
         logger.info("editEntity: {}", sBean.toString());
  
         try {
-            entityManager.flush();
+            entityManager.flush();                      // for throw OptimisticLockException
             entityManager.merge(sBean);
         } catch (OptimisticLockException e) {
             logger.error("OptimisticLockException - error messages: {}", e.getMessage());
             return sBean.toString() + "cannot be updated because it has changed or been deleted since it was last read. ";
+        } catch (ConstraintViolationException e) {
+            handleConstraintViolation(e);
         }
         return "Successful";
     }
@@ -120,4 +126,26 @@ public class SpecifyDaoImpl implements SpecifyDao {
         Query query = entityManager.createNamedQuery("Dnasequence.findAll");
         return query.getResultList(); 
     } 
+    
+    /**
+     * 
+     * handleConstrainViolation method logs all the ConstraintViolations
+     * 
+     * @param e - exception
+     */
+    private void handleConstraintViolation(ConstraintViolationException e) {
+        
+        Set<ConstraintViolation<?>> cvs = e.getConstraintViolations();
+        for (ConstraintViolation<?> cv : cvs) {
+            logger.info("------------------------------------------------");
+            logger.info("Violation: {}", cv.getMessage());
+            logger.info("Entity: {}", cv.getRootBeanClass().getSimpleName());
+            // The violation occurred on a leaf bean (embeddable)
+            if (cv.getLeafBean() != null && cv.getRootBean() != cv.getLeafBean()) {
+                logger.info("Embeddable: {}", cv.getLeafBean().getClass().getSimpleName());
+            }
+            logger.info("Attribute: {}", cv.getPropertyPath());
+            logger.info("Invalid value: {}", cv.getInvalidValue());
+        }
+    }
 }

@@ -13,7 +13,7 @@
     <packaging>ejb</packaging>
 
     <name>specify-data-jpa</name>
-  
+    
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir> 
         <netbeans.hint.deploy.server>gfv3ee6</netbeans.hint.deploy.server>
@@ -26,6 +26,12 @@
             <version>${project.parent.version}</version>
             <type>jar</type>
         </dependency>  
+        
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>1.0.0.GA</version>
+        </dependency>
          
         <dependency>
             <groupId>javax.persistence</groupId>
