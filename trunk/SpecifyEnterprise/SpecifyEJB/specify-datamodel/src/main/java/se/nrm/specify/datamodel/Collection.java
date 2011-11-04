@@ -160,7 +160,7 @@ public class Collection extends BaseEntity {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "collectionID")
     private java.util.Collection<Preptype> preptypeCollection;
     
-    @OneToMany(mappedBy = "collectionID")
+    @OneToMany(mappedBy = "collectionID", cascade= CascadeType.ALL)
     private java.util.Collection<Sptasksemaphore> sptasksemaphoreCollection;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "collectionID")

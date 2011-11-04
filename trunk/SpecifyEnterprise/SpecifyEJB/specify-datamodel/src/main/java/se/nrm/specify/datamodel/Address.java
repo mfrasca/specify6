@@ -3,6 +3,7 @@ package se.nrm.specify.datamodel;
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -153,10 +154,10 @@ public class Address extends BaseEntity {
     @Column(name = "TypeOfAddr")
     private String typeOfAddr;
     
-    @OneToMany(mappedBy = "addressID")
+    @OneToMany(mappedBy = "addressID", cascade= CascadeType.ALL)
     private Collection<Division> divisionCollection;
     
-    @OneToMany(mappedBy = "addressID")
+    @OneToMany(mappedBy = "addressID", cascade= CascadeType.ALL)
     private Collection<Institution> institutionCollection;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")

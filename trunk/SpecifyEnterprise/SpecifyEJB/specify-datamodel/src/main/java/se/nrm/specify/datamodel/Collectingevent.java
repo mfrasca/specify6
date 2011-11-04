@@ -93,6 +93,7 @@ public class Collectingevent extends BaseEntity {
     @Size(max = 50)
     @Column(name = "StartDateVerbatim")
     private String startDateVerbatim;
+    
     @Column(name = "StartTime")
     private Short startTime;
     

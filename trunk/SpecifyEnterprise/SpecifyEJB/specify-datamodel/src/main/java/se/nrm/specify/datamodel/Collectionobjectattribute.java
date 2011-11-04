@@ -3,6 +3,7 @@ package se.nrm.specify.datamodel;
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -327,7 +328,7 @@ public class Collectionobjectattribute extends BaseEntity {
     @Column(name = "YesNo7")
     private Boolean yesNo7;
     
-    @OneToMany(mappedBy = "collectionObjectAttributeID")
+    @OneToMany(mappedBy = "collectionObjectAttributeID", cascade= CascadeType.ALL)
     private Collection<Collectionobject> collectionobjectCollection;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")

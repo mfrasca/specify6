@@ -19,7 +19,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType; 
-//import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -66,7 +66,7 @@ public class Accession extends BaseEntity {
     private String accessionCondition;
     
     @Basic(optional = false)
-//    @NotNull
+    @NotNull(message="AccessNumber must be specified.")
     @Size(min = 1, max = 60)
     @Column(name = "AccessionNumber")
     private String accessionNumber;
@@ -137,7 +137,7 @@ public class Accession extends BaseEntity {
     @OneToMany(mappedBy = "accessionID")
     private Collection<Appraisal> appraisalCollection;
     
-    @OneToMany(mappedBy = "accessionID")
+    @OneToMany(mappedBy = "accessionID", cascade= CascadeType.ALL)
     private Collection<Accessionagent> accessionagentCollection;
     
     @JoinColumn(name = "AddressOfRecordID", referencedColumnName = "AddressOfRecordID")
