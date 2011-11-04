@@ -3,6 +3,7 @@ package se.nrm.specify.datamodel;
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -79,13 +80,13 @@ public class Addressofrecord extends BaseEntity {
     @Column(name = "State")
     private String state;
     
-    @OneToMany(mappedBy = "addressOfRecordID")
+    @OneToMany(mappedBy = "addressOfRecordID", cascade= CascadeType.ALL)
     private Collection<Loan> loanCollection;
     
-    @OneToMany(mappedBy = "addressOfRecordID")
+    @OneToMany(mappedBy = "addressOfRecordID", cascade= CascadeType.ALL)
     private Collection<Exchangein> exchangeinCollection;
     
-    @OneToMany(mappedBy = "addressOfRecordID")
+    @OneToMany(mappedBy = "addressOfRecordID", cascade= CascadeType.ALL)
     private Collection<Gift> giftCollection;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")

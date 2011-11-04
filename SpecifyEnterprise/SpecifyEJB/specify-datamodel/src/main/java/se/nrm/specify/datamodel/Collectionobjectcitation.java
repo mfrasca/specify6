@@ -55,6 +55,7 @@ public class Collectionobjectcitation extends BaseEntity {
     @Size(max = 65535)
     @Column(name = "Remarks")
     private String remarks;
+    
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
     private Agent createdByAgentID;

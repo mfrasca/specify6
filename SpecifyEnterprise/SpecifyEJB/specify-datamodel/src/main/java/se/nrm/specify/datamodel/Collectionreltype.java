@@ -3,6 +3,7 @@ package se.nrm.specify.datamodel;
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -54,7 +55,7 @@ public class Collectionreltype extends BaseEntity {
     @Column(name = "Remarks")
     private String remarks;
     
-    @OneToMany(mappedBy = "collectionRelTypeID")
+    @OneToMany(mappedBy = "collectionRelTypeID", cascade= CascadeType.ALL)
     private Collection<Collectionrelationship> collectionrelationshipCollection;
     
     @JoinColumn(name = "RightSideCollectionID", referencedColumnName = "UserGroupScopeId")

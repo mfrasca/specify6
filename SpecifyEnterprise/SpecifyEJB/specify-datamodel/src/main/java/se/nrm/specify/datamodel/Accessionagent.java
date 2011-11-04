@@ -13,7 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table; 
-//import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -48,7 +48,7 @@ public class Accessionagent extends BaseEntity {
     private String remarks;
     
     @Basic(optional = false)
-//    @NotNull
+    @NotNull(message="Role must be specified.")
     @Size(min = 1, max = 50)
     @Column(name = "Role")
     private String role;

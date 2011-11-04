@@ -9,7 +9,7 @@
         <version>0.1-SNAPSHOT</version>
     </parent>
  
-    <artifactId>specify-datamodel</artifactId> 
+    <artifactId>specify-datamodel</artifactId>    
     <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>

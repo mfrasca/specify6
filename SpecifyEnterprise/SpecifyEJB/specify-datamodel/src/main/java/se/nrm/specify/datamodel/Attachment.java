@@ -86,9 +86,11 @@ public class Attachment extends BaseEntity {
     @Size(max = 64)
     @Column(name = "License")
     private String license;
+    
     @Size(max = 64)
     @Column(name = "MimeType")
     private String mimeType;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 128)
@@ -113,7 +115,7 @@ public class Attachment extends BaseEntity {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "attachmentID")
     private Collection<Loanattachment> loanattachmentCollection;
     
-    @OneToMany(mappedBy = "attachmentID")
+    @OneToMany(mappedBy = "attachmentID", cascade= CascadeType.ALL)
     private Collection<Attachmentmetadata> attachmentmetadataCollection;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "attachmentID")
