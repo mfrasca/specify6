@@ -14,7 +14,7 @@
         <url>http://www.nrm.se</url>
     </organization>
     
-    <repositories>
+    <repositories> 
         <repository>
             <id>central</id>
             <name>Maven Repository Switchboard</name>
