@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    
+    <!-- **************************** persistence unit - development server ******************************** -->
     <persistence-unit name="jpa-development" transaction-type="JTA">
         <jta-data-source>jdbc/__entdbPool</jta-data-source>
-        <mapping-file>META-INF/orm.xml</mapping-file> 
+        <mapping-file>META-INF/orm.xml</mapping-file>
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <properties>
-<!--             <property name="toplink.logging.level" value="fine"/> -->
+      <!--             <property name="toplink.logging.level" value="fine"/> -->
         </properties>
     </persistence-unit>
+  
+    <!-- **************************** persistence unit - localhost ******************************** -->
     <persistence-unit name="jpa-local" transaction-type="JTA">
         <jta-data-source>jdbc/__SpecifyPool</jta-data-source>
         <mapping-file>META-INF/orm.xml</mapping-file>
-        <exclude-unlisted-classes>false</exclude-unlisted-classes>
-<!--    <exclude-unlisted-classes>true</exclude-unlisted-classes>-->
+        <exclude-unlisted-classes>false</exclude-unlisted-classes> 
         <properties>
-<!--             <property name="toplink.logging.level" value="fine"/> -->
+      <!--             <property name="toplink.logging.level" value="fine"/> -->
         </properties>
     </persistence-unit>
 </persistence>
