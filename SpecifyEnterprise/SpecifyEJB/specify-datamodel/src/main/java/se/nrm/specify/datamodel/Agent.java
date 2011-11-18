@@ -20,7 +20,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.Size; 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -137,10 +137,10 @@ public class Agent extends BaseEntity {
     @Column(name = "URL")
     private String url;
     
-    @OneToMany(mappedBy = "createdByAgentID")
+    @OneToMany(mappedBy = "createdByAgentID", cascade= CascadeType.ALL)
     private Collection<Localitynamealias> localitynamealiasCollection;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
+    @OneToMany(mappedBy = "modifiedByAgentID", cascade= CascadeType.ALL)
     private Collection<Localitynamealias> localitynamealiasCollection1;
     
     @OneToMany(mappedBy = "shipperID")
@@ -469,6 +469,7 @@ public class Agent extends BaseEntity {
     
     @OneToMany(mappedBy = "createdByAgentID")
     private Collection<Conservdescription> conservdescriptionCollection;
+    
     @OneToMany(mappedBy = "modifiedByAgentID")
     private Collection<Conservdescription> conservdescriptionCollection1;
     
@@ -478,13 +479,15 @@ public class Agent extends BaseEntity {
     @OneToMany(mappedBy = "modifiedByAgentID")
     private Collection<Addressofrecord> addressofrecordCollection1;
     
-    @OneToMany(mappedBy = "agentID")
+    @OneToMany(mappedBy = "agentID", cascade= CascadeType.ALL)
     private Collection<Addressofrecord> addressofrecordCollection2;
     
     @OneToMany(mappedBy = "createdByAgentID")
+//    @XmlElement
     private Collection<Division> divisionCollection;
     
     @OneToMany(mappedBy = "modifiedByAgentID")
+//    @XmlElement
     private Collection<Division> divisionCollection1;
     
     @OneToMany(mappedBy = "createdByAgentID")
@@ -622,7 +625,7 @@ public class Agent extends BaseEntity {
     @OneToMany(mappedBy = "createdByAgentID")
     private Collection<Spqueryfield> spqueryfieldCollection;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
+    @OneToMany(mappedBy = "modifiedByAgentID",  cascade= CascadeType.ALL)
     private Collection<Spqueryfield> spqueryfieldCollection1;
     
     @OneToMany(mappedBy = "createdByAgentID")
@@ -794,7 +797,7 @@ public class Agent extends BaseEntity {
     private Collection<Lithostrat> lithostratCollection1;
     
     @JoinColumn(name = "DivisionID", referencedColumnName = "UserGroupScopeId")
-    @ManyToOne
+    @ManyToOne 
     private Division divisionID;
     
     @JoinColumn(name = "InstitutionTCID", referencedColumnName = "UserGroupScopeId")
@@ -1100,12 +1103,14 @@ public class Agent extends BaseEntity {
     private Collection<Loanpreparation> loanpreparationCollection1;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "createdByAgentID")
+//    @XmlElement 
     private Collection<Address> addressCollection;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "modifiedByAgentID")
+//    @XmlElement
     private Collection<Address> addressCollection1;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "agentID") 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "agentID")  
     private Collection<Address> addressCollection2;
     
     @OneToMany(mappedBy = "createdByAgentID")
@@ -3323,6 +3328,7 @@ public class Agent extends BaseEntity {
         this.agentCollection = agentCollection;
     }
 
+    @XmlTransient
     public Agent getParentOrganizationID() {
         return parentOrganizationID;
     }
@@ -3340,6 +3346,7 @@ public class Agent extends BaseEntity {
         this.agentCollection1 = agentCollection1;
     }
 
+    @XmlTransient
     public Agent getCreatedByAgentID() {
         return createdByAgentID;
     }
@@ -3357,6 +3364,7 @@ public class Agent extends BaseEntity {
         this.agentCollection2 = agentCollection2;
     }
 
+    @XmlTransient
     public Agent getModifiedByAgentID() {
         return modifiedByAgentID;
     }

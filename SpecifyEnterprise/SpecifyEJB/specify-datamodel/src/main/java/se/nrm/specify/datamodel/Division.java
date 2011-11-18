@@ -19,7 +19,7 @@ import javax.persistence.Table;
 //import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlTransient; 
 
 /**
  *
@@ -116,18 +116,24 @@ public class Division extends BaseEntity {
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
+//    @XmlInverseReference(mappedBy = "divisionCollection")  
     private Agent createdByAgentID;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
+//    @XmlInverseReference(mappedBy = "divisionCollection1")  
     private Agent modifiedByAgentID;
     
     @JoinColumn(name = "AddressID", referencedColumnName = "AddressID")
     @ManyToOne
+//    @XmlInverseReference(mappedBy = "divisionCollection") 
+    @XmlTransient 
     private Address addressID;
     
     @JoinColumn(name = "InstitutionID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne(optional = false)
+//    @XmlInverseReference(mappedBy = "divisionCollection") 
+    @XmlTransient 
     private Institution institutionID;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "divisionID")
@@ -305,6 +311,7 @@ public class Division extends BaseEntity {
         this.conservdescriptionCollection = conservdescriptionCollection;
     }
 
+    @XmlTransient 
     public Agent getCreatedByAgentID() {
         return createdByAgentID;
     }
@@ -313,6 +320,7 @@ public class Division extends BaseEntity {
         this.createdByAgentID = createdByAgentID;
     }
 
+    @XmlTransient 
     public Agent getModifiedByAgentID() {
         return modifiedByAgentID;
     }

@@ -19,9 +19,11 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType; 
 //import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.Size; 
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlTransient; 
+ 
+
 
 /**
  *
@@ -29,7 +31,7 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @Entity
 @Table(name = "address")
-@XmlRootElement
+@XmlRootElement 
 @NamedQueries({
     @NamedQuery(name = "Address.findAll", query = "SELECT a FROM Address a"),
     @NamedQuery(name = "Address.findByAddressID", query = "SELECT a FROM Address a WHERE a.addressID = :addressID"),
@@ -65,60 +67,60 @@ public class Address extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
 //    @NotNull
-    @Column(name = "AddressID")
+    @Column(name = "AddressID") 
     private Integer addressID;
-     
+      
     @Size(max = 255)
-    @Column(name = "Address")
+    @Column(name = "Address") 
     private String address;
     
     @Size(max = 255)
-    @Column(name = "Address2")
+    @Column(name = "Address2") 
     private String address2;
     
     @Size(max = 64)
-    @Column(name = "Address3")
+    @Column(name = "Address3") 
     private String address3;
     
     @Size(max = 64)
-    @Column(name = "Address4")
+    @Column(name = "Address4") 
     private String address4;
     
     @Size(max = 64)
-    @Column(name = "Address5")
+    @Column(name = "Address5") 
     private String address5;
     
     @Size(max = 64)
-    @Column(name = "City")
+    @Column(name = "City") 
     private String city;
     
     @Size(max = 64)
-    @Column(name = "Country")
+    @Column(name = "Country") 
     private String country;
     
     @Column(name = "EndDate")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.DATE) 
     private Date endDate;
     
     // @Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$", message="Invalid phone/fax format, should be as xxx-xxx-xxxx")//if the field contains phone or fax number consider using this annotation to enforce field validation
     @Size(max = 50)
-    @Column(name = "Fax")
+    @Column(name = "Fax") 
     private String fax;
     
-    @Column(name = "IsCurrent")
+    @Column(name = "IsCurrent") 
     private Boolean isCurrent;
     
-    @Column(name = "IsPrimary")
+    @Column(name = "IsPrimary") 
     private Boolean isPrimary;
     
-    @Column(name = "IsShipping")
+    @Column(name = "IsShipping") 
     private Boolean isShipping;
     
-    @Column(name = "Ordinal")
+    @Column(name = "Ordinal") 
     private Integer ordinal;
     
     @Size(max = 50)
-    @Column(name = "Phone1")
+    @Column(name = "Phone1") 
     private String phone1;
     
     @Size(max = 50)
@@ -126,60 +128,69 @@ public class Address extends BaseEntity {
     private String phone2;
     
     @Size(max = 32)
-    @Column(name = "PositionHeld")
+    @Column(name = "PositionHeld") 
     private String positionHeld;
     
     @Size(max = 32)
-    @Column(name = "PostalCode")
+    @Column(name = "PostalCode") 
     private String postalCode;
     
     @Lob
     @Size(max = 65535)
-    @Column(name = "Remarks")
+    @Column(name = "Remarks") 
     private String remarks;
     
     @Size(max = 50)
-    @Column(name = "RoomOrBuilding")
+    @Column(name = "RoomOrBuilding") 
     private String roomOrBuilding;
     
     @Column(name = "StartDate")
-    @Temporal(TemporalType.DATE) 
+    @Temporal(TemporalType.DATE)  
     private Date startDate;
     
     @Size(max = 64)
-    @Column(name = "State")
+    @Column(name = "State") 
     private String state;
     
     @Size(max = 32)
-    @Column(name = "TypeOfAddr")
+    @Column(name = "TypeOfAddr") 
     private String typeOfAddr;
     
-    @OneToMany(mappedBy = "addressID", cascade= CascadeType.ALL)
+    @OneToMany(mappedBy = "addressID", cascade = CascadeType.ALL)
+//    @XmlElement 
     private Collection<Division> divisionCollection;
     
-    @OneToMany(mappedBy = "addressID", cascade= CascadeType.ALL)
+    @OneToMany(mappedBy = "addressID")
+//    @XmlElement 
     private Collection<Institution> institutionCollection;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
+//    @XmlInverseReference(mappedBy = "addressCollection") 
+    @XmlTransient 
     private Agent createdByAgentID;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
+//    @XmlInverseReference(mappedBy = "addressCollection1") 
+    @XmlTransient 
     private Agent modifiedByAgentID;
     
     @JoinColumn(name = "AgentID", referencedColumnName = "AgentID")
     @ManyToOne
+    @XmlTransient 
     private Agent agentID;
 
     public Address() {
+        super();
     }
 
     public Address(Integer addressID) {
+        super();
         this.addressID = addressID;
     }
 
-    public Address(Integer addressID, Date timestampCreated) {
+    public Address(Integer addressID, Date timestampCreated) { 
         super(timestampCreated);
         this.addressID = addressID; 
     }
