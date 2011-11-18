@@ -93,6 +93,7 @@ public class Discipline extends BaseEntity {
     private Collection<Fieldnotebookpageset> fieldnotebookpagesetCollection;
     @OneToMany(mappedBy = "disciplineID")
     private Collection<Giftagent> giftagentCollection;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "disciplineID")
     private Collection<se.nrm.specify.datamodel.Collection> collectionCollection;
     

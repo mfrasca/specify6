@@ -3,6 +3,7 @@ package se.nrm.specify.datamodel;
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,8 +16,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table; 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+//import javax.validation.constraints.NotNull;
+//import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -63,34 +64,34 @@ public class Spqueryfield extends BaseEntity {
     @Column(name = "AlwaysFilter")
     private Boolean alwaysFilter;
     
-    @Size(max = 64)
+//    @Size(max = 64)
     @Column(name = "ColumnAlias")
     private String columnAlias;
     
     @Column(name = "ContextTableIdent")
     private Integer contextTableIdent;
     
-    @Size(max = 64)
+//    @Size(max = 64)
     @Column(name = "EndValue")
     private String endValue;
     
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 32)
+//    @NotNull
+//    @Size(min = 1, max = 32)
     @Column(name = "FieldName")
     private String fieldName;
     
-    @Size(max = 64)
+//    @Size(max = 64)
     @Column(name = "FormatName")
     private String formatName;
     
     @Basic(optional = false)
-    @NotNull
+//    @NotNull
     @Column(name = "IsDisplay")
     private boolean isDisplay;
     
     @Basic(optional = false)
-    @NotNull
+//    @NotNull
     @Column(name = "IsNot")
     private boolean isNot;
     
@@ -104,37 +105,37 @@ public class Spqueryfield extends BaseEntity {
     private Short operEnd;
     
     @Basic(optional = false)
-    @NotNull
+//    @NotNull
     @Column(name = "OperStart")
     private short operStart;
     
     @Basic(optional = false)
-    @NotNull
+//    @NotNull
     @Column(name = "Position")
     private short position;
     
     @Basic(optional = false)
-    @NotNull
+//    @NotNull
     @Column(name = "SortType")
     private short sortType;
     
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 64)
+//    @NotNull
+//    @Size(min = 1, max = 64)
     @Column(name = "StartValue")
     private String startValue;
     
     @Basic(optional = false)
-    @NotNull
+//    @NotNull
     @Lob
-    @Size(min = 1, max = 65535)
+//    @Size(min = 1, max = 65535)
     @Column(name = "StringId")
     private String stringId;
     
     @Basic(optional = false)
-    @NotNull
+//    @NotNull
     @Lob
-    @Size(min = 1, max = 65535)
+//    @Size(min = 1, max = 65535)
     @Column(name = "TableList")
     private String tableList;
     
@@ -142,18 +143,21 @@ public class Spqueryfield extends BaseEntity {
     private Boolean allowNulls;
     
     @JoinColumn(name = "SpQueryID", referencedColumnName = "SpQueryID")
-    @ManyToOne
+    @ManyToOne 
+    @XmlTransient
     private Spquery spQueryID;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
+    @XmlTransient
     private Agent createdByAgentID;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne 
+    @XmlTransient
     private Agent modifiedByAgentID;
     
-    @OneToMany(mappedBy = "spQueryFieldID")
+    @OneToMany(mappedBy = "spQueryFieldID", cascade= CascadeType.ALL)
     private Collection<Spexportschemaitemmapping> spexportschemaitemmappingCollection;
 
     public Spqueryfield() {

@@ -15,6 +15,7 @@ import javax.persistence.Table;
 //import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -50,14 +51,17 @@ public class Spexportschemaitemmapping extends BaseEntity {
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
+    @XmlTransient
     private Agent createdByAgentID;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
+    @XmlTransient
     private Agent modifiedByAgentID;
     
     @JoinColumn(name = "SpQueryFieldID", referencedColumnName = "SpQueryFieldID")
     @ManyToOne
+    @XmlTransient
     private Spqueryfield spQueryFieldID;
     
     @JoinColumn(name = "ExportSchemaItemID", referencedColumnName = "SpExportSchemaItemID")

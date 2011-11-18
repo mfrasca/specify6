@@ -17,7 +17,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlTransient;   
 
 /**
  *
@@ -179,18 +179,24 @@ public class Institution extends BaseEntity {
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
+//    @XmlInverseReference(mappedBy = "institution")
+    @XmlTransient 
     private Agent createdByAgentID;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
+//    @XmlInverseReference(mappedBy = "institution") 
     private Agent modifiedByAgentID;
     
     @JoinColumn(name = "AddressID", referencedColumnName = "AddressID")
-    @ManyToOne
+    @ManyToOne 
+//    @XmlInverseReference(mappedBy = "institutionCollection")  
+    @XmlTransient 
     private Address addressID;
     
     @JoinColumn(name = "StorageTreeDefID", referencedColumnName = "StorageTreeDefID")
     @ManyToOne
+    @XmlTransient 
     private Storagetreedef storageTreeDefID;
 
     public Institution() {
@@ -459,6 +465,7 @@ public class Institution extends BaseEntity {
         this.createdByAgentID = createdByAgentID;
     }
 
+    @XmlTransient
     public Agent getModifiedByAgentID() {
         return modifiedByAgentID;
     }
