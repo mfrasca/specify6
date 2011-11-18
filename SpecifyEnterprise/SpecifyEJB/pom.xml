@@ -19,7 +19,7 @@
             <id>central</id>
             <name>Maven Repository Switchboard</name>
             <layout>default</layout>
-            <url>http://download.java.net/maven/2/</url>
+            <url>http://repo1.maven.org/maven2</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
@@ -45,16 +45,12 @@
         <maven-ear-plugin.version>2.1</maven-ear-plugin.version>
         <maven-javadoc-plugin.version>2.7</maven-javadoc-plugin.version> 
     </properties>
-
-    <modules> 
-<!--        <module>specify-common</module> -->
-        <module>specify-datamodel</module>  
-         
-<!--        <module>specify-webservice-simulator</module>-->
-<!--        <module>specify-dataservice-ear</module>-->
+ 
+    <modules>  
+        <module>specify-datamodel</module>   
          
         <module>specify-data-jpa</module>
-<!--        <module>Specify-data-service</module>-->
+        <module>Specify-data-service</module>
 <!--        <module>specifyKryptosPlus</module>-->
 <!--        <module>specify-jpa-test</module>
         <module>specify-jpa-test-ear</module>-->
@@ -94,7 +90,7 @@
         <pluginRepository>
             <id>maven.java.net</id>
             <name>Java.net Maven2 Repository</name>
-            <url>http://download.java.net/maven/2</url>
+            <url>http://repo1.maven.org/maven2</url>
         </pluginRepository> 
     </pluginRepositories>
 
