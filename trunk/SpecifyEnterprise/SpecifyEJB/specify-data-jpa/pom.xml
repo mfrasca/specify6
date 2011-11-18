@@ -12,7 +12,7 @@
     <artifactId>specify-data-jpa</artifactId> 
     <packaging>ejb</packaging>
 
-    <name>specify-data-jpa</name>
+    <name>${project.artifactId}</name>
     
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir> 
@@ -102,6 +102,6 @@
                 </executions>
             </plugin>
         </plugins>
-        <finalName>specify-data-jpa</finalName>
+        <finalName>${project.artifactId}</finalName>
     </build> 
 </project>

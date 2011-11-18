@@ -1,6 +1,7 @@
 package se.nrm.specify.specify.data.jpa;
 
-import java.util.List;  
+import java.util.List;   
+import se.nrm.specify.datamodel.Collectingevent; 
 import se.nrm.specify.datamodel.Dnasequence;
 import se.nrm.specify.datamodel.Geography;
 import se.nrm.specify.datamodel.Geographytreedefitem;
@@ -23,6 +24,16 @@ public interface SpecifyDao {
      * @return the entity
      */
     public <T extends SpecifyBean> T getById(int id, Class<T> clazz);
+    
+    /**
+     * Get the list of entity
+     * 
+     * @param <T> the entity class 
+     * @param clazz entity
+     * 
+     * @return the List<entity>
+     */
+    public <T extends SpecifyBean> List getAll(Class<T> clazz);
     
     /**
      * Persist entity in database
@@ -61,9 +72,12 @@ public interface SpecifyDao {
      */
     public List<Dnasequence> getAllDnasequences();
     
-//    public List<Object[]> getTaxonByCollectionMemberID(int id, String groupName);
-//    
-//    public List<Determination> getDeterminationsByTaxonId(Taxon t);
-//    
-//    public List<Object[]> getCollectionTree(int collectionId);
+    
+    /**
+     * Get Collectingevent by StationFieldNumber
+     * @param stationFieldNumber
+     * 
+     * @return Collectingevent
+     */
+    public Collectingevent getCollectingEventByStationFieldNumber(String stationFieldNumber); 
 }
