@@ -50,7 +50,7 @@
         <module>specify-datamodel</module>   
          
         <module>specify-data-jpa</module>
-        <module>Specify-data-service</module>
+        <module>specify-data-service</module>
 <!--        <module>specifyKryptosPlus</module>-->
 <!--        <module>specify-jpa-test</module>
         <module>specify-jpa-test-ear</module>-->
