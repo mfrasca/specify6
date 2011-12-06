@@ -169,7 +169,7 @@ public class SpecifyClient {
     }
 
     private static URI getBaseURI() {
-        return UriBuilder.fromUri("http://localhost:8080/specify-service/").build();            // service deployed in local
+        return UriBuilder.fromUri("http://localhost:8080/specify-data-service/").build();            // service deployed in local
 //        return UriBuilder.fromUri("http://172.16.0.145:8080/jpa-service/").build();           // service deployed in development server
     }
 }
