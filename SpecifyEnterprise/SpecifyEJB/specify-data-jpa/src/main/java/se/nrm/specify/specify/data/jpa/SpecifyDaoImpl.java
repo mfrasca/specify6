@@ -59,8 +59,16 @@ public class SpecifyDaoImpl implements SpecifyDao {
             
             return entityManager.find(clazz, id, LockModeType.PESSIMISTIC_WRITE);
         } 
-        
-        return entityManager.find(clazz, id, LockModeType.OPTIMISTIC);
+         
+        T bean = null;
+        try { 
+            bean = entityManager.find(clazz, id, LockModeType.OPTIMISTIC);
+            entityManager.flush();
+        } catch(OptimisticLockException ex) { 
+            logger.error(ex.getMessage());
+            entityManager.refresh(bean);
+        } 
+        return bean;
     }
 
     /**
