@@ -1,0 +1,240 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:h="http://java.sun.com/jsf/html" 
+      xmlns:p="http://primefaces.prime.com.tr/ui" 
+      xmlns:f="http://java.sun.com/jsf/core"  
+      xmlns:c="http://java.sun.com/jsp/jstl/core"   > 
+
+    <body>
+        <ui:composition> 
+            <div class="contentdiv">
+                <h:form id="sampleeditform">
+                    <h:panelGrid columns="3" id="sampleeditpanel" styleClass="samplelistpanel">   
+                        <h:panelGrid columns="2" cellpadding="5" styleClass="cancellistpanel">
+                            <h:commandButton action="#{smtpBean.cancellist}" styleClass="backbutton"  />
+                            <h:outputText value="#{msg.cancellist}" />  
+                        </h:panelGrid> 
+                        <h:column />
+                        <h:panelGrid columns="2" cellpadding="5" styleClass="createlistpanel"> 
+                            <h:outputText value="#{msg.submitlist}" />
+                            <h:commandButton action="#{smtpBean.submitlist}" styleClass="nextbutton"  /> 
+                        </h:panelGrid>
+                    </h:panelGrid>  
+
+                    <h:outputText styleClass="labeltext" value="#{smtpBean.sampleGroupBean.groupName}" />     
+
+                    <h:panelGrid columns="6" > 
+                        <h:outputText value="#{msg.collectingevent}"  /> 
+                        <h:outputText value="#{smtpBean.eventBean.eventId}"  styleClass="paddingrightdiv" /> 
+                        <h:outputText value="#{msg.startdate}" /> 
+                        <h:outputText value="#{smtpBean.eventBean.event.startDate}" styleClass="paddingrightdiv" >
+                            <f:convertDateTime pattern="yyyy-MM-dd" />
+                        </h:outputText>
+                        <h:outputText value="#{msg.enddate}" /> 
+                        <h:outputText value="#{smtpBean.eventBean.event.endDate}">
+                            <f:convertDateTime pattern="yyyy-MM-dd" />
+                        </h:outputText> 
+                    </h:panelGrid>
+
+                    <h:panelGrid columns="3" >  
+                        <h:outputText value="#{smtpBean.eventBean.event.localityID.localityName}" styleClass="paddingrightdiv" />  
+                        <h:outputText value="#{smtpBean.eventBean.event.localityID.lat1Text}" styleClass="paddingrightdiv" />  
+                        <h:outputText value="#{smtpBean.eventBean.event.localityID.long1Text}" /> 
+                    </h:panelGrid>
+
+
+                    <div class="#{smtpBean.styleBean.samplelisteditdiv}">
+                        <h:panelGrid columns="2" styleClass="fulldiv">  
+                            <h:panelGrid columns="2" styleClass="width20percent" > 
+                                <h:commandButton action="#{smtpBean.addnewsample}" styleClass="addbutton"  /> 
+                                <h:outputText value="#{msg.noofvials}" styleClass="smalldiv" /> 
+                            </h:panelGrid> 
+                            <h:column />
+                            <p:separator />
+                        </h:panelGrid> 
+
+                        <p:separator />
+
+                        <c:forEach var="samplebeans" items="#{smtpBean.sampleGroupBean.selectedSampleBeanList}" >
+
+                            <div id="${samplebeans.sampleNameId}disply" class="samplelistdiv" >
+                                <h:panelGrid columns="5" >   
+                                    <h:commandButton action="#{smtpBean.removesample(samplebeans)}" styleClass="removebutton"  alt="Remove sample"  /> 
+                                    <h:commandButton onclick="editsample('${samplebeans.sampleNameId}'); return false;  "  styleClass="editbutton"  /> 
+                                    <h:outputText value="${samplebeans.sampleNumber}" /> 
+                                    <h:outputText value="${samplebeans.sampleName}" styleClass="marginleft20div"  />  
+                                </h:panelGrid>
+                            </div>
+
+                            <div id="${samplebeans.sampleNameId}edit" class="samplelisteditdiv" >
+                                <h:panelGrid columns="5" >   
+                                    <h:commandButton action="#{smtpBean.removesampleedit}" styleClass="removebutton"  alt="Cancel edit"  /> 
+                                    <h:commandButton action="#{smtpBean.editsample(samplebeans)}" styleClass="checkbutton"  /> 
+                                    <h:inputText value="${samplebeans.sampleNumber}"   
+                                                 size="3" maxlength="2" converterMessage="Invalid number!" 
+                                                 id="${samplebeans.sampleNameId}${samplebeans.sampleNumber}"  >
+                                        <f:convertNumber integerOnly="true"  />
+                                    </h:inputText>
+                                    <p:autoComplete value="#{samplebeans.sampleName}" size="50"
+                                                    minQueryLength="3" forceSelection="true" 
+                                                    completeMethod="#{smtpBean.complete}"  />   
+                                    <h:message id="${samplebeans.sampleNameId}error" for="${samplebeans.sampleNameId}${samplebeans.sampleNumber}" styleClass="errormsg" />
+                                </h:panelGrid>
+
+                            </div>  
+                        </c:forEach> 
+
+                        <div id="newrecorddiv" class="#{smtpBean.styleBean.newrecorddiv}">
+                            <h:panelGrid columns="6" >  
+                                <h:commandButton action="#{smtpBean.canceladdnewsample}" styleClass="removebutton" />
+                                <h:commandButton action="#{smtpBean.createnewsample}" styleClass="addnewrecordbutton"   /> 
+                                <h:inputText size="3" value="#{smtpBean.sampleBean.sampleNumber}" maxlength="2" 
+                                             converterMessage="Invalid number!" 
+                                             id="newsampleid" >
+                                    <f:convertNumber integerOnly="true"  />
+                                </h:inputText>
+
+                                <p:autoComplete id="acSimple" value="#{smtpBean.sampleBean.sampleName}" size="50"
+                                                minQueryLength="3" forceSelection="true" 
+                                                completeMethod="#{smtpBean.complete}"  />  
+
+                                <h:message id="newsampleiderror" for="newsampleid" styleClass="errormsg" />
+                                <h:messages styleClass="errormsg"  />
+                            </h:panelGrid>  
+                        </div>  
+                    </div>
+
+
+                    <div class="#{smtpBean.styleBean.samplelistdiv}">
+                        <h:panelGrid columns="2" style="width: 100%;">  
+                            <h:panelGrid columns="1" style="width: 20%;">  
+                                <h:outputText value="#{msg.noofvials}" style="margin-left: 5px; float: left;"/> 
+                            </h:panelGrid> 
+                            <h:column />
+                        </h:panelGrid> 
+
+                        <p:separator />
+
+                        <c:forEach var="samplebeans" items="#{smtpBean.sampleGroupBean.selectedSampleBeanList}" >
+                            <h:panelGrid columns="2" >    
+                                <h:outputText value="${samplebeans.sampleNumber}"  />
+                                <h:outputText value="${samplebeans.sampleName}" style="margin-left: 20px;"/> 
+                            </h:panelGrid>
+                        </c:forEach> 
+                    </div>
+
+
+
+
+
+                    <!-- ######################################### dialogbox ############################################# -->
+                    <div id="dialogbox" class="#{smtpBean.styleBean.dialogbox}">
+                        <p:panel header="#{msg.inventory}#{smtpBean.sampleGroupBean.groupName} #{msg.vialcount} #{smtpBean.numberOfDetermination}" styleClass="centerpanel" id="smtpdialogbox">  
+
+                            <div class="buttondiv">
+                                <br />
+                                <br />
+                                <h:outputText value="#{msg.msg1} #{smtpBean.sampleGroupBean.groupName} #{msg.msg2}" /> 
+                                <br />
+                                <br /> 
+
+                                <h:panelGrid columns="6" > 
+                                    <h:outputText value="#{msg.collectingevent}"  /> 
+                                    <h:outputText value="#{smtpBean.eventBean.eventId}" styleClass="paddingrightdiv" /> 
+                                    <h:outputText value="#{msg.startdate}" /> 
+                                    <h:outputText value="#{smtpBean.eventBean.event.startDate}" styleClass="paddingrightdiv" >
+                                        <f:convertDateTime pattern="yyyy-MM-dd" />
+                                    </h:outputText>
+                                    <h:outputText value="#{msg.enddate}" /> 
+                                    <h:outputText value="#{smtpBean.eventBean.event.endDate}">
+                                        <f:convertDateTime pattern="yyyy-MM-dd" />
+                                    </h:outputText> 
+                                </h:panelGrid>
+
+                                <h:panelGrid columns="3" > 
+                                    <h:outputText value="#{smtpBean.eventBean.event.localityID.localityName}" styleClass="paddingrightdiv"  />  
+                                    <h:outputText value="#{smtpBean.eventBean.event.localityID.lat1Text}" styleClass="paddingrightdiv" />  
+                                    <h:outputText value="#{smtpBean.eventBean.event.localityID.long1Text}" /> 
+                                </h:panelGrid> 
+
+                                <br /> 
+                                <br /> 
+                                <h:outputText value="#{msg.msg3}" /> 
+                                <br />
+                                <br /> 
+                                <br /> 
+                                <br /> 
+
+                                <h:commandButton action="#{smtpBean.canceldialogbox('dialog')}" value="#{msg.cancelbutton}" alt="Cancel" styleClass="buttonstylesmall" id="cancelbutton" />  
+                                <h:commandButton action="#{smtpBean.createsorting('no')}" value="#{msg.nobutton}" alt="No" styleClass="buttonstylesmall" id="nobutton" /> 
+                                <h:commandButton action="#{smtpBean.editsorting}" value="#{msg.yesbutton}" alt="Yes" styleClass="buttonstylesmall" id="yesbutton" />  
+
+                                <br />
+                                <br />
+                                <br />
+                            </div>
+                        </p:panel>  
+                    </div>
+
+                    <!-- ######################################### editdialogbox ############################################# -->
+                    <div id="dialogboxedit" class="#{smtpBean.styleBean.dialogboxedit}">
+                        <p:panel header="#{msg.inventory}#{smtpBean.sampleGroupBean.groupName} #{msg.vialcount} #{smtpBean.numberOfDetermination}" styleClass="centerpanel" id="smtpdialogboxedit">  
+
+                            <div class="buttondiv">
+                                <br/>
+                                <br/>
+                                <h:outputText value=" #{smtpBean.sampleGroupBean.groupName} " /> 
+                                <br />
+                                <br /> 
+
+                                <h:panelGrid columns="6" > 
+                                    <h:outputText value="#{msg.collectingevent}"  /> 
+                                    <h:outputText value="#{smtpBean.eventBean.eventId}" styleClass="paddingrightdiv" /> 
+                                    <h:outputText value="#{msg.startdate}" /> 
+                                    <h:outputText value="#{smtpBean.eventBean.event.startDate}" styleClass="paddingrightdiv" >
+                                        <f:convertDateTime pattern="yyyy-MM-dd" />
+                                    </h:outputText>
+                                    <h:outputText value="#{msg.enddate}" /> 
+                                    <h:outputText value="#{smtpBean.eventBean.event.endDate}">
+                                        <f:convertDateTime pattern="yyyy-MM-dd" />
+                                    </h:outputText> 
+                                </h:panelGrid>
+
+                                <h:panelGrid columns="3" > 
+                                    <h:outputText value="#{smtpBean.eventBean.event.localityID.localityName}" styleClass="paddingrightdiv" />  
+                                    <h:outputText value="#{smtpBean.eventBean.event.localityID.lat1Text}" styleClass="paddingrightdiv" />  
+                                    <h:outputText value="#{smtpBean.eventBean.event.localityID.long1Text}" /> 
+                                </h:panelGrid> 
+
+                                <br /> 
+                                <br /> 
+
+                                <h:panelGrid columns="4" cellpadding="3px"> 
+                                    <h:outputText value="#{msg.msg4}" /> 
+                                    <h:inputText value="#{smtpBean.numberOfDeterminationSorted}" size="3" maxlength="2" />
+                                    <h:outputText value="#{msg.of}" /> 
+                                    <h:outputText value="#{smtpBean.numberOfDetermination}" /> 
+                                </h:panelGrid>
+                                <br />
+                                <br /> 
+                                <br /> 
+                                <br /> 
+
+                                <h:commandButton action="#{smtpBean.canceldialogbox('edit')}" value="#{msg.cancelbutton}" alt="Cancel" styleClass="buttonstylesmall" id="canceleditbutton" />   
+                                <h:commandButton action="#{smtpBean.createsorting('ok')}" value="#{msg.okbutton}" alt="Yes" styleClass="buttonstylesmall" id="okbutton" />  
+
+                                <br />
+                                <br />
+                                <br />
+                            </div>
+                        </p:panel>  
+                    </div>
+                </h:form>
+
+            </div>
+        </ui:composition>
+    </body>
+</html>
+

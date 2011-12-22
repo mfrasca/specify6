@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:h="http://java.sun.com/jsf/html" 
+      xmlns:p="http://primefaces.prime.com.tr/ui" 
+      xmlns:f="http://java.sun.com/jsf/core"  
+      xmlns:c="http://java.sun.com/jsp/jstl/core" >
+
+    <body>
+        <ui:composition> 
+            <h:form id="samplelistform"  onkeypress="if (event.keyCode == 13) submitform('samplelistform:createlistbtn');">
+                <div class="contentdiv" id="samplelistdiv">
+
+                    <h:panelGrid columns="3" id="samplelistpanel" styleClass="samplelistpanel">    
+                        
+                        <h:panelGrid columns="2" cellpadding="5" styleClass="cancellistpanel">
+                            <h:commandButton action="#{smtpBean.cancellist}" styleClass="backbutton" id="cancellistbutton"  />
+                            <h:outputText value="#{msg.cancellist}" />  
+                        </h:panelGrid> 
+                        <h:column />
+                        <h:panelGrid columns="2" cellpadding="5" styleClass="createlistpanel"> 
+                            <h:outputText value="#{msg.createlist}" />
+                            <h:commandButton id="createlistbtn" action="#{smtpBean.createlist}" styleClass="nextbutton" /> 
+                        </h:panelGrid>
+                    </h:panelGrid>  
+                    
+                    <h:outputText styleClass="labeltext" value="#{smtpBean.sampleGroupBean.groupName}" />
+                    
+                    <h:panelGrid columns="3" >  
+                        <h:outputText value="#{smtpBean.eventBean.event.localityID.localityName}" styleClass="paddingrightdiv" />  
+                        <h:outputText value="#{smtpBean.eventBean.event.localityID.lat1Text}" styleClass="paddingrightdiv" />  
+                        <h:outputText value="#{smtpBean.eventBean.event.localityID.long1Text}" /> 
+                    </h:panelGrid>
+                    
+                    <h:panelGrid columns="6" > 
+                        <h:outputText value="#{msg.collectingevent}"  /> 
+                        <h:outputText value="#{smtpBean.eventBean.eventId}" styleClass="paddingrightdiv" /> 
+                        <h:outputText value="#{msg.startdate}" /> 
+                        <h:outputText value="#{smtpBean.eventBean.event.startDate}" styleClass="paddingrightdiv" >
+                            <f:convertDateTime pattern="yyyy-MM-dd" />
+                        </h:outputText>
+                        <h:outputText value="#{msg.enddate}" /> 
+                        <h:outputText value="#{smtpBean.eventBean.event.endDate}">
+                            <f:convertDateTime pattern="yyyy-MM-dd" />
+                        </h:outputText> 
+                    </h:panelGrid>
+
+                    <h:panelGrid columns="1" styleClass="fulldiv" >  
+                        <h:outputText value="#{msg.noofvials}" styleClass="paddingleftdiv" /> 
+                        <p:separator />
+                    </h:panelGrid> 
+
+                    <c:forEach var="samplebeans" items="#{smtpBean.sampleGroupBean.sampleBeanList}">
+                        <h:panelGrid columns="4" columnClasses="column1, column2, column3, column4" styleClass="paddingleftdiv" >   
+                            <h:inputText size="2"  value="${samplebeans.sampleNumber}" 
+                                         id="${samplebeans.sampleNameId}" 
+                                         converterMessage="Invalid number!" 
+                                         immediate="true"  maxlength="2" >
+                                <f:convertNumber integerOnly="true"  />
+                            </h:inputText> 
+                            <h:outputText value="${samplebeans.sampleName}" styleClass="marginleftdiv"  /> 
+                            <h:outputText value="${samplebeans.desc}" /> 
+                            <h:message id="${samplebeans.sampleNameId}error" for="${samplebeans.sampleNameId}" styleClass="errormsgsamplelist" />
+                        </h:panelGrid>
+                    </c:forEach> 
+ 
+                </div>
+            </h:form>
+        </ui:composition>
+    </body>
+</html>
+
+

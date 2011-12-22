@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scene Scope="Project" version="2">
+    <Scope Scope="Faces Configuration Only"/>
+    <Scope Scope="Project">
+        <Node id="index.jsp" x="162" y="91" zoom="true"/>
+        <Node id="pages/statisticspage.xhtml" x="900" y="150" zoom="true"/>
+        <Node id="pages/uploadsummary.xhtml" x="400" y="450" zoom="true"/>
+        <Node id="start.xhtml" x="150" y="150" zoom="true"/>
+        <Node id="pages/samplelist.xhtml" x="389" y="32" zoom="true"/>
+        <Node id="views/samplelistview.xhtml" x="611" y="299" zoom="true"/>
+        <Node id="pages/inventoryrecord.xhtml" x="386" y="79" zoom="true"/>
+        <Node id="pages/header.xhtml" x="76" y="300" zoom="true"/>
+        <Node id="views/smtpview.xhtml" x="391" y="352" zoom="true"/>
+        <Node id="views/uploadsummaryview.xhtml" x="150" y="600" zoom="true"/>
+        <Node id="views/sampleeditview.xhtml" x="150" y="300" zoom="true"/>
+        <Node id="templates/masterLayout.xhtml" x="150" y="450" zoom="true"/>
+        <Node id="pages/smtpcollection.xhtml" x="388" y="132" zoom="true"/>
+        <Node id="views/uploadingview.xhtml" x="400" y="300" zoom="true"/>
+        <Node id="pages/footer.xhtml" x="69" y="345" zoom="true"/>
+        <Node id="pages/sampleedit.xhtml" x="400" y="150" zoom="true"/>
+        <Node id="views/statisticsview.xhtml" x="650" y="300" zoom="true"/>
+        <Node id="views/inventoryview.xhtml" x="316" y="299" zoom="true"/>
+        <Node id="pages/uploading.xhtml" x="650" y="150" zoom="true"/>
+    </Scope>
+    <Scope Scope="All Faces Configurations"/>
+</Scene>
