@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:h="http://java.sun.com/jsf/html" 
+      xmlns:p="http://primefaces.prime.com.tr/ui" 
+      xmlns:f="http://java.sun.com/jsf/core"  >
+
+    <body>
+        <ui:composition> 
+            <h:form id="collectionform">
+                <p:fieldset legend="#{msg.choosecollection}" styleClass="collectionFieldset" id="collectionfieldset"> 
+                    
+                    <h:selectOneRadio layout="pageDirection" value="#{smtpBean.collection}" 
+                                      onchange="smtpcollection(this.value); return false;" 
+                                      styleClass="radiodiv" id="collectiongroup" >
+                        <f:selectItem itemValue="gnm" itemLabel="#{msg.gnm}" /> 
+                        <f:selectItem itemValue="nrminv" itemLabel="#{msg.nrminv}" />
+                        <f:selectItem itemValue="nrmobj" itemLabel="#{msg.nrmobj}" />
+                        <f:selectItem itemValue="nrmher" itemLabel="#{msg.nrmher}" />
+                        <f:selectItem itemValue="nrmicht" itemLabel="#{msg.nrmicht}" />
+                        <f:selectItem itemValue="nrmmam" itemLabel="#{msg.nrmmam}" />
+                        <f:selectItem itemValue="nrmorn" itemLabel="#{msg.nrmorn}" />
+                        <f:selectItem itemValue="smtpinv" itemLabel="#{msg.smtpinv}" />
+                        <f:selectItem itemValue="smtpobs" itemLabel="#{msg.smtpobs}" />  
+                    </h:selectOneRadio>  
+
+                    <div class="okbuttondiv" id="okbuttondiv"> 
+                        <h:commandButton action="#{smtpBean.selectCollection}" value="#{msg.okbutton}" alt="Ok" styleClass="buttonstylesmall" id="okbutton" />
+                    </div>
+
+                </p:fieldset>
+ 
+
+                <div id="smtpinterfacediv" class="smtpinterfacediv"> 
+                    <p:panel header="#{msg.smtpinterface}" styleClass="centerpanel" id="smtpinterfacepanel">  
+
+                        <div class="buttondiv">
+                            <br/>
+                            <br/>
+                            <h:outputText value="#{msg.smtpinterfacetext}" /> 
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                        </div> 
+
+                        <div class="buttondiv" id="buttondiv">  
+                            <h:commandButton action="#{smtpBean.selectSMTPCollection}" value="#{msg.yesbutton}" alt="Yes" styleClass="buttonstylesmall" id="yesbutton" />  
+                            <h:commandButton action="#{smtpBean.selectCollection}" value="#{msg.nobutton}" alt="No" styleClass="buttonstylesmall" id="nobutton" /> 
+
+                            <br/>
+                            <br/>
+                            <br/>
+                        </div>
+                    </p:panel>  
+                </div> 
+            </h:form>
+
+        </ui:composition>  
+    </body>  
+
+</html>
+

@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:h="http://java.sun.com/jsf/html" 
+      xmlns:p="http://primefaces.prime.com.tr/ui" 
+      xmlns:f="http://java.sun.com/jsf/core"  
+      xmlns:c="http://java.sun.com/jsp/jstl/core"   > 
+
+    <body>
+        <ui:composition> 
+            <div class="contentdiv">
+                <h:form id="uploadsummaryform">
+
+                    <h:panelGrid columns="1" id="uploadsummaryimagepanel" styleClass="uploadsummaryimagepanel">    
+                        <h:panelGrid columns="1" id="uploadsummaryheader" >  
+                            <h:panelGrid columns="2" style="width: 300px;">
+                                <h:outputText value="#{msg.uploaded}" styleClass="labeltext" /> 
+                                <h:outputText value="#{smtpBean.sampleBean.totalSample}"  styleClass="labeltext"  /> 
+                            </h:panelGrid>
+                            
+
+                            <h:panelGrid columns="2" style="width: 690px; margin-top: -10px; font-weight: normal;">
+                                <h:panelGrid columns="3" > 
+                                    <h:outputText value="#{msg.timestamp}"  /> 
+                                    <h:outputText value="#{smtpBean.strDate}"    /> 
+                                    <h:outputText value="#{msg.curvedbracketclose}"  />
+                                </h:panelGrid>
+                                <h:panelGrid columns="2"  style="float: right;" > 
+                                    <h:outputText value="#{msg.startpage}" style="margin-right: 10px;"/>
+                                    <h:commandButton action="#{smtpBean.cancellist}" styleClass="startpagebutton"  /> 
+                                </h:panelGrid>
+                            </h:panelGrid>
+
+                        </h:panelGrid>
+                        <h:panelGrid columns="1" id="summaryimage" styleClass="uploadsummaryheader" /> 
+                    </h:panelGrid> 
+
+                    <h:outputText styleClass="labeltext" value="#{smtpBean.sampleGroupBean.groupName}" />     
+
+                    <h:panelGrid columns="3" >  
+                        <h:outputText value="#{smtpBean.eventBean.event.localityID.localityName}" style="padding-right: 20px;"  />  
+                        <h:outputText value="#{smtpBean.eventBean.event.localityID.lat1Text}" style="padding-right: 20px;" />  
+                        <h:outputText value="#{smtpBean.eventBean.event.localityID.long1Text}" /> 
+                    </h:panelGrid>
+
+                    <h:panelGrid columns="6" > 
+                        <h:outputText value="#{msg.collectingevent}"  /> 
+                        <h:outputText value="#{smtpBean.eventBean.eventId}" style="padding-right: 20px;" /> 
+                        <h:outputText value="#{msg.startdate}" /> 
+                        <h:outputText value="#{smtpBean.eventBean.event.startDate}" style="padding-right: 20px;" >
+                            <f:convertDateTime pattern="yyyy-MM-dd" />
+                        </h:outputText>
+                        <h:outputText value="#{msg.enddate}" /> 
+                        <h:outputText value="#{smtpBean.eventBean.event.endDate}">
+                            <f:convertDateTime pattern="yyyy-MM-dd" />
+                        </h:outputText> 
+                    </h:panelGrid>
+
+ 
+                    <h:panelGrid columns="2" style="width: 100%;">  
+                        <h:panelGrid columns="1" style="width: 20%;">  
+                            <h:outputText value="#{msg.noofvials}" style="margin-left: 5px; float: left;"/> 
+                        </h:panelGrid> 
+                        <h:column />
+                    </h:panelGrid> 
+
+                    <p:separator />
+
+                    <c:forEach var="samplebeans" items="#{smtpBean.sampleGroupBean.selectedSampleBeanList}" >
+                        <h:panelGrid columns="2" style="margin-left: 40px;">    
+                            <h:outputText value="${samplebeans.sampleNumber}" />
+                            <h:outputText value="${samplebeans.sampleName}" style="margin-left: 20px;"/> 
+                        </h:panelGrid>
+                    </c:forEach> 
+
+                    <br />
+                    <br /> 
+
+                    <h:panelGrid columns="1" cellpadding="3px"  style=" float: left;"> 
+
+                        <h:outputText styleClass="labeltext" value="#{msg.previousinventoryrecords}" style="padding-left: 2px;" /> 
+
+                        <h:panelGrid columns="4" cellpadding="3px"  style=" float: left;"> 
+                            <h:outputText value="#{msg.msg4}" /> 
+                            <h:outputText value="#{smtpBean.numberOfDeterminationSorted}" />
+                            <h:outputText value="#{msg.of}" /> 
+                            <h:outputText value="#{smtpBean.numberOfDetermination}" /> 
+                        </h:panelGrid>
+                    </h:panelGrid>
+
+                    <br />
+                    <br /> 
+
+                </h:form>
+
+
+            </div>
+        </ui:composition>
+    </body>
+</html>
+
+

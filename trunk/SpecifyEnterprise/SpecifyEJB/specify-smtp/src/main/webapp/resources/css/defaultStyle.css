@@ -1,0 +1,712 @@
+body * {
+    font-family: verdana, arial, helvetica, sans-serif;
+    font-size: 10px;
+}
+
+.mainpage {
+    width: 900px;
+    margin-left: auto;
+    margin-right:  auto; 
+}
+
+div.mainpage .dinalogo {
+    width: 145px;
+    height: 45px;
+    float: left;
+    padding: 10px 5px 10px 0; 
+}
+
+div.mainpage .specifylogo {
+    width: 80px;
+    height: 60px; 
+    float: right; 
+    margin-right: 20px; 
+/*    background: url('../resources/images/specify60.png') no-repeat scroll right center transparent; */
+}
+
+div.mainpage .nrmlogo {
+    width: 75px;
+    height: 65px;
+    float: left;
+    padding: 10px 5px 10px 20px;
+/*    background: url('../resources/images/logo-color.jpg') no-repeat scroll right center transparent; */
+}
+
+div.mainpage .headertext {
+    width: 650px; 
+    float: left; 
+    padding-top: 15px;   
+    padding-bottom: 10px; 
+    text-align: center;
+    font-size: 24px;  
+    font-weight:  bold; 
+    color: #086A87;
+} 
+
+.header .footer {
+    position: relative; 
+    float: left;
+    width: 100%; 
+    overflow: hidden;
+}
+
+.footertext {
+    width: 820px;
+    font-weight: bold;
+    font-size: 12px;
+    padding-top: 30px; 
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.pagediv { 
+    width: 900px;
+    background-color: #A9A9A9; 
+    height: 10px; 
+    float: left;
+}
+
+.fulldiv {
+    float: left;
+    width: 100%; 
+}
+
+
+.content {
+    position: relative; 
+    float: left; 
+    width: 100%; 
+    height: 100%; 
+    margin-top: 20px;
+    overflow: visible; 
+} 
+
+.collectionFieldset {
+    background: #d8d8d8;
+}
+
+.collectionFieldset .ui-fieldset-legend {
+    background: #585858;
+    padding: 5px 10px 5px 10px;
+    font-weight: bold;
+    font-size: 10px;
+    color: #FFFFFF;  
+}
+
+ 
+
+fieldset {
+    border: 1px solid #CCA383;
+    width: 700px;
+    padding: 3px; 
+    margin-left: auto;
+    margin-right: auto; 
+    margin-bottom: 30px; 
+    background: #CCA383;
+}
+
+
+.radiodiv {
+    width: 98%;
+    background: #FFFFFF;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+}
+
+.smtpinterfacediv {
+    width: 100%;
+    float: left; 
+}
+
+
+
+
+
+.labeltext {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+samplelistpanel .labeltext {
+    font-size: 16px;
+    width: 200px;
+    margin-left: auto;
+    margin-right:  auto;
+}
+
+.formlbl {
+    font-weight: bold; 
+    font-size: 10px;
+    padding-top: 5px;
+}
+
+.pageseparator { 
+    height: 5px;
+    width: 100%; 
+    background: #A9A9A9;
+    margin: 20px 0 10px 0;
+}
+
+
+
+
+.statisticpaneltext1 {
+    width: 300px;
+}
+
+.statisticpaneltext2 {
+    width: 690px; 
+    margin-top: -10px; 
+    font-weight: normal;
+}
+
+.paddingrightdiv {
+    padding-right: 20px;
+}
+
+.paddingleftdiv {
+    padding-left: 20px; 
+    width: 100%;
+    float: left;
+}
+
+.marginrightdiv {
+    margin-right: 10px;
+}
+
+.marginleftdiv {
+    margin-left: 10px; 
+}
+
+.marginleft20div {
+    margin-left: 20px;
+}
+
+
+.determinationpanel {
+    width: 700px;
+}
+
+.width50 {
+    width: 50px; 
+}
+
+.width20percent {
+    width: 20%;
+}
+
+.totaldeterminationspanel {
+    width: 120px; 
+    float: right; 
+    margin-right: 10px;
+}
+
+.uniquedeterminationspanel {
+    width: 200px; 
+    float: right; 
+    padding-left: 20px;
+}
+
+.smalldiv {
+    margin-left: 5px; 
+    float: left;
+}
+
+.uniquedeterminationtext {
+    margin-left: 5px; 
+    width: 10px;
+}
+
+.uniquedeterminationvalue {
+    width: 5px;
+}
+
+.vialanddeterminalpanel {
+    width: 300px; 
+    float: left;
+}
+
+
+.leftdiv {
+    float: left;
+}
+
+.rightdiv {
+    float: right;
+}
+
+.with20 {
+    width: 20px;
+}
+ 
+.statisticvalue {
+    width: 10px;
+    float: left;
+    font-weight: bold;
+}
+
+.statistictext {
+    width: 200px;
+    font-weight: bold;
+    float: left;
+    margin-left: 10px;
+}
+
+.column1 {
+    width: 30px;
+    float: left;
+    margin-top: -2px;
+}
+
+.column2 {
+    width: 180px;
+    float: left;
+    margin-top: 3px;
+}
+
+.column3 {
+    width: 320px;
+    float: left;
+    font-weight: bold;
+    color: #FF0000;
+    margin-left: 20px;
+    margin-top: 3px;
+}
+
+.column4 {
+    width: 100px;
+    float: left;
+    margin-top: 3px;
+}
+
+
+
+/********************************* page 2 accordingpanel and div **************************************/
+.contentdiv {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto; 
+    margin-top: 20px;
+    margin-bottom: 50px;
+    font-size: 12px;
+    font-weight: bold; 
+}
+  
+
+div.inventoryrecordgroup .accordingpanel { 
+    background: url('../resources/images/SMTPwasp.jpg') no-repeat scroll right center transparent; 
+}
+
+ 
+
+div.inventorystatistics .accordingpanel { 
+    background: url('../resources/images/SMTPflies.jpg') no-repeat scroll right center transparent;  
+}
+
+.accordingpanel {
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 90%;
+}
+
+.accordingpanel .ui-accordion-header  {
+    background: transparent;
+    font-size: 12px;
+    font-weight: bold; 
+}
+
+.accordingpanel .ui-accordion-content {
+    background: transparent;
+    font-size: 12px;
+    font-weight: bold; 
+}
+
+.accordingpanel .ui-state-active {
+    background: transparent; 
+}
+
+.ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited {
+    color: #585858;
+    background: transparent;
+}
+
+.divvisible {
+    display: block;
+}
+
+.divinvisible {
+    display: none;
+}
+ 
+.samplenumberenabledstyle {
+    border: 1px solid;  
+}
+
+.samplenumberdisabledstyle {
+    border: none; 
+    background: transparent;
+}
+
+
+
+.images {
+    border: none;
+}
+
+/*************************** panel ***********************************/   
+.ui-panel-titlebar {
+    background: #585858;
+    color: #FFFFFF; 
+}
+
+
+
+
+.centerpanel {
+    width: 715px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    background: #d8d8d8;
+}
+
+panel header {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+
+
+.uploadsummaryimagepanel {
+    width: 705px;
+    font-size: 16px; 
+    font-weight: bold;
+    background: #000000;
+    color: #FFFFFF; 
+}
+
+.uploadsummaryheader {
+    background: url('../resources/images/SMTPtrap_colreduc_new.jpg') no-repeat center;
+    width: 700px;
+    height: 100px;
+    float: left ;
+}
+
+
+
+.inactivebutton {
+    background: white url('../resources/images/inactive_arrow.jpg') no-repeat center;
+    width: 37px;
+    height: 35px;
+    padding: 5px;
+    border: none; 
+}
+
+.activebutton {
+    background: white url('../resources/images/active_arrow.png') no-repeat center;
+    width: 28px;
+    height: 28px;
+    padding: 5px;
+    border: none; 
+    cursor: pointer;
+}
+
+.samplelistpanel {
+    width: 100%;
+    float: left;
+    margin-top: -10px;
+    vertical-align: top;
+}
+
+.createlistpanel {
+    width: 30%;
+    float: right;
+}
+
+.cancellistpanel {
+    width: 30%;
+    float: left;
+} 
+
+
+.samplelistdiv {
+    width: 100%;
+    float: left; 
+}
+
+
+.samplelisteditdiv {
+    width: 100%;
+    float: left; 
+    display: none;
+}
+
+.newrecorddivvisible {
+    width: 100%;
+    float: left;
+    display: inline;
+}
+
+.newrecorddivinvisible {
+    width: 100%;
+    float: left;
+    display: none;
+}
+
+.dialogboxvisible {
+    width: 100%;
+    float: left;
+    display: inline;
+} 
+
+.dialogboxinvisible {
+    width: 100%;
+    float: left;
+    display: none;
+}
+
+.dialogboxeditvisible {
+    width: 100%;
+    float: left;
+    display: inline;
+}
+
+.dialogboxeditinvisible {
+    width: 100%;
+    float: left;
+    display: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/************************** button **********************************/
+
+
+
+.okbuttondiv{
+    width: 97%;
+    float: right;
+    margin: 10px 20px 5px 0;
+    text-align: right;
+    display: none;
+}
+
+.rightbuttondiv {
+    width: 97%;
+    float: right;
+    margin: 10px 20px 5px 0;
+    text-align: right;
+}
+
+
+.buttondiv {
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+    background: transparent;
+}
+
+
+.buttonstylesmall {
+    width: 80px;
+    font-weight: bold; 
+    font-size: 12px;
+    cursor: pointer; 
+}
+
+.cebutton {
+    background: white url('../resources/images/collecting_event.png') no-repeat center;
+    width: 32px;
+    height: 32px;
+    padding: 5px;
+    border: none; 
+    cursor: pointer;
+}
+
+
+.ctbutton {
+    background: white url('../resources/images/collection_trip.png') no-repeat center;
+    width: 32px;
+    height: 32px;
+    padding: 5px;
+    border: none; 
+    cursor: pointer;
+}
+
+.taxonbutton {
+    background: white url('../resources/images/taxon.png') no-repeat center;
+    width: 32px;
+    height: 32px;
+    padding: 5px;
+    border: none; 
+    cursor: pointer;
+}
+
+.addbutton {
+    background: white url('../resources/images/add.png') no-repeat center;
+    width: 16px;
+    height: 16px;
+    padding: 5px;
+    border: none; 
+    float: left;
+    cursor: pointer;
+}
+
+.removebutton {
+    background: white url('../resources/images/delete.png') no-repeat center;
+    width: 16px;
+    height: 16px;
+    padding: 5px;
+    border: none; 
+    float: left;
+    cursor: pointer;
+}
+
+.editbutton {
+    background: white url('../resources/images/edit_icon.gif') no-repeat center;
+    width: 16px;
+    height: 16px;
+    padding: 0 40px 0 40px;
+    border: none; 
+    float: left;
+    cursor: pointer;
+}
+
+.checkbutton {
+    background: white url('../resources/images/Checkmark16x16.png') no-repeat center;
+    width: 16px;
+    height: 16px;
+    padding: 0 40px 0 40px;
+    border: none; 
+    float: left;
+    cursor: pointer;
+}
+
+.addnewrecordbutton {
+    background: white url('../resources/images/AddNewRecord16x16.png') no-repeat center;
+    width: 16px;
+    height: 16px;
+    padding: 0 40px 0 40px;
+    border: none; 
+    float: left;
+    cursor: pointer;
+}
+
+.nextbutton {
+    background: white url('../resources/images/green_arrow_next.gif') no-repeat center;
+    width: 16px;
+    height: 16px;
+    padding: 5px;
+    border: none; 
+    float: right;
+    cursor: pointer;
+}
+
+.backbutton {
+    background: white url('../resources/images/red_arrow_back.gif') no-repeat center;
+    width: 16px;
+    height: 16px;
+    padding: 5px;
+    border: none; 
+    float: left;
+    cursor: pointer;
+}
+
+.startpagebutton {
+    background: white url('../resources/images/green_arrow_right.gif') no-repeat center;
+    width: 16px;
+    height: 16px;
+    padding: 5px;
+    border: none; 
+    float: right;
+    cursor: pointer; 
+}
+
+
+
+
+/************************************************************* messages *************************************************/
+.errormsg {
+    color: #FF0000;
+    padding-left: 20px;
+}
+
+
+.errormsgsamplelist {
+    float: right;
+    color: #FF0000; 
+}
+
+
+
+
+
+/*
+
+
+
+
+
+
+
+
+
+
+
+
+.formlbl {
+    font-weight: bold; 
+    font-size: 10px;
+    padding-top: 5px;
+}
+
+
+.uploadfilediv {
+    width: 100%; 
+    float: left;
+}
+
+
+.resultdiv {
+    width: 90%; 
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 20px;
+}
+
+
+.buttondivright { 
+    width: 170px;
+    float: right; 
+    padding: 10px 20px 0 0;
+}
+
+.buttonstyle {
+    width: 80px;
+    font-weight: bold; 
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.buttonstylelarge {
+    width: 200px;
+    font-weight: bold; 
+    font-size: 12px;
+    cursor: pointer;
+}*/

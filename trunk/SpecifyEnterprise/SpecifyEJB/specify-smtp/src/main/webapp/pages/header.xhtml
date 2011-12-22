@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:h="http://java.sun.com/jsf/html">
+    <body>
+        <ui:composition>  
+            <div class="fulldiv"> 
+                <div class="dinalogo">
+                    <h:outputLink value="#{msg.dinaurl}"  target="_blank" > 
+                        <h:graphicImage library="images" name="dina_logo.gif" alt="dina-project" styleClass="images" />
+                    </h:outputLink>
+                </div>
+
+                <div class="headertext">#{msg.headername}</div>  
+                
+                <div class="specifylogo" >
+                    <h:outputLink value="#{msg.specifyurl}"  target="_blank" > 
+                        <h:graphicImage library="images" name="specify60.png" alt="specify" styleClass="images" />
+                    </h:outputLink>
+                </div>
+            </div> 
+            <div class="pagediv" ></div>   
+        </ui:composition>
+    </body>
+</html>

@@ -1,0 +1,125 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!-- =========== FULL CONFIGURATION FILE ================================== -->
+
+<faces-config version="2.0"
+              xmlns="http://java.sun.com/xml/ns/javaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
+ 
+ 
+    <managed-bean>
+        <managed-bean-name>smtpBean</managed-bean-name>
+        <managed-bean-class>se.nrm.specify.smtp.controller.SmtpController</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope> 
+        
+        <managed-property>
+            <property-name>eventBean</property-name>
+            <value>#{eventBean}</value>
+        </managed-property>
+        <managed-property>
+            <property-name>styleBean</property-name>
+            <value>#{styleBean}</value>
+        </managed-property>
+        <managed-property>
+            <property-name>sampleGroupBean</property-name>
+            <value>#{sampleGroupBean}</value>
+        </managed-property>
+        <managed-property>
+            <property-name>sampleBean</property-name>
+            <value>#{sampleBean}</value>
+        </managed-property>
+        <managed-property>
+            <property-name>statisticsBean</property-name>
+            <value>#{statisticsBean}</value>
+        </managed-property>
+    </managed-bean>
+    
+    
+    <managed-bean>
+        <managed-bean-name>eventBean</managed-bean-name>
+        <managed-bean-class>se.nrm.specify.smtp.beans.CollectingEventBean</managed-bean-class>
+        <managed-bean-scope>none</managed-bean-scope>
+    </managed-bean>
+    
+    <managed-bean>
+        <managed-bean-name>styleBean</managed-bean-name>
+        <managed-bean-class>se.nrm.specify.smtp.beans.StyleBean</managed-bean-class>
+        <managed-bean-scope>none</managed-bean-scope>
+    </managed-bean>
+ 
+    <managed-bean>
+        <managed-bean-name>sampleBean</managed-bean-name>
+        <managed-bean-class>se.nrm.specify.smtp.beans.SampleBean</managed-bean-class>
+        <managed-bean-scope>none</managed-bean-scope>
+    </managed-bean>
+    
+    <managed-bean>
+        <managed-bean-name>sampleGroupBean</managed-bean-name>
+        <managed-bean-class>se.nrm.specify.smtp.beans.SampleGroupBean</managed-bean-class>
+        <managed-bean-scope>none</managed-bean-scope>
+    </managed-bean>
+    
+    <managed-bean>
+        <managed-bean-name>statisticsBean</managed-bean-name>
+        <managed-bean-class>se.nrm.specify.smtp.beans.StatisticsBean</managed-bean-class>
+        <managed-bean-scope>none</managed-bean-scope>
+    </managed-bean>
+    
+    <navigation-rule> 
+        <from-view-id>/start.xhtml</from-view-id>
+        <navigation-case> 
+            <from-action>#{smtpBean.selectSMTPCollection}</from-action>
+            <from-outcome>success</from-outcome>
+            <to-view-id>/views/inventoryview.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule> 
+    
+    <navigation-rule> 
+        <from-view-id>/views/samplelistview.xhtml</from-view-id>
+        <navigation-case> 
+            <from-action>#{smtpBean.createlist}</from-action>
+            <from-outcome>success</from-outcome>
+            <to-view-id>/views/sampleeditview.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule> 
+    
+    <navigation-rule> 
+        <from-view-id>/views/uploadingview.xhtml</from-view-id>
+        <navigation-case> 
+            <from-action>#{smtpBean.upload}</from-action>
+            <from-outcome>success</from-outcome>
+            <to-view-id>/views/uploadsummaryview.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+      
+    <navigation-rule> 
+        <from-view-id>/views/uploadingview.xhtml</from-view-id>
+        <navigation-case> 
+            <from-action>#{smtpBean.editlist}</from-action>
+            <from-outcome>success</from-outcome>
+            <to-view-id>/views/sampleeditview.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <application>
+        <locale-config>
+            <default-locale>en</default-locale>
+            <supported-locale>sv</supported-locale> 
+        </locale-config>
+        <resource-bundle>
+            <base-name>Messages</base-name>
+            <var>msg</var>
+        </resource-bundle>
+    </application>
+    
+    <validator>
+        <validator-id>sampleNumberValidator</validator-id>
+        <validator-class>se.nrm.specify.smtp.validation.SampleNumberValidator</validator-class>
+    </validator>
+</faces-config>
+
+
+
+
+

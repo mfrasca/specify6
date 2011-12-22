@@ -1,0 +1,489 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:h="http://java.sun.com/jsf/html" 
+      xmlns:p="http://primefaces.prime.com.tr/ui" 
+      xmlns:f="http://java.sun.com/jsf/core"  >
+    <f:view> 
+        <body>
+            <ui:composition> 
+                <h:form id="inventoryform">
+                    <div class="contentdiv" id="contentdiv">
+
+                        <!-- ##########################  inventory record group  ########################## -->
+                        <div class="inventoryrecordgroup" id="inventorygroupdiv">
+                            <h:panelGrid columns="1" cellpadding="10" id="inventoryrecordpanel">   
+                                <h:outputText styleClass="labeltext" value="#{msg.inventoryrecords}" />  
+                            </h:panelGrid>   
+                             
+                            <h:messages styleClass="errormsg"  />
+                            <!-- ##########################  tab1  ########################## -->
+                            <p:accordionPanel multiple="false" styleClass="accordingpanel" activeIndex="-1" id="invgroupaccpanel">  
+                                <p:tab title="#{msg.rawtrap}" id="inventoryRecordTab1">  
+                                    <h:panelGrid columns="4" >    
+                                        <h:column />
+                                        <h:column /> 
+                                        <h:outputLabel value="#{msg.eventnumber}" /> 
+                                        <h:column /> 
+
+                                        <h:outputLabel value="#{msg.openform}" />  
+                                        <h:commandButton action="#{smtpBean.openform(1)}" 
+                                                         title="#{msg.openform}" 
+                                                         styleClass="#{smtpBean.styleBean.openFormButton1}"
+                                                         disabled="#{smtpBean.styleBean.disabled1}" />
+                                        <h:inputText  size="50" value="#{smtpBean.eventBean.eventNum1}" id="eventid1" />  
+                                        <h:commandButton action="#{smtpBean.getevent(1)}" styleClass="cebutton"  /> 
+                                    </h:panelGrid>  
+
+                                    <!-- ##########################  search event 1 result  ########################## --> 
+                                    <div id="event1resultdiv1" class="#{smtpBean.styleBean.div1visibility}">
+                                        <h:panelGrid columns="3" > 
+                                            <h:outputText value="#{smtpBean.eventBean.event1.localityID.localityName}" styleClass="paddingrightdiv"  />  
+                                            <h:outputText value="#{smtpBean.eventBean.event1.localityID.lat1Text}" styleClass="paddingrightdiv" />  
+                                            <h:outputText value="#{smtpBean.eventBean.event1.localityID.long1Text}" /> 
+                                        </h:panelGrid> 
+                                        
+                                        <h:panelGrid columns="6" > 
+                                            <h:outputText value="#{msg.collectingevent}"  /> 
+                                            <h:outputText value="#{smtpBean.eventBean.eventNum1}" styleClass="paddingrightdiv" /> 
+                                            <h:outputText value="#{msg.startdate}" /> 
+                                            <h:outputText value="#{smtpBean.eventBean.event1.startDate}" styleClass="paddingrightdiv" >
+                                                <f:convertDateTime pattern="yyyy-MM-dd" />
+                                            </h:outputText>
+                                            <h:outputText value="#{msg.enddate}" /> 
+                                            <h:outputText value="#{smtpBean.eventBean.event1.endDate}">
+                                                <f:convertDateTime pattern="yyyy-MM-dd" />
+                                            </h:outputText> 
+                                        </h:panelGrid>
+ 
+                                        <br />
+                                        <br />
+                                    </div> 
+                                </p:tab>  
+
+                                <!-- ##########################  tab2  ########################## -->
+                                <p:tab title="#{msg.brachycera}" id="inventoryRecordTab2">  
+                                    <h:panelGrid columns="4" >    
+                                        <h:column />
+                                        <h:column /> 
+                                        <h:outputLabel value="#{msg.eventnumber}" /> 
+                                        <h:column /> 
+
+                                        <h:outputLabel value="#{msg.openform}" />  
+                                        <h:commandButton action="#{smtpBean.openform(2)}" 
+                                                         title="#{msg.openform}" 
+                                                         styleClass="#{smtpBean.styleBean.openFormButton2}" 
+                                                         disabled="#{smtpBean.styleBean.disabled2}" />
+                                        <h:inputText  size="50" value="#{smtpBean.eventBean.eventNum2}" id="eventid2" />  
+                                        <h:commandButton action="#{smtpBean.getevent(2)}" styleClass="cebutton"  /> 
+                                    </h:panelGrid> 
+                                    
+                                    <!-- ##########################  search event 2 result  ########################## --> 
+                                    <div id="event1resultdiv2" class="#{smtpBean.styleBean.div2visibility}">
+                                        <h:panelGrid columns="3" > 
+                                            <h:outputText value="#{smtpBean.eventBean.event2.localityID.localityName}" styleClass="paddingrightdiv" />  
+                                            <h:outputText value="#{smtpBean.eventBean.event2.localityID.lat1Text}" styleClass="paddingrightdiv" />  
+                                            <h:outputText value="#{smtpBean.eventBean.event2.localityID.long1Text}" /> 
+                                        </h:panelGrid> 
+                                        
+                                        <h:panelGrid columns="6" > 
+                                            <h:outputText value="#{msg.collectingevent}"  /> 
+                                            <h:outputText value="#{smtpBean.eventBean.eventNum2}" styleClass="paddingrightdiv" /> 
+                                            <h:outputText value="#{msg.startdate}" /> 
+                                            <h:outputText value="#{smtpBean.eventBean.event2.startDate}" styleClass="paddingrightdiv" >
+                                                <f:convertDateTime pattern="yyyy-MM-dd" />
+                                            </h:outputText>
+                                            <h:outputText value="#{msg.enddate}" /> 
+                                            <h:outputText value="#{smtpBean.eventBean.event2.endDate}">
+                                                <f:convertDateTime pattern="yyyy-MM-dd" />
+                                            </h:outputText> 
+                                        </h:panelGrid>
+ 
+                                        <br />
+                                        <br />
+                                    </div>
+                                </p:tab>  
+
+                                <!-- ##########################  tab3  ########################## -->
+                                <p:tab title="#{msg.nematocera}" id="inventoryRecordTab3">  
+                                    <h:panelGrid columns="4" >    
+                                        <h:column />
+                                        <h:column /> 
+                                        <h:outputLabel value="#{msg.eventnumber}" /> 
+                                        <h:column /> 
+
+                                        <h:outputLabel value="#{msg.openform}" />  
+                                        <h:commandButton action="#{smtpBean.openform(3)}" 
+                                                         title="#{msg.openform}" 
+                                                         styleClass="#{smtpBean.styleBean.openFormButton3}" 
+                                                         disabled="#{smtpBean.styleBean.disabled3}" />
+                                        <h:inputText  size="50" value="#{smtpBean.eventBean.eventNum3}" id="eventid3" />  
+                                        <h:commandButton action="#{smtpBean.getevent(3)}" styleClass="cebutton"  /> 
+                                    </h:panelGrid> 
+                                    
+                                    <!-- ##########################  search event 3 result  ########################## -->
+                                    <div id="event1resultdiv3" class="#{smtpBean.styleBean.div3visibility}">
+                                        <h:panelGrid columns="3" > 
+                                            <h:outputText value="#{smtpBean.eventBean.event3.localityID.localityName}" styleClass="paddingrightdiv" />  
+                                            <h:outputText value="#{smtpBean.eventBean.event3.localityID.lat1Text}" styleClass="paddingrightdiv" />  
+                                            <h:outputText value="#{smtpBean.eventBean.event3.localityID.long1Text}" /> 
+                                        </h:panelGrid>
+                                        
+                                        <h:panelGrid columns="6" > 
+                                            <h:outputText value="#{msg.collectingevent}"  /> 
+                                            <h:outputText value="#{smtpBean.eventBean.eventNum3}" styleClass="paddingrightdiv" /> 
+                                            <h:outputText value="#{msg.startdate}" /> 
+                                            <h:outputText value="#{smtpBean.eventBean.event3.startDate}" styleClass="paddingrightdiv" >
+                                                <f:convertDateTime pattern="yyyy-MM-dd" />
+                                            </h:outputText>
+                                            <h:outputText value="#{msg.enddate}" /> 
+                                            <h:outputText value="#{smtpBean.eventBean.event3.endDate}">
+                                                <f:convertDateTime pattern="yyyy-MM-dd" />
+                                            </h:outputText>  
+                                        </h:panelGrid> 
+                                        
+                                        <br />
+                                        <br />
+                                    </div> 
+                                </p:tab>  
+
+                                <!-- ##########################  tab4  ########################## -->
+                                <p:tab title="#{msg.hymenoptera}" id="inventoryRecordTab4">  
+                                    <h:panelGrid columns="4" >    
+                                        <h:column />
+                                        <h:column /> 
+                                        <h:outputLabel value="#{msg.eventnumber}" /> 
+                                        <h:column /> 
+
+                                        <h:outputLabel value="#{msg.openform}" />  
+                                        <h:commandButton action="#{smtpBean.openform(4)}" 
+                                                         title="#{msg.openform}" 
+                                                         styleClass="#{smtpBean.styleBean.openFormButton4}"
+                                                         disabled="#{smtpBean.styleBean.disabled4}" />
+                                        <h:inputText  size="50" value="#{smtpBean.eventBean.eventNum4}" id="eventid4" />  
+                                        <h:commandButton action="#{smtpBean.getevent(4)}" styleClass="cebutton"  /> 
+                                    </h:panelGrid>   
+                                    
+                                    <!-- ##########################  search event 4 result  ########################## -->
+                                    <div id="event1resultdiv4" class="#{smtpBean.styleBean.div4visibility}">
+                                        <h:panelGrid columns="3" > 
+                                            <h:outputText value="#{smtpBean.eventBean.event4.localityID.localityName}" styleClass="paddingrightdiv" />  
+                                            <h:outputText value="#{smtpBean.eventBean.event4.localityID.lat1Text}" styleClass="paddingrightdiv" />  
+                                            <h:outputText value="#{smtpBean.eventBean.event4.localityID.long1Text}" /> 
+                                        </h:panelGrid>
+                                        
+                                        <h:panelGrid columns="6" > 
+                                            <h:outputText value="#{msg.collectingevent}"  /> 
+                                            <h:outputText value="#{smtpBean.eventBean.eventNum4}" styleClass="paddingrightdiv" /> 
+                                            <h:outputText value="#{msg.startdate}" /> 
+                                            <h:outputText value="#{smtpBean.eventBean.event4.startDate}" styleClass="paddingrightdiv" >
+                                                <f:convertDateTime pattern="yyyy-MM-dd" />
+                                            </h:outputText>
+                                            <h:outputText value="#{msg.enddate}" /> 
+                                            <h:outputText value="#{smtpBean.eventBean.event4.endDate}">
+                                                <f:convertDateTime pattern="yyyy-MM-dd" />
+                                            </h:outputText> 
+                                        </h:panelGrid> 
+                                        
+                                        <br />
+                                        <br />
+                                    </div>
+                                </p:tab>   
+
+                                <!-- ##########################  tab5  ########################## -->
+                                <p:tab title="#{msg.braconidae}" id="inventoryRecordTab5">  
+                                    <h:panelGrid columns="4" >    
+                                        <h:column />
+                                        <h:column /> 
+                                        <h:outputLabel value="#{msg.eventnumber}" /> 
+                                        <h:column /> 
+
+                                        <h:outputLabel value="#{msg.openform}" />  
+                                        <h:commandButton action="#{smtpBean.openform(5)}" 
+                                                         title="#{msg.openform}" 
+                                                         styleClass="#{smtpBean.styleBean.openFormButton5}" 
+                                                         disabled="#{smtpBean.styleBean.disabled5}" />
+                                        <h:inputText  size="50" value="#{smtpBean.eventBean.eventNum5}" id="eventid5" />  
+                                        <h:commandButton action="#{smtpBean.getevent(5)}" styleClass="cebutton"  /> 
+                                    </h:panelGrid>  
+                                    
+                                    <!-- ##########################  search event 5 result  ########################## -->
+                                    <div id="event1resultdiv5" class="#{smtpBean.styleBean.div5visibility}">
+                                        <h:panelGrid columns="3" > 
+                                            <h:outputText value="#{smtpBean.eventBean.event5.localityID.localityName}" styleClass="paddingrightdiv"  />  
+                                            <h:outputText value="#{smtpBean.eventBean.event5.localityID.lat1Text}" styleClass="paddingrightdiv" />  
+                                            <h:outputText value="#{smtpBean.eventBean.event5.localityID.long1Text}" /> 
+                                        </h:panelGrid>
+                                        
+                                        <h:panelGrid columns="6" > 
+                                            <h:outputText value="#{msg.collectingevent}"  /> 
+                                            <h:outputText value="#{smtpBean.eventBean.eventNum5}" styleClass="paddingrightdiv" /> 
+                                            <h:outputText value="#{msg.startdate}" /> 
+                                            <h:outputText value="#{smtpBean.eventBean.event5.startDate}" styleClass="paddingrightdiv" >
+                                                <f:convertDateTime pattern="yyyy-MM-dd" />
+                                            </h:outputText>
+                                            <h:outputText value="#{msg.enddate}" /> 
+                                            <h:outputText value="#{smtpBean.eventBean.event5.endDate}">
+                                                <f:convertDateTime pattern="yyyy-MM-dd" />
+                                            </h:outputText> 
+                                        </h:panelGrid>
+ 
+                                        <br />
+                                        <br />
+                                    </div>
+                                </p:tab>  
+
+                                <!-- ##########################  tab6  ########################## -->
+                                <p:tab title="#{msg.ichneumonidea}" id="inventoryRecordTab6">  
+                                    <h:panelGrid columns="4" >    
+                                        <h:column />
+                                        <h:column /> 
+                                        <h:outputLabel value="#{msg.eventnumber}" /> 
+                                        <h:column /> 
+
+                                        <h:outputLabel value="#{msg.openform}" />  
+                                        <h:commandButton action="#{smtpBean.openform(6)}" 
+                                                         title="#{msg.openform}" 
+                                                         styleClass="#{smtpBean.styleBean.openFormButton6}" 
+                                                         disabled="#{smtpBean.styleBean.disabled6}" />
+                                        <h:inputText  size="50" value="#{smtpBean.eventBean.eventNum6}" id="eventid6" />  
+                                        <h:commandButton action="#{smtpBean.getevent(6)}" styleClass="cebutton"  /> 
+                                    </h:panelGrid> 
+                                    
+                                    <!-- ##########################  search event 6 result  ########################## -->
+                                    <div id="event1resultdiv6" class="#{smtpBean.styleBean.div6visibility}">
+                                        <h:panelGrid columns="3" > 
+                                            <h:outputText value="#{smtpBean.eventBean.event6.localityID.localityName}" styleClass="paddingrightdiv" />  
+                                            <h:outputText value="#{smtpBean.eventBean.event6.localityID.lat1Text}" styleClass="paddingrightdiv" />  
+                                            <h:outputText value="#{smtpBean.eventBean.event6.localityID.long1Text}" /> 
+                                        </h:panelGrid>
+                                        
+                                        <h:panelGrid columns="6" > 
+                                            <h:outputText value="#{msg.collectingevent}"  /> 
+                                            <h:outputText value="#{smtpBean.eventBean.eventNum6}" styleClass="paddingrightdiv" /> 
+                                            <h:outputText value="#{msg.startdate}" /> 
+                                            <h:outputText value="#{smtpBean.eventBean.event6.startDate}" styleClass="paddingrightdiv" >
+                                                <f:convertDateTime pattern="yyyy-MM-dd" />
+                                            </h:outputText>
+                                            <h:outputText value="#{msg.enddate}" /> 
+                                            <h:outputText value="#{smtpBean.eventBean.event6.endDate}">
+                                                <f:convertDateTime pattern="yyyy-MM-dd" />
+                                            </h:outputText> 
+                                        </h:panelGrid>
+ 
+                                        <br />
+                                        <br />
+                                    </div>
+                                </p:tab> 
+
+                                <!-- ##########################  tab7  ########################## -->
+                                <p:tab title="#{msg.chalcidoidea}" id="inventoryRecordTab7">  
+                                    <h:panelGrid columns="4" >    
+                                        <h:column />
+                                        <h:column /> 
+                                        <h:outputLabel value="#{msg.eventnumber}" /> 
+                                        <h:column /> 
+
+                                        <h:outputLabel value="#{msg.openform}" />  
+                                        <h:commandButton action="#{smtpBean.openform(7)}" 
+                                                         title="#{msg.openform}"
+                                                         styleClass="#{smtpBean.styleBean.openFormButton7}"
+                                                         disabled="#{smtpBean.styleBean.disabled7}" />
+                                        <h:inputText  size="50" value="#{smtpBean.eventBean.eventNum7}" id="eventid7" />  
+                                        <h:commandButton action="#{smtpBean.getevent(7)}" styleClass="cebutton"  /> 
+                                    </h:panelGrid>  
+                                    
+                                    <!-- ##########################  search event 7 result  ########################## -->
+                                    <div id="event1resultdiv7" class="#{smtpBean.styleBean.div7visibility}">
+                                        <h:panelGrid columns="3" > 
+                                            <h:outputText value="#{smtpBean.eventBean.event7.localityID.localityName}" styleClass="paddingrightdiv" />  
+                                            <h:outputText value="#{smtpBean.eventBean.event7.localityID.lat1Text}" styleClass="paddingrightdiv" />  
+                                            <h:outputText value="#{smtpBean.eventBean.event7.localityID.long1Text}" /> 
+                                        </h:panelGrid>
+                                        
+                                        <h:panelGrid columns="6" > 
+                                            <h:outputText value="#{msg.collectingevent}"  /> 
+                                            <h:outputText value="#{smtpBean.eventBean.eventNum7}" styleClass="paddingrightdiv" /> 
+                                            <h:outputText value="#{msg.startdate}" /> 
+                                            <h:outputText value="#{smtpBean.eventBean.event7.startDate}" styleClass="paddingrightdiv" >
+                                                <f:convertDateTime pattern="yyyy-MM-dd" />
+                                            </h:outputText>
+                                            <h:outputText value="#{msg.enddate}" /> 
+                                            <h:outputText value="#{smtpBean.eventBean.event7.endDate}">
+                                                <f:convertDateTime pattern="yyyy-MM-dd" />
+                                            </h:outputText> 
+                                        </h:panelGrid>
+ 
+                                        <br />
+                                        <br />
+                                    </div>
+                                    
+                                </p:tab> 
+                            </p:accordionPanel>   
+                        </div>
+  
+                        
+                        <br />  
+                        <br />
+                        <br />
+                        <br />
+                        
+
+                        <!-- ##########################  inventory record statistic  ########################## -->
+                        <div class="inventorystatistics">
+                            <h:panelGrid columns="2" cellpadding="10">   
+                                <h:outputText styleClass="labeltext" value="#{msg.statistics}" />  
+                            </h:panelGrid>  
+
+                            <p:accordionPanel multiple="false" styleClass="accordingpanel" activeIndex="-1" id="invstaticaccpanel" > 
+                                <!-- ##########################  tab1  ########################## -->
+                                <p:tab title="#{msg.rawtrapsample}" id="statisticsTab1">   
+                                    <h:panelGrid columns="4" >    
+                                        <h:column />
+                                        <h:column /> 
+                                        <h:outputLabel value="#{msg.eventnumber}" /> 
+                                        <h:column /> 
+
+                                        <h:outputLabel value="#{msg.openform}" />  
+                                        <h:commandButton action="#{smtpBean.openstatisticsform}" 
+                                                         title="#{msg.openform}" 
+                                                         styleClass="#{smtpBean.styleBean.openFormButton8}"
+                                                         disabled="#{smtpBean.styleBean.disabled8}" />
+                                        <h:inputText  size="50" value="#{smtpBean.eventBean.eventNum8}" id="eventId8" />  
+                                        <h:commandButton action="#{smtpBean.getevent(8)}" styleClass="cebutton"  /> 
+                                    </h:panelGrid>  
+
+                                    <!-- ##########################  search event 8 result  ########################## -->
+                                    <div id="event1resultdiv8" class="#{smtpBean.styleBean.div8visibility}">
+                                        <h:panelGrid columns="3" > 
+                                            <h:outputText value="#{smtpBean.eventBean.event8.localityID.localityName}" styleClass="paddingrightdiv" />  
+                                            <h:outputText value="#{smtpBean.eventBean.event8.localityID.lat1Text}" styleClass="paddingrightdiv" />  
+                                            <h:outputText value="#{smtpBean.eventBean.event8.localityID.long1Text}" /> 
+                                        </h:panelGrid>
+                                        
+                                        <h:panelGrid columns="6" > 
+                                            <h:outputText value="#{msg.collectingevent}"  /> 
+                                            <h:outputText value="#{smtpBean.eventBean.eventNum8}" styleClass="paddingrightdiv" /> 
+                                            <h:outputText value="#{msg.startdate}" /> 
+                                            <h:outputText value="#{smtpBean.eventBean.event8.startDate}" styleClass="paddingrightdiv" >
+                                                <f:convertDateTime pattern="yyyy-MM-dd" />
+                                            </h:outputText>
+                                            <h:outputText value="#{msg.enddate}" /> 
+                                            <h:outputText value="#{smtpBean.eventBean.event8.endDate}">
+                                                <f:convertDateTime pattern="yyyy-MM-dd" />
+                                            </h:outputText> 
+                                        </h:panelGrid>
+ 
+                                        <br />
+                                        <br />
+                                    </div>
+                                </p:tab>   
+
+                                <!-- ##########################  tab2  ########################## -->
+                                <p:tab title="#{msg.traps}" id="statisticsdTab2">  
+                                    <h:panelGrid columns="4" >    
+                                        <h:column />
+                                        <h:column /> 
+                                        <h:outputLabel value="#{msg.trapidnumber}" /> 
+                                        <h:column /> 
+
+                                        <h:outputLabel value="#{msg.openform}" />  
+                                        <h:commandButton action="#{smtpBean.openstatisticstripform}" 
+                                                         title="#{msg.openform}" 
+                                                         styleClass="#{smtpBean.styleBean.openFormButton9}"
+                                                         disabled="#{smtpBean.styleBean.disabled9}" />
+                                        <h:inputText  size="50" value="#{smtpBean.eventBean.eventNum9}" id="eventId9" />  
+                                        <h:commandButton action="#{smtpBean.gettrap()}" styleClass="ctbutton"  /> 
+                                    </h:panelGrid>  
+
+                                    <!-- ##########################  search event 9 result  ########################## -->
+                                    <div id="event1resultdiv9" class="#{smtpBean.styleBean.div9visibility}">
+                                        <h:panelGrid columns="3" > 
+                                            <h:outputText value="#{smtpBean.eventBean.event9.localityID.localityName}" styleClass="paddingrightdiv" />  
+                                            <h:outputText value="#{smtpBean.eventBean.event9.localityID.lat1Text}" styleClass="paddingrightdiv" />  
+                                            <h:outputText value="#{smtpBean.eventBean.event9.localityID.long1Text}" /> 
+                                        </h:panelGrid>  
+ 
+                                        <br />
+                                        <br />
+                                    </div>
+                                </p:tab>  
+
+                                <!-- ##########################  tab3  ########################## -->
+                                <p:tab title="#{msg.taxonomicgroups}" id="statisticsdTab3" >  
+                                    <h:panelGrid columns="4" >    
+                                        <h:column />
+                                        <h:column /> 
+                                        <h:outputLabel value="#{msg.taxonname}" /> 
+                                        <h:column /> 
+
+                                        <h:outputLabel value="#{msg.openform}" />  
+                                        <h:commandButton action="#{smtpBean.openstatisticstaxonform}" 
+                                                         title="#{msg.openform}" 
+                                                         styleClass="#{smtpBean.styleBean.openFormButton10}"
+                                                         disabled="#{smtpBean.styleBean.disabled10}" /> 
+                                        
+                                        <p:autoComplete id="acSimple" value="#{smtpBean.eventBean.eventNum10}" size="50"
+                                                                minQueryLength="3" forceSelection="true" 
+                                                                completeMethod="#{smtpBean.complete}"/>  
+                                        <h:commandButton action="#{smtpBean.gettaxon()}" styleClass="taxonbutton"  /> 
+                                    </h:panelGrid>  
+
+                                    <!-- ##########################  search event 10 result  ########################## -->
+                                    <div id="event1resultdiv10" class="#{smtpBean.styleBean.div10visibility}">
+                                        <h:panelGrid columns="1" > 
+                                            <h:outputText value="#{smtpBean.statisticsBean.taxontree}" styleClass="paddingrightdiv"  />   
+                                        </h:panelGrid> 
+ 
+                                        <br />
+                                        <br />
+                                    </div>
+                                </p:tab>   
+
+                                <!-- ##########################  tab4  ########################## -->
+                                <p:tab title="#{msg.progress}" id="statisticsdTab4">  
+                                    <h:panelGrid columns="3" >     
+                                        <h:outputLabel value="#{msg.openform}"  styleClass="with20" />  
+                                        <h:commandButton action="#{smtpBean.openstatisticsprogressform}" 
+                                                         title="#{msg.openform}" 
+                                                         styleClass="#{smtpBean.styleBean.openFormButton11}"
+                                                         disabled="#{smtpBean.styleBean.disabled11}" />
+                                        <h:graphicImage library="images" name="SMTPKajsa_burk_small.jpg" /> 
+                                    </h:panelGrid>  
+
+                                    <!-- ##########################  search event 11 result  ########################## -->
+                                    <div id="event1resultdiv11" class="#{smtpBean.styleBean.div11visibility}">
+                                        <h:panelGrid columns="3" > 
+                                            <h:outputText value="#{smtpBean.eventBean.event11.localityID.localityName}" styleClass="paddingrightdiv" />  
+                                            <h:outputText value="#{smtpBean.eventBean.event11.localityID.lat1Text}" styleClass="paddingrightdiv" />  
+                                            <h:outputText value="#{smtpBean.eventBean.event11.localityID.long1Text}" /> 
+                                        </h:panelGrid>
+                                        
+                                        <h:panelGrid columns="6" > 
+                                            <h:outputText value="#{msg.collectingevent}"  /> 
+                                            <h:outputText value="#{smtpBean.eventBean.eventNum11}" styleClass="paddingrightdiv" /> 
+                                            <h:outputText value="#{msg.startdate}" /> 
+                                            <h:outputText value="#{smtpBean.eventBean.event11.startDate}" styleClass="paddingrightdiv" >
+                                                <f:convertDateTime pattern="yyyy-MM-dd" />
+                                            </h:outputText>
+                                            <h:outputText value="#{msg.enddate}" /> 
+                                            <h:outputText value="#{smtpBean.eventBean.event11.endDate}">
+                                                <f:convertDateTime pattern="yyyy-MM-dd" />
+                                            </h:outputText> 
+                                        </h:panelGrid>
+ 
+                                        <br />
+                                        <br />
+                                    </div>
+                                </p:tab>  
+                            </p:accordionPanel> 
+                        </div>  
+                    </div>
+                </h:form> 
+            </ui:composition>
+        </body>
+    </f:view>
+</html>
+
+
