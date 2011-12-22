@@ -1,8 +1,9 @@
 package se.nrm.specify.data.service;
 
 import com.google.gson.Gson;
-import com.sun.jersey.spi.resource.PerRequest; 
-import java.util.List; 
+import com.sun.jersey.spi.resource.PerRequest;
+import java.sql.Timestamp;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -16,10 +17,16 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.nrm.specify.business.logic.smtp.SMTPLogic;
+import se.nrm.specify.business.logic.specify.SpecifyLogic;
 import se.nrm.specify.datamodel.Accession;
 import se.nrm.specify.datamodel.Address;
+import se.nrm.specify.datamodel.Collectingevent;
+import se.nrm.specify.datamodel.DataWrapper;
+import se.nrm.specify.datamodel.Determination;
+import se.nrm.specify.datamodel.Locality;
 import se.nrm.specify.datamodel.SpecifyBean;
-import se.nrm.specify.specify.data.jpa.SpecifyDao;
+import se.nrm.specify.datamodel.Taxon;
 
 /**
  * REST Web Service
@@ -35,7 +42,9 @@ public class SpecyResource {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
     @Inject
-    SpecifyDao dao;
+    private SMTPLogic smtp;
+    @Inject
+    private SpecifyLogic specify;
 
     /** Creates a new instance of SpecyResource */
     public SpecyResource() {
@@ -55,7 +64,7 @@ public class SpecyResource {
 
         logger.info("getEntity - entity: {}, id: {}", entity, id);
 
-        return dao.getById(Integer.parseInt(id), getEntityClass(entity));
+        return specify.getDao().getById(Integer.parseInt(id), getEntityClass(entity));
     }
 
     /**
@@ -71,9 +80,9 @@ public class SpecyResource {
 
         logger.info("createEntity - entity: {}, json: {}", entity, json);
 
-        dao.createEntity(jsonToEntity(entity, json));
+        specify.getDao().createEntity(jsonToEntity(entity, json));
     }
-    
+
     /**
      * Create a specific entity
      * 
@@ -86,10 +95,9 @@ public class SpecyResource {
 
         logger.info("createEntity - entity: {}", address);
 
-        dao.createEntity(address);
+        specify.getDao().createEntity(address);
     }
 
-    
     /**
      * Generic method delete entity by entityid
      * 
@@ -102,9 +110,9 @@ public class SpecyResource {
 
         logger.info("delete entity - entity: {}, id: {}", entity, id);
 
-        SpecifyBean sBean = dao.getById(Integer.parseInt(id), getEntityClass(entity));
+        SpecifyBean sBean = specify.getDao().getById(Integer.parseInt(id), getEntityClass(entity));
         if (sBean != null) {
-            dao.deleteEntity(sBean);
+            specify.getDao().deleteEntity(sBean);
         }
     }
 
@@ -120,10 +128,10 @@ public class SpecyResource {
 
         logger.info("update entity: {}, json: {}", entity, json);
 
-        String result = dao.editEntity(jsonToEntity(entity, json));
+        String result = specify.getDao().editEntity(jsonToEntity(entity, json));
 
         logger.info("Edit entity result:  {}", result);
-        
+
         return result;
     }
 
@@ -134,7 +142,7 @@ public class SpecyResource {
     @GET
     @Path("search/all/accessions")
     public List<Accession> getAllAccessions() {
-        return dao.getAll(Accession.class);
+        return specify.getDao().getAll(Accession.class);
     }
 
     /**
@@ -143,12 +151,107 @@ public class SpecyResource {
      * @return 
      */
     @GET
-    @Path("search/collectingevent/{eventId}")
-    public SpecifyBean testGetCollectingEventByStationFieldNumber(@PathParam("eventId") String eventId) {
+    @Path("search/collectingevent/{stationFieldNumber}")
+    public SpecifyBean getCollectingEventByStationFieldNumber(@PathParam("stationFieldNumber") String stationFieldNumber) {
 
-        logger.info("getCollectingEventByEventId: {}", eventId);
+        logger.info("getCollectingEventByStationFieldNumber: {}", stationFieldNumber);
 
-        return dao.getCollectingEventByStationFieldNumber(eventId);
+        return specify.getDao().getCollectingEventByStationFieldNumber(stationFieldNumber);
+    }
+
+    /**
+     * Search for Taxon
+     * @return List<Taxon>
+     */
+    @GET
+    @Path("search/all/taxon")
+    public DataWrapper getAllTaxon() {
+
+        logger.info("getAllTaxon");
+
+        return new DataWrapper(specify.getDao().getAllTaxonName());
+    }
+
+    /**
+     * get taxon by taxonname
+     * @param taxonname
+     * @return Taxon
+     */
+    @GET
+    @Path("search/taxon/{taxonname}")
+    public Taxon getTaxonByTaxonname(@PathParam("taxonname") String taxonname) {
+
+        logger.info("getTaxonByTaxonname- taxonname: {}", taxonname);
+
+        return specify.getDao().getTaxonByTaxonName(taxonname);
+    }
+
+    /**
+     * Get list of determination by taxon name, stationfieldnumber and collection code
+     * @param taxonname
+     * @param eventId
+     * @param collection code
+     * @return 
+     */
+    @GET
+    @Path("search/determinations/{taxonname}/{eventid}/{collection}")
+    public List<Determination> getDeterminationsbyTaxonnameAndCollecdtingevent(@PathParam("taxonname") String taxonname, @PathParam("eventid") String eventId, @PathParam("collection") String collection) {
+
+        logger.info("getDeterminations");
+
+        return specify.getDao().getDeterminationsByTaxonNameAndCollectingevent(taxonname, new Collectingevent(Integer.parseInt(eventId)), collection);
+    }
+
+    @POST
+    @Path("upload")
+    public void uploadData(DataWrapper wrapper) {
+
+        logger.info("upload data - event: {}, number of sorted vials: {}", wrapper.getEvent(), wrapper.getNumSortedVials());
+
+        smtp.saveSMTPBatchData(wrapper);
+    }
+
+    @GET
+    @Path("search/determinationsbyevent/{eventid}/{code}")
+    public DataWrapper getDeterminationsByCollectingevent(@PathParam("eventid") String eventid, @PathParam("code") String collectionCode) {
+
+        logger.info("getDeterminationsByCollectingevent: {}, {}", eventid, collectionCode);
+        return specify.getDao().getDeterminationsByCollectingEvent(new Collectingevent(Integer.parseInt(eventid)), collectionCode);
+    }
+
+    @GET
+    @Path("search/collectingeventbylocality/{localityname}")
+    public List<Collectingevent> getCollectingeventByLocalityName(@PathParam("localityname") String localityName) {
+
+        logger.info("getCollectingeventByLocalityName - localityName: {}", localityName);
+
+        return specify.getDao().getCollectingeventsByLocality(localityName);
+    }
+
+    /**
+     * get determination taxon names by localityId
+     * 
+     * @param locality
+     * @param collection
+     * @return 
+     * 
+     */
+    @GET
+    @Path("search/determinationsbylocalityid/{locality}/{collection}")
+    public DataWrapper getDeterminationsByLocalityId(@PathParam("locality") String locality, @PathParam("collection") String collectionCode) {
+
+        logger.info("getDeterminationsByLocalityId: {}, {}", locality, collectionCode);
+
+        return new DataWrapper(specify.getDao().getDeterminationByLocalityID(new Locality(Integer.parseInt(locality)), collectionCode));
+    }
+
+    @GET
+    @Path("search/determinations/taxon/{taxonid}/{collection}")
+    public DataWrapper getDeterminationsByTaxonId(@PathParam("taxonid") String taxonid, @PathParam("collection") String collectionCode) {
+
+        logger.info("getDeterminationsByTaxonId");
+
+        return specify.getDao().getDeterminationsByTaxon(new Taxon(Integer.parseInt(taxonid)), collectionCode);
     }
 
     /**
