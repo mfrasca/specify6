@@ -47,13 +47,13 @@
     </properties>
  
     <modules>  
-        <module>specify-datamodel</module>   
-         
+        <module>specify-datamodel</module>    
         <module>specify-data-jpa</module>
-        <module>specify-data-service</module>
-<!--        <module>specifyKryptosPlus</module>-->
-<!--        <module>specify-jpa-test</module>
-        <module>specify-jpa-test-ear</module>-->
+        
+        <module>specify-business-logic</module>
+        <module>specify-data-service</module> 
+        <module>specify-smtp</module>
+        
     </modules>
 
     <dependencies>
