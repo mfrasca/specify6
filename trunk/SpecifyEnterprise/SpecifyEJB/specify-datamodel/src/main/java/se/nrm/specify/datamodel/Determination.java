@@ -58,6 +58,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Determination.findByYesNo1", query = "SELECT d FROM Determination d WHERE d.yesNo1 = :yesNo1"),
     @NamedQuery(name = "Determination.findByYesNo2", query = "SELECT d FROM Determination d WHERE d.yesNo2 = :yesNo2"),
     @NamedQuery(name = "Determination.findByPreferredTaxonID", query = "SELECT d FROM Determination d WHERE d.preferredTaxonID = :preferredTaxonID"),
+    @NamedQuery(name = "Determination.findCurrentByTaxonNameAndEvent", query = "SELECT d FROM Determination d WHERE d.taxonID.fullName = :fullName and d.collectionObjectID.collectingEventID = :collectingEventID and d.collectionObjectID.collectionID.code = :code and d.isCurrent = :isCurrent"),
     @NamedQuery(name = "Determination.findByTaxonID", query = "SELECT d FROM Determination d WHERE d.taxonID = :taxonId")})
 public class Determination extends BaseEntity { 
     
@@ -171,7 +172,7 @@ public class Determination extends BaseEntity {
     private Agent createdByAgentID;
     
     @JoinColumn(name = "CollectionObjectID", referencedColumnName = "CollectionObjectID")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade= CascadeType.ALL)
     private Collectionobject collectionObjectID;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")

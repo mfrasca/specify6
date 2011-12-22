@@ -64,6 +64,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Collectionobject.findByRestrictions", query = "SELECT c FROM Collectionobject c WHERE c.restrictions = :restrictions"),
     @NamedQuery(name = "Collectionobject.findByTotalValue", query = "SELECT c FROM Collectionobject c WHERE c.totalValue = :totalValue"),
     @NamedQuery(name = "Collectionobject.findByVisibility", query = "SELECT c FROM Collectionobject c WHERE c.visibility = :visibility"),
+    @NamedQuery(name = "Collectionobject.findLastRecordByCollectionCode", query = "select c from Collectionobject c where c.collectionID.code = :code order by c.collectionObjectID desc"),
+    @NamedQuery(name = "Collectionobject.findByCollectingEventIDAndYesNo2", query = "SELECT c FROM Collectionobject c WHERE c.collectingEventID = :collectingEventID and c.yesNo2 IS NULL"),
     @NamedQuery(name = "Collectionobject.findByYesNo1", query = "SELECT c FROM Collectionobject c WHERE c.yesNo1 = :yesNo1"),
     @NamedQuery(name = "Collectionobject.findByYesNo2", query = "SELECT c FROM Collectionobject c WHERE c.yesNo2 = :yesNo2"),
     @NamedQuery(name = "Collectionobject.findByYesNo3", query = "SELECT c FROM Collectionobject c WHERE c.yesNo3 = :yesNo3"),

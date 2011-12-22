@@ -41,6 +41,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Collectingevent.findByEndDatePrecision", query = "SELECT c FROM Collectingevent c WHERE c.endDatePrecision = :endDatePrecision"),
     @NamedQuery(name = "Collectingevent.findByEndDateVerbatim", query = "SELECT c FROM Collectingevent c WHERE c.endDateVerbatim = :endDateVerbatim"),
     @NamedQuery(name = "Collectingevent.findByEndTime", query = "SELECT c FROM Collectingevent c WHERE c.endTime = :endTime"),
+    @NamedQuery(name = "Collectingevent.findByLocality", query = "SELECT c FROM Collectingevent c WHERE c.localityID.localityName like :localityName"),
     @NamedQuery(name = "Collectingevent.findByMethod", query = "SELECT c FROM Collectingevent c WHERE c.method = :method"),
     @NamedQuery(name = "Collectingevent.findByStartDate", query = "SELECT c FROM Collectingevent c WHERE c.startDate = :startDate"),
     @NamedQuery(name = "Collectingevent.findByStartDatePrecision", query = "SELECT c FROM Collectingevent c WHERE c.startDatePrecision = :startDatePrecision"),
