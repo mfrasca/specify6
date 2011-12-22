@@ -9,8 +9,7 @@
         <groupId>se.nrm.specify</groupId>
         <version>0.1-SNAPSHOT</version>
     </parent>
-
-    <groupId>se.nrm.specify</groupId>
+ 
     <artifactId>specify-data-service</artifactId> 
     <packaging>war</packaging>
 
@@ -30,11 +29,10 @@
         </repository>  
     </repositories>-->
 
-    <dependencies>
-        
+    <dependencies> 
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
-            <artifactId>specify-data-jpa</artifactId>
+            <artifactId>specify-business-logic</artifactId>
             <version>${project.parent.version}</version>
             <type>ejb</type>
         </dependency>
