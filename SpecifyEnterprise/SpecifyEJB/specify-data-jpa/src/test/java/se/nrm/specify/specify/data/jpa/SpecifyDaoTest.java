@@ -1,12 +1,13 @@
 package se.nrm.specify.specify.data.jpa;
-
+ 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List; 
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import javax.persistence.OptimisticLockException;
-import javax.persistence.Query; 
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.validation.ConstraintViolationException;
 import org.junit.After;
 import org.junit.Before;
@@ -21,10 +22,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.nrm.specify.datamodel.Address;
 import se.nrm.specify.datamodel.Collectingevent;
+import se.nrm.specify.datamodel.Collectionobject;
+import se.nrm.specify.datamodel.DataWrapper;
+import se.nrm.specify.datamodel.Determination;
+import se.nrm.specify.datamodel.Dnasequence;
 import se.nrm.specify.datamodel.Geography;
 
 import se.nrm.specify.datamodel.Geographytreedefitem;
+import se.nrm.specify.datamodel.Locality;
 import se.nrm.specify.datamodel.Sppermission;
+import se.nrm.specify.datamodel.Taxon;
 
 /**
  *
@@ -33,18 +40,23 @@ import se.nrm.specify.datamodel.Sppermission;
 public class SpecifyDaoTest {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    
     private SpecifyDao testInstance;
-    
     private Address address;
     private List<Geography> geographyList;
+    private List<Dnasequence> dnasequenceList;
     private Sppermission spPermission;
-    
-    
+    private List<String> stringList;
+    private List<Integer> intList;
     @Mock
     private EntityManager entityManager;
     @Mock
     private Query query;
+    @Mock
+    private TypedQuery<String> stringquery;
+    @Mock
+    private TypedQuery<Integer> intquery;
+    @Mock
+    private Taxon taxon;
 
     public SpecifyDaoTest() {
     }
@@ -60,7 +72,7 @@ public class SpecifyDaoTest {
         address.setAddress("Frescativägen 40");
         address.setCity("Stockholm");
         address.setCountry("Sweden");
-        
+
         // prepair test data
         spPermission = new Sppermission();
         spPermission.setSpPermissionID(1);
@@ -73,6 +85,26 @@ public class SpecifyDaoTest {
         geographyList.add(new Geography(3, null, "Europe", 100));
         geographyList.add(new Geography(4, null, "North America", 100));
         geographyList.add(new Geography(5, null, "South America", 100));
+
+        // prepair thes data
+        dnasequenceList = new ArrayList<Dnasequence>();
+        dnasequenceList.add(new Dnasequence(1));
+        dnasequenceList.add(new Dnasequence(2));
+
+        stringList = new ArrayList<String>();
+        stringList.add("test 1");
+        stringList.add("test 2");
+        stringList.add("test 3");
+
+        intList = new ArrayList<Integer>();
+        intList.add(Integer.valueOf(12));
+        intList.add(Integer.valueOf(2));
+        intList.add(Integer.valueOf(3));
+        intList.add(Integer.valueOf(6));
+        intList.add(Integer.valueOf(6));
+        intList.add(Integer.valueOf(12));
+        intList.add(Integer.valueOf(12));
+
 
         testInstance = new SpecifyDaoImpl(entityManager);
     }
@@ -100,27 +132,45 @@ public class SpecifyDaoTest {
         assertEquals(expResult.getAddress(), result.getAddress());
         assertEquals(expResult.getCity(), result.getCity());
         assertEquals(expResult.getCountry(), result.getCountry());
-        
+
         verify(entityManager).find(Address.class, 1, LockModeType.OPTIMISTIC);
         verify(entityManager, times(0)).find(Address.class, 1, LockModeType.PESSIMISTIC_WRITE);
     }
-    
+
+    /**
+     * Test throw OptimisticLockException whe getById method, of class SpecifyDaoImpl.
+     */
+    @Test
+    public void testOptimisticLockExceptionWhenGetEntityById() {
+
+        logger.info("testOptimisticLockExceptionWhenGetEntityById");
+
+        doThrow(new OptimisticLockException()).when(entityManager).flush();
+
+        int id = 1;
+
+        Address bean = testInstance.getById(id, Address.class);
+
+        verify(entityManager).find(Address.class, 1, LockModeType.OPTIMISTIC);
+        verify(entityManager, times(1)).refresh(bean);
+    }
+
     /**
      * Test of getById method for PESSIMISTIC_WRITE lock entities, of class SpecifyDaoImpl.
      */
     @Test
     public void testGetByIdForPessimisticLockEntity() {
-        
+
         logger.info("testGetByIdForPessimisticLockEntity");
-        
+
         when(entityManager.find(Sppermission.class, 1, LockModeType.PESSIMISTIC_WRITE)).thenReturn(spPermission);
-        
+
         int id = 1;
         Sppermission expResult = spPermission;
         Sppermission result = testInstance.getById(id, Sppermission.class);
-        
+
         assertEquals(expResult, result);
-        
+
         verify(entityManager).find(Sppermission.class, 1, LockModeType.PESSIMISTIC_WRITE);
         verify(entityManager, times(0)).find(Sppermission.class, 1, LockModeType.OPTIMISTIC);
     }
@@ -181,7 +231,7 @@ public class SpecifyDaoTest {
         testInstance.deleteEntity(address);
         verify(entityManager).remove(address);
     }
-    
+
     /**
      * Test of ConstrainViolationException when deleting
      */
@@ -230,7 +280,7 @@ public class SpecifyDaoTest {
         String expected = address.toString() + "cannot be updated because it has changed or been deleted since it was last read. ";
         String result = testInstance.editEntity(address);
 
-        assertEquals(expected, result); 
+        assertEquals(expected, result);
     }
 
     /**
@@ -238,23 +288,279 @@ public class SpecifyDaoTest {
      */
     @Test
     public void testGetCollectingEventByStationFieldNumber() {
-        
+
         logger.info("testGetCollectingEventByStationFieldNumber");
-        
+
         String stationFieldNumber = "test number";
         Collectingevent event = new Collectingevent();
         event.setStationFieldNumber(stationFieldNumber);
-        
+
         when(entityManager.createNamedQuery("Collectingevent.findByStationFieldNumber")).thenReturn(query);
         query.setParameter("stationFieldNumber", stationFieldNumber);
         when(query.getSingleResult()).thenReturn(event);
-        
+
         Collectingevent result = testInstance.getCollectingEventByStationFieldNumber(stationFieldNumber);
         assertNotNull(result);
-        assertEquals(event, result); 
+        assertEquals(event, result);
     }
-     
     
+    /**
+     * Test of testGetAllTaxonName method, of class SpecifyDaoImpl.
+     */
+    @Test
+    public void testGetAllTaxonName() {
+        
+        logger.info("testGetAllTaxonName");
+        
+        String strQuery = "SELECT t.fullName FROM Taxon AS t";
+        
+        when(entityManager.createQuery(strQuery, String.class)).thenReturn(stringquery);
+        when(stringquery.getResultList()).thenReturn(stringList);
+        
+        List<String> result = testInstance.getAllTaxonName();
+        assertNotNull(result);
+        assertEquals(3, result.size());
+    }
+
+    /**
+     * Test of testGetTaxonByTaxonName method, of class SpecifyDaoImpl.
+     */
+    @Test
+    public void testGetTaxonByTaxonName() {
+
+        logger.info("testGetTaxonByTaxonName");
+
+        String taxonName = "taxonname";
+
+        when(entityManager.createNamedQuery("Taxon.findByFullName")).thenReturn(query);
+        query.setParameter("fullName", taxonName);
+
+        Taxon expectedTaxon = new Taxon(10);
+        expectedTaxon.setFullName(taxonName);
+        when(query.getSingleResult()).thenReturn(expectedTaxon);
+
+        Taxon result = testInstance.getTaxonByTaxonName(taxonName);
+        assertNotNull(result);
+        assertEquals(taxonName, result.getFullName());
+    }
+
+    /**
+     * Test of testNoResultExceptionWhenGetTaxonByTaxonName method, of class SpecifyDaoImpl.
+     */
+    @Test
+    public void testNoResultExceptionWhenGetTaxonByTaxonName() {
+
+        logger.info("testNoResultExceptionWhenGetTaxonByTaxonName");
+
+        String taxonName = "taxonname";
+        when(entityManager.createNamedQuery("Taxon.findByFullName")).thenReturn(query);
+        query.setParameter("fullName", taxonName);
+
+        doThrow(new javax.persistence.NoResultException()).when(query).getSingleResult();
+        Taxon result = testInstance.getTaxonByTaxonName(taxonName);
+        assertNull(result);
+    }
+
+    /**
+     * Test of testNonUniqueResultExceptionWhenGetTaxonByTaxonName method, of class SpecifyDaoImpl.
+     */
+    @Test
+    public void testNonUniqueResultExceptionWhenGetTaxonByTaxonName() {
+
+        logger.info("testNonUniqueResultExceptionWhenGetTaxonByTaxonName");
+
+        String taxonName = "taxonname";
+        when(entityManager.createNamedQuery("Taxon.findByFullName")).thenReturn(query);
+        query.setParameter("fullName", taxonName);
+
+        doThrow(new javax.persistence.NonUniqueResultException()).when(query).getSingleResult();
+        Taxon result = testInstance.getTaxonByTaxonName(taxonName);
+        assertNotNull(result);
+        assertNull(result.getTaxonID());
+    }
+
+    /**
+     * Test of testGetDeterminationsByTaxonNameAndCollectingevent method, of class SpecifyDaoImpl.
+     */
+    @Test
+    public void testGetDeterminationsByTaxonNameAndCollectingevent() {
+
+        logger.info("testGetDeterminationsByTaxonNameAndCollectingevent");
+
+        String taxonName = "taxonname";
+        Collectingevent event = new Collectingevent(18);
+        String collectionCode = "test";
+
+        List<Determination> list = new ArrayList<Determination>();
+        list.add(new Determination(10));
+        list.add(new Determination(18));
+
+        when(entityManager.createNamedQuery("Determination.findCurrentByTaxonNameAndEvent")).thenReturn(query);
+        query.setParameter("fullName", taxonName);
+        query.setParameter("collectingEventID", event);
+        query.setParameter("code", collectionCode);
+        query.setParameter("isCurrent", true);
+
+        when(query.getResultList()).thenReturn(list);
+
+        List<Determination> result = testInstance.getDeterminationsByTaxonNameAndCollectingevent(taxonName, event, collectionCode);
+        assertNotNull(result);
+        assertEquals(list, result);
+        assertEquals(2, result.size());
+    }
+
+    /**
+     * Test of testGetLastCollectionobjectByGroup method, of class SpecifyDaoImpl.
+     */
+    @Test
+    public void testGetLastCollectionobjectByGroup() {
+
+        logger.info("testGetLastCollectionobjectByGroup");
+
+        Collectionobject obj = new Collectionobject(18);
+
+        List<Collectionobject> list = new ArrayList<Collectionobject>();
+        list.add(new Collectionobject(18));
+
+        String code = "testcode";
+        when(entityManager.createNamedQuery("Collectionobject.findLastRecordByCollectionCode")).thenReturn(query);
+        query.setParameter("code", code);
+        query.setMaxResults(1);
+
+        when(query.getResultList()).thenReturn(list);
+        Collectionobject result = testInstance.getLastCollectionobjectByGroup(code);
+
+        assertNotNull(result);
+        assertEquals(obj, result);
+    }
+
+    /**
+     * Test of testGetCollectionobjectByCollectingEventAndYesno2 method, of class SpecifyDaoImpl.
+     */
+    @Test
+    public void testGetCollectionobjectByCollectingEventAndYesno2() {
+
+        logger.info("testGetCollectionobjectByCollectingEventAndYesno2");
+
+        List<Collectionobject> list = new ArrayList<Collectionobject>();
+        list.add(new Collectionobject(18));
+        list.add(new Collectionobject(32));
+
+        Collectingevent event = new Collectingevent(18);
+        when(entityManager.createNamedQuery("Collectionobject.findByCollectingEventIDAndYesNo2")).thenReturn(query);
+        query.setParameter("collectingEventID", event);
+        when(query.getResultList()).thenReturn(list);
+
+        List<Collectionobject> result = testInstance.getCollectionobjectByCollectingEventAndYesno2(event);
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals(list, result);
+    }
+
+    /**
+     * Test of getDeterminationsByCollectingEvent method, of class SpecifyDaoImpl.
+     */
+    @Test
+    public void testGetDeterminationsByCollectingEvent() {
+
+        logger.info("getDeterminationsByCollectingEvent");
+
+        Collectingevent event = new Collectingevent(18);
+        String collectionCode = "test";
+        String strQuery = "SELECT d.taxonID.fullName FROM Determination AS d where d.collectionObjectID.collectingEventID.collectingEventID = "
+                + event.getCollectingEventID() + " and d.collectionObjectID.collectionID.code = '" + collectionCode + "' and d.isCurrent = true";
+
+        when(entityManager.createQuery(strQuery, String.class)).thenReturn(stringquery);
+        when(stringquery.getResultList()).thenReturn(stringList);
+
+        DataWrapper result = testInstance.getDeterminationsByCollectingEvent(event, collectionCode);
+        assertNotNull(result);
+        assertEquals(3, result.getList().size());
+    }
+
+    /**
+     * Test of testGetCollectingeventsByLocality method, of class SpecifyDaoImpl.
+     */
+    @Test
+    public void testGetCollectingeventsByLocality() {
+
+        logger.info("testGetCollectingeventsByLocality");
+
+        String localityName = "test localityName";
+
+        List<Collectingevent> expectedResult = new ArrayList<Collectingevent>();
+        expectedResult.add(new Collectingevent(12));
+        expectedResult.add(new Collectingevent(18));
+
+        when(entityManager.createNamedQuery("Collectingevent.findByLocality")).thenReturn(query);
+        query.setParameter("localityName", localityName + "%");
+        when(query.getResultList()).thenReturn(expectedResult);
+
+        List<Collectingevent> result = testInstance.getCollectingeventsByLocality(localityName);
+        assertNotNull(result);
+        assertEquals(expectedResult, result);
+        assertEquals(2, result.size());
+    }
+
+    /**
+     * Test of testGetDeterminationByLocalityID method, of class SpecifyDaoImpl.
+     */
+    @Test
+    public void testGetDeterminationByLocalityID() {
+
+        logger.info("testGetDeterminationByLocalityID");
+
+        Locality locality = new Locality(5);
+        String collectionCode = "test";
+
+        String strquery = "SELECT d.taxonID.fullName FROM Determination AS d where d.collectionObjectID.collectingEventID.localityID.localityID = "
+                + locality.getLocalityID() + " and d.collectionObjectID.collectionID.code = '" + collectionCode + "' and d.isCurrent = true";
+
+        when(entityManager.createQuery(strquery, String.class)).thenReturn(stringquery);
+        when(stringquery.getResultList()).thenReturn(stringList);
+        List<String> result = testInstance.getDeterminationByLocalityID(locality, collectionCode);
+
+        assertNotNull(result);
+        assertEquals(3, result.size());
+    }
+
+    /**
+     * Test of getDeterminationsByTaxon method, of class SpecifyDaoImpl.
+     */
+    @Test
+    public void testGetDeterminationsByTaxon() {
+
+        logger.info("getDeterminationsByTaxon");
+
+        Taxon taxonId = new Taxon(12);
+
+        String collectionCode = "test";
+
+        when(entityManager.find(Taxon.class, 12, LockModeType.OPTIMISTIC)).thenReturn(taxon);
+        when(taxon.getHighestChildNodeNumber()).thenReturn(18);
+        when(taxon.getNodeNumber()).thenReturn(8);
+
+        String query1 = "SELECT d.collectionObjectID.collectingEventID.localityID.localityID FROM Determination AS d where d.collectionObjectID.collectionID.code = '"
+                + collectionCode + "' and d.taxonID.nodeNumber BETWEEN " + 8 + " AND " + 18
+                + " and d.isCurrent = true group by d.collectionObjectID.collectingEventID.collectingEventID";
+
+        String query2 = "SELECT d.taxonID.fullName FROM Determination AS d where d.collectionObjectID.collectionID.code = '"
+                + collectionCode + "' and d.taxonID.nodeNumber BETWEEN " + 8 + " AND " + 18
+                + "and d.isCurrent = true";
+
+        when(entityManager.createQuery(query1, Integer.class)).thenReturn(intquery);
+        when(intquery.getResultList()).thenReturn(intList);
+
+        when(entityManager.createQuery(query2, String.class)).thenReturn(stringquery);
+        when(stringquery.getResultList()).thenReturn(stringList);
+
+        DataWrapper result = testInstance.getDeterminationsByTaxon(taxonId, collectionCode);
+        assertNotNull(result);
+        assertEquals(3, result.getList().size());
+        assertEquals("7", result.getEventcount());
+        assertEquals("4", result.getTrapcount());
+    }
+
     /**
      * Test of getGeographyListByGeographytreedefitemId method, of class SpecifyDaoImpl.
      */
@@ -275,5 +581,24 @@ public class SpecifyDaoTest {
         assertNotNull(result);
         assertEquals(expResult, result);
         assertEquals(5, result.size());
+    }
+
+    /**
+     * Test of getAllDnasequences method, of class SpecifyDaoImpl.
+     */
+    @Test
+    public void testGetAllDnasequences() {
+
+        logger.info("testGetAllDnasequences");
+
+        when(entityManager.createNamedQuery("Dnasequence.findAll")).thenReturn(query);
+        when(query.getResultList()).thenReturn(dnasequenceList);
+
+        List expResult = dnasequenceList;
+        List result = testInstance.getAllDnasequences();
+
+        assertNotNull(result);
+        assertEquals(expResult, result);
+        assertEquals(result.size(), 2);
     }
 }
