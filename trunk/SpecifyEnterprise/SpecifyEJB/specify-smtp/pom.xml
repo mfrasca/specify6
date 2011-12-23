@@ -8,7 +8,7 @@
         <version>0.1-SNAPSHOT</version>
     </parent>
 
-    <groupId>se.nrm</groupId>
+    <groupId>se.nrm.specify</groupId>
     <artifactId>specify-smtp</artifactId>
     <version>0.1-SNAPSHOT</version>
     <packaging>war</packaging>
