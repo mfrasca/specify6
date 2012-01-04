@@ -1,5 +1,5 @@
 package se.nrm.specify.specify.data.jpa;
- 
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -8,6 +8,12 @@ import javax.persistence.LockModeType;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CompoundSelection;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.ParameterExpression;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Root;
 import javax.validation.ConstraintViolationException;
 import org.junit.After;
 import org.junit.Before;
@@ -55,6 +61,24 @@ public class SpecifyDaoTest {
     private TypedQuery<String> stringquery;
     @Mock
     private TypedQuery<Integer> intquery;
+    @Mock
+    private CriteriaBuilder cb;
+    @Mock
+    private CriteriaQuery<String> q;
+    @Mock
+    private Root<Determination> d;
+    @Mock
+    private CompoundSelection<java.lang.String> cs;
+    @Mock
+    private Path path;
+    @Mock
+    private ParameterExpression<Collectingevent> collectingEvent;
+    @Mock
+    private ParameterExpression<Locality> localityId;
+    @Mock
+    private ParameterExpression<String> code;
+    @Mock
+    private ParameterExpression<Boolean> isCurrent;
     @Mock
     private Taxon taxon;
 
@@ -104,8 +128,7 @@ public class SpecifyDaoTest {
         intList.add(Integer.valueOf(6));
         intList.add(Integer.valueOf(12));
         intList.add(Integer.valueOf(12));
-
-
+ 
         testInstance = new SpecifyDaoImpl(entityManager);
     }
 
@@ -303,20 +326,20 @@ public class SpecifyDaoTest {
         assertNotNull(result);
         assertEquals(event, result);
     }
-    
+
     /**
      * Test of testGetAllTaxonName method, of class SpecifyDaoImpl.
      */
     @Test
     public void testGetAllTaxonName() {
-        
+
         logger.info("testGetAllTaxonName");
-        
+
         String strQuery = "SELECT t.fullName FROM Taxon AS t";
-        
+
         when(entityManager.createQuery(strQuery, String.class)).thenReturn(stringquery);
         when(stringquery.getResultList()).thenReturn(stringList);
-        
+
         List<String> result = testInstance.getAllTaxonName();
         assertNotNull(result);
         assertEquals(3, result.size());
@@ -467,10 +490,31 @@ public class SpecifyDaoTest {
 
         Collectingevent event = new Collectingevent(18);
         String collectionCode = "test";
-        String strQuery = "SELECT d.taxonID.fullName FROM Determination AS d where d.collectionObjectID.collectingEventID.collectingEventID = "
-                + event.getCollectingEventID() + " and d.collectionObjectID.collectionID.code = '" + collectionCode + "' and d.isCurrent = true";
 
-        when(entityManager.createQuery(strQuery, String.class)).thenReturn(stringquery);
+        when(entityManager.getCriteriaBuilder()).thenReturn(cb);
+        when(cb.createQuery(String.class)).thenReturn(q);
+        when(q.from(Determination.class)).thenReturn(d);
+        when(d.get(anyString())).thenReturn(path);
+        when(path.get(anyString())).thenReturn(path);
+
+        when(cb.construct(String.class, path)).thenReturn(cs);
+
+        q.select(cs);
+
+        when(cb.parameter(Collectingevent.class)).thenReturn(collectingEvent);
+        when(cb.parameter(String.class)).thenReturn(code);
+        when(cb.parameter(Boolean.class)).thenReturn(isCurrent);
+
+        q.where(cb.equal(path, collectingEvent),
+                cb.equal(path, code),
+                cb.equal(path, isCurrent));
+
+        when(entityManager.createQuery(q)).thenReturn(stringquery);
+        stringquery.setParameter(collectingEvent, event);
+        stringquery.setParameter(code, collectionCode);
+        stringquery.setParameter(isCurrent, true);
+
+
         when(stringquery.getResultList()).thenReturn(stringList);
 
         DataWrapper result = testInstance.getDeterminationsByCollectingEvent(event, collectionCode);
@@ -512,11 +556,29 @@ public class SpecifyDaoTest {
 
         Locality locality = new Locality(5);
         String collectionCode = "test";
+ 
+        when(entityManager.getCriteriaBuilder()).thenReturn(cb);
+        when(cb.createQuery(String.class)).thenReturn(q);
+        when(q.from(Determination.class)).thenReturn(d);
+        when(d.get(anyString())).thenReturn(path);
+        when(path.get(anyString())).thenReturn(path); 
+        when(cb.construct(String.class, path)).thenReturn(cs);
+         
+        q.select(cs);
 
-        String strquery = "SELECT d.taxonID.fullName FROM Determination AS d where d.collectionObjectID.collectingEventID.localityID.localityID = "
-                + locality.getLocalityID() + " and d.collectionObjectID.collectionID.code = '" + collectionCode + "' and d.isCurrent = true";
+        when(cb.parameter(Locality.class)).thenReturn(localityId);
+        when(cb.parameter(String.class)).thenReturn(code);
+        when(cb.parameter(Boolean.class)).thenReturn(isCurrent);
 
-        when(entityManager.createQuery(strquery, String.class)).thenReturn(stringquery);
+        q.where(cb.equal(path, localityId),
+                cb.equal(path, code),
+                cb.equal(path, isCurrent));
+
+        when(entityManager.createQuery(q)).thenReturn(stringquery);
+        stringquery.setParameter(localityId, locality);
+        stringquery.setParameter(code, collectionCode);
+        stringquery.setParameter(isCurrent, true);
+    
         when(stringquery.getResultList()).thenReturn(stringList);
         List<String> result = testInstance.getDeterminationByLocalityID(locality, collectionCode);
 
@@ -540,18 +602,29 @@ public class SpecifyDaoTest {
         when(taxon.getHighestChildNodeNumber()).thenReturn(18);
         when(taxon.getNodeNumber()).thenReturn(8);
 
-        String query1 = "SELECT d.collectionObjectID.collectingEventID.localityID.localityID FROM Determination AS d where d.collectionObjectID.collectionID.code = '"
-                + collectionCode + "' and d.taxonID.nodeNumber BETWEEN " + 8 + " AND " + 18
-                + " and d.isCurrent = true group by d.collectionObjectID.collectingEventID.collectingEventID";
-
-        String query2 = "SELECT d.taxonID.fullName FROM Determination AS d where d.collectionObjectID.collectionID.code = '"
-                + collectionCode + "' and d.taxonID.nodeNumber BETWEEN " + 8 + " AND " + 18
-                + "and d.isCurrent = true";
-
-        when(entityManager.createQuery(query1, Integer.class)).thenReturn(intquery);
+        StringBuilder queryBuilder = new StringBuilder();
+        queryBuilder.append("SELECT d.collectionObjectID.collectingEventID.localityID.localityID FROM Determination AS d where d.collectionObjectID.collectionID.code = '");
+        queryBuilder.append(collectionCode);
+        queryBuilder.append("' and d.taxonID.nodeNumber BETWEEN ");
+        queryBuilder.append(8);
+        queryBuilder.append(" AND ");
+        queryBuilder.append(18);
+        queryBuilder.append(" and d.isCurrent = true group by d.collectionObjectID.collectingEventID.collectingEventID");
+ 
+        when(entityManager.createQuery(queryBuilder.toString(), Integer.class)).thenReturn(intquery);
         when(intquery.getResultList()).thenReturn(intList);
+        
+        queryBuilder = new StringBuilder();
+        queryBuilder.append("SELECT d.taxonID.fullName FROM Determination AS d where d.collectionObjectID.collectionID.code = '");
+        queryBuilder.append(collectionCode);
+        queryBuilder.append("' and d.taxonID.nodeNumber BETWEEN ");
+        queryBuilder.append(8);
+        queryBuilder.append(" AND ");
+        queryBuilder.append(18);
+        queryBuilder.append(" and d.isCurrent = true");
+        
 
-        when(entityManager.createQuery(query2, String.class)).thenReturn(stringquery);
+        when(entityManager.createQuery(queryBuilder.toString(), String.class)).thenReturn(stringquery);
         when(stringquery.getResultList()).thenReturn(stringList);
 
         DataWrapper result = testInstance.getDeterminationsByTaxon(taxonId, collectionCode);

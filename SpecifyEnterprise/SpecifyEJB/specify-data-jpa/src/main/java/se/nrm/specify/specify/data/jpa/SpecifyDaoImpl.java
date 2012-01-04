@@ -1,6 +1,5 @@
 package se.nrm.specify.specify.data.jpa;
-
-import java.util.ArrayList;
+ 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -10,8 +9,12 @@ import javax.persistence.LockModeType;
 import javax.persistence.NoResultException;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
+import javax.persistence.Query;  
+import javax.persistence.TypedQuery; 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery; 
+import javax.persistence.criteria.ParameterExpression; 
+import javax.persistence.criteria.Root;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import org.slf4j.Logger;
@@ -183,9 +186,10 @@ public class SpecifyDaoImpl implements SpecifyDao {
     public List<String> getAllTaxonName() {
 
         logger.info("getAllTaxonName");
-
-        TypedQuery<String> query = entityManager.createQuery("SELECT t.fullName FROM Taxon AS t", String.class); 
-        return query.getResultList();
+         
+        TypedQuery<String> query = entityManager.createQuery("SELECT t.fullName FROM Taxon AS t", String.class);
+        
+        return query.getResultList(); 
     }
 
     /**
@@ -268,13 +272,29 @@ public class SpecifyDaoImpl implements SpecifyDao {
      */
     public DataWrapper getDeterminationsByCollectingEvent(Collectingevent event, String collectionCode) {
 
-        logger.info("getDeterminationsByCollectingEvent - event: {}, collectionCode: {}", event, collectionCode);
+        logger.info("getDeterminationsByCollectingEvent - event: {}, collectionCode: {}", event, collectionCode); 
+        
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 
-        TypedQuery<String> query = entityManager.createQuery("SELECT d.taxonID.fullName FROM Determination AS d where d.collectionObjectID.collectingEventID.collectingEventID = "
-                + event.getCollectingEventID() + " and d.collectionObjectID.collectionID.code = '" + collectionCode
-                + "' and d.isCurrent = true", String.class);
+        CriteriaQuery<String> q = cb.createQuery(String.class);
+        
+        Root<Determination> d = q.from(Determination.class);
+        q.select(cb.construct(String.class, d.get("taxonID").get("fullName")));
+          
+        ParameterExpression<Collectingevent> collectingEvent = cb.parameter(Collectingevent.class);
+        ParameterExpression<String> code = cb.parameter(String.class);
+        ParameterExpression<Boolean> isCurrent = cb.parameter(Boolean.class);
+ 
+        q.where(cb.equal(d.get("collectionObjectID").get("collectingEventID"), collectingEvent), 
+                cb.equal(d.get("collectionObjectID").get("collectionID").get("code"), code), 
+                cb.equal(d.get("isCurrent"), isCurrent)); 
 
-        return new DataWrapper(query.getResultList());
+        TypedQuery<String> tq = entityManager.createQuery(q);
+        tq.setParameter(collectingEvent, event); 
+        tq.setParameter(code, collectionCode);
+        tq.setParameter(isCurrent, true);  
+
+        return new DataWrapper(tq.getResultList());
     }
 
     public List<Collectingevent> getCollectingeventsByLocality(String localityName) {
@@ -289,42 +309,67 @@ public class SpecifyDaoImpl implements SpecifyDao {
 
     public List<String> getDeterminationByLocalityID(Locality locality, String collectionCode) {
 
-        logger.info("getDeterminationByLocalityID: {}, {}", locality, collectionCode);
+        logger.info("getDeterminationByLocalityID: {}, {}", locality, collectionCode); 
+         
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 
-        List<String> determinations = new ArrayList<String>();
+        CriteriaQuery<String> q = cb.createQuery(String.class);
+        
+        Root<Determination> d = q.from(Determination.class);
+        q.select(cb.construct(String.class, d.get("taxonID").get("fullName")));
+         
+        ParameterExpression<Locality> localityId = cb.parameter(Locality.class);
+        ParameterExpression<String> code = cb.parameter(String.class);
+        ParameterExpression<Boolean> isCurrent = cb.parameter(Boolean.class);
 
-        TypedQuery<String> typedQuery = entityManager.createQuery("SELECT d.taxonID.fullName FROM Determination AS d where d.collectionObjectID.collectingEventID.localityID.localityID = "
-                + locality.getLocalityID() + " and d.collectionObjectID.collectionID.code = '" + collectionCode
-                + "' and d.isCurrent = true", String.class);
-        determinations = typedQuery.getResultList();
+        q.where(cb.equal(d.get("collectionObjectID").get("collectingEventID").get("localityID"), localityId), 
+                cb.equal(d.get("collectionObjectID").get("collectionID").get("code"), code), 
+                cb.equal(d.get("isCurrent"), isCurrent)); 
 
-        return determinations;
+        TypedQuery<String> query = entityManager.createQuery(q);
+        query.setParameter(localityId, locality);
+        query.setParameter(code, collectionCode);
+        query.setParameter(isCurrent, true);
+         
+        return query.getResultList();  
     }
 
     public DataWrapper getDeterminationsByTaxon(Taxon taxonId, String collectionCode) {
 
         logger.info("getDeterminationsByTaxonId - taxon: {}, collection: {}", taxonId, collectionCode);
-
-//        List<Integer> taxonIdList = new ArrayList<Integer>();
-        Taxon taxon = getById(taxonId.getTaxonID(), Taxon.class);
-//        taxonIdList.add(taxon.getTaxonID());
+ 
+        Taxon taxon = getById(taxonId.getTaxonID(), Taxon.class); 
         int highestChildNode = taxon.getHighestChildNodeNumber();
         int node = taxon.getNodeNumber();
  
-        TypedQuery<Integer> typedQuery = entityManager.createQuery("SELECT d.collectionObjectID.collectingEventID.localityID.localityID FROM Determination AS d where d.collectionObjectID.collectionID.code = '"
-                + collectionCode + "' and d.taxonID.nodeNumber BETWEEN " + node + " AND " + highestChildNode
-                + " and d.isCurrent = true group by d.collectionObjectID.collectingEventID.collectingEventID", Integer.class);
+        StringBuilder queryBuilder = new StringBuilder();
+        queryBuilder.append("SELECT d.collectionObjectID.collectingEventID.localityID.localityID FROM Determination AS d where d.collectionObjectID.collectionID.code = '");
+        queryBuilder.append(collectionCode);
+        queryBuilder.append("' and d.taxonID.nodeNumber BETWEEN ");
+        queryBuilder.append(node);
+        queryBuilder.append(" AND ");
+        queryBuilder.append(highestChildNode);
+        queryBuilder.append(" and d.isCurrent = true group by d.collectionObjectID.collectingEventID.collectingEventID");
+        
+        TypedQuery<Integer> typedQuery = entityManager.createQuery(queryBuilder.toString(), Integer.class);
         List<Integer> localityIds = typedQuery.getResultList();
         
-        TypedQuery<String> query = entityManager.createQuery("SELECT d.taxonID.fullName FROM Determination AS d where d.collectionObjectID.collectionID.code = '"
-                + collectionCode + "' and d.taxonID.nodeNumber BETWEEN " + node + " AND " + highestChildNode
-                + "and d.isCurrent = true", String.class);
- 
+        queryBuilder = new StringBuilder();
+        queryBuilder.append("SELECT d.taxonID.fullName FROM Determination AS d where d.collectionObjectID.collectionID.code = '");
+        queryBuilder.append(collectionCode);
+        queryBuilder.append("' and d.taxonID.nodeNumber BETWEEN ");
+        queryBuilder.append(node);
+        queryBuilder.append(" AND ");
+        queryBuilder.append(highestChildNode);
+        queryBuilder.append(" and d.isCurrent = true");
+        
+        TypedQuery<String> query = entityManager.createQuery(queryBuilder.toString(), String.class); 
 
         Set<Integer> s = new HashSet<Integer>();
-        for (Integer localityId : localityIds) {
+        for (Integer localityId : localityIds) { 
             s.add(localityId);
-        }
+        } 
+         
         return new DataWrapper(query.getResultList(), String.valueOf(localityIds.size()), String.valueOf(s.size()));
     }
 
