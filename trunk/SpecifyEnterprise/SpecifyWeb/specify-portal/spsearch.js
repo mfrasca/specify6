@@ -39,7 +39,7 @@ function fixValueForSearch(text, prefix)
     }
     return searchStr;
 }
-renderColumn
+
 //-------------------------------------------------
 //
 //-------------------------------------------------
@@ -132,7 +132,7 @@ var tabs = Ext.createWidget('tabpanel', {
         contentEl:'script', 
         title: 'Search',
         closable: true
-    },{renderColumn
+    },{
         contentEl:'markup', 
         title: 'Advanced Search'
     }]
