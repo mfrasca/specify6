@@ -2,9 +2,13 @@ package se.nrm.specify.business.logic.smtp;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.nrm.specify.datamodel.Agent;
@@ -35,18 +39,26 @@ public class SMTPLogicImpl implements SMTPLogic {
     public SMTPLogicImpl(SpecifyDao dao) {
         this.dao = dao;
     }
-
+ 
+    @TransactionAttribute(value = TransactionAttributeType.REQUIRES_NEW)
     public void saveSMTPBatchData(DataWrapper wrapper) {
+        
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
-        Agent agent = dao.getById(1, Agent.class);
+//        Agent agent = dao.getById(1, Agent.class);
+        
+        Agent agent = dao.getByReference(1, Agent.class); 
+        Preptype pretype = dao.getByReference(24, Preptype.class);
+        
         Collectingevent event = wrapper.getEvent();
-        Preptype pretype = dao.getById(24, Preptype.class);
         String collectionCode = wrapper.getCollectionCode();
 
         for (String taxonName : wrapper.getList()) {
-            Taxon taxon = dao.getTaxonByTaxonName(taxonName);
-
+              
+            Map<String, String> map = new HashMap<String, String>(); 
+            map.put("fullName", taxonName);
+             
+            Taxon taxon = (Taxon)dao.getEntityByNamedQuery("Taxon.findByFullName", map); 
 
             if (taxon != null) {
 
@@ -78,7 +90,7 @@ public class SMTPLogicImpl implements SMTPLogic {
                 preparation.setPreparedDatePrecision(Short.valueOf("1"));
                 preparation.setPrepTypeID(pretype);
                 preparation.setCreatedByAgentID(agent);
-                preparation.setCollectionObjectID(newObject);
+                preparation.setCollectionObjectID(newObject); 
 
                 List<Preparation> preparations = new ArrayList<Preparation>();
                 preparations.add(preparation);

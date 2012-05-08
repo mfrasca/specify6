@@ -10,4 +10,6 @@ public interface SpecifyLogic {
     
     public SpecifyDao getDao();
     
+    public String getDNASequenceList();
+    
 }
