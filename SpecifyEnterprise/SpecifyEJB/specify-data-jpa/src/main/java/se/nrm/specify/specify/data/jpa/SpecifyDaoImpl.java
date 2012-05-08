@@ -1,19 +1,22 @@
 package se.nrm.specify.specify.data.jpa;
- 
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
-import javax.persistence.NoResultException;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;  
-import javax.persistence.TypedQuery; 
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery; 
-import javax.persistence.criteria.ParameterExpression; 
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Root;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -23,15 +26,13 @@ import se.nrm.specify.datamodel.Collectingevent;
 import se.nrm.specify.datamodel.Collectionobject;
 import se.nrm.specify.datamodel.DataWrapper;
 import se.nrm.specify.datamodel.Determination;
-import se.nrm.specify.datamodel.Dnasequence;
-import se.nrm.specify.datamodel.Geography;
-import se.nrm.specify.datamodel.Geographytreedefitem;
 import se.nrm.specify.datamodel.Locality;
 import se.nrm.specify.datamodel.Recordsetitem;
 import se.nrm.specify.datamodel.SpecifyBean;
 import se.nrm.specify.datamodel.Sppermission;
 import se.nrm.specify.datamodel.Taxon;
 import se.nrm.specify.datamodel.Workbenchrow;
+import se.nrm.specify.specify.data.jpa.util.JPAUtil;
 
 /**
  *
@@ -41,7 +42,11 @@ import se.nrm.specify.datamodel.Workbenchrow;
 public class SpecifyDaoImpl implements SpecifyDao {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    @PersistenceContext(unitName = "jpa-local")         //  persistence unit connect to local database
+    @Inject
+    private EntityMapping entitymapping;
+    @PersistenceContext(unitName = "jpa-local")           //  persistence unit connect to local database
+//    @PersistenceContext(unitName = "jpa-development")       //  persistence unit connect to development database
+//    @PersistenceContext(unitName = "jpa-production")       //  persistence unit connect to development database
     private EntityManager entityManager;
 
     public SpecifyDaoImpl() {
@@ -52,7 +57,63 @@ public class SpecifyDaoImpl implements SpecifyDao {
     }
 
     /**
-     * Generic method returning an entity by id
+     * Generic method create an entities
+     *
+     * @param sBean , the entity to newBaseEntity created
+     */
+    public void createEntity(SpecifyBean sBean) {
+
+        logger.info("Persisting: {}", sBean);
+
+        try {
+            entityManager.persist(sBean);
+            logger.info("{} persisted", sBean);
+        } catch (ConstraintViolationException e) {
+            handleConstraintViolation(e);
+        }
+    }
+
+    /**
+     * Generic method edit an entity
+     *
+     * @param sBean, the entity to newBaseEntity edited
+     */
+    public String editEntity(SpecifyBean sBean) {
+
+        logger.info("editEntity: {}", sBean.toString());
+
+        try {
+            //    entityManager.flush();                        // for throwing OptimisticLockException before merge
+            entityManager.merge(sBean);
+
+            entityManager.flush();                              // this one used for throwing OptimisticLockException if method called with web service
+        } catch (OptimisticLockException e) {
+            logger.error("OptimisticLockException - error messages: {}", e.getMessage());
+            return sBean.toString() + "cannot be updated because it has changed or been deleted since it was last read. ";
+        } catch (ConstraintViolationException e) {
+            handleConstraintViolation(e);
+        }
+        return "Successful";
+    }
+
+    /**
+     * Generic method delete an entity
+     *
+     * @param sBean, the entity to newBaseEntity deleted
+     */
+    public void deleteEntity(SpecifyBean sBean) {
+
+        logger.info("deleteEntity {}", sBean);
+
+        try {
+            entityManager.remove(sBean);
+        } catch (ConstraintViolationException e) {
+            handleConstraintViolation(e);
+        }
+    }
+
+    /**
+     * Generic method retrieves an entity by entity id
      *
      * @param <T>   Entity
      * @param id:   the id of the entity 
@@ -79,13 +140,74 @@ public class SpecifyDaoImpl implements SpecifyDao {
             logger.error(ex.getMessage());
             entityManager.refresh(bean);
         }
-
-        logger.info("bean: {}", bean);
         return bean;
     }
 
+    public <T extends SpecifyBean> T getByReference(int id, Class<T> clazz) {
+        return entityManager.getReference(clazz, id);
+    }
+
     /**
-     * Generic method returning a list of entity with named query - ClassName.findAll
+     * getListByJPQLByFetchGroup - only fetches required fields as fetch group.
+     * 
+     * @param <T> 
+     * @param classname - entity name
+     * @param jpql  
+     * @param fields -fields required.
+     * 
+     * @return SpecifyBean
+     */
+    public <T extends SpecifyBean> List getListByJPQLByFetchGroup(String classname, String jpql, List<String> fields) {
+
+        logger.info("getListByJPQLByFetchGroup - classname: {} - jpql: {}", classname, jpql);
+
+        Query query = entityManager.createQuery(jpql);
+
+        List<String> removelist = JPAUtil.addFetchGroup(fields, query, classname);
+        List<T> beans = (List<T>) query.getResultList();
+
+        if (removelist != null) {
+            fields.removeAll(removelist);
+        }
+        
+        List<SpecifyBean> list = copyEntityGroup(beans, fields, classname);
+        logger.info("end of jpa fetch data");
+        
+        
+        
+        return list;
+    }
+
+    public <T extends SpecifyBean> List getAllByFetchGroup(Class<T> clazz, List<String> fields) {
+
+        logger.info("getAllByFetchGroup - Clazz: {}", clazz);
+
+        Query query = entityManager.createNamedQuery(clazz.getSimpleName() + ".findAll");
+        JPAUtil.addFetchGroup(fields, query, clazz.getSimpleName());
+
+        List<T> beans = (List<T>) query.getResultList();
+ 
+        List<SpecifyBean> list = copyEntityGroup(beans, fields, clazz.getSimpleName());
+        logger.info("end of jpa fetch data");
+        return list;
+    }
+
+    private <T extends SpecifyBean> List copyEntityGroup(List<T> beans, List<String> fields, String classname) {
+
+        List newBeans = new ArrayList();
+
+        for (T bean : beans) {
+            Map<String, SpecifyBean> beanmap = new HashMap<String, SpecifyBean>();
+            beanmap.put(classname, bean);
+            SpecifyBean obj = JPAUtil.createNewInstance(classname);
+            entitymapping.setEntityValue(obj, classname, fields, beanmap);
+            newBeans.add(obj);
+        }
+        return newBeans;
+    }
+
+    /**
+     * Generic method retrieves all the entity with named query - ClassName.findAll
      * 
      * @param <T>       Entity
      * @param clazz:    the class of the entity
@@ -100,120 +222,102 @@ public class SpecifyDaoImpl implements SpecifyDao {
     }
 
     /**
-     * generic method for creating entities
-     *
-     * @param sBean , the entity to be created
-     */
-    public void createEntity(SpecifyBean sBean) {
-
-        logger.info("Persisting: {}", sBean);
-
-        try {
-            entityManager.persist(sBean);
-
-            logger.info("{} persisted", sBean);
-        } catch (ConstraintViolationException e) {
-            handleConstraintViolation(e);
-        }
-    }
-
-    /**
-     * generic method for deleted entity
-     *
-     * @param sBean ,the entity to be deleted
-     */
-    public void deleteEntity(SpecifyBean sBean) {
-
-        logger.info("deleteEntity {}", sBean);
-
-        try {
-            entityManager.remove(sBean);
-        } catch (ConstraintViolationException e) {
-            handleConstraintViolation(e);
-        }
-    }
-
-    /**
-     * method for editing optional entity
-     *
-     * @param sBean, the entity to be edited
-     */
-    public String editEntity(SpecifyBean sBean) {
-
-        logger.info("editEntity: {}", sBean.toString());
-
-        try {
-            //    entityManager.flush();                      // for throwing OptimisticLockException before merge
-            entityManager.merge(sBean);
-
-            entityManager.flush();                      // this one used for throwing OptimisticLockException if method called with web service
-        } catch (OptimisticLockException e) {
-            logger.error("OptimisticLockException - error messages: {}", e.getMessage());
-            return sBean.toString() + "cannot be updated because it has changed or been deleted since it was last read. ";
-        } catch (ConstraintViolationException e) {
-            handleConstraintViolation(e);
-        }
-        return "Successful";
-    }
-
-    /**
-     * method retrieves Collectingevent by given stationFieldNumber
+     * Generic method gets an entity by named query with parameters
+    
+     * @param parameters
      * 
-     * @param stationFieldNumber
-     * 
-     * @return Collectingevent
+     * @return Entity
      */
-    public Collectingevent getCollectingEventByStationFieldNumber(String stationFieldNumber) {
+    public SpecifyBean getEntityByNamedQuery(String namedQuery, Map<String, String> parameters) {
 
-        logger.info("getCollectingEventByStationFieldNumber - stationFieldNumber: {}", stationFieldNumber);
+        logger.info("getEntityByNamedQuery - namedquery: {}, parameters: {}", namedQuery, parameters);
 
-        Query query = entityManager.createNamedQuery("Collectingevent.findByStationFieldNumber");
-        query.setParameter("stationFieldNumber", stationFieldNumber);
-
+        Query query = createQuery(namedQuery, parameters);
         try {
-            return (Collectingevent) query.getSingleResult();
-        } catch (NoResultException ex) {
-            logger.error(ex.getMessage());
-            return null;
-        }
-    }
-
-    /**
-     * get all the taxon fullname from database
-     * 
-     * @return - List<String>
-     */
-    public List<String> getAllTaxonName() {
-
-        logger.info("getAllTaxonName");
-         
-        TypedQuery<String> query = entityManager.createQuery("SELECT t.fullName FROM Taxon AS t", String.class);
-        
-        return query.getResultList(); 
-    }
-
-    /**
-     * get taxon by taxon fullname
-     * 
-     * @param taxonName
-     * @return Taxon
-     */
-    public Taxon getTaxonByTaxonName(String taxonName) {
-
-        logger.info("getTaxonByTaxonName - taxon name: {}", taxonName);
-
-        Query query = entityManager.createNamedQuery("Taxon.findByFullName");
-        query.setParameter("fullName", taxonName);
-
-        try {
-            return (Taxon) query.getSingleResult();
+            return (SpecifyBean) query.getSingleResult();
         } catch (javax.persistence.NoResultException ex) {
             logger.info(ex.getMessage());
-            return null;                // if no result, return null
+            return null;                        // if no result, return null
         } catch (javax.persistence.NonUniqueResultException ex) {
             logger.info(ex.getMessage());
-            return new Taxon();         // if result not unique, return new taxon
+            return null;                        // if result not unique, return null
         }
+    }
+
+    public SpecifyBean getEntityByJPQL(String jpql) {
+
+        logger.info("getEntityByJPQL - jpql: {}", jpql);
+
+        Query query = entityManager.createQuery(jpql);
+        try {
+            return (SpecifyBean) query.getSingleResult();
+        } catch (javax.persistence.NoResultException ex) {
+            logger.info(ex.getMessage());
+            return null;                        // if no result, return null
+        } catch (javax.persistence.NonUniqueResultException ex) {
+            logger.info(ex.getMessage());
+            return null;                        // if result not unique, return null
+        }
+    }
+
+    /**
+     * Generic method gets all the entities by named query with parameters
+     * @param <T>
+     * @param parameters
+     * @return 
+     */
+    public <T extends SpecifyBean> List getAllEntitiesByNamedQuery(String namedQuery, Map<String, String> parameters) {
+
+        logger.info("getAllEntitiesByNamedQuery - parameters: {}", parameters);
+        return createQuery(namedQuery, parameters).getResultList();
+    }
+
+    public <T extends SpecifyBean> List getAllEntitiesByJPQL(String jpql) {
+
+        logger.info("getAllEntitiesByJPQL - jpql: {}", jpql);
+
+        Query query = entityManager.createQuery(jpql);
+        List<SpecifyBean> list = query.getResultList();
+        return list;
+    }
+
+    /**
+     * Generic method search by jpql
+     * 
+     * @param jpql
+     * @return List<String>
+     */
+    public List<String> getTextListByJPQL(String jpql) {
+
+        logger.info("getTextListByJPQL: {}", jpql);
+
+        TypedQuery<String> query = entityManager.createQuery(jpql, String.class);
+        return query.getResultList();
+    }
+
+    public List<Object[]> getDataListByJPQL(String jpql) {
+
+        logger.info("getDataListByJPQL: {}", jpql);
+
+        TypedQuery<Object[]> query = entityManager.createQuery(jpql, Object[].class);
+        List list = query.getResultList();
+
+        return list;
+    }
+
+    public List<String> getSynomyList(Taxon taxon) {
+
+        logger.info("getSynomyList - taxon: {}", taxon);
+
+        List<String> synomyList = new ArrayList<String>();
+
+        Taxon t = getById(taxon.getTaxonID(), Taxon.class);
+        for (Taxon tx : t.getTaxonCollection3()) {
+            if (tx.getIsAccepted()) {
+                synomyList.add(taxon.getFullName());
+            }
+        }
+        return synomyList;
     }
 
     /**
@@ -233,7 +337,6 @@ public class SpecifyDaoImpl implements SpecifyDao {
         query.setParameter("code", code);
         query.setParameter("isCurrent", true);
 
-
         return query.getResultList();
     }
 
@@ -245,7 +348,7 @@ public class SpecifyDaoImpl implements SpecifyDao {
      */
     public Collectionobject getLastCollectionobjectByGroup(String collectionCode) {
 
-        logger.info("getLastCatalogNumber");
+        logger.info("getLastCatalogNumber: {}", collectionCode);
 
         Query query = entityManager.createNamedQuery("Collectionobject.findLastRecordByCollectionCode");
         query.setParameter("code", collectionCode);
@@ -272,76 +375,70 @@ public class SpecifyDaoImpl implements SpecifyDao {
      */
     public DataWrapper getDeterminationsByCollectingEvent(Collectingevent event, String collectionCode) {
 
-        logger.info("getDeterminationsByCollectingEvent - event: {}, collectionCode: {}", event, collectionCode); 
-        
+        logger.info("getDeterminationsByCollectingEvent - event: {}, collectionCode: {}", event, collectionCode);
+
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 
         CriteriaQuery<String> q = cb.createQuery(String.class);
-        
+
         Root<Determination> d = q.from(Determination.class);
+
         q.select(cb.construct(String.class, d.get("taxonID").get("fullName")));
-          
+
         ParameterExpression<Collectingevent> collectingEvent = cb.parameter(Collectingevent.class);
         ParameterExpression<String> code = cb.parameter(String.class);
         ParameterExpression<Boolean> isCurrent = cb.parameter(Boolean.class);
- 
-        q.where(cb.equal(d.get("collectionObjectID").get("collectingEventID"), collectingEvent), 
-                cb.equal(d.get("collectionObjectID").get("collectionID").get("code"), code), 
-                cb.equal(d.get("isCurrent"), isCurrent)); 
+
+        q.where(cb.equal(d.get("collectionObjectID").get("collectingEventID"), collectingEvent),
+                cb.equal(d.get("collectionObjectID").get("collectionID").get("code"), code),
+                cb.equal(d.get("isCurrent"), isCurrent));
 
         TypedQuery<String> tq = entityManager.createQuery(q);
-        tq.setParameter(collectingEvent, event); 
+
+        tq.setParameter(collectingEvent, event);
         tq.setParameter(code, collectionCode);
-        tq.setParameter(isCurrent, true);  
+        tq.setParameter(isCurrent, true);
 
         return new DataWrapper(tq.getResultList());
     }
 
-    public List<Collectingevent> getCollectingeventsByLocality(String localityName) {
-
-        logger.info("getCollectingeventsByLocality");
-
-        Query query = entityManager.createNamedQuery("Collectingevent.findByLocality");
-
-        query.setParameter("localityName", localityName + "%");
-        return query.getResultList();
-    }
-
     public List<String> getDeterminationByLocalityID(Locality locality, String collectionCode) {
 
-        logger.info("getDeterminationByLocalityID: {}, {}", locality, collectionCode); 
-         
+        logger.info("getDeterminationByLocalityID: {}, {}", locality, collectionCode);
+
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 
         CriteriaQuery<String> q = cb.createQuery(String.class);
-        
+
         Root<Determination> d = q.from(Determination.class);
         q.select(cb.construct(String.class, d.get("taxonID").get("fullName")));
-         
+
         ParameterExpression<Locality> localityId = cb.parameter(Locality.class);
         ParameterExpression<String> code = cb.parameter(String.class);
         ParameterExpression<Boolean> isCurrent = cb.parameter(Boolean.class);
 
-        q.where(cb.equal(d.get("collectionObjectID").get("collectingEventID").get("localityID"), localityId), 
-                cb.equal(d.get("collectionObjectID").get("collectionID").get("code"), code), 
-                cb.equal(d.get("isCurrent"), isCurrent)); 
+        q.where(cb.equal(d.get("collectionObjectID").get("collectingEventID").get("localityID"), localityId),
+                cb.equal(d.get("collectionObjectID").get("collectionID").get("code"), code),
+                cb.equal(d.get("isCurrent"), isCurrent));
 
         TypedQuery<String> query = entityManager.createQuery(q);
         query.setParameter(localityId, locality);
         query.setParameter(code, collectionCode);
         query.setParameter(isCurrent, true);
-         
-        return query.getResultList();  
+
+        List<String> list = query.getResultList();
+
+        return list;
     }
 
     public DataWrapper getDeterminationsByTaxon(Taxon taxonId, String collectionCode) {
 
         logger.info("getDeterminationsByTaxonId - taxon: {}, collection: {}", taxonId, collectionCode);
- 
-        Taxon taxon = getById(taxonId.getTaxonID(), Taxon.class); 
+
+        Taxon taxon = getById(taxonId.getTaxonID(), Taxon.class);
         int highestChildNode = taxon.getHighestChildNodeNumber();
         int node = taxon.getNodeNumber();
- 
+
         StringBuilder queryBuilder = new StringBuilder();
         queryBuilder.append("SELECT d.collectionObjectID.collectingEventID.localityID.localityID FROM Determination AS d where d.collectionObjectID.collectionID.code = '");
         queryBuilder.append(collectionCode);
@@ -350,10 +447,10 @@ public class SpecifyDaoImpl implements SpecifyDao {
         queryBuilder.append(" AND ");
         queryBuilder.append(highestChildNode);
         queryBuilder.append(" and d.isCurrent = true group by d.collectionObjectID.collectingEventID.collectingEventID");
-        
+
         TypedQuery<Integer> typedQuery = entityManager.createQuery(queryBuilder.toString(), Integer.class);
         List<Integer> localityIds = typedQuery.getResultList();
-        
+
         queryBuilder = new StringBuilder();
         queryBuilder.append("SELECT d.taxonID.fullName FROM Determination AS d where d.collectionObjectID.collectionID.code = '");
         queryBuilder.append(collectionCode);
@@ -362,43 +459,42 @@ public class SpecifyDaoImpl implements SpecifyDao {
         queryBuilder.append(" AND ");
         queryBuilder.append(highestChildNode);
         queryBuilder.append(" and d.isCurrent = true");
-        
-        TypedQuery<String> query = entityManager.createQuery(queryBuilder.toString(), String.class); 
+
+        TypedQuery<String> query = entityManager.createQuery(queryBuilder.toString(), String.class);
 
         Set<Integer> s = new HashSet<Integer>();
-        for (Integer localityId : localityIds) { 
+        for (Integer localityId : localityIds) {
             s.add(localityId);
-        } 
-         
+        }
         return new DataWrapper(query.getResultList(), String.valueOf(localityIds.size()), String.valueOf(s.size()));
     }
 
     /**
-     * Method retrieves list of Geography entity by a given GeographytreedefitemID from database 
+     * get taxon by Collectionobject.
      * 
-     * @param g - Geographytreedefitem 
-     * @return List<Geography>
+     * @param object - Collectionobject. 
+     * @return Taxon
      */
-    public List<Geography> getGeographyListByGeographytreedefitemId(Geographytreedefitem g) {
+    public Taxon getTaxonByCollectionobject(Collectionobject object) {
 
-        logger.info("getGeographyListByGeographytreedefitemId: {}", g.toString());
-
-        Query query = entityManager.createNamedQuery("Geography.findByGeographytreedefitemId");
-        query.setParameter("geographyTreeDefItemID", g);
-        return (List<Geography>) query.getResultList();
+        Query query = entityManager.createNamedQuery("Determination.findCurrentByCollectionobjectID");
+        query.setParameter("collectionObjectID", object);
+        query.setParameter("isCurrent", true);
+        Determination determination = (Determination) query.getSingleResult();
+        return (determination == null) ? null : determination.getTaxonID();
     }
 
-    /**
-     * Method retrieves all dna sequences from database
-     * 
-     * @return List<Dnasequence>
-     */
-    public List<Dnasequence> getAllDnasequences() {
+    private Query createQuery(String namedQuery, Map<String, String> parameters) {
 
-        logger.info("getAllDnasequences");
+        Set<String> keys = parameters.keySet();
 
-        Query query = entityManager.createNamedQuery("Dnasequence.findAll");
-        return (List<Dnasequence>) query.getResultList();
+        Query query = entityManager.createNamedQuery(namedQuery);
+
+        for (String key : keys) {
+            String param = parameters.get(key);
+            query.setParameter(key, param);
+        }
+        return query;
     }
 
     /**

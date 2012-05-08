@@ -1,15 +1,13 @@
 package se.nrm.specify.specify.data.jpa;
 
-import java.util.List;   
-import se.nrm.specify.datamodel.Collectingevent; 
+import java.util.List;
+import java.util.Map;
+import se.nrm.specify.datamodel.Collectingevent;
 import se.nrm.specify.datamodel.Collectionobject;
 import se.nrm.specify.datamodel.DataWrapper;
 import se.nrm.specify.datamodel.Determination;
-import se.nrm.specify.datamodel.Dnasequence;
-import se.nrm.specify.datamodel.Geography;
-import se.nrm.specify.datamodel.Geographytreedefitem;
 import se.nrm.specify.datamodel.Locality;
-import se.nrm.specify.datamodel.SpecifyBean; 
+import se.nrm.specify.datamodel.SpecifyBean;
 import se.nrm.specify.datamodel.Taxon;
 
 /**
@@ -18,7 +16,27 @@ import se.nrm.specify.datamodel.Taxon;
  */
 public interface SpecifyDao {
 
- 
+    /**
+     * Persist entity in database
+     * 
+     * @param sBean the entity bean
+     */
+    public void createEntity(SpecifyBean sBean);
+
+    /**
+     * Edit entity
+     * 
+     * @param sBean the entity bean
+     */
+    public String editEntity(SpecifyBean sBean);
+
+    /**
+     * Delete entity in database
+     * 
+     * @param sBean the entity bean
+     */
+    public void deleteEntity(SpecifyBean sBean);
+
     /**
      * Get the entity by entity id
      * 
@@ -29,7 +47,22 @@ public interface SpecifyDao {
      * @return the entity
      */
     public <T extends SpecifyBean> T getById(int id, Class<T> clazz);
-    
+
+    /**
+     * getByReference - Get an instance whose state may be lazily fetched
+     * @param <T> entityClass
+     * @param id
+     * @param clazz
+     * @return entity instance
+     */
+    public <T extends SpecifyBean> T getByReference(int id, Class<T> clazz);
+
+    public <T extends SpecifyBean> List getAllByFetchGroup(Class<T> clazz, List<String> fields);
+
+    public <T extends SpecifyBean> List getListByJPQLByFetchGroup(String classname, String jpql, List<String> fields);
+
+    public List<Object[]> getDataListByJPQL(String jpql);
+
     /**
      * Get the list of entity
      * 
@@ -39,49 +72,19 @@ public interface SpecifyDao {
      * @return the List<entity>
      */
     public <T extends SpecifyBean> List getAll(Class<T> clazz);
-    
-    /**
-     * Persist entity in database
-     * 
-     * @param sBean the entity bean
-     */
-    public void createEntity(SpecifyBean sBean);
-    
-    /**
-     * Delete entity in database
-     * 
-     * @param sBean the entity bean
-     */
-    public void deleteEntity(SpecifyBean sBean);
 
-    /**
-     * Edit entity
-     * 
-     * @param sBean the entity bean
-     */
-    public String editEntity(SpecifyBean sBean);
-     
-    /**
-     * Get Collectingevent by StationFieldNumber
-     * @param stationFieldNumber
-     * 
-     * @return Collectingevent
-     */
-    public Collectingevent getCollectingEventByStationFieldNumber(String stationFieldNumber); 
-    
-    /**
-     * Get all the taxon full name from database
-     * @return List<String>
-     */
-    public List<String> getAllTaxonName();
-    
-    /**
-     * Get taxon by taxon full name
-     * @param taxonName
-     * @return Taxon
-     */
-    public Taxon getTaxonByTaxonName(String taxonName);
-     
+    public SpecifyBean getEntityByJPQL(String jpql);
+
+    public SpecifyBean getEntityByNamedQuery(String namedQuery, Map<String, String> parameters);
+
+    public List<String> getTextListByJPQL(String jpql);
+
+    public <T extends SpecifyBean> List getAllEntitiesByNamedQuery(String namedQuery, Map<String, String> parameters);
+
+    public <T extends SpecifyBean> List getAllEntitiesByJPQL(String jpql);
+
+    public List<String> getSynomyList(Taxon taxon);
+
     /**
      * Get List of Determination by taxon name. collectingevent and collection code
      * @param taxonName
@@ -90,34 +93,21 @@ public interface SpecifyDao {
      * @return List<Determination>
      */
     public List<Determination> getDeterminationsByTaxonNameAndCollectingevent(String taxonName, Collectingevent event, String code);
-    
-    
+
     public Collectionobject getLastCollectionobjectByGroup(String collectionCode);
-    
+
     public List<Collectionobject> getCollectionobjectByCollectingEventAndYesno2(Collectingevent event);
-    
+
     public DataWrapper getDeterminationsByCollectingEvent(Collectingevent event, String collectionCode);
-    
-    public List<Collectingevent> getCollectingeventsByLocality(String localityName);
-    
+
     public List<String> getDeterminationByLocalityID(Locality locality, String collectionCode);
-    
+
     public DataWrapper getDeterminationsByTaxon(Taxon taxonId, String collectionCode);
-            
-    
-    /**
-     * Get the list of Geography by GeographytreedefitemId
-     * 
-     * @param g the Geographytreedefitem
-     * 
-     * @return a List of Geography
-     */
-    public List<Geography> getGeographyListByGeographytreedefitemId(Geographytreedefitem g);
-    
-    /**
-     * Get the list of Dnasequences
-     * 
-     * @return the list of Dnasequences
-     */
-    public List<Dnasequence> getAllDnasequences();
+
+    public Taxon getTaxonByCollectionobject(Collectionobject collectionobject);
+    //    public <T extends SpecifyBean> T getPatialObjects(Class<T> clazz, List<String> fields);
+//    
+//    public <T extends SpecifyBean> T getPartialObject(Class<T> clazz, String field);
+//    public <T extends SpecifyBean> T fatchByGroup(String classname, List<String> fields, Map<String, Object> conditions);
+//    public <T extends SpecifyBean> T getByJPQLByFetchGroup(String classname, String jpql, List<String> fields);
 }
