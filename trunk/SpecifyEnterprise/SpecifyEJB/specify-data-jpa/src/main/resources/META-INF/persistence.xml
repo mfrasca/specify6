@@ -8,6 +8,22 @@
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <properties>
       <!--             <property name="toplink.logging.level" value="fine"/> -->
+      
+<!--            <property name="eclipselink.profiler" value="PerformanceProfiler" />-->
+       
+            <property name="eclipselink.weaving" value="true"/>
+      
+        </properties>
+    </persistence-unit>
+    
+    <!-- **************************** persistence unit - production server ******************************** -->
+    <persistence-unit name="jpa-production" transaction-type="JTA">
+        <jta-data-source>jdbc/__entdbPool</jta-data-source>
+        <mapping-file>META-INF/orm.xml</mapping-file>
+        <exclude-unlisted-classes>false</exclude-unlisted-classes>
+        <properties>
+      <!--             <property name="toplink.logging.level" value="fine"/> -->
+            <property name="eclipselink.weaving" value="true" />
         </properties>
     </persistence-unit>
   
@@ -16,8 +32,11 @@
         <jta-data-source>jdbc/__SpecifyPool</jta-data-source>
         <mapping-file>META-INF/orm.xml</mapping-file>
         <exclude-unlisted-classes>false</exclude-unlisted-classes> 
-        <properties>
+        <properties> 
+                
       <!--             <property name="toplink.logging.level" value="fine"/> -->
+<!--            <property name="eclipselink.profiler" value="PerformanceProfiler" />-->
+            <property name="eclipselink.weaving" value="true" />
         </properties>
     </persistence-unit>
 </persistence>

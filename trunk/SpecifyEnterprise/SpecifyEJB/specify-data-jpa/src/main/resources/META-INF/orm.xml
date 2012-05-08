@@ -36,7 +36,7 @@
     <entity name="Collectingeventattribute" class="se.nrm.specify.datamodel.Collectingeventattribute"></entity>
     <entity name="Collectingtrip" class="se.nrm.specify.datamodel.Collectingtrip"></entity>
     <entity name="Collection" class="se.nrm.specify.datamodel.Collection"></entity>
-    <entity name="Collectionobject" class="se.nrm.specify.datamodel.Collectionobject"></entity>
+    <entity name="Collectionobject" class="se.nrm.specify.datamodel.Collectionobject"> </entity>
     <entity name="Collectionobjectattachment" class="se.nrm.specify.datamodel.Collectionobjectattachment"></entity>
     <entity name="Collectionobjectattr" class="se.nrm.specify.datamodel.Collectionobjectattr"></entity>
     <entity name="Collectionobjectattribute" class="se.nrm.specify.datamodel.Collectionobjectattribute"></entity>
@@ -176,4 +176,13 @@
     <entity name="Workbenchrowimage" class="se.nrm.specify.datamodel.Workbenchrowimage"></entity>
     <entity name="Workbenchtemplate" class="se.nrm.specify.datamodel.Workbenchtemplate"></entity>
     <entity name="Workbenchtemplatemappingitem" class="se.nrm.specify.datamodel.Workbenchtemplatemappingitem"></entity> 
+
+    <persistence-unit-metadata>
+        <persistence-unit-defaults>
+            <cascade-persist/>
+        </persistence-unit-defaults>
+    </persistence-unit-metadata>
+
+
+
 </entity-mappings>                  

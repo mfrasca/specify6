@@ -33,8 +33,7 @@ import se.nrm.specify.datamodel.DataWrapper;
 import se.nrm.specify.datamodel.Determination;
 import se.nrm.specify.datamodel.Dnasequence;
 import se.nrm.specify.datamodel.Geography;
-
-import se.nrm.specify.datamodel.Geographytreedefitem;
+ 
 import se.nrm.specify.datamodel.Locality;
 import se.nrm.specify.datamodel.Sppermission;
 import se.nrm.specify.datamodel.Taxon;
@@ -274,7 +273,7 @@ public class SpecifyDaoTest {
     /**
      * Test of editEntity method, of class SpecifyDaoImpl.
      */
-    @Test
+//    @Test
     public void testEditEntity() throws Throwable {
 
         logger.info("testEditEntity");
@@ -293,7 +292,7 @@ public class SpecifyDaoTest {
     /**
      * Test of OptimisticLockException 
      */
-    @Test
+//    @Test
     public void testOptimisticLockExceptionWhenEditEntity() {
 
         logger.info("testOptimisticLockExceptionWhenEditEntity");
@@ -306,102 +305,7 @@ public class SpecifyDaoTest {
         assertEquals(expected, result);
     }
 
-    /**
-     * Test of testGetCollectingEventByStationFieldNumber method, of class SpecifyDaoImpl.
-     */
-    @Test
-    public void testGetCollectingEventByStationFieldNumber() {
-
-        logger.info("testGetCollectingEventByStationFieldNumber");
-
-        String stationFieldNumber = "test number";
-        Collectingevent event = new Collectingevent();
-        event.setStationFieldNumber(stationFieldNumber);
-
-        when(entityManager.createNamedQuery("Collectingevent.findByStationFieldNumber")).thenReturn(query);
-        query.setParameter("stationFieldNumber", stationFieldNumber);
-        when(query.getSingleResult()).thenReturn(event);
-
-        Collectingevent result = testInstance.getCollectingEventByStationFieldNumber(stationFieldNumber);
-        assertNotNull(result);
-        assertEquals(event, result);
-    }
-
-    /**
-     * Test of testGetAllTaxonName method, of class SpecifyDaoImpl.
-     */
-    @Test
-    public void testGetAllTaxonName() {
-
-        logger.info("testGetAllTaxonName");
-
-        String strQuery = "SELECT t.fullName FROM Taxon AS t";
-
-        when(entityManager.createQuery(strQuery, String.class)).thenReturn(stringquery);
-        when(stringquery.getResultList()).thenReturn(stringList);
-
-        List<String> result = testInstance.getAllTaxonName();
-        assertNotNull(result);
-        assertEquals(3, result.size());
-    }
-
-    /**
-     * Test of testGetTaxonByTaxonName method, of class SpecifyDaoImpl.
-     */
-    @Test
-    public void testGetTaxonByTaxonName() {
-
-        logger.info("testGetTaxonByTaxonName");
-
-        String taxonName = "taxonname";
-
-        when(entityManager.createNamedQuery("Taxon.findByFullName")).thenReturn(query);
-        query.setParameter("fullName", taxonName);
-
-        Taxon expectedTaxon = new Taxon(10);
-        expectedTaxon.setFullName(taxonName);
-        when(query.getSingleResult()).thenReturn(expectedTaxon);
-
-        Taxon result = testInstance.getTaxonByTaxonName(taxonName);
-        assertNotNull(result);
-        assertEquals(taxonName, result.getFullName());
-    }
-
-    /**
-     * Test of testNoResultExceptionWhenGetTaxonByTaxonName method, of class SpecifyDaoImpl.
-     */
-    @Test
-    public void testNoResultExceptionWhenGetTaxonByTaxonName() {
-
-        logger.info("testNoResultExceptionWhenGetTaxonByTaxonName");
-
-        String taxonName = "taxonname";
-        when(entityManager.createNamedQuery("Taxon.findByFullName")).thenReturn(query);
-        query.setParameter("fullName", taxonName);
-
-        doThrow(new javax.persistence.NoResultException()).when(query).getSingleResult();
-        Taxon result = testInstance.getTaxonByTaxonName(taxonName);
-        assertNull(result);
-    }
-
-    /**
-     * Test of testNonUniqueResultExceptionWhenGetTaxonByTaxonName method, of class SpecifyDaoImpl.
-     */
-    @Test
-    public void testNonUniqueResultExceptionWhenGetTaxonByTaxonName() {
-
-        logger.info("testNonUniqueResultExceptionWhenGetTaxonByTaxonName");
-
-        String taxonName = "taxonname";
-        when(entityManager.createNamedQuery("Taxon.findByFullName")).thenReturn(query);
-        query.setParameter("fullName", taxonName);
-
-        doThrow(new javax.persistence.NonUniqueResultException()).when(query).getSingleResult();
-        Taxon result = testInstance.getTaxonByTaxonName(taxonName);
-        assertNotNull(result);
-        assertNull(result.getTaxonID());
-    }
-
+ 
     /**
      * Test of testGetDeterminationsByTaxonNameAndCollectingevent method, of class SpecifyDaoImpl.
      */
@@ -521,30 +425,7 @@ public class SpecifyDaoTest {
         assertNotNull(result);
         assertEquals(3, result.getList().size());
     }
-
-    /**
-     * Test of testGetCollectingeventsByLocality method, of class SpecifyDaoImpl.
-     */
-    @Test
-    public void testGetCollectingeventsByLocality() {
-
-        logger.info("testGetCollectingeventsByLocality");
-
-        String localityName = "test localityName";
-
-        List<Collectingevent> expectedResult = new ArrayList<Collectingevent>();
-        expectedResult.add(new Collectingevent(12));
-        expectedResult.add(new Collectingevent(18));
-
-        when(entityManager.createNamedQuery("Collectingevent.findByLocality")).thenReturn(query);
-        query.setParameter("localityName", localityName + "%");
-        when(query.getResultList()).thenReturn(expectedResult);
-
-        List<Collectingevent> result = testInstance.getCollectingeventsByLocality(localityName);
-        assertNotNull(result);
-        assertEquals(expectedResult, result);
-        assertEquals(2, result.size());
-    }
+ 
 
     /**
      * Test of testGetDeterminationByLocalityID method, of class SpecifyDaoImpl.
@@ -634,44 +515,25 @@ public class SpecifyDaoTest {
         assertEquals("4", result.getTrapcount());
     }
 
-    /**
-     * Test of getGeographyListByGeographytreedefitemId method, of class SpecifyDaoImpl.
-     */
-    @Test
-    public void testGetGeographyListByGeographytreedefitemId() {
-
-        logger.info("testGetGeographyListByGeographytreedefitemId");
-
-        Geographytreedefitem g = new Geographytreedefitem(2);
-
-        when(entityManager.createNamedQuery("Geography.findByGeographytreedefitemId")).thenReturn(query);
-        query.setParameter("geographyTreeDefItemID", g);
-        when(query.getResultList()).thenReturn(geographyList);
-
-        List<Geography> expResult = geographyList;
-        List<Geography> result = testInstance.getGeographyListByGeographytreedefitemId(g);
-
-        assertNotNull(result);
-        assertEquals(expResult, result);
-        assertEquals(5, result.size());
-    }
-
-    /**
-     * Test of getAllDnasequences method, of class SpecifyDaoImpl.
-     */
-    @Test
-    public void testGetAllDnasequences() {
-
-        logger.info("testGetAllDnasequences");
-
-        when(entityManager.createNamedQuery("Dnasequence.findAll")).thenReturn(query);
-        when(query.getResultList()).thenReturn(dnasequenceList);
-
-        List expResult = dnasequenceList;
-        List result = testInstance.getAllDnasequences();
-
-        assertNotNull(result);
-        assertEquals(expResult, result);
-        assertEquals(result.size(), 2);
-    }
+//    /**
+//     * Test of getGeographyListByGeographytreedefitemId method, of class SpecifyDaoImpl.
+//     */
+//    @Test
+//    public void testGetGeographyListByGeographytreedefitemId() {
+//
+//        logger.info("testGetGeographyListByGeographytreedefitemId");
+//
+//        Geographytreedefitem g = new Geographytreedefitem(2);
+//
+//        when(entityManager.createNamedQuery("Geography.findByGeographytreedefitemId")).thenReturn(query);
+//        query.setParameter("geographyTreeDefItemID", g);
+//        when(query.getResultList()).thenReturn(geographyList);
+//
+//        List<Geography> expResult = geographyList;
+//        List<Geography> result = testInstance.getGeographyListByGeographytreedefitemId(g);
+//
+//        assertNotNull(result);
+//        assertEquals(expResult, result);
+//        assertEquals(5, result.size());
+//    } 
 }
