@@ -1,5 +1,5 @@
 package se.nrm.specify.datamodel;
- 
+
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Date;
@@ -15,7 +15,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToMany; 
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -23,6 +23,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.eclipse.persistence.annotations.FetchAttribute;
+import org.eclipse.persistence.annotations.FetchGroup;
 
 /**
  *
@@ -35,6 +37,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Geography.findAll", query = "SELECT g FROM Geography g"),
     @NamedQuery(name = "Geography.findByGeographyID", query = "SELECT g FROM Geography g WHERE g.geographyID = :geographyID"),
     @NamedQuery(name = "Geography.findByGeographytreedefitemId", query = "SELECT g FROM Geography g WHERE g.geographyTreeDefItemID = :geographyTreeDefItemID"),
+    @NamedQuery(name = "Geography.findByContinent", query = "SELECT g FROM Geography g WHERE g.geographyTreeDefItemID.name = :name"),
     @NamedQuery(name = "Geography.findByTimestampCreated", query = "SELECT g FROM Geography g WHERE g.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Geography.findByTimestampModified", query = "SELECT g FROM Geography g WHERE g.timestampModified = :timestampModified"),
     @NamedQuery(name = "Geography.findByVersion", query = "SELECT g FROM Geography g WHERE g.version = :version"),
@@ -43,12 +46,13 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Geography.findByCentroidLon", query = "SELECT g FROM Geography g WHERE g.centroidLon = :centroidLon"),
     @NamedQuery(name = "Geography.findByCommonName", query = "SELECT g FROM Geography g WHERE g.commonName = :commonName"),
     @NamedQuery(name = "Geography.findByFullName", query = "SELECT g FROM Geography g WHERE g.fullName = :fullName"),
+    @NamedQuery(name = "Geography.findByParent", query = "SELECT g FROM Geography g WHERE g.parentID.geographyID = :geographyID"),
     @NamedQuery(name = "Geography.findByGeographyCode", query = "SELECT g FROM Geography g WHERE g.geographyCode = :geographyCode"),
     @NamedQuery(name = "Geography.findByGuid", query = "SELECT g FROM Geography g WHERE g.guid = :guid"),
     @NamedQuery(name = "Geography.findByHighestChildNodeNumber", query = "SELECT g FROM Geography g WHERE g.highestChildNodeNumber = :highestChildNodeNumber"),
     @NamedQuery(name = "Geography.findByIsAccepted", query = "SELECT g FROM Geography g WHERE g.isAccepted = :isAccepted"),
     @NamedQuery(name = "Geography.findByIsCurrent", query = "SELECT g FROM Geography g WHERE g.isCurrent = :isCurrent"),
-    @NamedQuery(name = "Geography.findByName", query = "SELECT g FROM Geography g WHERE g.name = :name"),
+    @NamedQuery(name = "Geography.findByName", query = "SELECT g FROM Geography g WHERE g.name = :name "),
     @NamedQuery(name = "Geography.findByNodeNumber", query = "SELECT g FROM Geography g WHERE g.nodeNumber = :nodeNumber"),
     @NamedQuery(name = "Geography.findByNumber1", query = "SELECT g FROM Geography g WHERE g.number1 = :number1"),
     @NamedQuery(name = "Geography.findByNumber2", query = "SELECT g FROM Geography g WHERE g.number2 = :number2"),
@@ -56,17 +60,16 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Geography.findByText1", query = "SELECT g FROM Geography g WHERE g.text1 = :text1"),
     @NamedQuery(name = "Geography.findByText2", query = "SELECT g FROM Geography g WHERE g.text2 = :text2"),
     @NamedQuery(name = "Geography.findByTimestampVersion", query = "SELECT g FROM Geography g WHERE g.timestampVersion = :timestampVersion")})
-public class Geography extends BaseEntity { 
-    
+public class Geography extends BaseEntity {
+
     private static final long serialVersionUID = 1L;
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-//    @NotNull
+//    @NotNull 
     @Column(name = "GeographyID")
     private Integer geographyID;
-     
+    
     @Size(max = 16)
     @Column(name = "Abbrev")
     private String abbrev;
@@ -108,8 +111,8 @@ public class Geography extends BaseEntity {
     @Column(name = "IsCurrent")
     private Boolean isCurrent;
     
-    @Basic(optional = false)
     @NotNull
+    @Basic(optional = false) 
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
@@ -123,8 +126,8 @@ public class Geography extends BaseEntity {
     @Column(name = "Number2")
     private Integer number2;
     
-    @Basic(optional = false)
     @NotNull
+    @Basic(optional = false) 
     @Column(name = "RankID")
     private int rankID;
     
@@ -142,7 +145,7 @@ public class Geography extends BaseEntity {
     private String text2;
     
     @Column(name = "TimestampVersion")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.TIMESTAMP) 
     private Date timestampVersion;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "geographyID")
@@ -150,34 +153,26 @@ public class Geography extends BaseEntity {
     
     @OneToMany(mappedBy = "acceptedID")
     private Collection<Geography> geographyCollection;
-    
     @JoinColumn(name = "AcceptedID", referencedColumnName = "GeographyID")
     @ManyToOne
     private Geography acceptedID;
-    
     @JoinColumn(name = "GeographyTreeDefItemID", referencedColumnName = "GeographyTreeDefItemID")
     @ManyToOne(optional = false)
     private Geographytreedefitem geographyTreeDefItemID;
-    
     @JoinColumn(name = "GeographyTreeDefID", referencedColumnName = "GeographyTreeDefID")
     @ManyToOne(optional = false)
     private Geographytreedef geographyTreeDefID;
-    
     @OneToMany(mappedBy = "parentID")
     private Collection<Geography> geographyCollection1;
-    
     @JoinColumn(name = "ParentID", referencedColumnName = "GeographyID")
     @ManyToOne
     private Geography parentID;
-    
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
     private Agent createdByAgentID;
-    
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
     private Agent modifiedByAgentID;
-    
     @OneToMany(mappedBy = "geographyID")
     private Collection<Locality> localityCollection;
 
@@ -190,7 +185,7 @@ public class Geography extends BaseEntity {
 
     public Geography(Integer geographyID, Date timestampCreated, String name, int rankID) {
         super(timestampCreated);
-        this.geographyID = geographyID; 
+        this.geographyID = geographyID;
         this.name = name;
         this.rankID = rankID;
     }
@@ -201,8 +196,8 @@ public class Geography extends BaseEntity {
 
     public void setGeographyID(Integer geographyID) {
         this.geographyID = geographyID;
-    } 
-    
+    }
+
     public String getAbbrev() {
         return abbrev;
     }
@@ -447,6 +442,30 @@ public class Geography extends BaseEntity {
         this.localityCollection = localityCollection;
     }
 
+    public Geography getCountry() {
+
+        if (rankID > 200) {
+            Geography parent = parentID;
+            while (!parent.getGeographyTreeDefItemID().getName().equals("Country")) {
+                parent = parent.getParentID();
+            }
+            return parent;
+        }
+        return new Geography();
+    }
+
+    public Geography getContinent() {
+
+        if (rankID > 100) {
+            Geography parent = parentID;
+            while (!parent.getGeographyTreeDefItemID().getName().equals("Continent")) {
+                parent = parent.getParentID();
+            }
+            return parent;
+        }
+        return new Geography();
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -471,5 +490,4 @@ public class Geography extends BaseEntity {
     public String toString() {
         return "Geography[ geographyID=" + geographyID + " ]";
     }
-    
 }

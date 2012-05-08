@@ -5,7 +5,7 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Entity;
+import javax.persistence.Entity; 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -68,8 +68,8 @@ public class Agent extends BaseEntity {
     @Column(name = "Abbreviation")
     private String abbreviation;
     
-    @Basic(optional = false)
     @NotNull
+    @Basic(optional = false) 
     @Column(name = "AgentType")
     private short agentType;
     
@@ -233,7 +233,7 @@ public class Agent extends BaseEntity {
     @OneToMany(mappedBy = "modifiedByAgentID")
     private Collection<Splocaleitemstr> splocaleitemstrCollection1;
     
-    @OneToMany(mappedBy = "preparedByID")
+    @OneToMany(mappedBy = "preparedByAgentID")
     private Collection<Preparation> preparationCollection;
     
     @OneToMany(mappedBy = "createdByAgentID")
@@ -1102,22 +1102,24 @@ public class Agent extends BaseEntity {
     @OneToMany(mappedBy = "modifiedByAgentID")
     private Collection<Loanpreparation> loanpreparationCollection1;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "createdByAgentID")
-//    @XmlElement 
-    private Collection<Address> addressCollection;
+    
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "modifiedByAgentID")
 //    @XmlElement
+    private Collection<Address> addressCollection2;
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "createdByAgentID")
+//    @XmlElement 
     private Collection<Address> addressCollection1;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "agentID")  
-    private Collection<Address> addressCollection2;
-    
+    private Collection<Address> addressCollection;  // change addressCollection2 to addressCollection to match global.views.xml
+     
     @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Locality> localityCollection;
+    private Collection<Locality> localityCollection1;
     
     @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Locality> localityCollection1;
+    private Collection<Locality> localityCollection;
     
     @OneToMany(mappedBy = "createdByAgentID")
     private Collection<Agentspecialty> agentspecialtyCollection;
@@ -4180,7 +4182,7 @@ public class Agent extends BaseEntity {
         this.loanpreparationCollection1 = loanpreparationCollection1;
     }
 
-    @XmlTransient
+//    @XmlTransient
     public Collection<Address> getAddressCollection() {
         return addressCollection;
     }
@@ -4189,7 +4191,7 @@ public class Agent extends BaseEntity {
         this.addressCollection = addressCollection;
     }
 
-    @XmlTransient
+//    @XmlTransient
     public Collection<Address> getAddressCollection1() {
         return addressCollection1;
     }
@@ -4198,7 +4200,7 @@ public class Agent extends BaseEntity {
         this.addressCollection1 = addressCollection1;
     }
 
-    @XmlTransient
+//    @XmlTransient
     public Collection<Address> getAddressCollection2() {
         return addressCollection2;
     }

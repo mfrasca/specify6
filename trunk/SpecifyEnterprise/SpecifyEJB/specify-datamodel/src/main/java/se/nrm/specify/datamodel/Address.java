@@ -177,8 +177,7 @@ public class Address extends BaseEntity {
     private Agent modifiedByAgentID;
     
     @JoinColumn(name = "AgentID", referencedColumnName = "AgentID")
-    @ManyToOne
-    @XmlTransient 
+    @ManyToOne 
     private Agent agentID;
 
     public Address() {
@@ -397,6 +396,7 @@ public class Address extends BaseEntity {
         this.institutionCollection = institutionCollection;
     }
 
+    @XmlTransient
     public Agent getCreatedByAgentID() {
         return createdByAgentID;
     }
@@ -405,6 +405,7 @@ public class Address extends BaseEntity {
         this.createdByAgentID = createdByAgentID;
     }
 
+    @XmlTransient
     public Agent getModifiedByAgentID() {
         return modifiedByAgentID;
     }
@@ -412,7 +413,8 @@ public class Address extends BaseEntity {
     public void setModifiedByAgentID(Agent modifiedByAgentID) {
         this.modifiedByAgentID = modifiedByAgentID;
     }
-
+ 
+    @XmlTransient
     public Agent getAgentID() {
         return agentID;
     }

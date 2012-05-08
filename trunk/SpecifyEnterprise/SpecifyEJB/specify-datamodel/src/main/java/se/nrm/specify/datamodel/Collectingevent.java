@@ -354,7 +354,6 @@ public class Collectingevent extends BaseEntity {
         this.disciplineID = disciplineID;
     }
     
-    @XmlTransient
     public Collector getCollectorID() {
         return collectorID;
     }

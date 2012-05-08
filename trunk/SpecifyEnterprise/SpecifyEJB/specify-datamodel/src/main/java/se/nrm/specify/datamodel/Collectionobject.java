@@ -23,8 +23,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlRootElement; 
 import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter; 
 
 /**
  *
@@ -65,7 +66,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Collectionobject.findByTotalValue", query = "SELECT c FROM Collectionobject c WHERE c.totalValue = :totalValue"),
     @NamedQuery(name = "Collectionobject.findByVisibility", query = "SELECT c FROM Collectionobject c WHERE c.visibility = :visibility"),
     @NamedQuery(name = "Collectionobject.findLastRecordByCollectionCode", query = "select c from Collectionobject c where c.collectionID.code = :code order by c.collectionObjectID desc"),
-    @NamedQuery(name = "Collectionobject.findByCollectingEventIDAndYesNo2", query = "SELECT c FROM Collectionobject c WHERE c.collectingEventID = :collectingEventID and c.yesNo2 IS NULL"),
+    @NamedQuery(name = "Collectionobject.findByCollectingEventIDAndYesNo2", query = "SELECT c FROM Collectionobject c WHERE c.collectingEventID = :collectingEventID and c.yesNo2 IS NULL"),  
     @NamedQuery(name = "Collectionobject.findByYesNo1", query = "SELECT c FROM Collectionobject c WHERE c.yesNo1 = :yesNo1"),
     @NamedQuery(name = "Collectionobject.findByYesNo2", query = "SELECT c FROM Collectionobject c WHERE c.yesNo2 = :yesNo2"),
     @NamedQuery(name = "Collectionobject.findByYesNo3", query = "SELECT c FROM Collectionobject c WHERE c.yesNo3 = :yesNo3"),
@@ -75,7 +76,7 @@ import javax.xml.bind.annotation.XmlTransient;
 public class Collectionobject extends BaseEntity { 
     
     private static final long serialVersionUID = 1L;
-    
+     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -83,8 +84,8 @@ public class Collectionobject extends BaseEntity {
     @Column(name = "CollectionObjectID")
     private Integer collectionObjectID;
       
-    @Basic(optional = false)
     @NotNull
+    @Basic(optional = false) 
     @Column(name = "CollectionMemberID")
     private int collectionMemberID;
     
@@ -298,6 +299,7 @@ public class Collectionobject extends BaseEntity {
     private Collection<Exsiccataitem> exsiccataitemCollection;
 
     public Collectionobject() {
+        super();
     }
 
     public Collectionobject(Integer collectionObjectID) {
@@ -349,7 +351,7 @@ public class Collectionobject extends BaseEntity {
     public void setCatalogNumber(String catalogNumber) {
         this.catalogNumber = catalogNumber;
     }
-
+ 
     public Date getCatalogedDate() {
         return catalogedDate;
     }
@@ -592,7 +594,7 @@ public class Collectionobject extends BaseEntity {
         this.treatmenteventCollection = treatmenteventCollection;
     }
 
-    @XmlTransient
+//    @XmlTransient
     public Collection<Preparation> getPreparationCollection() {
         return preparationCollection;
     }
@@ -646,7 +648,7 @@ public class Collectionobject extends BaseEntity {
         this.collectionobjectattrCollection = collectionobjectattrCollection;
     }
 
-    @XmlTransient
+//    @XmlTransient
     public Collection<Determination> getDeterminationCollection() {
         return determinationCollection;
     }
@@ -814,7 +816,8 @@ public class Collectionobject extends BaseEntity {
         }
         return true;
     }
-
+  
+    
     @Override
     public String toString() {
         return "Collectionobject[ collectionObjectID=" + collectionObjectID + " ]";
