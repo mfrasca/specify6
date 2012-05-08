@@ -347,7 +347,7 @@ public class Accession extends BaseEntity {
         this.appraisalCollection = appraisalCollection;
     }
 
-    @XmlTransient
+//    @XmlTransient
     public Collection<Accessionagent> getAccessionagentCollection() {
         return accessionagentCollection;
     }

@@ -1,8 +1,8 @@
 package se.nrm.specify.datamodel;
- 
-import java.util.List;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+
+import java.util.List; 
+import javax.xml.bind.annotation.XmlElement; 
+import javax.xml.bind.annotation.XmlRootElement; 
 
 /**
  * DataWrapper wrapper different data into object to pass data through web service
@@ -13,7 +13,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class DataWrapper {
 
     @XmlElement
-    private List<String> list; 
+    private List<String> list;
+    
+//    @XmlElement
+    private List<Object[]> dataList;
+    
     @XmlElement
     private String eventcount;
     @XmlElement
@@ -23,29 +27,30 @@ public class DataWrapper {
     private Collectingevent event;
     @XmlElement
     private int numSortedVials;
-    @XmlElement 
+    @XmlElement
     private String collectionCode;
-
+     
     public DataWrapper() {
     }
-
-    public DataWrapper(List<String> list) {
-        this.list = list;
-    } 
      
+    public DataWrapper(List list) {
+        this.list = list;
+    }
+     
+
     public DataWrapper(List<String> list, String eventcount, String trapcount) {
         this.list = list;
         this.eventcount = eventcount;
         this.trapcount = trapcount;
     }
-    
+
     public DataWrapper(List<String> list, Collectingevent event, int numSortedVails, String collectionCode) {
         this.list = list;
         this.event = event;
         this.numSortedVials = numSortedVails;
         this.collectionCode = collectionCode;
     }
-     
+  
     public String getEventcount() {
         return eventcount;
     }
@@ -53,16 +58,24 @@ public class DataWrapper {
     public String getTrapcount() {
         return trapcount;
     }
-     
+
     public List<String> getList() {
         return list;
     }
 
+    public List<Object[]> getDataList() {
+        return dataList;
+    }
+
+    public void setDataList(List<Object[]> dataList) {
+        this.dataList = dataList;
+    }
+    
+    
+
     public String getCollectionCode() {
         return collectionCode;
     }
- 
-    
 
     public Collectingevent getEvent() {
         return event;
@@ -71,12 +84,7 @@ public class DataWrapper {
     public int getNumSortedVials() {
         return numSortedVials;
     }
-    
-    
-    
-    
-    
- 
+
     @Override
     public String toString() {
         return "data is: List: " + list + " event count: " + eventcount + " trap count: " + trapcount;

@@ -20,6 +20,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -124,7 +125,7 @@ public class Preparation extends BaseEntity {
     
     @JoinColumn(name = "PreparedByID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent preparedByID;
+    private Agent preparedByAgentID;            // change name to match common.view.xml
     
     @JoinColumn(name = "StorageID", referencedColumnName = "StorageID")
     @ManyToOne
@@ -139,7 +140,7 @@ public class Preparation extends BaseEntity {
     private Collectionobject collectionObjectID;
     
     @JoinColumn(name = "PrepTypeID", referencedColumnName = "PrepTypeID")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade= CascadeType.ALL)
     private Preptype prepTypeID;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
@@ -315,11 +316,11 @@ public class Preparation extends BaseEntity {
     }
 
     public Agent getPreparedByID() {
-        return preparedByID;
+        return preparedByAgentID;
     }
 
     public void setPreparedByID(Agent preparedByID) {
-        this.preparedByID = preparedByID;
+        this.preparedByAgentID = preparedByID;
     }
 
     public Storage getStorageID() {
@@ -338,6 +339,7 @@ public class Preparation extends BaseEntity {
         this.createdByAgentID = createdByAgentID;
     }
 
+    @XmlTransient
     public Collectionobject getCollectionObjectID() {
         return collectionObjectID;
     }
@@ -345,7 +347,7 @@ public class Preparation extends BaseEntity {
     public void setCollectionObjectID(Collectionobject collectionObjectID) {
         this.collectionObjectID = collectionObjectID;
     }
-
+ 
     public Preptype getPrepTypeID() {
         return prepTypeID;
     }
@@ -414,7 +416,20 @@ public class Preparation extends BaseEntity {
     public void setLoanpreparationCollection(Collection<Loanpreparation> loanpreparationCollection) {
         this.loanpreparationCollection = loanpreparationCollection;
     }
-
+    
+    /**
+     * Parent pointer
+     * 
+     * @param u
+     * @param parent 
+     */
+    public void afterUnmarshal(Unmarshaller u, Object parent) {
+        
+        if(parent instanceof Collectionobject) {
+            this.collectionObjectID = (Collectionobject)parent;
+        } 
+    }
+     
     @Override
     public int hashCode() {
         int hash = 0;

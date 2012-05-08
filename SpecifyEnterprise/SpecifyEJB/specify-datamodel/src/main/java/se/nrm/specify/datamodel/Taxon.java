@@ -1,7 +1,7 @@
 package se.nrm.specify.datamodel;
  
 import java.util.Collection;
-import java.util.Date;
+import java.util.Date; 
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -15,11 +15,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table; 
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.eclipse.persistence.annotations.Index;
 
 /**
  *
@@ -40,10 +41,12 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Taxon.findByCitesStatus", query = "SELECT t FROM Taxon t WHERE t.citesStatus = :citesStatus"),
     @NamedQuery(name = "Taxon.findByCOLStatus", query = "SELECT t FROM Taxon t WHERE t.cOLStatus = :cOLStatus"),
     @NamedQuery(name = "Taxon.findByCommonName", query = "SELECT t FROM Taxon t WHERE t.commonName = :commonName"),
+    @NamedQuery(name = "Taxon.findByCommonNameWithWildCard", query = "SELECT t FROM Taxon t WHERE t.commonName like :commonName"),
     @NamedQuery(name = "Taxon.findByCultivarName", query = "SELECT t FROM Taxon t WHERE t.cultivarName = :cultivarName"),
     @NamedQuery(name = "Taxon.findByEnvironmentalProtectionStatus", query = "SELECT t FROM Taxon t WHERE t.environmentalProtectionStatus = :environmentalProtectionStatus"),
     @NamedQuery(name = "Taxon.findByEsaStatus", query = "SELECT t FROM Taxon t WHERE t.esaStatus = :esaStatus"),
     @NamedQuery(name = "Taxon.findByFullName", query = "SELECT t FROM Taxon t WHERE t.fullName = :fullName"),
+    @NamedQuery(name = "Taxon.findByFullNameWithWildCard", query = "SELECT t FROM Taxon t WHERE t.fullName like :fullName"),
     @NamedQuery(name = "Taxon.findByGroupNumber", query = "SELECT t FROM Taxon t WHERE t.groupNumber = :groupNumber"),
     @NamedQuery(name = "Taxon.findByGuid", query = "SELECT t FROM Taxon t WHERE t.guid = :guid"),
     @NamedQuery(name = "Taxon.findByHighestChildNodeNumber", query = "SELECT t FROM Taxon t WHERE t.highestChildNodeNumber = :highestChildNodeNumber"),
@@ -71,221 +74,166 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Taxon.findByUnitName4", query = "SELECT t FROM Taxon t WHERE t.unitName4 = :unitName4"),
     @NamedQuery(name = "Taxon.findByUsfwsCode", query = "SELECT t FROM Taxon t WHERE t.usfwsCode = :usfwsCode"),
     @NamedQuery(name = "Taxon.findByVisibility", query = "SELECT t FROM Taxon t WHERE t.visibility = :visibility")})
-public class Taxon extends BaseEntity {  
-    
+public class Taxon extends BaseEntity {
+
     private static final long serialVersionUID = 1L;
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "TaxonID")
     private Integer taxonID;
-     
     @Size(max = 128)
     @Column(name = "Author")
     private String author;
-    
     @Size(max = 32)
     @Column(name = "CitesStatus")
     private String citesStatus;
-    
     @Size(max = 32)
     @Column(name = "COLStatus")
     private String cOLStatus;
-    
     @Size(max = 128)
     @Column(name = "CommonName")
     private String commonName;
-    
     @Size(max = 32)
     @Column(name = "CultivarName")
     private String cultivarName;
-    
     @Size(max = 64)
     @Column(name = "EnvironmentalProtectionStatus")
     private String environmentalProtectionStatus;
-    
     @Size(max = 64)
     @Column(name = "EsaStatus")
     private String esaStatus;
-    
+    @Index
     @Size(max = 255)
     @Column(name = "FullName")
     private String fullName;
-    
     @Size(max = 20)
     @Column(name = "GroupNumber")
     private String groupNumber;
-    
     @Size(max = 128)
     @Column(name = "GUID")
     private String guid;
-    
     @Column(name = "HighestChildNodeNumber")
     private Integer highestChildNodeNumber;
-    
     @Column(name = "IsAccepted")
     private Boolean isAccepted;
-    
     @Column(name = "IsHybrid")
     private Boolean isHybrid;
-    
     @Size(max = 16)
     @Column(name = "IsisNumber")
     private String isisNumber;
-    
     @Size(max = 64)
     @Column(name = "LabelFormat")
     private String labelFormat;
-    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
-    
     @Size(max = 8)
     @Column(name = "NcbiTaxonNumber")
     private String ncbiTaxonNumber;
-    
     @Column(name = "NodeNumber")
     private Integer nodeNumber;
-    
     @Column(name = "Number1")
     private Integer number1;
-    
     @Column(name = "Number2")
     private Integer number2;
-    
     @Basic(optional = false)
     @NotNull
     @Column(name = "RankID")
     private int rankID;
-    
     @Lob
     @Size(max = 65535)
     @Column(name = "Remarks")
     private String remarks;
-    
     @Size(max = 64)
     @Column(name = "Source")
     private String source;
-    
     @Size(max = 50)
     @Column(name = "TaxonomicSerialNumber")
     private String taxonomicSerialNumber;
-    
     @Size(max = 32)
     @Column(name = "Text1")
     private String text1;
-    
     @Size(max = 32)
     @Column(name = "Text2")
     private String text2;
-    
     @Size(max = 50)
     @Column(name = "UnitInd1")
     private String unitInd1;
-    
     @Size(max = 50)
     @Column(name = "UnitInd2")
     private String unitInd2;
-    
     @Size(max = 50)
     @Column(name = "UnitInd3")
     private String unitInd3;
-    
     @Size(max = 50)
     @Column(name = "UnitInd4")
     private String unitInd4;
-    
     @Size(max = 50)
     @Column(name = "UnitName1")
     private String unitName1;
-    
     @Size(max = 50)
     @Column(name = "UnitName2")
     private String unitName2;
-    
     @Size(max = 50)
     @Column(name = "UnitName3")
     private String unitName3;
-    
     @Size(max = 50)
     @Column(name = "UnitName4")
     private String unitName4;
-    
     @Size(max = 16)
     @Column(name = "UsfwsCode")
     private String usfwsCode;
-    
     @Column(name = "Visibility")
     private Short visibility;
-    
-    @JoinColumn(name = "TaxonTreeDefID", referencedColumnName = "TaxonTreeDefID") 
+    @JoinColumn(name = "TaxonTreeDefID", referencedColumnName = "TaxonTreeDefID")
     @ManyToOne(optional = false)
     private Taxontreedef taxonTreeDefID;
-    
-    @OneToMany(mappedBy = "parentID") 
+    @OneToMany(mappedBy = "parentID")
     private Collection<Taxon> taxonCollection;
-    
     @JoinColumn(name = "ParentID", referencedColumnName = "TaxonID")
     @ManyToOne
     private Taxon parentID;
-    
     @JoinColumn(name = "TaxonTreeDefItemID", referencedColumnName = "TaxonTreeDefItemID")
     @ManyToOne(optional = false)
     private Taxontreedefitem taxonTreeDefItemID;
-    
     @JoinColumn(name = "VisibilitySetByID", referencedColumnName = "SpecifyUserID")
     @ManyToOne
     private Specifyuser visibilitySetByID;
-    
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
     private Agent createdByAgentID;
-    
     @OneToMany(mappedBy = "hybridParent2ID")
     private Collection<Taxon> taxonCollection1;
-    
     @JoinColumn(name = "HybridParent2ID", referencedColumnName = "TaxonID")
     @ManyToOne
     private Taxon hybridParent2ID;
-    
     @OneToMany(mappedBy = "hybridParent1ID")
     private Collection<Taxon> taxonCollection2;
-    
     @JoinColumn(name = "HybridParent1ID", referencedColumnName = "TaxonID")
     @ManyToOne
     private Taxon hybridParent1ID;
-    
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
     private Agent modifiedByAgentID;
-    
     @OneToMany(mappedBy = "acceptedID")
     private Collection<Taxon> taxonCollection3;
-    
     @JoinColumn(name = "AcceptedID", referencedColumnName = "TaxonID")
     @ManyToOne
     private Taxon acceptedID;
-    
     @OneToMany(mappedBy = "hostTaxonID")
     private Collection<Collectingeventattribute> collectingeventattributeCollection;
-    
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "taxonID") 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "taxonID")
     private Collection<Commonnametx> commonnametxCollection;
-    
     @OneToMany(mappedBy = "preferredTaxonID")
     private Collection<Determination> determinationCollection;
-    
     @OneToMany(mappedBy = "taxonID")
     private Collection<Determination> determinationCollection1;
-    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "taxonID")
     private Collection<Taxoncitation> taxoncitationCollection;
-    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "taxonID")
     private Collection<Taxonattachment> taxonattachmentCollection;
 
@@ -298,9 +246,14 @@ public class Taxon extends BaseEntity {
 
     public Taxon(Integer taxonID, Date timestampCreated, String name, int rankID) {
         super(timestampCreated);
-        this.taxonID = taxonID; 
+        this.taxonID = taxonID;
         this.name = name;
         this.rankID = rankID;
+    }
+
+    public Taxon(Integer taxonID, String fullName) {
+        this.taxonID = taxonID;
+        this.fullName = fullName;
     }
 
     public Integer getTaxonID() {
@@ -310,7 +263,7 @@ public class Taxon extends BaseEntity {
     public void setTaxonID(Integer taxonID) {
         this.taxonID = taxonID;
     }
- 
+
     public String getAuthor() {
         return author;
     }
@@ -760,11 +713,26 @@ public class Taxon extends BaseEntity {
     public void setTaxonattachmentCollection(Collection<Taxonattachment> taxonattachmentCollection) {
         this.taxonattachmentCollection = taxonattachmentCollection;
     }
-     
-    
+
     @XmlTransient
     public int getNumDetermination() {
         return determinationCollection1.size();
+    }
+
+    public Taxon getTaxonFamily() {
+
+        if(rankID > 140) {
+            if (taxonTreeDefItemID.getName().equals("Family")) {
+                return this;
+            } else {
+                Taxon parent = parentID;
+                while (!parent.getTaxonTreeDefItemID().getName().equals("Family")) {
+                    parent = parent.getParentID();
+                }
+                return parent;
+            } 
+        } 
+        return new Taxon();
     }
 
     @Override
@@ -791,5 +759,4 @@ public class Taxon extends BaseEntity {
     public String toString() {
         return "Taxon[ taxonID=" + taxonID + " ]";
     }
-    
 }

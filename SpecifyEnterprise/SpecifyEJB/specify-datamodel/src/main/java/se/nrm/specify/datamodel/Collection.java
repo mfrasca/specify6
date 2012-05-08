@@ -1,5 +1,5 @@
 package se.nrm.specify.datamodel;
- 
+
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -14,7 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table; 
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -53,149 +53,113 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Collection.findByRegNumber", query = "SELECT c FROM Collection c WHERE c.regNumber = :regNumber"),
     @NamedQuery(name = "Collection.findByWebPortalURI", query = "SELECT c FROM Collection c WHERE c.webPortalURI = :webPortalURI"),
     @NamedQuery(name = "Collection.findByWebSiteURI", query = "SELECT c FROM Collection c WHERE c.webSiteURI = :webSiteURI")})
-public class Collection extends BaseEntity {  
-    
+public class Collection extends BaseEntity {
+
     private static final long serialVersionUID = 1L;
-    
     @Id
     @Basic(optional = false)
     @NotNull
     @Column(name = "UserGroupScopeId")
     private Integer userGroupScopeId;
-      
     @Basic(optional = false)
 //    @NotNull
     @Size(min = 1, max = 64)
     @Column(name = "CatalogFormatNumName")
     private String catalogFormatNumName;
-    
     @Size(max = 50)
     @Column(name = "Code")
     private String code;
-    
     @Column(name = "collectionId")
     private Integer collectionId;
-    
     @Size(max = 50)
     @Column(name = "CollectionName")
     private String collectionName;
-    
     @Size(max = 32)
     @Column(name = "CollectionType")
     private String collectionType;
-    
     @Size(max = 32)
     @Column(name = "DbContentVersion")
     private String dbContentVersion;
-    
     @Lob
     @Size(max = 65535)
     @Column(name = "Description")
     private String description;
-    
     @Size(max = 32)
     @Column(name = "DevelopmentStatus")
     private String developmentStatus;
-    
     @Column(name = "EstimatedSize")
     private Integer estimatedSize;
-    
     @Size(max = 32)
     @Column(name = "InstitutionType")
     private String institutionType;
-    
     @Basic(optional = false)
     @NotNull
     @Column(name = "IsEmbeddedCollectingEvent")
     private boolean isEmbeddedCollectingEvent;
-    
     @Size(max = 24)
     @Column(name = "IsaNumber")
     private String isaNumber;
-    
     @Size(max = 32)
     @Column(name = "KingdomCoverage")
     private String kingdomCoverage;
-    
     @Size(max = 32)
     @Column(name = "PreservationMethodType")
     private String preservationMethodType;
-    
     @Size(max = 32)
     @Column(name = "PrimaryFocus")
     private String primaryFocus;
-    
     @Size(max = 32)
     @Column(name = "PrimaryPurpose")
     private String primaryPurpose;
-    
     @Size(max = 24)
     @Column(name = "RegNumber")
     private String regNumber;
-    
     @Lob
     @Size(max = 65535)
     @Column(name = "Remarks")
     private String remarks;
-    
     @Lob
     @Size(max = 65535)
     @Column(name = "Scope")
     private String scope;
-    
     @Size(max = 255)
     @Column(name = "WebPortalURI")
     private String webPortalURI;
-    
     @Size(max = 255)
     @Column(name = "WebSiteURI")
     private String webSiteURI;
-    
     @JoinTable(name = "autonumsch_coll", joinColumns = {
         @JoinColumn(name = "CollectionID", referencedColumnName = "UserGroupScopeId")}, inverseJoinColumns = {
         @JoinColumn(name = "AutoNumberingSchemeID", referencedColumnName = "AutoNumberingSchemeID")})
     @ManyToMany
     private java.util.Collection<Autonumberingscheme> autonumberingschemeCollection;
-    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "collectionID")
     private java.util.Collection<Preptype> preptypeCollection;
-    
-    @OneToMany(mappedBy = "collectionID", cascade= CascadeType.ALL)
+    @OneToMany(mappedBy = "collectionID", cascade = CascadeType.ALL)
     private java.util.Collection<Sptasksemaphore> sptasksemaphoreCollection;
-    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "collectionID")
     private java.util.Collection<Picklist> picklistCollection;
-    
     @JoinColumn(name = "DisciplineID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne(optional = false)
     private Discipline disciplineID;
-    
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
     private Agent createdByAgentID;
-    
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
     private Agent modifiedByAgentID;
-    
     @OneToMany(mappedBy = "rightSideCollectionID")
     private java.util.Collection<Collectionreltype> collectionreltypeCollection;
-    
     @OneToMany(mappedBy = "leftSideCollectionID")
     private java.util.Collection<Collectionreltype> collectionreltypeCollection1;
-    
     @OneToMany(mappedBy = "collectionTCID")
     private java.util.Collection<Agent> agentCollection;
-    
     @OneToMany(mappedBy = "collectionCCID")
     private java.util.Collection<Agent> agentCollection1;
-    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "collectionID")
     private java.util.Collection<Collectionobject> collectionobjectCollection;
-    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "collectionID")
     private java.util.Collection<Fieldnotebook> fieldnotebookCollection;
-    
     @OneToMany(mappedBy = "collectionID")
     private java.util.Collection<Spappresourcedir> spappresourcedirCollection;
 
@@ -208,7 +172,7 @@ public class Collection extends BaseEntity {
 
     public Collection(Integer userGroupScopeId, Date timestampCreated, String catalogFormatNumName, boolean isEmbeddedCollectingEvent) {
         super(timestampCreated);
-        this.userGroupScopeId = userGroupScopeId; 
+        this.userGroupScopeId = userGroupScopeId;
         this.catalogFormatNumName = catalogFormatNumName;
         this.isEmbeddedCollectingEvent = isEmbeddedCollectingEvent;
     }
@@ -220,7 +184,7 @@ public class Collection extends BaseEntity {
     public void setUserGroupScopeId(Integer userGroupScopeId) {
         this.userGroupScopeId = userGroupScopeId;
     }
- 
+
     public String getCatalogFormatNumName() {
         return catalogFormatNumName;
     }
@@ -531,10 +495,10 @@ public class Collection extends BaseEntity {
         }
         return true;
     }
+ 
 
     @Override
     public String toString() {
         return "Collection[ userGroupScopeId=" + userGroupScopeId + " ]";
     }
-    
 }

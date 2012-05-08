@@ -20,6 +20,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType; 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -59,7 +60,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Determination.findByYesNo2", query = "SELECT d FROM Determination d WHERE d.yesNo2 = :yesNo2"),
     @NamedQuery(name = "Determination.findByPreferredTaxonID", query = "SELECT d FROM Determination d WHERE d.preferredTaxonID = :preferredTaxonID"),
     @NamedQuery(name = "Determination.findCurrentByTaxonNameAndEvent", query = "SELECT d FROM Determination d WHERE d.taxonID.fullName = :fullName and d.collectionObjectID.collectingEventID = :collectingEventID and d.collectionObjectID.collectionID.code = :code and d.isCurrent = :isCurrent"),
-    @NamedQuery(name = "Determination.findByTaxonID", query = "SELECT d FROM Determination d WHERE d.taxonID = :taxonId")})
+    @NamedQuery(name = "Determination.findByTaxonID", query = "SELECT d FROM Determination d WHERE d.taxonID = :taxonId"),
+    @NamedQuery(name = "Determination.findCurrentByCollectionobjectID", query = "SELECT d FROM Determination d WHERE d.collectionObjectID = :collectionObjectID and d.isCurrent = :isCurrent")})
 public class Determination extends BaseEntity { 
     
     private static final long serialVersionUID = 1L;
@@ -186,6 +188,7 @@ public class Determination extends BaseEntity {
     @JoinColumn(name = "TaxonID", referencedColumnName = "TaxonID")
     @ManyToOne
     private Taxon taxonID;
+     
 
     public Determination() {
     }
@@ -410,6 +413,7 @@ public class Determination extends BaseEntity {
         this.createdByAgentID = createdByAgentID;
     }
 
+    @XmlTransient
     public Collectionobject getCollectionObjectID() {
         return collectionObjectID;
     }
@@ -425,7 +429,7 @@ public class Determination extends BaseEntity {
     public void setModifiedByAgentID(Agent modifiedByAgentID) {
         this.modifiedByAgentID = modifiedByAgentID;
     }
-
+  
     public Taxon getPreferredTaxonID() {
         return preferredTaxonID;
     }
@@ -433,15 +437,27 @@ public class Determination extends BaseEntity {
     public void setPreferredTaxonID(Taxon preferredTaxonID) {
         this.preferredTaxonID = preferredTaxonID;
     }
-
+  
     public Taxon getTaxonID() {
         return taxonID;
     }
 
     public void setTaxonID(Taxon taxonID) {
         this.taxonID = taxonID;
+    } 
+     
+    /**
+     * Parent pointer
+     * 
+     * @param u
+     * @param parent 
+     */
+    public void afterUnmarshal(Unmarshaller u, Object parent) {  
+        if(parent instanceof Collectionobject) {
+            this.collectionObjectID = (Collectionobject)parent;   
+        }
     }
-
+     
     @Override
     public int hashCode() {
         int hash = 0;
@@ -465,6 +481,5 @@ public class Determination extends BaseEntity {
     @Override
     public String toString() {
         return "Determination[ determinationID=" + determinationID + " ]";
-    }
-    
+    } 
 }

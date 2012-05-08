@@ -6,7 +6,7 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
-import javax.persistence.TemporalType; 
+import javax.persistence.TemporalType;
 import javax.persistence.Version; 
 import javax.xml.bind.annotation.XmlAttribute; 
 //import javax.validation.constraints.NotNull;
@@ -19,28 +19,25 @@ import javax.xml.bind.annotation.XmlAttribute;
 public abstract class BaseEntity implements Serializable, SpecifyBean {
 
     private static final long serialVersionUID = 1L;
-    
     @XmlAttribute
     @Version
     @Column(name = "Version") 
     Integer version;
-    
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "TimestampCreated")
     @Temporal(TemporalType.TIMESTAMP)
     Date timestampCreated;
-    
-    @Column(name = "TimestampModified") 
+    @Column(name = "TimestampModified")
     @Temporal(TemporalType.TIMESTAMP)
     Date timestampModified;
-        
-    public BaseEntity() {  
+
+    public BaseEntity() {
     }
-    
-    public BaseEntity(Date timestampCreated) { 
+
+    public BaseEntity(Date timestampCreated) {
         this.timestampCreated = timestampCreated;
-    } 
+    }
 
     public Integer getVersion() {
         return version;
@@ -64,5 +61,5 @@ public abstract class BaseEntity implements Serializable, SpecifyBean {
 
     public void setTimestampModified(Date timestampModified) {
         this.timestampModified = timestampModified;
-    } 
+    }
 }
