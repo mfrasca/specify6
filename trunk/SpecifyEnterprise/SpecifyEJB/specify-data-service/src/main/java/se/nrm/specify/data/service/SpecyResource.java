@@ -2,8 +2,11 @@ package se.nrm.specify.data.service;
 
 import com.google.gson.Gson;
 import com.sun.jersey.spi.resource.PerRequest;
-import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -14,18 +17,20 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.UriInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.nrm.specify.business.logic.smtp.SMTPLogic;
 import se.nrm.specify.business.logic.specify.SpecifyLogic;
-import se.nrm.specify.datamodel.Accession;
-import se.nrm.specify.datamodel.Address;
 import se.nrm.specify.datamodel.Collectingevent;
 import se.nrm.specify.datamodel.DataWrapper;
 import se.nrm.specify.datamodel.Determination;
 import se.nrm.specify.datamodel.Locality;
 import se.nrm.specify.datamodel.SpecifyBean;
+import se.nrm.specify.datamodel.SpecifyBeanWrapper;
 import se.nrm.specify.datamodel.Taxon;
 
 /**
@@ -51,9 +56,10 @@ public class SpecyResource {
     }
 
     /**
-     * Generic method to get entity from database.  
+     * Generic method to get an entity by entity id from database.  
+     * This method passes in a PathParam entity class name and entity id
      * 
-     * @param entity - name of the entity
+     * @param entity - class name of the entity
      * @param id - entity id
      * 
      * @return entity
@@ -68,15 +74,33 @@ public class SpecyResource {
     }
 
     /**
-     * Generic method - createEntity method add the entity into database
+     * Generic method to get an entity by entity id from database.  
+     * This method passes in a PathParam entity class name and entity id
+     * 
+     * @param entity - class name of the entity
+     * @param id - entity id
+     * 
+     * @return entity
+     */
+    @GET
+    @Path("search/entitybyid/{entity}/{id}")
+    public SpecifyBeanWrapper getEntityById(@PathParam("entity") String entity, @PathParam("id") String id) {
+
+        logger.info("getEntity - entity: {}, id: {}", entity, id);
+        SpecifyBean bean = specify.getDao().getById(Integer.parseInt(id), getEntityClass(entity));
+        return new SpecifyBeanWrapper(bean);
+    }
+
+    /**
+     * Generic method to create an entity.  This method passes entity class name and an entity as json string
      * 
      * @param entity - the name of the entity
      * 
-     * @param json - an entity in json
+     * @param json - an entity in json string
      */
     @POST
     @Path("add/{entity}/{json}")
-    public void createEntity(@PathParam("entity") String entity, @PathParam("json") String json) {
+    public void createJsonEntity(@PathParam("entity") String entity, @PathParam("json") String json) {
 
         logger.info("createEntity - entity: {}, json: {}", entity, json);
 
@@ -84,22 +108,21 @@ public class SpecyResource {
     }
 
     /**
-     * Create a specific entity
+     * Generic method to create an entity by passing SpecifyBeanWrapper, the entity to be created is wrapped into SpecifyBeanWrapper
      * 
-     * @param entity
-     * @param id 
+     * @param wrapper - SpecifyBeanWrapper
      */
     @POST
-    @Path("add/address")
-    public void createAddress(Address address) {
+    @Path("add/entity")
+    public void createEntity(SpecifyBeanWrapper wrapper) {
 
-        logger.info("createEntity - entity: {}", address);
+        logger.info("createEntity - entity: {}", wrapper.getBean());
 
-        specify.getDao().createEntity(address);
+        specify.getDao().createEntity(wrapper.getBean());
     }
 
     /**
-     * Generic method delete entity by entityid
+     * Generic method delete an entity by entityid
      * 
      * @param entity
      * @param id 
@@ -117,7 +140,7 @@ public class SpecyResource {
     }
 
     /**
-     * Generic method update entity
+     * Generic method update entity in json string
      * 
      * @param entity
      * @param json 
@@ -128,62 +151,188 @@ public class SpecyResource {
 
         logger.info("update entity: {}, json: {}", entity, json);
 
-        String result = specify.getDao().editEntity(jsonToEntity(entity, json));
-
-        logger.info("Edit entity result:  {}", result);
-
-        return result;
+        return specify.getDao().editEntity(jsonToEntity(entity, json));
     }
 
     /**
-     * Search for Accessions
-     * @return List<Accession>
-     */
-    @GET
-    @Path("search/all/accessions")
-    public List<Accession> getAllAccessions() {
-        return specify.getDao().getAll(Accession.class);
-    }
-
-    /**
+     * Generic method update an entity
      * 
-     * @param eventId
+     * @param data - SpecifyBeanWrapper
+     * @return 
+     */
+    @PUT
+    @Path("updateentity")
+    public String updateEntity(SpecifyBeanWrapper data) {
+
+        logger.info("update entity: {}", data.getBean());
+
+        return specify.getDao().editEntity(data.getBean());
+    }
+
+    /**
+     * Generic method get all entities by entity class name
+     * 
+     * @param entity - entity class name
      * @return 
      */
     @GET
-    @Path("search/collectingevent/{stationFieldNumber}")
-    public SpecifyBean getCollectingEventByStationFieldNumber(@PathParam("stationFieldNumber") String stationFieldNumber) {
+    @Path("search/allentities/{entity}")
+    public SpecifyBeanWrapper getAllEntities(@PathParam("entity") String entity) {
 
-        logger.info("getCollectingEventByStationFieldNumber: {}", stationFieldNumber);
+        logger.info("getAllEntities - entity: {}", entity);
 
-        return specify.getDao().getCollectingEventByStationFieldNumber(stationFieldNumber);
+        Class clazz = getEntityClass(entity);
+        return new SpecifyBeanWrapper(specify.getDao().getAll(clazz));
+    }
+
+    @GET
+    @Path("search/entity/{jpql}")
+    public SpecifyBean getEntityByJPQL(@PathParam("jpql") String jpql) {
+
+        logger.info("getEntityByJPQL: {}", jpql);
+
+        return specify.getDao().getEntityByJPQL(jpql);
+    }
+
+    @GET
+    @Path("search/entity/namedquery")
+    public SpecifyBean getEntityByNamedQuery(@Context UriInfo uri) {
+
+        logger.info("getEntityByNamedQuery");
+
+        MultivaluedMap map = uri.getQueryParameters();
+
+        Set<String> set = map.keySet();
+        Map<String, String> parameters = new HashMap<String, String>();
+        List<String> query = (List<String>) map.get("namedquery");
+        for (String key : set) {
+            if (!key.equals("namedquery")) {
+                List<String> params = (List<String>) map.get(key);
+                parameters.put(key, params.get(0));
+            }
+        }
+
+        return specify.getDao().getEntityByNamedQuery(query.get(0), parameters);
     }
 
     /**
-     * Search for Taxon
-     * @return List<Taxon>
+     * Generic method search by jpql
+     * 
+     * @return List<String>
      */
     @GET
-    @Path("search/all/taxon")
-    public DataWrapper getAllTaxon() {
+    @Path("search/textlist/{jpql}")
+    public DataWrapper getTextListByJPQL(@PathParam("jpql") String jpql) {
 
-        logger.info("getAllTaxon");
+        logger.info("getTextListByJPQL: {}", jpql);
 
-        return new DataWrapper(specify.getDao().getAllTaxonName());
+        return new DataWrapper(specify.getDao().getTextListByJPQL(jpql));
     }
 
     /**
-     * get taxon by taxonname
-     * @param taxonname
-     * @return Taxon
+     * Generic method search by jpql
+     * 
+     * @return List<String>
      */
     @GET
-    @Path("search/taxon/{taxonname}")
-    public Taxon getTaxonByTaxonname(@PathParam("taxonname") String taxonname) {
+    @Path("search/synomys/{id}")
+    public DataWrapper getTextSynomysByTaxonId(@PathParam("id") String id) {
 
-        logger.info("getTaxonByTaxonname- taxonname: {}", taxonname);
+        logger.info("getTextSynomysByTaxonId: {}", id);
 
-        return specify.getDao().getTaxonByTaxonName(taxonname);
+        List<String> list = specify.getDao().getSynomyList(new Taxon(Integer.parseInt(id)));
+
+        return new DataWrapper(list);
+    }
+
+    @GET
+    @Path("search/entities/namedquery")
+    public SpecifyBeanWrapper getAllEntitiesByNamedQuery(@Context UriInfo uri) {
+
+        logger.info("getAllEntitiesByJPQL");
+
+
+        MultivaluedMap map = uri.getQueryParameters();
+
+        Set<String> set = map.keySet();
+        Map<String, String> parameters = new HashMap<String, String>();
+        List<String> query = (List<String>) map.get("namedquery");
+
+        for (String key : set) {
+            if (!key.equals("namedquery")) {
+                List<String> params = (List<String>) map.get(key);
+                parameters.put(key, params.get(0));
+            }
+        }
+        return new SpecifyBeanWrapper(specify.getDao().getAllEntitiesByNamedQuery(query.get(0), parameters));
+    }
+
+    @GET
+    @Path("search/list/bygroup/{entity}")
+    public SpecifyBeanWrapper fetchListByGroup(@PathParam("entity") String entity, @Context UriInfo uri) {
+        logger.info("fetchByGroup - entity: {}", entity);
+
+        MultivaluedMap map = uri.getQueryParameters();
+
+        List<String> params = (List<String>) map.get("jpql");
+        String jpql = params.get(0);
+        List<String> fields = (List<String>) map.get(entity);
+
+        List<SpecifyBean> list = (List<SpecifyBean>) specify.getDao().getListByJPQLByFetchGroup(entity, jpql, fields);
+        return new SpecifyBeanWrapper(list);
+    }
+
+    @GET
+    @Path("search/all/bygroup/{entity}")
+    public SpecifyBeanWrapper fetchAllByGroup(@PathParam("entity") String entity, @Context UriInfo uri) {
+        logger.info("fetchAllByGroup - entity: {}", entity);
+
+        MultivaluedMap map = uri.getQueryParameters();
+        
+        Class clazz = getEntityClass(entity); 
+        List<String> fields = (List<String>) map.get(entity);
+
+        List<SpecifyBean> list = (List<SpecifyBean>) specify.getDao().getAllByFetchGroup(clazz, fields);
+        return new SpecifyBeanWrapper(list);
+    }
+
+    @GET
+    @Path("search/entitiesbyjpql/{jpql}")
+    public SpecifyBeanWrapper getAllEntitiesByJPQL(@PathParam("jpql") String jpql) {
+
+        logger.info("getAllEntitiesByJPQL: {}", jpql);
+        List<SpecifyBean> list = (List<SpecifyBean>) specify.getDao().getAllEntitiesByJPQL(jpql);
+        return new SpecifyBeanWrapper(list);
+    }
+
+    @GET
+    @Path("search/data/{jpql}")
+    public DataWrapper getData(@PathParam("jpql") String jpql) {
+
+        List<Object[]> list = specify.getDao().getDataListByJPQL(jpql);
+        for (int i = 0; i < 10; i++) {
+            Object[] objs = list.get(i);
+            StringBuilder sb = new StringBuilder();
+            for (Object obj : objs) {
+                sb.append(String.valueOf(obj));
+                sb.append(" - ");
+            }
+            logger.info(sb.toString());
+        }
+
+        logger.info("list: {}", list.size());
+        DataWrapper data = new DataWrapper();
+        data.setDataList(list);
+        return new DataWrapper();
+    }
+
+    @POST
+    @Path("upload")
+    public void uploadData(DataWrapper wrapper) {
+
+        logger.info("upload data - event: {}, number of sorted vials: {}", wrapper.getEvent(), wrapper.getNumSortedVials());
+
+        smtp.saveSMTPBatchData(wrapper);
     }
 
     /**
@@ -202,30 +351,12 @@ public class SpecyResource {
         return specify.getDao().getDeterminationsByTaxonNameAndCollectingevent(taxonname, new Collectingevent(Integer.parseInt(eventId)), collection);
     }
 
-    @POST
-    @Path("upload")
-    public void uploadData(DataWrapper wrapper) {
-
-        logger.info("upload data - event: {}, number of sorted vials: {}", wrapper.getEvent(), wrapper.getNumSortedVials());
-
-        smtp.saveSMTPBatchData(wrapper);
-    }
-
     @GET
     @Path("search/determinationsbyevent/{eventid}/{code}")
     public DataWrapper getDeterminationsByCollectingevent(@PathParam("eventid") String eventid, @PathParam("code") String collectionCode) {
 
         logger.info("getDeterminationsByCollectingevent: {}, {}", eventid, collectionCode);
         return specify.getDao().getDeterminationsByCollectingEvent(new Collectingevent(Integer.parseInt(eventid)), collectionCode);
-    }
-
-    @GET
-    @Path("search/collectingeventbylocality/{localityname}")
-    public List<Collectingevent> getCollectingeventByLocalityName(@PathParam("localityname") String localityName) {
-
-        logger.info("getCollectingeventByLocalityName - localityName: {}", localityName);
-
-        return specify.getDao().getCollectingeventsByLocality(localityName);
     }
 
     /**
