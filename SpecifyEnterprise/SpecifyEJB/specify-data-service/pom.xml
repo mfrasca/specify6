@@ -37,6 +37,14 @@
             <version>${project.parent.version}</version>
             <type>ejb</type>
         </dependency>
+        
+        <dependency>
+            <groupId>${project.parent.groupId}</groupId>
+            <artifactId>specify-ui-formdata</artifactId>
+            <version>${project.parent.version}</version>
+            <type>ejb</type>
+        </dependency>
+ 
  
         <dependency>
             <groupId>com.google.code.gson</groupId>

@@ -10,11 +10,13 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 import java.net.URI;
 import java.sql.Timestamp;
-import java.util.ArrayList; 
-import java.util.List; 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.UriBuilder; 
+import javax.ws.rs.core.UriBuilder;
 import se.nrm.specify.datamodel.*;
 import se.nrm.specify.datamodel.SpecifyBean;
 
@@ -56,21 +58,35 @@ public class SpecifyClient {
 
 
         //        testGetPartialObjects();
-        testQry();
+//        testQry();
 //        testQry1();
 //        testFetchGroup();
 
-//                testGetEntityByNamedQuery();
+//        testGetEntityByNamedQuery();
         //        testGetTextListByJPQL();
-        //        testGetAllEntitiesByNamedQuery();
+//                testGetAllEntitiesByNamedQuery();
         //        testGetEntitiesByJPQL(); 
-        
+
 //        testGetEntityById();
-         
+        testUIView();
+
+    }
+
+    private static void testUIView() {
+        
+        String discipline = "fish";
+        String view = "CollectionObject"; 
+        
+        
+        MultivaluedMapImpl queryParams = new MultivaluedMapImpl();
+        queryParams.add("catalogNumber", "NHRS-GULI000000970");
+        
+        String xml = service.path("search").path("uidata").path(discipline).path(view).queryParams(queryParams).accept(MediaType.APPLICATION_XML).get(String.class);
+        System.out.println("xml: " + xml);
     }
     
     private static void testGetEntityById() {
-        
+
         String entity = Agent.class.getName();
         String id = "1";
 
@@ -79,21 +95,21 @@ public class SpecifyClient {
         List<Address> addresses = (List<Address>) agent.getAddressCollection();
         System.out.println("size: " + addresses.size());
     }
-    
+
     private static void testQry1() {
-        
+
         List<String> fetchFields = new ArrayList<String>();
         fetchFields.add("geneSequence");
         fetchFields.add("collectionObjectID.collectionObjectID");
-        
+
         String classname = Dnasequence.class.getName();
-        
+
         MultivaluedMap queryParams = new MultivaluedMapImpl();
         queryParams.put(classname, fetchFields);
-        
+
         SpecifyBeanWrapper wrapper = service.path("search").path("all").path("bygroup").path(classname).queryParams(queryParams).accept(MediaType.APPLICATION_JSON).get(SpecifyBeanWrapper.class);
-        for(SpecifyBean bean : wrapper.getBeans()) {
-            Dnasequence dna = (Dnasequence)bean;
+        for (SpecifyBean bean : wrapper.getBeans()) {
+            Dnasequence dna = (Dnasequence) bean;
             System.out.println("dna: " + dna.getCollectionObjectID().getCollectionObjectID());
         }
     }
@@ -101,8 +117,8 @@ public class SpecifyClient {
     private static void testQry() {
 
         String fieldname = "catalogNumber";
-//        String fieldvalue = "NHRS-COLE000008661";
-        String fieldvalue = "SMTPINV000007096";
+        String fieldvalue = "NHRS-COLE000008661";
+//        String fieldvalue = "SMTPINV000007096";
         String classname = "Collectionobject"; 
  
         StringBuilder jpqlSB = new StringBuilder();
@@ -114,15 +130,11 @@ public class SpecifyClient {
         jpqlSB.append(fieldvalue);
         jpqlSB.append("'");
  
-        String entity = classname;
-  
-        MultivaluedMap queryParams = new MultivaluedMapImpl();
-
-
+//
         List<String> fields = new ArrayList<String>();
 //        fields.add("collectionObjectID");
-//        fields.add("timestampModified");
-        fields.add("catalogNumber");
+        fields.add("timestampModified");
+//        fields.add("catalogNumber");
 //        fields.add("remarks");
 //        fields.add("collectingEventID.stationFieldNumber");
 //        fields.add("collectingEventID.startDate");
@@ -136,24 +148,25 @@ public class SpecifyClient {
 //        fields.add("determinationCollection.preferredTaxonID.fullName");
 //        fields.add("determinationCollection.isCurrent");
 //        fields.add("determinationCollection.typeStatusName");
-        fields.add("determinationCollection.taxonID.fullName");
-        fields.add("determinationCollection.determinerID.addressCollection.address");
-        fields.add("catalogerID.addressCollection.address");
+//        fields.add("determinationCollection.taxonID.fullName");
+//        fields.add("determinationCollection.determinerID.addressCollection.address");
+//        fields.add("catalogerID.addressCollection.address");
 //        fields.add("preparationCollection.collectionMemberID");
-         
-    
-         
-        
+
+
+  
+        MultivaluedMap queryParams = new MultivaluedMapImpl();
+  
         List<String> jpqlarry = new ArrayList<String>();
         jpqlarry.add(jpqlSB.toString());
-  
+
         queryParams.put("jpql", jpqlarry);
-        queryParams.put(entity, fields);
+//        queryParams.put(classname, fields);
 
 
-        String bean = service.path("search").path("list").path("bygroup").path(entity).queryParams(queryParams).accept(MediaType.APPLICATION_XML).get(String.class);
+        String bean = service.path("search").path("list").path("bygroup").path(classname).queryParams(queryParams).accept(MediaType.APPLICATION_XML).get(String.class);
         System.out.println("bean: " + bean);
- 
+
 //        
 //        SpecifyBeanWrapper wrapper = service.path("search").path("list").path("bygroup").path(entity).queryParams(queryParams).accept(MediaType.APPLICATION_JSON).get(SpecifyBeanWrapper.class);
 //        System.out.println("list: " + wrapper.getBeans());
@@ -187,6 +200,23 @@ public class SpecifyClient {
 //        System.out.println(response);
 //        
 
+
+    }
+
+    private static void testGetEntityByNamedQuery() {
+
+        MultivaluedMap queryParams = new MultivaluedMapImpl();
+
+        queryParams.add("namedquery", "Specifyuser.findByName");
+        queryParams.add("name", "idali");
+
+
+        SpecifyBeanWrapper wrapper = service.path("search").path("entity").path("namedquery").queryParams(queryParams).accept(MediaType.APPLICATION_JSON).get(SpecifyBeanWrapper.class);
+
+        Specifyuser user = (Specifyuser) wrapper.getBean();
+
+        System.out.println("g: {}" + user);
+        System.out.println("name: " + user.getName());
 
     }
 
@@ -453,28 +483,6 @@ public class SpecifyClient {
         }
     }
 
-    private static void testGetEntityByNamedQuery() {
-
-        MultivaluedMap queryParams = new MultivaluedMapImpl();
-        queryParams.add("namedquery", "Geography.findByName");
-        queryParams.add("name", "Sweden");
-
-        SpecifyBeanWrapper wrapper = service.path("search").path("entities").path("namedquery").queryParams(queryParams).accept(MediaType.APPLICATION_JSON).get(SpecifyBeanWrapper.class);
-        for (SpecifyBean bean : wrapper.getBeans()) {
-            Geography g = (Geography) bean;
-
-            System.out.println("g: {}" + g);
-            System.out.println("name: " + g.getName());
-
-            System.out.println("node: " + g.getNodeNumber() + "..." + g.getHighestChildNodeNumber());
-        }
-
-
-
-
-
-    }
-
     private static void testGetTextListByJPQL() {
         String jpql = "SELECT t.fullName FROM Taxon AS t";
 
@@ -571,9 +579,9 @@ public class SpecifyClient {
      */
     private static void testGetEntity() {
 
-        String entity = Collectionobject.class.getName();
-        String id = "206015";
- 
+        String entity = Address.class.getName();
+        String id = "18";
+
 
 //        String entity = Collectionobject.class.getName();
 //        String id = "205180";  
@@ -587,7 +595,7 @@ public class SpecifyClient {
 //        System.out.println("xml: " + xml);
 //
         String bean = service.path("search").path("entity").path(entity).path(id).accept(MediaType.APPLICATION_XML).get(String.class);
-        System.out.println("bean:  test: " + bean );
+        System.out.println("bean:  test: " + bean);
 
 //
 //        java.util.Collection<Determination> determinations = bean.getDeterminationCollection();
