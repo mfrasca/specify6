@@ -8,6 +8,7 @@ import se.nrm.specify.datamodel.DataWrapper;
 import se.nrm.specify.datamodel.Determination;
 import se.nrm.specify.datamodel.Locality;
 import se.nrm.specify.datamodel.SpecifyBean;
+import se.nrm.specify.datamodel.Specifyuser;
 import se.nrm.specify.datamodel.Taxon;
 
 /**
@@ -60,6 +61,12 @@ public interface SpecifyDao {
     public <T extends SpecifyBean> List getAllByFetchGroup(Class<T> clazz, List<String> fields);
 
     public <T extends SpecifyBean> List getListByJPQLByFetchGroup(String classname, String jpql, List<String> fields);
+    
+    public SpecifyBean getFetchgroupByNameedQuery(String nameedQuery, Map<String, Object> conditions, List<String> fields);
+    
+    public <T extends SpecifyBean> List getAllFetchgroupByNameedQuery(String namedQuery, String classname, Map<String, Object> conditions, List<String> fields);
+
+    
 
     public List<Object[]> getDataListByJPQL(String jpql);
 
@@ -75,11 +82,11 @@ public interface SpecifyDao {
 
     public SpecifyBean getEntityByJPQL(String jpql);
 
-    public SpecifyBean getEntityByNamedQuery(String namedQuery, Map<String, String> parameters);
+    public SpecifyBean getEntityByNamedQuery(String namedQuery, Map<String, Object> parameters);
 
     public List<String> getTextListByJPQL(String jpql);
 
-    public <T extends SpecifyBean> List getAllEntitiesByNamedQuery(String namedQuery, Map<String, String> parameters);
+    public <T extends SpecifyBean> List getAllEntitiesByNamedQuery(String namedQuery, Map<String, Object> parameters);
 
     public <T extends SpecifyBean> List getAllEntitiesByJPQL(String jpql);
 
@@ -105,6 +112,12 @@ public interface SpecifyDao {
     public DataWrapper getDeterminationsByTaxon(Taxon taxonId, String collectionCode);
 
     public Taxon getTaxonByCollectionobject(Collectionobject collectionobject);
+    
+    
+    
+    public Specifyuser loginSpecifyUser(Specifyuser user);
+    
+    public void logoutSpecifyUser(Specifyuser user);
     //    public <T extends SpecifyBean> T getPatialObjects(Class<T> clazz, List<String> fields);
 //    
 //    public <T extends SpecifyBean> T getPartialObject(Class<T> clazz, String field);

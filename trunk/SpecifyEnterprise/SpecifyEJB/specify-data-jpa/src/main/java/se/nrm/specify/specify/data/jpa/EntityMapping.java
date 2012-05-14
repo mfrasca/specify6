@@ -26,8 +26,7 @@ public class EntityMapping {
     }
 
     public void setEntityValue(SpecifyBean o, String classname, List<String> fields, Map<String, SpecifyBean> beanmap) {
- 
-
+  
         SpecifyBean bean = beanmap.get(classname);
         Map<String, List<String>> map = JPAUtil.createMap(classname, fields);
 

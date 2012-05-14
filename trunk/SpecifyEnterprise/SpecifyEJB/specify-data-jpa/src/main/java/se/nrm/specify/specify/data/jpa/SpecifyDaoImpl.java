@@ -1,5 +1,6 @@
 package se.nrm.specify.specify.data.jpa;
-
+ 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -16,10 +17,12 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import org.eclipse.persistence.queries.FetchGroup;
 import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Root;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import org.eclipse.persistence.config.QueryHints;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.nrm.specify.datamodel.Collectingevent;
@@ -29,6 +32,7 @@ import se.nrm.specify.datamodel.Determination;
 import se.nrm.specify.datamodel.Locality;
 import se.nrm.specify.datamodel.Recordsetitem;
 import se.nrm.specify.datamodel.SpecifyBean;
+import se.nrm.specify.datamodel.Specifyuser;
 import se.nrm.specify.datamodel.Sppermission;
 import se.nrm.specify.datamodel.Taxon;
 import se.nrm.specify.datamodel.Workbenchrow;
@@ -163,18 +167,18 @@ public class SpecifyDaoImpl implements SpecifyDao {
 
         Query query = entityManager.createQuery(jpql);
 
-        List<String> removelist = JPAUtil.addFetchGroup(fields, query, classname);
+        if(fields == null) {
+            fields = new ArrayList<String>();
+        }
+        List<String> removelist = JPAUtil.addFetchGroup(fields, query, classname); 
+        
         List<T> beans = (List<T>) query.getResultList();
 
         if (removelist != null) {
             fields.removeAll(removelist);
         }
-        
-        List<SpecifyBean> list = copyEntityGroup(beans, fields, classname);
-        logger.info("end of jpa fetch data");
-        
-        
-        
+
+        List<SpecifyBean> list = copyEntityGroup(beans, fields, classname); 
         return list;
     }
 
@@ -186,7 +190,7 @@ public class SpecifyDaoImpl implements SpecifyDao {
         JPAUtil.addFetchGroup(fields, query, clazz.getSimpleName());
 
         List<T> beans = (List<T>) query.getResultList();
- 
+
         List<SpecifyBean> list = copyEntityGroup(beans, fields, clazz.getSimpleName());
         logger.info("end of jpa fetch data");
         return list;
@@ -197,13 +201,24 @@ public class SpecifyDaoImpl implements SpecifyDao {
         List newBeans = new ArrayList();
 
         for (T bean : beans) {
-            Map<String, SpecifyBean> beanmap = new HashMap<String, SpecifyBean>();
-            beanmap.put(classname, bean);
-            SpecifyBean obj = JPAUtil.createNewInstance(classname);
-            entitymapping.setEntityValue(obj, classname, fields, beanmap);
-            newBeans.add(obj);
+//            Map<String, SpecifyBean> beanmap = new HashMap<String, SpecifyBean>();
+//            beanmap.put(classname, bean);
+//            SpecifyBean obj = JPAUtil.createNewInstance(classname);
+//            entitymapping.setEntityValue(obj, classname, fields, beanmap);
+             
+            newBeans.add(copyEntity(bean, fields, classname));
         }
         return newBeans;
+    }
+
+    private SpecifyBean copyEntity(SpecifyBean bean, List<String> fields, String classname) {
+
+        Map<String, SpecifyBean> beanmap = new HashMap<String, SpecifyBean>();
+        beanmap.put(classname, bean);
+        SpecifyBean obj = JPAUtil.createNewInstance(classname);
+        entitymapping.setEntityValue(obj, classname, fields, beanmap);
+
+        return obj;
     }
 
     /**
@@ -228,7 +243,7 @@ public class SpecifyDaoImpl implements SpecifyDao {
      * 
      * @return Entity
      */
-    public SpecifyBean getEntityByNamedQuery(String namedQuery, Map<String, String> parameters) {
+    public SpecifyBean getEntityByNamedQuery(String namedQuery, Map<String, Object> parameters) {
 
         logger.info("getEntityByNamedQuery - namedquery: {}, parameters: {}", namedQuery, parameters);
 
@@ -266,10 +281,11 @@ public class SpecifyDaoImpl implements SpecifyDao {
      * @param parameters
      * @return 
      */
-    public <T extends SpecifyBean> List getAllEntitiesByNamedQuery(String namedQuery, Map<String, String> parameters) {
+    public <T extends SpecifyBean> List getAllEntitiesByNamedQuery(String namedQuery, Map<String, Object> parameters) {
 
         logger.info("getAllEntitiesByNamedQuery - parameters: {}", parameters);
-        return createQuery(namedQuery, parameters).getResultList();
+        
+        return createQuery(namedQuery, parameters).getResultList(); 
     }
 
     public <T extends SpecifyBean> List getAllEntitiesByJPQL(String jpql) {
@@ -398,6 +414,9 @@ public class SpecifyDaoImpl implements SpecifyDao {
         tq.setParameter(collectingEvent, event);
         tq.setParameter(code, collectionCode);
         tq.setParameter(isCurrent, true);
+         
+       
+        
 
         return new DataWrapper(tq.getResultList());
     }
@@ -484,15 +503,111 @@ public class SpecifyDaoImpl implements SpecifyDao {
         return (determination == null) ? null : determination.getTaxonID();
     }
 
-    private Query createQuery(String namedQuery, Map<String, String> parameters) {
+    public SpecifyBean getFetchgroupByNameedQuery(String namedQuery, Map<String, Object> conditions, List<String> fields) {
+
+        logger.info("getFetchgroupByNameedQuery: {}", namedQuery);
+        Query query = entityManager.createNamedQuery(namedQuery);
+
+        for (Map.Entry<String, Object> map : conditions.entrySet()) {
+            query.setParameter(map.getKey(), map.getValue());
+        }
+
+        FetchGroup group = new FetchGroup();
+        for (String string : fields) {
+            group.addAttribute(string);
+        }
+        
+        SpecifyBean bean = (SpecifyBean) query.getSingleResult();
+        return copyEntity(bean, fields, bean.getClass().getSimpleName()); 
+    }
+    
+    
+    public <T extends SpecifyBean> List getAllFetchgroupByNameedQuery(String namedQuery, String classname, Map<String, Object> conditions, List<String> fields) {
+
+        logger.info("getFetchgroupByNameedQuery: {}", namedQuery);
+        
+        Query query = entityManager.createNamedQuery(namedQuery);
+
+        for (Map.Entry<String, Object> map : conditions.entrySet()) {
+            query.setParameter(map.getKey(), map.getValue());
+        }
+
+        FetchGroup group = new FetchGroup();
+        for (String string : fields) {
+            group.addAttribute(string);
+        }
+        
+        List<SpecifyBean> beans = query.getResultList();
+        return copyEntityGroup(beans, fields, classname); 
+    }
+
+    public Specifyuser loginSpecifyUser(Specifyuser user) {
+
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+
+        logger.info("loginSpecifyUser: {}", user);
+        
+        List<String> fields = new ArrayList<String>();
+        fields.add("specifyUserID");
+        fields.add("name");
+//        fields.add("password");
+        fields.add("eMail");
+//        fields.add("timestampCreated");
+//        fields.add("timestampModified");
+        fields.add("loginOutTime");
+//        fields.add("version");
+        fields.add("userType");
+//        fields.add("accumMinLoggedIn");
+        
+//        fields.add("createdByAgentID.agentID");
+//        fields.add("modifiedByAgentID.agentID");
+        fields.add("isLoggedIn");
+//        fields.add("isLoggedInReport"); 
+//        fields.add("loginCollectionName");
+//        fields.add("loginDisciplineName");
+         
+
+        Query query = entityManager.createNamedQuery("Specifyuser.findByName");
+        FetchGroup group = new FetchGroup();
+        
+        for(String string : fields) {
+            group.addAttribute(string);
+        } 
+
+        query.setHint(QueryHints.FETCH_GROUP, group); 
+        query.setParameter("name", user.getName());
+        user = (Specifyuser) query.getSingleResult(); 
+        
+        if (user != null) {
+            Specifyuser spUser = getByReference(user.getSpecifyUserID(), Specifyuser.class);
+            spUser.setIsLoggedIn(true);
+            spUser.setLoginOutTime(timestamp);
+            editEntity(spUser);
+        }
+        return (Specifyuser)copyEntity(user, fields, Specifyuser.class.getSimpleName());  
+    }
+
+    public void logoutSpecifyUser(Specifyuser user) {
+
+        logger.info("logoutSpecifyUser: {}", user);
+
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+
+        Specifyuser spUser = getByReference(user.getSpecifyUserID(), Specifyuser.class);
+        if (spUser != null) {
+            spUser.setIsLoggedIn(false);
+            spUser.setLoginOutTime(timestamp);
+            editEntity(spUser);
+        } 
+    }
+
+    private Query createQuery(String namedQuery, Map<String, Object> parameters) {
 
         Set<String> keys = parameters.keySet();
 
-        Query query = entityManager.createNamedQuery(namedQuery);
-
-        for (String key : keys) {
-            String param = parameters.get(key);
-            query.setParameter(key, param);
+        Query query = entityManager.createNamedQuery(namedQuery); 
+        for (String key : keys) { 
+            query.setParameter(key, parameters.get(key));
         }
         return query;
     }

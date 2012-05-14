@@ -78,10 +78,10 @@ public class JPAUtil {
         FetchGroup group = new FetchGroup();
 
         SpecifyBean bean = createNewInstance(classname);
-
+   
         if (bean != null) {
             List<String> reqFields = ReflectionUtil.addAllRequiredFields(bean);
-            fields.addAll(reqFields);
+            fields.addAll(reqFields); 
         }
 
         Map<String, SpecifyBean> beanmap = new HashMap<String, SpecifyBean>();
@@ -123,8 +123,7 @@ public class JPAUtil {
                     }
                 }
             }
-
-
+ 
             for (String key : map.keySet()) {
 
                 SpecifyBean entity = (SpecifyBean) map.get(key);
@@ -140,9 +139,9 @@ public class JPAUtil {
                 } 
             }
 
-            fields = new ArrayList(new HashSet(fields));
+            fields = new ArrayList(new HashSet(fields)); 
             for (String field : fields) {
-                if (!removelist.contains(field)) { 
+                if (!removelist.contains(field)) {  
                     group.addAttribute(field);
                 }
             }
