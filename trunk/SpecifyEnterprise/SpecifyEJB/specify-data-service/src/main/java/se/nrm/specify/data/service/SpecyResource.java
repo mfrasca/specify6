@@ -2,7 +2,6 @@ package se.nrm.specify.data.service;
 
 import com.google.gson.Gson;
 import com.sun.jersey.spi.resource.PerRequest;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +30,10 @@ import se.nrm.specify.datamodel.Determination;
 import se.nrm.specify.datamodel.Locality;
 import se.nrm.specify.datamodel.SpecifyBean;
 import se.nrm.specify.datamodel.SpecifyBeanWrapper;
-import se.nrm.specify.datamodel.Taxon;
+import se.nrm.specify.datamodel.Specifyuser;
+import se.nrm.specify.datamodel.Taxon; 
+import se.nrm.specify.ui.form.data.service.UIDataConstractor; 
+import se.nrm.specify.ui.form.data.xml.model.ViewData;
 
 /**
  * REST Web Service
@@ -50,6 +52,8 @@ public class SpecyResource {
     private SMTPLogic smtp;
     @Inject
     private SpecifyLogic specify;
+    @Inject
+    private UIDataConstractor uidata;
 
     /** Creates a new instance of SpecyResource */
     public SpecyResource() {
@@ -66,11 +70,14 @@ public class SpecyResource {
      */
     @GET
     @Path("search/entity/{entity}/{id}")
-    public SpecifyBean getEntity(@PathParam("entity") String entity, @PathParam("id") String id) {
+    public SpecifyBeanWrapper getEntity(@PathParam("entity") String entity, @PathParam("id") String id) {
 
         logger.info("getEntity - entity: {}, id: {}", entity, id);
 
-        return specify.getDao().getById(Integer.parseInt(id), getEntityClass(entity));
+        SpecifyBean bean = specify.getDao().getById(Integer.parseInt(id), getEntityClass(entity));
+
+        logger.info("result: {}", bean);
+        return new SpecifyBeanWrapper(bean);
     }
 
     /**
@@ -170,6 +177,34 @@ public class SpecyResource {
     }
 
     /**
+     * Login Specifyuser
+     * 
+     * @param data - SpecifyBeanWrapper
+     * @return SpecifyBeanWrapper
+     */
+    @PUT
+    @Path("loginSpUser")
+    public SpecifyBeanWrapper loginSPUser(SpecifyBeanWrapper data) {
+
+        logger.info("loginSPUser: {}", data.getBean());
+        return new SpecifyBeanWrapper(specify.getDao().loginSpecifyUser((Specifyuser) data.getBean()));
+    }
+
+    /**
+     * Generic method update an entity
+     * 
+     * @param data - SpecifyBeanWrapper
+     * @return 
+     */
+    @PUT
+    @Path("logoutSpUser")
+    public void logoutSPUser(SpecifyBeanWrapper data) {
+
+        logger.info("logoutSPUser: {}", data.getBean());
+        specify.getDao().logoutSpecifyUser((Specifyuser) data.getBean());
+    }
+
+    /**
      * Generic method get all entities by entity class name
      * 
      * @param entity - entity class name
@@ -196,14 +231,14 @@ public class SpecyResource {
 
     @GET
     @Path("search/entity/namedquery")
-    public SpecifyBean getEntityByNamedQuery(@Context UriInfo uri) {
+    public SpecifyBeanWrapper getEntityByNamedQuery(@Context UriInfo uri) {
 
         logger.info("getEntityByNamedQuery");
 
         MultivaluedMap map = uri.getQueryParameters();
 
         Set<String> set = map.keySet();
-        Map<String, String> parameters = new HashMap<String, String>();
+        Map<String, Object> parameters = new HashMap<String, Object>();
         List<String> query = (List<String>) map.get("namedquery");
         for (String key : set) {
             if (!key.equals("namedquery")) {
@@ -212,7 +247,7 @@ public class SpecyResource {
             }
         }
 
-        return specify.getDao().getEntityByNamedQuery(query.get(0), parameters);
+        return new SpecifyBeanWrapper(specify.getDao().getEntityByNamedQuery(query.get(0), parameters));
     }
 
     /**
@@ -251,20 +286,34 @@ public class SpecyResource {
 
         logger.info("getAllEntitiesByJPQL");
 
-
         MultivaluedMap map = uri.getQueryParameters();
 
         Set<String> set = map.keySet();
-        Map<String, String> parameters = new HashMap<String, String>();
+        Map<String, Object> parameters = new HashMap<String, Object>();
         List<String> query = (List<String>) map.get("namedquery");
+        map.remove("namedquery");
 
         for (String key : set) {
-            if (!key.equals("namedquery")) {
-                List<String> params = (List<String>) map.get(key);
-                parameters.put(key, params.get(0));
-            }
+            List<String> params = (List<String>) map.get(key);
+            parameters.put(key, params.get(0));
         }
         return new SpecifyBeanWrapper(specify.getDao().getAllEntitiesByNamedQuery(query.get(0), parameters));
+    }
+
+    @GET
+    @Path("search/uidata/{discipline}/{view}")
+    public SpecifyBeanWrapper fetchUIData(@PathParam("discipline") String discipline, @PathParam("view") String view, @Context UriInfo uri) {
+        logger.info("fetchUIData - discipline: {} - view: {}", discipline, view);
+
+        MultivaluedMap map = uri.getQueryParameters();
+        
+        ViewData viewdata = uidata.initData(discipline, view);
+        String jpql = uidata.getJpql(discipline, view, map, viewdata);
+        String entity = uidata.getEntityName(viewdata); 
+        List<String> fields = uidata.constructSearchFields(viewdata);
+        
+        List<SpecifyBean> list = (List<SpecifyBean>) specify.getDao().getListByJPQLByFetchGroup(entity, jpql, fields);
+        return new SpecifyBeanWrapper(list);
     }
 
     @GET
@@ -283,13 +332,55 @@ public class SpecyResource {
     }
 
     @GET
+    @Path("search/bygroup/bynqry/{namedqry}")
+    public SpecifyBeanWrapper fetchGroupByNamedQuery(@PathParam("namedqry") String namedqry, @Context UriInfo uri) {
+        logger.info("fetchByGroup - entity: {}", namedqry);
+
+        MultivaluedMap map = uri.getQueryParameters();
+        List<String> fields = (List<String>) map.get("fields");
+        map.remove("fields");
+
+        Map<String, Object> conditions = new HashMap<String, Object>();
+
+        Set<String> set = map.keySet();
+        for (String key : set) {
+            List<Object> list = (List<Object>) map.get(key);
+            conditions.put(key, list.get(0));
+        }
+
+        SpecifyBean bean = specify.getDao().getFetchgroupByNameedQuery(namedqry, conditions, fields);
+        return new SpecifyBeanWrapper(bean);
+    }
+
+    @GET
+    @Path("search/all/bygroup/bynqry/{namedqry}/{classname}")
+    public SpecifyBeanWrapper fetchAllGroupByNamedQuery(@PathParam("namedqry") String namedqry, @PathParam("classname") String classname, @Context UriInfo uri) {
+        logger.info("fetchByGroup - entity: {}", namedqry);
+
+        MultivaluedMap map = uri.getQueryParameters();
+        List<String> fields = (List<String>) map.get("fields");
+        map.remove("fields");
+
+        Map<String, Object> conditions = new HashMap<String, Object>();
+
+        Set<String> set = map.keySet();
+        for (String key : set) {
+            List<Object> list = (List<Object>) map.get(key);
+            conditions.put(key, list.get(0));
+        }
+
+        List<SpecifyBean> beans = (List<SpecifyBean>) specify.getDao().getAllFetchgroupByNameedQuery(namedqry, classname, conditions, fields);
+        return new SpecifyBeanWrapper(beans);
+    }
+
+    @GET
     @Path("search/all/bygroup/{entity}")
     public SpecifyBeanWrapper fetchAllByGroup(@PathParam("entity") String entity, @Context UriInfo uri) {
         logger.info("fetchAllByGroup - entity: {}", entity);
 
         MultivaluedMap map = uri.getQueryParameters();
-        
-        Class clazz = getEntityClass(entity); 
+
+        Class clazz = getEntityClass(entity);
         List<String> fields = (List<String>) map.get(entity);
 
         List<SpecifyBean> list = (List<SpecifyBean>) specify.getDao().getAllByFetchGroup(clazz, fields);
@@ -319,20 +410,19 @@ public class SpecyResource {
             }
             logger.info(sb.toString());
         }
-
-        logger.info("list: {}", list.size());
+ 
         DataWrapper data = new DataWrapper();
         data.setDataList(list);
         return new DataWrapper();
     }
 
     @POST
-    @Path("upload")
-    public void uploadData(DataWrapper wrapper) {
+    @Path("upload/smtp/{userid}")
+    public void uploadData(@PathParam("userid") String userid, DataWrapper wrapper) {
 
-        logger.info("upload data - event: {}, number of sorted vials: {}", wrapper.getEvent(), wrapper.getNumSortedVials());
-
-        smtp.saveSMTPBatchData(wrapper);
+        logger.info("upload data - event: {}, user: {}", wrapper.getEvent());
+ 
+        smtp.saveSMTPBatchData(wrapper, userid);
     }
 
     /**
@@ -414,5 +504,5 @@ public class SpecyResource {
             logger.error(ex.getMessage());
         }
         return null;
-    }
+    } 
 }
