@@ -1,24 +1,14 @@
 package se.nrm.specify.ui.form.data.service;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
-import java.net.URI;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.UriBuilder;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory; 
-import se.nrm.specify.datamodel.SpecifyBean;
-import se.nrm.specify.datamodel.SpecifyBeanWrapper;
+import org.slf4j.LoggerFactory;
 import se.nrm.specify.ui.form.data.ViewCreator;
 import se.nrm.specify.ui.form.data.util.FormDataType;
 import se.nrm.specify.ui.form.data.util.UIXmlUtil;
@@ -29,52 +19,29 @@ import se.nrm.specify.ui.form.data.xml.model.ViewData;
  * @author idali
  */
 @Stateless
-public class SpecifyRSClient {
+public class UIDataConstractor {
 
-    private static Logger logger = LoggerFactory.getLogger(SpecifyRSClient.class);
-    private WebResource service;
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    
     @Inject
     private ViewCreator creator;
-    private String entityname;
+    private String entityname; 
 
-    public SpecifyRSClient() {
-        ClientConfig config = new DefaultClientConfig();
-        Client client = Client.create(config);
-        service = client.resource(getBaseURI());
+    public UIDataConstractor() {
     }
-
-    public SpecifyRSClient(ViewCreator creator) {
-        ClientConfig config = new DefaultClientConfig();
-        Client client = Client.create(config);
-        service = client.resource(getBaseURI());
-
-        this.creator = creator;
+    
+    public UIDataConstractor(ViewCreator creator) { 
+        this.creator = creator; 
     }
+ 
 
-    public List<SpecifyBean> getEntityResult(String dicsipline, String view, Map<String, Object> searchConditions) {
-        MultivaluedMap queryParams = createSearchData(dicsipline, view, searchConditions);
-        SpecifyBeanWrapper wrapper = service.path("search").path("list").path("bygroup").path(entityname).queryParams(queryParams).accept(MediaType.APPLICATION_JSON).get(SpecifyBeanWrapper.class);
-
-        return (List<SpecifyBean>) wrapper.getBeans();
-    }
-
-    public String getJSONResult(String dicsipline, String view, Map<String, Object> searchConditions) {
-        MultivaluedMap queryParams = createSearchData(dicsipline, view, searchConditions);
-        return service.path("search").path("list").path("bygroup").path(entityname).queryParams(queryParams).accept(MediaType.APPLICATION_JSON).get(String.class);
-    }
-
-    public String getXMLResult(String dicsipline, String view, Map<String, Object> searchConditions) {
-        MultivaluedMap queryParams = createSearchData(dicsipline, view, searchConditions);
-        return service.path("search").path("list").path("bygroup").path(entityname).queryParams(queryParams).accept(MediaType.APPLICATION_XML).get(String.class);
-    }
-
-    private ViewData initData(String discipline, String view) {
+    public ViewData initData(String discipline, String view) {
         creator.createDataObjectFormatter();
         creator.createDisciplineView(discipline, view);
         return creator.getViewdata(view);
     }
 
-    private List<String> constructSearchFields(ViewData viewdata) {
+    public List<String> constructSearchFields(ViewData viewdata) {
         List<String> fieldlist = new ArrayList<String>();
         try {
             fieldlist.addAll(viewdata.getViewdef().getFieldList());
@@ -96,8 +63,52 @@ public class SpecifyRSClient {
         }
         return fieldlist;
     }
+ 
+    public String getEntityName(ViewData viewdata) {
+        return UIXmlUtil.entityNameConvert(viewdata.getViewdef().getViewDefClass());
+    }
 
-    private MultivaluedMap createSearchData(String discipline, String view, Map<String, Object> searchConditions) {
+    
+    public String getJpql(String discipline, String view, MultivaluedMap<String, List<Object>> searchConditions, ViewData viewdata) {
+        
+        logger.info("getJpql: {}", searchConditions); 
+        String entityName = UIXmlUtil.entityNameConvert(viewdata.getViewdef().getViewDefClass());
+        
+        StringBuilder jpqlSB = new StringBuilder();
+        jpqlSB.append("SELECT o FROM ");
+        jpqlSB.append(entityName);
+        jpqlSB.append(" o ");
+
+        if (searchConditions != null) {
+            jpqlSB.append("where o.");
+
+            int count = 0;
+            for (String key : searchConditions.keySet()) {
+                Object value =  searchConditions.get(key).get(0); 
+                if (value instanceof java.lang.String) {
+                    jpqlSB.append(key);
+                    jpqlSB.append(" = '");
+                    jpqlSB.append(value);
+                    jpqlSB.append("'");
+                } else if (value instanceof java.lang.Integer || value instanceof java.lang.Boolean) {
+                    jpqlSB.append(key);
+                    jpqlSB.append(" = ");
+                    jpqlSB.append(value);
+                }
+
+                count++;
+                if (count < searchConditions.size()) {
+                    jpqlSB.append(" AND o.");
+                }
+            }
+        }
+        
+        logger.info("jpql: {}", jpqlSB.toString());
+        return jpqlSB.toString(); 
+    }
+    
+    
+    public MultivaluedMap createSearchData(String discipline, String view, Map<String, Object> searchConditions) {
 
         logger.info("createSearchData");
          
@@ -202,39 +213,5 @@ public class SpecifyRSClient {
             }
         }
         return fieldList;
-    }
- 
-    private static URI getBaseURI() {
-        return UriBuilder.fromUri("http://localhost:8080/specify-data-service/").build();            // service deployed in local
-//        return UriBuilder.fromUri("http://barcode.nrm.se:80/specify-data-service/").build(); 
-//        return UriBuilder.fromUri("http://172.16.0.145:8080/jpa-service/").build();           // service deployed in development server
-    }
-
-    public static void main(String[] args) {
-        
-        String discipline = "fish";
-        String view = "CollectionObject";
-
-        ViewCreator creator = new ViewCreator(discipline);
-        SpecifyRSClient client = new SpecifyRSClient(creator);
-
-        Map<String, Object> map = new HashMap<String, Object>();
-
-        map.put("catalogNumber", "NHRS-GULI000000970");
-          
-//        String json = client.getJSONResult(discipline, view, map);
-        String xml = client.getXMLResult(discipline, view, map);
-//        List<SpecifyBean> beans = client.getEntityResult("fish", "CollectionObject", map);
-
-//        logger.info("Result in JSON: {}", json);
-        logger.info("Result in XML: {}", xml);
-//        logger.info("Result in Entity: {}", beans); 
-        
-        
-//        "http://localhost:8080/specify-data-service/search/list/bygroup/Collectionobject?jpql=SELECT%20o%20FROM%20Collectionobject%20o%20where%20o.catalogNumber=%27NHRS-COLE000008661%27"
-   
-    
-//    http://localhost:8080/specify-data-service/search/uidata/fish/CollectionObject?catalogNumber=NHRS-GULI000000970
-        
     } 
 }
