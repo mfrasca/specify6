@@ -19,6 +19,7 @@ import se.nrm.specify.datamodel.DataWrapper;
 import se.nrm.specify.datamodel.Determination;
 import se.nrm.specify.datamodel.Preparation;
 import se.nrm.specify.datamodel.Preptype;
+import se.nrm.specify.datamodel.Specifyuser;
 import se.nrm.specify.datamodel.Taxon;
 import se.nrm.specify.specify.data.jpa.SpecifyDao;
 
@@ -41,21 +42,24 @@ public class SMTPLogicImpl implements SMTPLogic {
     }
  
     @TransactionAttribute(value = TransactionAttributeType.REQUIRES_NEW)
-    public void saveSMTPBatchData(DataWrapper wrapper) {
+    public void saveSMTPBatchData(DataWrapper wrapper, String userid) {
         
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-
-//        Agent agent = dao.getById(1, Agent.class);
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis()); 
         
-        Agent agent = dao.getByReference(1, Agent.class); 
-        Preptype pretype = dao.getByReference(24, Preptype.class);
+        Map<String, Object> conditionmap = new HashMap<String, Object>(); 
+        conditionmap.put("specifyUserID", Integer.parseInt(userid));
+             
+        Agent agent = (Agent)dao.getEntityByNamedQuery("Agent.findBySpecifyuserid", conditionmap); 
+          
+        Preptype pretype = dao.getByReference(24, Preptype.class);                              // TODO hard coded for smtp
         
         Collectingevent event = wrapper.getEvent();
+        event = dao.getByReference(event.getCollectingEventID(), Collectingevent.class);
         String collectionCode = wrapper.getCollectionCode();
 
         for (String taxonName : wrapper.getList()) {
               
-            Map<String, String> map = new HashMap<String, String>(); 
+            Map<String, Object> map = new HashMap<String, Object>(); 
             map.put("fullName", taxonName);
              
             Taxon taxon = (Taxon)dao.getEntityByNamedQuery("Taxon.findByFullName", map); 
@@ -67,9 +71,9 @@ public class SMTPLogicImpl implements SMTPLogic {
                 newObject.setTimestampCreated(timestamp);
                 newObject.setCatalogedDate(timestamp);
                 newObject.setCatalogedDatePrecision(Short.valueOf("1"));
-                newObject.setDescription("test desc");
+//                newObject.setDescription("test desc");
                 newObject.setCreatedByAgentID(agent);
-                newObject.setRemarks("test remark");
+//                newObject.setRemarks("test remark");
                 newObject.setCollectingEventID(event);
                 newObject.setCatalogerID(agent);
 
