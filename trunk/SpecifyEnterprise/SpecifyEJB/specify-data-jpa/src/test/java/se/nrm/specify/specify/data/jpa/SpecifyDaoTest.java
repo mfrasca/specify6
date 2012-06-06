@@ -1,5 +1,6 @@
 package se.nrm.specify.specify.data.jpa;
-
+ 
+import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -28,8 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.nrm.specify.datamodel.Address;
 import se.nrm.specify.datamodel.Collectingevent;
-import se.nrm.specify.datamodel.Collectionobject;
-import se.nrm.specify.datamodel.DataWrapper;
+import se.nrm.specify.datamodel.Collectionobject; 
 import se.nrm.specify.datamodel.Determination;
 import se.nrm.specify.datamodel.Dnasequence;
 import se.nrm.specify.datamodel.Geography;
@@ -91,14 +91,14 @@ public class SpecifyDaoTest {
 
         // prepair test data
         address = new Address();
-        address.setAddressID(1);
+        address.setAddressId(1);
         address.setAddress("Frescativägen 40");
         address.setCity("Stockholm");
         address.setCountry("Sweden");
 
         // prepair test data
         spPermission = new Sppermission();
-        spPermission.setSpPermissionID(1);
+        spPermission.setPermissionId(1);
         spPermission.setActions("add");
 
         // prepair test data
@@ -217,7 +217,7 @@ public class SpecifyDaoTest {
      * Test of createEntity method, of class SpecifyDaoImpl
      */
     @Test
-    public void testCreateEntity() {
+    public void testCreateEntity() throws MySQLIntegrityConstraintViolationException {
 
         logger.info("createEntity");
 
@@ -384,136 +384,136 @@ public class SpecifyDaoTest {
         assertEquals(list, result);
     }
 
-    /**
-     * Test of getDeterminationsByCollectingEvent method, of class SpecifyDaoImpl.
-     */
-    @Test
-    public void testGetDeterminationsByCollectingEvent() {
-
-        logger.info("getDeterminationsByCollectingEvent");
-
-        Collectingevent event = new Collectingevent(18);
-        String collectionCode = "test";
-
-        when(entityManager.getCriteriaBuilder()).thenReturn(cb);
-        when(cb.createQuery(String.class)).thenReturn(q);
-        when(q.from(Determination.class)).thenReturn(d);
-        when(d.get(anyString())).thenReturn(path);
-        when(path.get(anyString())).thenReturn(path);
-
-        when(cb.construct(String.class, path)).thenReturn(cs);
-
-        q.select(cs);
-
-        when(cb.parameter(Collectingevent.class)).thenReturn(collectingEvent);
-        when(cb.parameter(String.class)).thenReturn(code);
-        when(cb.parameter(Boolean.class)).thenReturn(isCurrent);
-
-        q.where(cb.equal(path, collectingEvent),
-                cb.equal(path, code),
-                cb.equal(path, isCurrent));
-
-        when(entityManager.createQuery(q)).thenReturn(stringquery);
-        stringquery.setParameter(collectingEvent, event);
-        stringquery.setParameter(code, collectionCode);
-        stringquery.setParameter(isCurrent, true);
-
-
-        when(stringquery.getResultList()).thenReturn(stringList);
-
-        DataWrapper result = testInstance.getDeterminationsByCollectingEvent(event, collectionCode);
-        assertNotNull(result);
-        assertEquals(3, result.getList().size());
-    }
+//    /**
+//     * Test of getDeterminationsByCollectingEvent method, of class SpecifyDaoImpl.
+//     */
+//    @Test
+//    public void testGetDeterminationsByCollectingEvent() {
+//
+//        logger.info("getDeterminationsByCollectingEvent");
+//
+//        Collectingevent event = new Collectingevent(18);
+//        String collectionCode = "test";
+//
+//        when(entityManager.getCriteriaBuilder()).thenReturn(cb);
+//        when(cb.createQuery(String.class)).thenReturn(q);
+//        when(q.from(Determination.class)).thenReturn(d);
+//        when(d.get(anyString())).thenReturn(path);
+//        when(path.get(anyString())).thenReturn(path);
+//
+//        when(cb.construct(String.class, path)).thenReturn(cs);
+//
+//        q.select(cs);
+//
+//        when(cb.parameter(Collectingevent.class)).thenReturn(collectingEvent);
+//        when(cb.parameter(String.class)).thenReturn(code);
+//        when(cb.parameter(Boolean.class)).thenReturn(isCurrent);
+//
+//        q.where(cb.equal(path, collectingEvent),
+//                cb.equal(path, code),
+//                cb.equal(path, isCurrent));
+//
+//        when(entityManager.createQuery(q)).thenReturn(stringquery);
+//        stringquery.setParameter(collectingEvent, event);
+//        stringquery.setParameter(code, collectionCode);
+//        stringquery.setParameter(isCurrent, true);
+//
+//
+//        when(stringquery.getResultList()).thenReturn(stringList);
+//
+//        DataWrapper result = testInstance.getDeterminationsByCollectingEvent(event, collectionCode);
+//        assertNotNull(result);
+//        assertEquals(3, result.getList().size());
+//    }
  
 
-    /**
-     * Test of testGetDeterminationByLocalityID method, of class SpecifyDaoImpl.
-     */
-    @Test
-    public void testGetDeterminationByLocalityID() {
+//    /**
+//     * Test of testGetDeterminationByLocalityID method, of class SpecifyDaoImpl.
+//     */
+//    @Test
+//    public void testGetDeterminationByLocalityID() {
+//
+//        logger.info("testGetDeterminationByLocalityID");
+//
+//        Locality locality = new Locality(5);
+//        String collectionCode = "test";
+// 
+//        when(entityManager.getCriteriaBuilder()).thenReturn(cb);
+//        when(cb.createQuery(String.class)).thenReturn(q);
+//        when(q.from(Determination.class)).thenReturn(d);
+//        when(d.get(anyString())).thenReturn(path);
+//        when(path.get(anyString())).thenReturn(path); 
+//        when(cb.construct(String.class, path)).thenReturn(cs);
+//         
+//        q.select(cs);
+//
+//        when(cb.parameter(Locality.class)).thenReturn(localityId);
+//        when(cb.parameter(String.class)).thenReturn(code);
+//        when(cb.parameter(Boolean.class)).thenReturn(isCurrent);
+//
+//        q.where(cb.equal(path, localityId),
+//                cb.equal(path, code),
+//                cb.equal(path, isCurrent));
+//
+//        when(entityManager.createQuery(q)).thenReturn(stringquery);
+//        stringquery.setParameter(localityId, locality);
+//        stringquery.setParameter(code, collectionCode);
+//        stringquery.setParameter(isCurrent, true);
+//    
+//        when(stringquery.getResultList()).thenReturn(stringList);
+//        List<String> result = testInstance.getDeterminationByLocalityID(locality, collectionCode);
+//
+//        assertNotNull(result);
+//        assertEquals(3, result.size());
+//    }
 
-        logger.info("testGetDeterminationByLocalityID");
-
-        Locality locality = new Locality(5);
-        String collectionCode = "test";
- 
-        when(entityManager.getCriteriaBuilder()).thenReturn(cb);
-        when(cb.createQuery(String.class)).thenReturn(q);
-        when(q.from(Determination.class)).thenReturn(d);
-        when(d.get(anyString())).thenReturn(path);
-        when(path.get(anyString())).thenReturn(path); 
-        when(cb.construct(String.class, path)).thenReturn(cs);
-         
-        q.select(cs);
-
-        when(cb.parameter(Locality.class)).thenReturn(localityId);
-        when(cb.parameter(String.class)).thenReturn(code);
-        when(cb.parameter(Boolean.class)).thenReturn(isCurrent);
-
-        q.where(cb.equal(path, localityId),
-                cb.equal(path, code),
-                cb.equal(path, isCurrent));
-
-        when(entityManager.createQuery(q)).thenReturn(stringquery);
-        stringquery.setParameter(localityId, locality);
-        stringquery.setParameter(code, collectionCode);
-        stringquery.setParameter(isCurrent, true);
-    
-        when(stringquery.getResultList()).thenReturn(stringList);
-        List<String> result = testInstance.getDeterminationByLocalityID(locality, collectionCode);
-
-        assertNotNull(result);
-        assertEquals(3, result.size());
-    }
-
-    /**
-     * Test of getDeterminationsByTaxon method, of class SpecifyDaoImpl.
-     */
-    @Test
-    public void testGetDeterminationsByTaxon() {
-
-        logger.info("getDeterminationsByTaxon");
-
-        Taxon taxonId = new Taxon(12);
-
-        String collectionCode = "test";
-
-        when(entityManager.find(Taxon.class, 12, LockModeType.OPTIMISTIC)).thenReturn(taxon);
-        when(taxon.getHighestChildNodeNumber()).thenReturn(18);
-        when(taxon.getNodeNumber()).thenReturn(8);
-
-        StringBuilder queryBuilder = new StringBuilder();
-        queryBuilder.append("SELECT d.collectionObjectID.collectingEventID.localityID.localityID FROM Determination AS d where d.collectionObjectID.collectionID.code = '");
-        queryBuilder.append(collectionCode);
-        queryBuilder.append("' and d.taxonID.nodeNumber BETWEEN ");
-        queryBuilder.append(8);
-        queryBuilder.append(" AND ");
-        queryBuilder.append(18);
-        queryBuilder.append(" and d.isCurrent = true group by d.collectionObjectID.collectingEventID.collectingEventID");
- 
-        when(entityManager.createQuery(queryBuilder.toString(), Integer.class)).thenReturn(intquery);
-        when(intquery.getResultList()).thenReturn(intList);
-        
-        queryBuilder = new StringBuilder();
-        queryBuilder.append("SELECT d.taxonID.fullName FROM Determination AS d where d.collectionObjectID.collectionID.code = '");
-        queryBuilder.append(collectionCode);
-        queryBuilder.append("' and d.taxonID.nodeNumber BETWEEN ");
-        queryBuilder.append(8);
-        queryBuilder.append(" AND ");
-        queryBuilder.append(18);
-        queryBuilder.append(" and d.isCurrent = true");
-        
-
-        when(entityManager.createQuery(queryBuilder.toString(), String.class)).thenReturn(stringquery);
-        when(stringquery.getResultList()).thenReturn(stringList);
-
-        DataWrapper result = testInstance.getDeterminationsByTaxon(taxonId, collectionCode);
-        assertNotNull(result);
-        assertEquals(3, result.getList().size());
-        assertEquals("7", result.getEventcount());
-        assertEquals("4", result.getTrapcount());
-    }
+//    /**
+//     * Test of getDeterminationsByTaxon method, of class SpecifyDaoImpl.
+//     */
+//    @Test
+//    public void testGetDeterminationsByTaxon() {
+//
+//        logger.info("getDeterminationsByTaxon");
+//
+//        Taxon taxonId = new Taxon(12);
+//
+//        String collectionCode = "test";
+//
+//        when(entityManager.find(Taxon.class, 12, LockModeType.OPTIMISTIC)).thenReturn(taxon);
+//        when(taxon.getHighestChildNodeNumber()).thenReturn(18);
+//        when(taxon.getNodeNumber()).thenReturn(8);
+//
+//        StringBuilder queryBuilder = new StringBuilder();
+//        queryBuilder.append("SELECT d.collectionObjectID.collectingEventID.localityID.localityID FROM Determination AS d where d.collectionObjectID.collectionID.code = '");
+//        queryBuilder.append(collectionCode);
+//        queryBuilder.append("' and d.taxonID.nodeNumber BETWEEN ");
+//        queryBuilder.append(8);
+//        queryBuilder.append(" AND ");
+//        queryBuilder.append(18);
+//        queryBuilder.append(" and d.isCurrent = true group by d.collectionObjectID.collectingEventID.collectingEventID");
+// 
+//        when(entityManager.createQuery(queryBuilder.toString(), Integer.class)).thenReturn(intquery);
+//        when(intquery.getResultList()).thenReturn(intList);
+//        
+//        queryBuilder = new StringBuilder();
+//        queryBuilder.append("SELECT d.taxonID.fullName FROM Determination AS d where d.collectionObjectID.collectionID.code = '");
+//        queryBuilder.append(collectionCode);
+//        queryBuilder.append("' and d.taxonID.nodeNumber BETWEEN ");
+//        queryBuilder.append(8);
+//        queryBuilder.append(" AND ");
+//        queryBuilder.append(18);
+//        queryBuilder.append(" and d.isCurrent = true");
+//        
+//
+//        when(entityManager.createQuery(queryBuilder.toString(), String.class)).thenReturn(stringquery);
+//        when(stringquery.getResultList()).thenReturn(stringList);
+//
+//        DataWrapper result = testInstance.getDeterminationsByTaxon(taxonId, collectionCode);
+//        assertNotNull(result);
+//        assertEquals(3, result.getList().size());
+//        assertEquals("7", result.getEventcount());
+//        assertEquals("4", result.getTrapcount());
+//    }
 
 //    /**
 //     * Test of getGeographyListByGeographytreedefitemId method, of class SpecifyDaoImpl.

@@ -8,7 +8,7 @@ import java.util.Map;
 import javax.ejb.Stateless;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory; 
+import org.slf4j.LoggerFactory;
 import se.nrm.specify.datamodel.SpecifyBean;
 import se.nrm.specify.specify.data.jpa.util.JPAUtil;
 import se.nrm.specify.specify.data.jpa.util.ReflectionUtil;
@@ -21,15 +21,19 @@ import se.nrm.specify.specify.data.jpa.util.ReflectionUtil;
 public class EntityMapping {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    
+    private final String JAVA_UTIL_COLLECTION = "java.util.Collection";
 
     public EntityMapping() {
     }
 
     public void setEntityValue(SpecifyBean o, String classname, List<String> fields, Map<String, SpecifyBean> beanmap) {
   
+        logger.info("setEntityValue: {} - {}", o, classname);
+        
         SpecifyBean bean = beanmap.get(classname);
         Map<String, List<String>> map = JPAUtil.createMap(classname, fields);
-
+ 
         List<String> fieldlist = map.get(classname);
         try {
             for (String strfield : fieldlist) {
@@ -43,10 +47,10 @@ public class EntityMapping {
                 if (key.contains(".")) {
                     String[] strarry = StringUtils.split(key, ".");
                     Field field = ReflectionUtil.getField(bean.getClass(), strarry[1]);
-                    if (field.getType().getName().equals("java.util.Collection")) {
+                    if (field.getType().getName().equals(JAVA_UTIL_COLLECTION)) {
 
                         ReflectionUtil.makeAccessible(field);
-                        Collection<SpecifyBean> collectionbeans = (Collection<SpecifyBean>) field.get(bean);
+                        Collection<SpecifyBean> collectionbeans = (Collection<SpecifyBean>) field.get(bean); 
 
                         Collection<SpecifyBean> newcollections = new ArrayList<SpecifyBean>();
                         for (SpecifyBean sb : collectionbeans) {
@@ -59,13 +63,11 @@ public class EntityMapping {
                             Field newField = ReflectionUtil.getField(o.getClass(), field.getName());
                             ReflectionUtil.makeAccessible(newField);
                             newField.set(o, newcollections);
-                        }
-
+                        } 
                     } else {
-                        SpecifyBean subo = JPAUtil.createNewInstance(field.getType().getSimpleName());
-                        setSubEntity(subo, o, bean, field, map.get(key));
-                    }
-
+                        SpecifyBean subo = JPAUtil.createNewInstance(field.getType().getSimpleName()); 
+                        setSubEntity(subo, o, bean, field, map.get(key)); 
+                    } 
                 }
             }
         } catch (NoSuchFieldException ex) {
@@ -78,10 +80,11 @@ public class EntityMapping {
     }
 
     private void setSubEntity(SpecifyBean subo, SpecifyBean o, SpecifyBean bean, Field field, List<String> fields) { 
-        String classname = field.getName();
-
-        Map<String, List<String>> map = JPAUtil.createMap(classname, fields);
-
+        
+        logger.info("setSubEntity: {} - {}", o, bean);
+        
+        String classname = field.getName(); 
+        Map<String, List<String>> map = JPAUtil.createMap(classname, fields);  
         ReflectionUtil.makeAccessible(field);
         try {
             if (field.get(bean) instanceof SpecifyBean) {
@@ -100,7 +103,7 @@ public class EntityMapping {
                         if (key.contains(".")) {
                             String[] strarry = StringUtils.split(key, ".");
                             Field subfield = ReflectionUtil.getField(subo.getClass(), strarry[1]);
-                            if (subfield.getType().getName().equals("java.util.Collection")) {
+                            if (subfield.getType().getName().equals(JAVA_UTIL_COLLECTION)) {
                                 ReflectionUtil.makeAccessible(subfield);
                                 Collection<SpecifyBean> collectionbeans = (Collection<SpecifyBean>) subfield.get(value);
 
@@ -119,12 +122,12 @@ public class EntityMapping {
 
                                         Field newField = ReflectionUtil.getField(subo.getClass(), subfield.getName());
                                         ReflectionUtil.makeAccessible(newField);
-                                        newField.set(subo, newcollections);
+                                        newField.set(subo, newcollections); 
                                     }
                                 }
                             } else {
                                 SpecifyBean gsubo = JPAUtil.createNewInstance(subfield.getType().getSimpleName());
-                                setSubEntity(gsubo, subo, value, subfield, map.get(key));
+                                setSubEntity(gsubo, subo, value, subfield, map.get(key)); 
                             } 
                         }
                     }

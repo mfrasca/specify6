@@ -1,10 +1,11 @@
 package se.nrm.specify.specify.data.jpa.util;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.List; 
+import java.util.List;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import org.apache.commons.lang.StringUtils;
@@ -38,9 +39,9 @@ public class ReflectionUtil {
             field.setAccessible(true);
         }
     }
- 
-    public static List<String> addAllRequiredFields(SpecifyBean bean) { 
-        List<String> list = new ArrayList<String>(); 
+
+    public static List<String> addAllRequiredFields(SpecifyBean bean) {
+        List<String> list = new ArrayList<String>();
         Field[] fs = bean.getClass().getDeclaredFields();
         for (Field f : fs) {
             if (f.isAnnotationPresent(NotNull.class)) {
@@ -55,17 +56,19 @@ public class ReflectionUtil {
         return list;
     }
 
-    public static String getEntityNameByMethod(SpecifyBean bean, String name) { 
-
+    public static String getEntityNameByType(Field field) {
+ 
         String entityName = "";
-        Method[] methods = bean.getClass().getDeclaredMethods();
-        for (Method method : methods) {  
-            if (method.getName().toLowerCase().contains("get" + name.toLowerCase())) { 
-                entityName = StringUtils.substringBetween(method.getName(), "get", "Collection"); 
-                return entityName;
+        Type type = field.getGenericType(); 
+        if (type instanceof ParameterizedType) {
+            ParameterizedType pt = (ParameterizedType) type; 
+            for (Type t : pt.getActualTypeArguments()) { 
+                String strType = t.toString();
+                String[] strArray = StringUtils.split(strType, ".");
+                entityName = strArray[strArray.length - 1];  
             }
-        } 
-        return "";
+        }  
+        return entityName;
     }
 
     public static String getIDFieldName(SpecifyBean bean) {
