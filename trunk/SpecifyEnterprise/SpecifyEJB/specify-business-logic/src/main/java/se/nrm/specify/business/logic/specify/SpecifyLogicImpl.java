@@ -43,16 +43,16 @@ public class SpecifyLogicImpl implements SpecifyLogic {
 
         List<Dnasequence> list = dao.getAll(Dnasequence.class);        // List of Dnasequence from database                       
         for (Dnasequence sequence : list) {
-            Collectionobject collectionObj = sequence.getCollectionObjectID();
+            Collectionobject collectionObj = sequence.getCollectionObject();
             
             String jpql = "SELECT d FROM Determination d WHERE d.collectionObjectID.collectionObjectID = " + 
-                                                        collectionObj.getCollectionObjectID() + " and d.isCurrent = true";
+                                                        collectionObj.getCollectionObjectId() + " and d.isCurrent = true";
             
             Taxon taxon = (Taxon)dao.getEntityByJPQL(jpql);
 //            Taxon taxon = dao.getTaxonByCollectionobject(collectionObj);    // get taxon by collectionobject from database
                 
             sb.append(">");
-            sb.append(collectionObj.getCollectionObjectID());
+            sb.append(collectionObj.getCollectionObjectId());
             sb.append("::");
             sb.append(taxon.getFullName());
             sb.append("::");
