@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Collectionreltype.findAll", query = "SELECT c FROM Collectionreltype c"),
-    @NamedQuery(name = "Collectionreltype.findByCollectionRelTypeID", query = "SELECT c FROM Collectionreltype c WHERE c.collectionRelTypeID = :collectionRelTypeID"),
+    @NamedQuery(name = "Collectionreltype.findByCollectionRelTypeID", query = "SELECT c FROM Collectionreltype c WHERE c.collectionRelTypeId = :collectionRelTypeID"),
     @NamedQuery(name = "Collectionreltype.findByTimestampCreated", query = "SELECT c FROM Collectionreltype c WHERE c.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Collectionreltype.findByTimestampModified", query = "SELECT c FROM Collectionreltype c WHERE c.timestampModified = :timestampModified"),
     @NamedQuery(name = "Collectionreltype.findByVersion", query = "SELECT c FROM Collectionreltype c WHERE c.version = :version"),
@@ -44,7 +44,7 @@ public class Collectionreltype extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "CollectionRelTypeID")
-    private Integer collectionRelTypeID;
+    private Integer collectionRelTypeId;
      
     @Size(max = 32)
     @Column(name = "Name")
@@ -55,44 +55,77 @@ public class Collectionreltype extends BaseEntity {
     @Column(name = "Remarks")
     private String remarks;
     
-    @OneToMany(mappedBy = "collectionRelTypeID", cascade= CascadeType.ALL)
-    private Collection<Collectionrelationship> collectionrelationshipCollection;
+    @OneToMany(mappedBy = "collectionRelType", cascade= CascadeType.ALL)
+    private Collection<Collectionrelationship> collectionrelationships;
     
     @JoinColumn(name = "RightSideCollectionID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne
-    private se.nrm.specify.datamodel.Collection rightSideCollectionID;
+    private se.nrm.specify.datamodel.Collection rightSideCollection;
     
     @JoinColumn(name = "LeftSideCollectionID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne
-    private se.nrm.specify.datamodel.Collection leftSideCollectionID;
+    private se.nrm.specify.datamodel.Collection leftSideCollection;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
 
     public Collectionreltype() {
     }
 
-    public Collectionreltype(Integer collectionRelTypeID) {
-        this.collectionRelTypeID = collectionRelTypeID;
+    public Collectionreltype(Integer collectionRelTypeId) {
+        this.collectionRelTypeId = collectionRelTypeId;
     }
 
     public Collectionreltype(Integer collectionRelTypeID, Date timestampCreated) {
         super(timestampCreated);
-        this.collectionRelTypeID = collectionRelTypeID; 
+        this.collectionRelTypeId = collectionRelTypeId; 
     }
 
-    public Integer getCollectionRelTypeID() {
-        return collectionRelTypeID;
+    public Integer getCollectionRelTypeId() {
+        return collectionRelTypeId;
     }
 
-    public void setCollectionRelTypeID(Integer collectionRelTypeID) {
-        this.collectionRelTypeID = collectionRelTypeID;
+    public void setCollectionRelTypeId(Integer collectionRelTypeId) {
+        this.collectionRelTypeId = collectionRelTypeId;
     }
+
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
+    }
+
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public se.nrm.specify.datamodel.Collection getLeftSideCollection() {
+        return leftSideCollection;
+    }
+
+    public void setLeftSideCollection(se.nrm.specify.datamodel.Collection leftSideCollection) {
+        this.leftSideCollection = leftSideCollection;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public se.nrm.specify.datamodel.Collection getRightSideCollection() {
+        return rightSideCollection;
+    }
+
+    public void setRightSideCollection(se.nrm.specify.datamodel.Collection rightSideCollection) {
+        this.rightSideCollection = rightSideCollection;
+    }
+ 
  
     public String getName() {
         return name;
@@ -111,50 +144,22 @@ public class Collectionreltype extends BaseEntity {
     }
 
     @XmlTransient
-    public Collection<Collectionrelationship> getCollectionrelationshipCollection() {
-        return collectionrelationshipCollection;
+    public Collection<Collectionrelationship> getCollectionrelationships() {
+        return collectionrelationships;
     }
 
-    public void setCollectionrelationshipCollection(Collection<Collectionrelationship> collectionrelationshipCollection) {
-        this.collectionrelationshipCollection = collectionrelationshipCollection;
+    public void setCollectionrelationships(Collection<Collectionrelationship> collectionrelationships) {
+        this.collectionrelationships = collectionrelationships;
     }
 
-    public se.nrm.specify.datamodel.Collection getRightSideCollectionID() {
-        return rightSideCollectionID;
-    }
+ 
 
-    public void setRightSideCollectionID(se.nrm.specify.datamodel.Collection rightSideCollectionID) {
-        this.rightSideCollectionID = rightSideCollectionID;
-    }
-
-    public se.nrm.specify.datamodel.Collection getLeftSideCollectionID() {
-        return leftSideCollectionID;
-    }
-
-    public void setLeftSideCollectionID(se.nrm.specify.datamodel.Collection leftSideCollectionID) {
-        this.leftSideCollectionID = leftSideCollectionID;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (collectionRelTypeID != null ? collectionRelTypeID.hashCode() : 0);
+        hash += (collectionRelTypeId != null ? collectionRelTypeId.hashCode() : 0);
         return hash;
     }
 
@@ -165,7 +170,7 @@ public class Collectionreltype extends BaseEntity {
             return false;
         }
         Collectionreltype other = (Collectionreltype) object;
-        if ((this.collectionRelTypeID == null && other.collectionRelTypeID != null) || (this.collectionRelTypeID != null && !this.collectionRelTypeID.equals(other.collectionRelTypeID))) {
+        if ((this.collectionRelTypeId == null && other.collectionRelTypeId != null) || (this.collectionRelTypeId != null && !this.collectionRelTypeId.equals(other.collectionRelTypeId))) {
             return false;
         }
         return true;
@@ -173,7 +178,7 @@ public class Collectionreltype extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Collectionreltype[ collectionRelTypeID=" + collectionRelTypeID + " ]";
+        return "Collectionreltype[ collectionRelTypeId=" + collectionRelTypeId + " ]";
     }
     
 }

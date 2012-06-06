@@ -26,11 +26,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Determinationcitation.findAll", query = "SELECT d FROM Determinationcitation d"),
-    @NamedQuery(name = "Determinationcitation.findByDeterminationCitationID", query = "SELECT d FROM Determinationcitation d WHERE d.determinationCitationID = :determinationCitationID"),
+    @NamedQuery(name = "Determinationcitation.findByDeterminationCitationID", query = "SELECT d FROM Determinationcitation d WHERE d.determinationCitationId = :determinationCitationID"),
     @NamedQuery(name = "Determinationcitation.findByTimestampCreated", query = "SELECT d FROM Determinationcitation d WHERE d.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Determinationcitation.findByTimestampModified", query = "SELECT d FROM Determinationcitation d WHERE d.timestampModified = :timestampModified"),
     @NamedQuery(name = "Determinationcitation.findByVersion", query = "SELECT d FROM Determinationcitation d WHERE d.version = :version"),
-    @NamedQuery(name = "Determinationcitation.findByCollectionMemberID", query = "SELECT d FROM Determinationcitation d WHERE d.collectionMemberID = :collectionMemberID")})
+    @NamedQuery(name = "Determinationcitation.findByCollectionMemberID", query = "SELECT d FROM Determinationcitation d WHERE d.collectionMemberId = :collectionMemberID")})
 public class Determinationcitation extends BaseEntity {  
     
     private static final long serialVersionUID = 1L;
@@ -40,12 +40,12 @@ public class Determinationcitation extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "DeterminationCitationID")
-    private Integer determinationCitationID;
+    private Integer determinationCitationId;
       
     @Basic(optional = false)
     @NotNull
     @Column(name = "CollectionMemberID")
-    private int collectionMemberID;
+    private int collectionMemberId;
     
     @Lob
     @Size(max = 65535)
@@ -54,48 +54,34 @@ public class Determinationcitation extends BaseEntity {
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ReferenceWorkID", referencedColumnName = "ReferenceWorkID")
     @ManyToOne(optional = false)
-    private Referencework referenceWorkID;
+    private Referencework referenceWork;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "DeterminationID", referencedColumnName = "DeterminationID")
     @ManyToOne(optional = false)
-    private Determination determinationID;
+    private Determination determination;
 
     public Determinationcitation() {
     }
 
-    public Determinationcitation(Integer determinationCitationID) {
-        this.determinationCitationID = determinationCitationID;
+    public Determinationcitation(Integer determinationCitationId) {
+        this.determinationCitationId = determinationCitationId;
     }
 
-    public Determinationcitation(Integer determinationCitationID, Date timestampCreated, int collectionMemberID) {
+    public Determinationcitation(Integer determinationCitationId, Date timestampCreated, int collectionMemberId) {
         super(timestampCreated);
-        this.determinationCitationID = determinationCitationID; 
-        this.collectionMemberID = collectionMemberID;
+        this.determinationCitationId = determinationCitationId; 
+        this.collectionMemberId = collectionMemberId;
     }
 
-    public Integer getDeterminationCitationID() {
-        return determinationCitationID;
-    }
-
-    public void setDeterminationCitationID(Integer determinationCitationID) {
-        this.determinationCitationID = determinationCitationID;
-    }
  
-    public int getCollectionMemberID() {
-        return collectionMemberID;
-    }
-
-    public void setCollectionMemberID(int collectionMemberID) {
-        this.collectionMemberID = collectionMemberID;
-    }
 
     public String getRemarks() {
         return remarks;
@@ -105,42 +91,60 @@ public class Determinationcitation extends BaseEntity {
         this.remarks = remarks;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public int getCollectionMemberId() {
+        return collectionMemberId;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setCollectionMemberId(int collectionMemberId) {
+        this.collectionMemberId = collectionMemberId;
     }
 
-    public Referencework getReferenceWorkID() {
-        return referenceWorkID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setReferenceWorkID(Referencework referenceWorkID) {
-        this.referenceWorkID = referenceWorkID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Determination getDetermination() {
+        return determination;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setDetermination(Determination determination) {
+        this.determination = determination;
     }
 
-    public Determination getDeterminationID() {
-        return determinationID;
+    public Integer getDeterminationCitationId() {
+        return determinationCitationId;
     }
 
-    public void setDeterminationID(Determination determinationID) {
-        this.determinationID = determinationID;
+    public void setDeterminationCitationId(Integer determinationCitationId) {
+        this.determinationCitationId = determinationCitationId;
     }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Referencework getReferenceWork() {
+        return referenceWork;
+    }
+
+    public void setReferenceWork(Referencework referenceWork) {
+        this.referenceWork = referenceWork;
+    }
+
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (determinationCitationID != null ? determinationCitationID.hashCode() : 0);
+        hash += (determinationCitationId != null ? determinationCitationId.hashCode() : 0);
         return hash;
     }
 
@@ -151,7 +155,7 @@ public class Determinationcitation extends BaseEntity {
             return false;
         }
         Determinationcitation other = (Determinationcitation) object;
-        if ((this.determinationCitationID == null && other.determinationCitationID != null) || (this.determinationCitationID != null && !this.determinationCitationID.equals(other.determinationCitationID))) {
+        if ((this.determinationCitationId == null && other.determinationCitationId != null) || (this.determinationCitationId != null && !this.determinationCitationId.equals(other.determinationCitationId))) {
             return false;
         }
         return true;
@@ -159,7 +163,7 @@ public class Determinationcitation extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Determinationcitation[ determinationCitationID=" + determinationCitationID + " ]";
+        return "Determinationcitation[ determinationCitationId=" + determinationCitationId + " ]";
     }
     
 }

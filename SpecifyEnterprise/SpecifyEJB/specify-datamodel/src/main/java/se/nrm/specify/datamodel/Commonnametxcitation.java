@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Commonnametxcitation.findAll", query = "SELECT c FROM Commonnametxcitation c"),
-    @NamedQuery(name = "Commonnametxcitation.findByCommonNameTxCitationID", query = "SELECT c FROM Commonnametxcitation c WHERE c.commonNameTxCitationID = :commonNameTxCitationID"),
+    @NamedQuery(name = "Commonnametxcitation.findByCommonNameTxCitationID", query = "SELECT c FROM Commonnametxcitation c WHERE c.commonNameTxCitationId = :commonNameTxCitationID"),
     @NamedQuery(name = "Commonnametxcitation.findByTimestampCreated", query = "SELECT c FROM Commonnametxcitation c WHERE c.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Commonnametxcitation.findByTimestampModified", query = "SELECT c FROM Commonnametxcitation c WHERE c.timestampModified = :timestampModified"),
     @NamedQuery(name = "Commonnametxcitation.findByVersion", query = "SELECT c FROM Commonnametxcitation c WHERE c.version = :version"),
@@ -43,7 +43,7 @@ public class Commonnametxcitation extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "CommonNameTxCitationID")
-    private Integer commonNameTxCitationID;
+    private Integer commonNameTxCitationId;
      
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "Number1")
@@ -75,40 +75,33 @@ public class Commonnametxcitation extends BaseEntity {
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ReferenceWorkID", referencedColumnName = "ReferenceWorkID")
     @ManyToOne(optional = false)
-    private Referencework referenceWorkID;
+    private Referencework referenceWork;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "CommonNameTxID", referencedColumnName = "CommonNameTxID")
     @ManyToOne(optional = false)
-    private Commonnametx commonNameTxID;
+    private Commonnametx commonNameTx;
      
     public Commonnametxcitation() {
     }
 
-    public Commonnametxcitation(Integer commonNameTxCitationID) {
-        this.commonNameTxCitationID = commonNameTxCitationID;
+    public Commonnametxcitation(Integer commonNameTxCitationId) {
+        this.commonNameTxCitationId = commonNameTxCitationId;
     }
 
-    public Commonnametxcitation(Integer commonNameTxCitationID, Date timestampCreated) {
+    public Commonnametxcitation(Integer commonNameTxCitationId, Date timestampCreated) {
         super(timestampCreated);
-        this.commonNameTxCitationID = commonNameTxCitationID; 
+        this.commonNameTxCitationId = commonNameTxCitationId; 
     }
 
-    public Integer getCommonNameTxCitationID() {
-        return commonNameTxCitationID;
-    }
-
-    public void setCommonNameTxCitationID(Integer commonNameTxCitationID) {
-        this.commonNameTxCitationID = commonNameTxCitationID;
-    } 
-    
+ 
     public Float getNumber1() {
         return number1;
     }
@@ -165,42 +158,51 @@ public class Commonnametxcitation extends BaseEntity {
         this.yesNo2 = yesNo2;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Commonnametx getCommonNameTx() {
+        return commonNameTx;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setCommonNameTx(Commonnametx commonNameTx) {
+        this.commonNameTx = commonNameTx;
     }
 
-    public Referencework getReferenceWorkID() {
-        return referenceWorkID;
+    public Integer getCommonNameTxCitationId() {
+        return commonNameTxCitationId;
     }
 
-    public void setReferenceWorkID(Referencework referenceWorkID) {
-        this.referenceWorkID = referenceWorkID;
+    public void setCommonNameTxCitationId(Integer commonNameTxCitationId) {
+        this.commonNameTxCitationId = commonNameTxCitationId;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Commonnametx getCommonNameTxID() {
-        return commonNameTxID;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setCommonNameTxID(Commonnametx commonNameTxID) {
-        this.commonNameTxID = commonNameTxID;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
 
+    public Referencework getReferenceWork() {
+        return referenceWork;
+    }
+
+    public void setReferenceWork(Referencework referenceWork) {
+        this.referenceWork = referenceWork;
+    }
+
+    
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (commonNameTxCitationID != null ? commonNameTxCitationID.hashCode() : 0);
+        hash += (commonNameTxCitationId != null ? commonNameTxCitationId.hashCode() : 0);
         return hash;
     }
 
@@ -211,7 +213,7 @@ public class Commonnametxcitation extends BaseEntity {
             return false;
         }
         Commonnametxcitation other = (Commonnametxcitation) object;
-        if ((this.commonNameTxCitationID == null && other.commonNameTxCitationID != null) || (this.commonNameTxCitationID != null && !this.commonNameTxCitationID.equals(other.commonNameTxCitationID))) {
+        if ((this.commonNameTxCitationId == null && other.commonNameTxCitationId != null) || (this.commonNameTxCitationId != null && !this.commonNameTxCitationId.equals(other.commonNameTxCitationId))) {
             return false;
         }
         return true;
@@ -219,7 +221,7 @@ public class Commonnametxcitation extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Commonnametxcitation[ commonNameTxCitationID=" + commonNameTxCitationID + " ]";
+        return "Commonnametxcitation[ commonNameTxCitationId=" + commonNameTxCitationId + " ]";
     }
     
 }

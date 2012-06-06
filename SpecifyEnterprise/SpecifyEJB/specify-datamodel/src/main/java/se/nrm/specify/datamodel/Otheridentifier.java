@@ -26,11 +26,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Otheridentifier.findAll", query = "SELECT o FROM Otheridentifier o"),
-    @NamedQuery(name = "Otheridentifier.findByOtherIdentifierID", query = "SELECT o FROM Otheridentifier o WHERE o.otherIdentifierID = :otherIdentifierID"),
+    @NamedQuery(name = "Otheridentifier.findByOtherIdentifierID", query = "SELECT o FROM Otheridentifier o WHERE o.otherIdentifierId = :otherIdentifierID"),
     @NamedQuery(name = "Otheridentifier.findByTimestampCreated", query = "SELECT o FROM Otheridentifier o WHERE o.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Otheridentifier.findByTimestampModified", query = "SELECT o FROM Otheridentifier o WHERE o.timestampModified = :timestampModified"),
     @NamedQuery(name = "Otheridentifier.findByVersion", query = "SELECT o FROM Otheridentifier o WHERE o.version = :version"),
-    @NamedQuery(name = "Otheridentifier.findByCollectionMemberID", query = "SELECT o FROM Otheridentifier o WHERE o.collectionMemberID = :collectionMemberID"),
+    @NamedQuery(name = "Otheridentifier.findByCollectionMemberID", query = "SELECT o FROM Otheridentifier o WHERE o.collectionMemberId = :collectionMemberID"),
     @NamedQuery(name = "Otheridentifier.findByIdentifier", query = "SELECT o FROM Otheridentifier o WHERE o.identifier = :identifier"),
     @NamedQuery(name = "Otheridentifier.findByInstitution", query = "SELECT o FROM Otheridentifier o WHERE o.institution = :institution")})
 public class Otheridentifier extends BaseEntity {  
@@ -42,12 +42,12 @@ public class Otheridentifier extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "OtherIdentifierID")
-    private Integer otherIdentifierID;
+    private Integer otherIdentifierId;
    
     @Basic(optional = false) 
     @NotNull
     @Column(name = "CollectionMemberID")
-    private int collectionMemberID;
+    private int collectionMemberId;
     
     @Basic(optional = false)
     @NotNull
@@ -66,45 +66,71 @@ public class Otheridentifier extends BaseEntity {
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "CollectionObjectID", referencedColumnName = "CollectionObjectID")
     @ManyToOne(optional = false)
-    private Collectionobject collectionObjectID;
+    private Collectionobject collectionObject;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
 
     public Otheridentifier() {
     }
 
-    public Otheridentifier(Integer otherIdentifierID) {
-        this.otherIdentifierID = otherIdentifierID;
+    public Otheridentifier(Integer otherIdentifierId) {
+        this.otherIdentifierId = otherIdentifierId;
     }
 
-    public Otheridentifier(Integer otherIdentifierID, Date timestampCreated, int collectionMemberID, String identifier) {
+    public Otheridentifier(Integer otherIdentifierId, Date timestampCreated, int collectionMemberId, String identifier) {
         super(timestampCreated);
-        this.otherIdentifierID = otherIdentifierID; 
-        this.collectionMemberID = collectionMemberID;
+        this.otherIdentifierId = otherIdentifierId; 
+        this.collectionMemberId = collectionMemberId;
         this.identifier = identifier;
     }
 
-    public Integer getOtherIdentifierID() {
-        return otherIdentifierID;
+    public int getCollectionMemberId() {
+        return collectionMemberId;
     }
 
-    public void setOtherIdentifierID(Integer otherIdentifierID) {
-        this.otherIdentifierID = otherIdentifierID;
-    } 
+    public void setCollectionMemberId(int collectionMemberId) {
+        this.collectionMemberId = collectionMemberId;
+    }
+
+    public Collectionobject getCollectionObject() {
+        return collectionObject;
+    }
+
+    public void setCollectionObject(Collectionobject collectionObject) {
+        this.collectionObject = collectionObject;
+    }
+
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
+    }
+
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Integer getOtherIdentifierId() {
+        return otherIdentifierId;
+    }
+
+    public void setOtherIdentifierId(Integer otherIdentifierId) {
+        this.otherIdentifierId = otherIdentifierId;
+    }
+
     
-    public int getCollectionMemberID() {
-        return collectionMemberID;
-    }
-
-    public void setCollectionMemberID(int collectionMemberID) {
-        this.collectionMemberID = collectionMemberID;
-    }
 
     public String getIdentifier() {
         return identifier;
@@ -130,34 +156,11 @@ public class Otheridentifier extends BaseEntity {
         this.remarks = remarks;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Collectionobject getCollectionObjectID() {
-        return collectionObjectID;
-    }
-
-    public void setCollectionObjectID(Collectionobject collectionObjectID) {
-        this.collectionObjectID = collectionObjectID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
+   
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (otherIdentifierID != null ? otherIdentifierID.hashCode() : 0);
+        hash += (otherIdentifierId != null ? otherIdentifierId.hashCode() : 0);
         return hash;
     }
 
@@ -168,7 +171,7 @@ public class Otheridentifier extends BaseEntity {
             return false;
         }
         Otheridentifier other = (Otheridentifier) object;
-        if ((this.otherIdentifierID == null && other.otherIdentifierID != null) || (this.otherIdentifierID != null && !this.otherIdentifierID.equals(other.otherIdentifierID))) {
+        if ((this.otherIdentifierId == null && other.otherIdentifierId != null) || (this.otherIdentifierId != null && !this.otherIdentifierId.equals(other.otherIdentifierId))) {
             return false;
         }
         return true;
@@ -176,7 +179,7 @@ public class Otheridentifier extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Otheridentifier[ otherIdentifierID=" + otherIdentifierID + " ]";
+        return "Otheridentifier[ otherIdentifierID=" + otherIdentifierId + " ]";
     }
     
 }

@@ -1,15 +1,7 @@
 package se.nrm.specify.datamodel;
  
 import java.util.Date;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -23,17 +15,17 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Workbenchrowexportedrelationship.findAll", query = "SELECT w FROM Workbenchrowexportedrelationship w"),
-    @NamedQuery(name = "Workbenchrowexportedrelationship.findByWorkbenchRowExportedRelationshipID", query = "SELECT w FROM Workbenchrowexportedrelationship w WHERE w.workbenchRowExportedRelationshipID = :workbenchRowExportedRelationshipID"),
+    @NamedQuery(name = "Workbenchrowexportedrelationship.findByWorkbenchRowExportedRelationshipID", query = "SELECT w FROM Workbenchrowexportedrelationship w WHERE w.workbenchRowExportedRelationshipId = :workbenchRowExportedRelationshipID"),
     @NamedQuery(name = "Workbenchrowexportedrelationship.findByTimestampCreated", query = "SELECT w FROM Workbenchrowexportedrelationship w WHERE w.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Workbenchrowexportedrelationship.findByTimestampModified", query = "SELECT w FROM Workbenchrowexportedrelationship w WHERE w.timestampModified = :timestampModified"),
     @NamedQuery(name = "Workbenchrowexportedrelationship.findByVersion", query = "SELECT w FROM Workbenchrowexportedrelationship w WHERE w.version = :version"),
-    @NamedQuery(name = "Workbenchrowexportedrelationship.findByRecordID", query = "SELECT w FROM Workbenchrowexportedrelationship w WHERE w.recordID = :recordID"),
+    @NamedQuery(name = "Workbenchrowexportedrelationship.findByRecordID", query = "SELECT w FROM Workbenchrowexportedrelationship w WHERE w.recordId = :recordID"),
     @NamedQuery(name = "Workbenchrowexportedrelationship.findByRelationshipName", query = "SELECT w FROM Workbenchrowexportedrelationship w WHERE w.relationshipName = :relationshipName"),
     @NamedQuery(name = "Workbenchrowexportedrelationship.findBySequence", query = "SELECT w FROM Workbenchrowexportedrelationship w WHERE w.sequence = :sequence"),
     @NamedQuery(name = "Workbenchrowexportedrelationship.findByTableName", query = "SELECT w FROM Workbenchrowexportedrelationship w WHERE w.tableName = :tableName"),
-    @NamedQuery(name = "Workbenchrowexportedrelationship.findByModifiedByAgentID", query = "SELECT w FROM Workbenchrowexportedrelationship w WHERE w.modifiedByAgentID = :modifiedByAgentID"),
-    @NamedQuery(name = "Workbenchrowexportedrelationship.findByWorkbenchRowID", query = "SELECT w FROM Workbenchrowexportedrelationship w WHERE w.workbenchRowID = :workbenchRowID"),
-    @NamedQuery(name = "Workbenchrowexportedrelationship.findByCreatedByAgentID", query = "SELECT w FROM Workbenchrowexportedrelationship w WHERE w.createdByAgentID = :createdByAgentID")})
+    @NamedQuery(name = "Workbenchrowexportedrelationship.findByModifiedByAgentID", query = "SELECT w FROM Workbenchrowexportedrelationship w WHERE w.modifiedByAgent = :modifiedByAgentID"),
+    @NamedQuery(name = "Workbenchrowexportedrelationship.findByWorkbenchRowID", query = "SELECT w FROM Workbenchrowexportedrelationship w WHERE w.workbenchRow = :workbenchRowID"),
+    @NamedQuery(name = "Workbenchrowexportedrelationship.findByCreatedByAgentID", query = "SELECT w FROM Workbenchrowexportedrelationship w WHERE w.createdByAgent = :createdByAgentID")})
 public class Workbenchrowexportedrelationship extends BaseEntity { 
     
     private static final long serialVersionUID = 1L;
@@ -43,10 +35,10 @@ public class Workbenchrowexportedrelationship extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "WorkbenchRowExportedRelationshipID")
-    private Integer workbenchRowExportedRelationshipID;
+    private Integer workbenchRowExportedRelationshipId;
      
     @Column(name = "RecordID")
-    private Integer recordID;
+    private Integer recordId;
     
     @Size(max = 120)
     @Column(name = "RelationshipName")
@@ -60,44 +52,30 @@ public class Workbenchrowexportedrelationship extends BaseEntity {
     private String tableName;
     
     @Column(name = "ModifiedByAgentID")
-    private Integer modifiedByAgentID;
+    private Integer modifiedByAgent;
     
     @Basic(optional = false)
     @NotNull
     @Column(name = "WorkbenchRowID")
-    private int workbenchRowID;
+    private int workbenchRow;
     
     @Column(name = "CreatedByAgentID")
-    private Integer createdByAgentID;
+    private Integer createdByAgent;
 
     public Workbenchrowexportedrelationship() {
     }
 
-    public Workbenchrowexportedrelationship(Integer workbenchRowExportedRelationshipID) {
-        this.workbenchRowExportedRelationshipID = workbenchRowExportedRelationshipID;
+    public Workbenchrowexportedrelationship(Integer workbenchRowExportedRelationshipId) {
+        this.workbenchRowExportedRelationshipId = workbenchRowExportedRelationshipId;
     }
 
-    public Workbenchrowexportedrelationship(Integer workbenchRowExportedRelationshipID, Date timestampCreated, int workbenchRowID) {
+    public Workbenchrowexportedrelationship(Integer workbenchRowExportedRelationshipId, Date timestampCreated, int workbenchRow) {
         super(timestampCreated);
-        this.workbenchRowExportedRelationshipID = workbenchRowExportedRelationshipID; 
-        this.workbenchRowID = workbenchRowID;
+        this.workbenchRowExportedRelationshipId = workbenchRowExportedRelationshipId; 
+        this.workbenchRow = workbenchRow;
     }
 
-    public Integer getWorkbenchRowExportedRelationshipID() {
-        return workbenchRowExportedRelationshipID;
-    }
-
-    public void setWorkbenchRowExportedRelationshipID(Integer workbenchRowExportedRelationshipID) {
-        this.workbenchRowExportedRelationshipID = workbenchRowExportedRelationshipID;
-    }
  
-    public Integer getRecordID() {
-        return recordID;
-    }
-
-    public void setRecordID(Integer recordID) {
-        this.recordID = recordID;
-    }
 
     public String getRelationshipName() {
         return relationshipName;
@@ -123,34 +101,51 @@ public class Workbenchrowexportedrelationship extends BaseEntity {
         this.tableName = tableName;
     }
 
-    public Integer getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Integer getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setModifiedByAgentID(Integer modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setCreatedByAgent(Integer createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public int getWorkbenchRowID() {
-        return workbenchRowID;
+    public Integer getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setWorkbenchRowID(int workbenchRowID) {
-        this.workbenchRowID = workbenchRowID;
+    public void setModifiedByAgent(Integer modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
 
-    public Integer getCreatedByAgentID() {
-        return createdByAgentID;
+    public Integer getRecordId() {
+        return recordId;
     }
 
-    public void setCreatedByAgentID(Integer createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setRecordId(Integer recordId) {
+        this.recordId = recordId;
     }
+
+    public int getWorkbenchRow() {
+        return workbenchRow;
+    }
+
+    public void setWorkbenchRow(int workbenchRow) {
+        this.workbenchRow = workbenchRow;
+    }
+
+    public Integer getWorkbenchRowExportedRelationshipId() {
+        return workbenchRowExportedRelationshipId;
+    }
+
+    public void setWorkbenchRowExportedRelationshipId(Integer workbenchRowExportedRelationshipId) {
+        this.workbenchRowExportedRelationshipId = workbenchRowExportedRelationshipId;
+    }
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (workbenchRowExportedRelationshipID != null ? workbenchRowExportedRelationshipID.hashCode() : 0);
+        hash += (workbenchRowExportedRelationshipId != null ? workbenchRowExportedRelationshipId.hashCode() : 0);
         return hash;
     }
 
@@ -161,7 +156,7 @@ public class Workbenchrowexportedrelationship extends BaseEntity {
             return false;
         }
         Workbenchrowexportedrelationship other = (Workbenchrowexportedrelationship) object;
-        if ((this.workbenchRowExportedRelationshipID == null && other.workbenchRowExportedRelationshipID != null) || (this.workbenchRowExportedRelationshipID != null && !this.workbenchRowExportedRelationshipID.equals(other.workbenchRowExportedRelationshipID))) {
+        if ((this.workbenchRowExportedRelationshipId == null && other.workbenchRowExportedRelationshipId != null) || (this.workbenchRowExportedRelationshipId != null && !this.workbenchRowExportedRelationshipId.equals(other.workbenchRowExportedRelationshipId))) {
             return false;
         }
         return true;
@@ -169,7 +164,7 @@ public class Workbenchrowexportedrelationship extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Workbenchrowexportedrelationship[ workbenchRowExportedRelationshipID=" + workbenchRowExportedRelationshipID + " ]";
+        return "Workbenchrowexportedrelationship[ workbenchRowExportedRelationshipID=" + workbenchRowExportedRelationshipId + " ]";
     }
     
 }

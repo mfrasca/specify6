@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Shipment.findAll", query = "SELECT s FROM Shipment s"),
-    @NamedQuery(name = "Shipment.findByShipmentID", query = "SELECT s FROM Shipment s WHERE s.shipmentID = :shipmentID"),
+    @NamedQuery(name = "Shipment.findByShipmentID", query = "SELECT s FROM Shipment s WHERE s.shipmentId = :shipmentID"),
     @NamedQuery(name = "Shipment.findByTimestampCreated", query = "SELECT s FROM Shipment s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Shipment.findByTimestampModified", query = "SELECT s FROM Shipment s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Shipment.findByVersion", query = "SELECT s FROM Shipment s WHERE s.version = :version"),
@@ -51,7 +51,7 @@ public class Shipment extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "ShipmentID")
-    private Integer shipmentID;
+    private Integer shipmentId;
      
     @Size(max = 50)
     @Column(name = "InsuredForAmount")
@@ -108,64 +108,146 @@ public class Shipment extends BaseEntity {
     
     @JoinColumn(name = "BorrowID", referencedColumnName = "BorrowID")
     @ManyToOne
-    private Borrow borrowID;
+    private Borrow borrow;
     
     @JoinColumn(name = "ShipperID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent shipperID;
+    private Agent shipper;
     
     @JoinColumn(name = "ShippedToID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent shippedToID;
+    private Agent shippedTo;
     
     @JoinColumn(name = "ShippedByID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent shippedByID;
+    private Agent shippedBy;
     
     @JoinColumn(name = "ExchangeOutID", referencedColumnName = "ExchangeOutID")
     @ManyToOne
-    private Exchangeout exchangeOutID;
+    private Exchangeout exchangeOut;
     
     @JoinColumn(name = "LoanID", referencedColumnName = "LoanID")
     @ManyToOne
-    private Loan loanID;
+    private Loan loan;
     
     @JoinColumn(name = "GiftID", referencedColumnName = "GiftID")
     @ManyToOne
-    private Gift giftID;
+    private Gift gift;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "DisciplineID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne
-    private Discipline disciplineID;
+    private Discipline discipline;
 
     public Shipment() {
     }
 
-    public Shipment(Integer shipmentID) {
-        this.shipmentID = shipmentID;
+    public Shipment(Integer shipmentId) {
+        this.shipmentId = shipmentId;
     }
 
-    public Shipment(Integer shipmentID, Date timestampCreated, String shipmentNumber) {
+    public Shipment(Integer shipmentId, Date timestampCreated, String shipmentNumber) {
         super(timestampCreated);
-        this.shipmentID = shipmentID; 
+        this.shipmentId = shipmentId; 
         this.shipmentNumber = shipmentNumber;
     }
 
-    public Integer getShipmentID() {
-        return shipmentID;
+    public Borrow getBorrow() {
+        return borrow;
     }
 
-    public void setShipmentID(Integer shipmentID) {
-        this.shipmentID = shipmentID;
+    public void setBorrow(Borrow borrow) {
+        this.borrow = borrow;
     }
+
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
+    }
+
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Discipline getDiscipline() {
+        return discipline;
+    }
+
+    public void setDiscipline(Discipline discipline) {
+        this.discipline = discipline;
+    }
+
+    public Exchangeout getExchangeOut() {
+        return exchangeOut;
+    }
+
+    public void setExchangeOut(Exchangeout exchangeOut) {
+        this.exchangeOut = exchangeOut;
+    }
+
+    public Gift getGift() {
+        return gift;
+    }
+
+    public void setGift(Gift gift) {
+        this.gift = gift;
+    }
+
+    public Loan getLoan() {
+        return loan;
+    }
+
+    public void setLoan(Loan loan) {
+        this.loan = loan;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Integer getShipmentId() {
+        return shipmentId;
+    }
+
+    public void setShipmentId(Integer shipmentId) {
+        this.shipmentId = shipmentId;
+    }
+
+    public Agent getShippedBy() {
+        return shippedBy;
+    }
+
+    public void setShippedBy(Agent shippedBy) {
+        this.shippedBy = shippedBy;
+    }
+
+    public Agent getShippedTo() {
+        return shippedTo;
+    }
+
+    public void setShippedTo(Agent shippedTo) {
+        this.shippedTo = shippedTo;
+    }
+
+    public Agent getShipper() {
+        return shipper;
+    }
+
+    public void setShipper(Agent shipper) {
+        this.shipper = shipper;
+    }
+
+    
  
     public String getInsuredForAmount() {
         return insuredForAmount;
@@ -271,90 +353,13 @@ public class Shipment extends BaseEntity {
         this.yesNo2 = yesNo2;
     }
 
-    public Borrow getBorrowID() {
-        return borrowID;
-    }
-
-    public void setBorrowID(Borrow borrowID) {
-        this.borrowID = borrowID;
-    }
-
-    public Agent getShipperID() {
-        return shipperID;
-    }
-
-    public void setShipperID(Agent shipperID) {
-        this.shipperID = shipperID;
-    }
-
-    public Agent getShippedToID() {
-        return shippedToID;
-    }
-
-    public void setShippedToID(Agent shippedToID) {
-        this.shippedToID = shippedToID;
-    }
-
-    public Agent getShippedByID() {
-        return shippedByID;
-    }
-
-    public void setShippedByID(Agent shippedByID) {
-        this.shippedByID = shippedByID;
-    }
-
-    public Exchangeout getExchangeOutID() {
-        return exchangeOutID;
-    }
-
-    public void setExchangeOutID(Exchangeout exchangeOutID) {
-        this.exchangeOutID = exchangeOutID;
-    }
-
-    public Loan getLoanID() {
-        return loanID;
-    }
-
-    public void setLoanID(Loan loanID) {
-        this.loanID = loanID;
-    }
-
-    public Gift getGiftID() {
-        return giftID;
-    }
-
-    public void setGiftID(Gift giftID) {
-        this.giftID = giftID;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
-    public Discipline getDisciplineID() {
-        return disciplineID;
-    }
-
-    public void setDisciplineID(Discipline disciplineID) {
-        this.disciplineID = disciplineID;
-    }
+  
+  
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (shipmentID != null ? shipmentID.hashCode() : 0);
+        hash += (shipmentId != null ? shipmentId.hashCode() : 0);
         return hash;
     }
 
@@ -365,7 +370,7 @@ public class Shipment extends BaseEntity {
             return false;
         }
         Shipment other = (Shipment) object;
-        if ((this.shipmentID == null && other.shipmentID != null) || (this.shipmentID != null && !this.shipmentID.equals(other.shipmentID))) {
+        if ((this.shipmentId == null && other.shipmentId != null) || (this.shipmentId != null && !this.shipmentId.equals(other.shipmentId))) {
             return false;
         }
         return true;
@@ -373,7 +378,7 @@ public class Shipment extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Shipment[ shipmentID=" + shipmentID + " ]";
+        return "Shipment[ shipmentID=" + shipmentId + " ]";
     }
     
 }

@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Journal.findAll", query = "SELECT j FROM Journal j"),
-    @NamedQuery(name = "Journal.findByJournalID", query = "SELECT j FROM Journal j WHERE j.journalID = :journalID"),
+    @NamedQuery(name = "Journal.findByJournalID", query = "SELECT j FROM Journal j WHERE j.journalId = :journalID"),
     @NamedQuery(name = "Journal.findByTimestampCreated", query = "SELECT j FROM Journal j WHERE j.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Journal.findByTimestampModified", query = "SELECT j FROM Journal j WHERE j.timestampModified = :timestampModified"),
     @NamedQuery(name = "Journal.findByVersion", query = "SELECT j FROM Journal j WHERE j.version = :version"),
@@ -47,7 +47,7 @@ public class Journal extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "JournalID")
-    private Integer journalID; 
+    private Integer journalId; 
     
     @Size(max = 128)
     @Column(name = "GUID")
@@ -74,37 +74,63 @@ public class Journal extends BaseEntity {
     @Column(name = "Text1")
     private String text1;
     
-    @OneToMany(mappedBy = "journalID")
-    private Collection<Referencework> referenceworkCollection;
+    @OneToMany(mappedBy = "journal")
+    private Collection<Referencework> referenceWorks;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
 
     public Journal() {
     }
 
-    public Journal(Integer journalID) {
-        this.journalID = journalID;
+    public Journal(Integer journalId) {
+        this.journalId = journalId;
     }
 
-    public Journal(Integer journalID, Date timestampCreated) {
+    public Journal(Integer journalId, Date timestampCreated) {
         super(timestampCreated);
-        this.journalID = journalID; 
+        this.journalId = journalId; 
     }
 
-    public Integer getJournalID() {
-        return journalID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setJournalID(Integer journalID) {
-        this.journalID = journalID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
- 
+
+    public Integer getJournalId() {
+        return journalId;
+    }
+
+    public void setJournalId(Integer journalId) {
+        this.journalId = journalId;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    @XmlTransient
+    public Collection<Referencework> getReferenceWorks() {
+        return referenceWorks;
+    }
+
+    public void setReferenceWorks(Collection<Referencework> referenceWorks) {
+        this.referenceWorks = referenceWorks;
+    }
+
+     
     public String getGuid() {
         return guid;
     }
@@ -152,36 +178,12 @@ public class Journal extends BaseEntity {
     public void setText1(String text1) {
         this.text1 = text1;
     }
-
-    @XmlTransient
-    public Collection<Referencework> getReferenceworkCollection() {
-        return referenceworkCollection;
-    }
-
-    public void setReferenceworkCollection(Collection<Referencework> referenceworkCollection) {
-        this.referenceworkCollection = referenceworkCollection;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (journalID != null ? journalID.hashCode() : 0);
+        hash += (journalId != null ? journalId.hashCode() : 0);
         return hash;
     }
 
@@ -192,7 +194,7 @@ public class Journal extends BaseEntity {
             return false;
         }
         Journal other = (Journal) object;
-        if ((this.journalID == null && other.journalID != null) || (this.journalID != null && !this.journalID.equals(other.journalID))) {
+        if ((this.journalId == null && other.journalId != null) || (this.journalId != null && !this.journalId.equals(other.journalId))) {
             return false;
         }
         return true;
@@ -200,7 +202,7 @@ public class Journal extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Journal[ journalID=" + journalID + " ]";
+        return "Journal[ journalID=" + journalId + " ]";
     }
     
 }

@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Recordsetitem.findAll", query = "SELECT r FROM Recordsetitem r"),
-    @NamedQuery(name = "Recordsetitem.findByRecordSetItemID", query = "SELECT r FROM Recordsetitem r WHERE r.recordSetItemID = :recordSetItemID"),
+    @NamedQuery(name = "Recordsetitem.findByRecordSetItemID", query = "SELECT r FROM Recordsetitem r WHERE r.recordSetItemId = :recordSetItemID"),
     @NamedQuery(name = "Recordsetitem.findByRecordId", query = "SELECT r FROM Recordsetitem r WHERE r.recordId = :recordId")})
 public class Recordsetitem implements Serializable, SpecifyBean {
     
@@ -35,7 +35,7 @@ public class Recordsetitem implements Serializable, SpecifyBean {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "RecordSetItemID")
-    private Integer recordSetItemID;
+    private Integer recordSetItemId;
     
     @Basic(optional = false)
     @NotNull
@@ -44,27 +44,21 @@ public class Recordsetitem implements Serializable, SpecifyBean {
     
     @JoinColumn(name = "RecordSetID", referencedColumnName = "RecordSetID")
     @ManyToOne(optional = false)
-    private Recordset recordSetID;
+    private Recordset recordSet;
 
     public Recordsetitem() {
     }
 
-    public Recordsetitem(Integer recordSetItemID) {
-        this.recordSetItemID = recordSetItemID;
+    public Recordsetitem(Integer recordSetItemId) {
+        this.recordSetItemId = recordSetItemId;
     }
 
-    public Recordsetitem(Integer recordSetItemID, int recordId) {
-        this.recordSetItemID = recordSetItemID;
+    public Recordsetitem(Integer recordSetItemId, int recordId) {
+        this.recordSetItemId = recordSetItemId;
         this.recordId = recordId;
     }
 
-    public Integer getRecordSetItemID() {
-        return recordSetItemID;
-    }
-
-    public void setRecordSetItemID(Integer recordSetItemID) {
-        this.recordSetItemID = recordSetItemID;
-    }
+ 
 
     public int getRecordId() {
         return recordId;
@@ -74,18 +68,27 @@ public class Recordsetitem implements Serializable, SpecifyBean {
         this.recordId = recordId;
     }
 
-    public Recordset getRecordSetID() {
-        return recordSetID;
+    public Recordset getRecordSet() {
+        return recordSet;
     }
 
-    public void setRecordSetID(Recordset recordSetID) {
-        this.recordSetID = recordSetID;
+    public void setRecordSet(Recordset recordSet) {
+        this.recordSet = recordSet;
     }
+
+    public Integer getRecordSetItemId() {
+        return recordSetItemId;
+    }
+
+    public void setRecordSetItemId(Integer recordSetItemId) {
+        this.recordSetItemId = recordSetItemId;
+    }
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (recordSetItemID != null ? recordSetItemID.hashCode() : 0);
+        hash += (recordSetItemId != null ? recordSetItemId.hashCode() : 0);
         return hash;
     }
 
@@ -96,7 +99,7 @@ public class Recordsetitem implements Serializable, SpecifyBean {
             return false;
         }
         Recordsetitem other = (Recordsetitem) object;
-        if ((this.recordSetItemID == null && other.recordSetItemID != null) || (this.recordSetItemID != null && !this.recordSetItemID.equals(other.recordSetItemID))) {
+        if ((this.recordSetItemId == null && other.recordSetItemId != null) || (this.recordSetItemId != null && !this.recordSetItemId.equals(other.recordSetItemId))) {
             return false;
         }
         return true;
@@ -104,7 +107,7 @@ public class Recordsetitem implements Serializable, SpecifyBean {
 
     @Override
     public String toString() {
-        return "se.nrm.specify.datamodel.Recordsetitem[ recordSetItemID=" + recordSetItemID + " ]";
+        return "se.nrm.specify.datamodel.Recordsetitem[ recordSetItemID=" + recordSetItemId + " ]";
     }
     
 }

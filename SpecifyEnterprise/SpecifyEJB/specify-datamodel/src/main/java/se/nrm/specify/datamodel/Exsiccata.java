@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Exsiccata.findAll", query = "SELECT e FROM Exsiccata e"),
-    @NamedQuery(name = "Exsiccata.findByExsiccataID", query = "SELECT e FROM Exsiccata e WHERE e.exsiccataID = :exsiccataID"),
+    @NamedQuery(name = "Exsiccata.findByExsiccataID", query = "SELECT e FROM Exsiccata e WHERE e.exsiccataId = :exsiccataID"),
     @NamedQuery(name = "Exsiccata.findByTimestampCreated", query = "SELECT e FROM Exsiccata e WHERE e.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Exsiccata.findByTimestampModified", query = "SELECT e FROM Exsiccata e WHERE e.timestampModified = :timestampModified"),
     @NamedQuery(name = "Exsiccata.findByVersion", query = "SELECT e FROM Exsiccata e WHERE e.version = :version"),
@@ -43,7 +43,7 @@ public class Exsiccata extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "ExsiccataID")
-    private Integer exsiccataID;
+    private Integer exsiccataId;
      
     @Basic(optional = false)
     @NotNull
@@ -53,39 +53,33 @@ public class Exsiccata extends BaseEntity {
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ReferenceWorkID", referencedColumnName = "ReferenceWorkID")
     @ManyToOne(optional = false)
-    private Referencework referenceWorkID;
+    private Referencework referenceWork;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "exsiccataID")
-    private Collection<Exsiccataitem> exsiccataitemCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "exsiccata")
+    private Collection<Exsiccataitem> exsiccataItems;
 
     public Exsiccata() {
     }
 
-    public Exsiccata(Integer exsiccataID) {
-        this.exsiccataID = exsiccataID;
+    public Exsiccata(Integer exsiccataId) {
+        this.exsiccataId = exsiccataId;
     }
 
-    public Exsiccata(Integer exsiccataID, Date timestampCreated, String title) {
+    public Exsiccata(Integer exsiccataId, Date timestampCreated, String title) {
         super(timestampCreated);
-        this.exsiccataID = exsiccataID; 
+        this.exsiccataId = exsiccataId; 
         this.title = title;
     }
 
-    public Integer getExsiccataID() {
-        return exsiccataID;
-    }
-
-    public void setExsiccataID(Integer exsiccataID) {
-        this.exsiccataID = exsiccataID;
-    }
+  
  
     public String getTitle() {
         return title;
@@ -95,43 +89,53 @@ public class Exsiccata extends BaseEntity {
         this.title = title;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Referencework getReferenceWorkID() {
-        return referenceWorkID;
+    public Integer getExsiccataId() {
+        return exsiccataId;
     }
 
-    public void setReferenceWorkID(Referencework referenceWorkID) {
-        this.referenceWorkID = referenceWorkID;
+    public void setExsiccataId(Integer exsiccataId) {
+        this.exsiccataId = exsiccataId;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Referencework getReferenceWork() {
+        return referenceWork;
+    }
+
+    public void setReferenceWork(Referencework referenceWork) {
+        this.referenceWork = referenceWork;
     }
 
     @XmlTransient
-    public Collection<Exsiccataitem> getExsiccataitemCollection() {
-        return exsiccataitemCollection;
+    public Collection<Exsiccataitem> getExsiccataItems() {
+        return exsiccataItems;
     }
 
-    public void setExsiccataitemCollection(Collection<Exsiccataitem> exsiccataitemCollection) {
-        this.exsiccataitemCollection = exsiccataitemCollection;
+    public void setExsiccataItems(Collection<Exsiccataitem> exsiccataItems) {
+        this.exsiccataItems = exsiccataItems;
     }
+
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (exsiccataID != null ? exsiccataID.hashCode() : 0);
+        hash += (exsiccataId != null ? exsiccataId.hashCode() : 0);
         return hash;
     }
 
@@ -142,7 +146,7 @@ public class Exsiccata extends BaseEntity {
             return false;
         }
         Exsiccata other = (Exsiccata) object;
-        if ((this.exsiccataID == null && other.exsiccataID != null) || (this.exsiccataID != null && !this.exsiccataID.equals(other.exsiccataID))) {
+        if ((this.exsiccataId == null && other.exsiccataId != null) || (this.exsiccataId != null && !this.exsiccataId.equals(other.exsiccataId))) {
             return false;
         }
         return true;
@@ -150,7 +154,7 @@ public class Exsiccata extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Exsiccata[ exsiccataID=" + exsiccataID + " ]";
+        return "Exsiccata[ exsiccataID=" + exsiccataId + " ]";
     }
     
 }

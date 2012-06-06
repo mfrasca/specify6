@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Commonnametx.findAll", query = "SELECT c FROM Commonnametx c"),
-    @NamedQuery(name = "Commonnametx.findByCommonNameTxID", query = "SELECT c FROM Commonnametx c WHERE c.commonNameTxID = :commonNameTxID"),
+    @NamedQuery(name = "Commonnametx.findByCommonNameTxID", query = "SELECT c FROM Commonnametx c WHERE c.commonNameTxId = :commonNameTxID"),
     @NamedQuery(name = "Commonnametx.findByTimestampCreated", query = "SELECT c FROM Commonnametx c WHERE c.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Commonnametx.findByTimestampModified", query = "SELECT c FROM Commonnametx c WHERE c.timestampModified = :timestampModified"),
     @NamedQuery(name = "Commonnametx.findByVersion", query = "SELECT c FROM Commonnametx c WHERE c.version = :version"),
@@ -46,7 +46,7 @@ public class Commonnametx extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "CommonNameTxID")
-    private Integer commonNameTxID;
+    private Integer commonNameTxId;
      
     @Size(max = 128)
     @Column(name = "Author")
@@ -70,39 +70,74 @@ public class Commonnametx extends BaseEntity {
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "TaxonID", referencedColumnName = "TaxonID")
     @ManyToOne(optional = false)
-    private Taxon taxonID;
+    private Taxon taxon;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "commonNameTxID")
-    private Collection<Commonnametxcitation> commonnametxcitationCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "commonNameTx")
+    private Collection<Commonnametxcitation> citations;
 
     public Commonnametx() {
     }
 
-    public Commonnametx(Integer commonNameTxID) {
-        this.commonNameTxID = commonNameTxID;
+    public Commonnametx(Integer commonNameTxId) {
+        this.commonNameTxId = commonNameTxId;
     }
 
-    public Commonnametx(Integer commonNameTxID, Date timestampCreated) {
-        this.commonNameTxID = commonNameTxID;
+    public Commonnametx(Integer commonNameTxId, Date timestampCreated) {
+        this.commonNameTxId = commonNameTxId;
 //        this.timestampCreated = timestampCreated;
         setTimestampCreated(timestampCreated);
     }
 
-    public Integer getCommonNameTxID() {
-        return commonNameTxID;
+    @XmlTransient
+    public Collection<Commonnametxcitation> getCitations() {
+        return citations;
     }
 
-    public void setCommonNameTxID(Integer commonNameTxID) {
-        this.commonNameTxID = commonNameTxID;
-    } 
+    public void setCitations(Collection<Commonnametxcitation> citations) {
+        this.citations = citations;
+    }
+
+    public Integer getCommonNameTxId() {
+        return commonNameTxId;
+    }
+
+    public void setCommonNameTxId(Integer commonNameTxId) {
+        this.commonNameTxId = commonNameTxId;
+    }
+
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
+    }
+
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Taxon getTaxon() {
+        return taxon;
+    }
+
+    public void setTaxon(Taxon taxon) {
+        this.taxon = taxon;
+    }
+
+ 
 
     public String getAuthor() {
         return author;
@@ -144,43 +179,15 @@ public class Commonnametx extends BaseEntity {
         this.variant = variant;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
+ 
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
-    public Taxon getTaxonID() {
-        return taxonID;
-    }
-
-    public void setTaxonID(Taxon taxonID) {
-        this.taxonID = taxonID;
-    }
-
-    @XmlTransient
-    public Collection<Commonnametxcitation> getCommonnametxcitationCollection() {
-        return commonnametxcitationCollection;
-    }
-
-    public void setCommonnametxcitationCollection(Collection<Commonnametxcitation> commonnametxcitationCollection) {
-        this.commonnametxcitationCollection = commonnametxcitationCollection;
-    }
+ 
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (commonNameTxID != null ? commonNameTxID.hashCode() : 0);
+        hash += (commonNameTxId != null ? commonNameTxId.hashCode() : 0);
         return hash;
     }
 
@@ -191,7 +198,7 @@ public class Commonnametx extends BaseEntity {
             return false;
         }
         Commonnametx other = (Commonnametx) object;
-        if ((this.commonNameTxID == null && other.commonNameTxID != null) || (this.commonNameTxID != null && !this.commonNameTxID.equals(other.commonNameTxID))) {
+        if ((this.commonNameTxId == null && other.commonNameTxId != null) || (this.commonNameTxId != null && !this.commonNameTxId.equals(other.commonNameTxId))) {
             return false;
         }
         return true;
@@ -199,7 +206,7 @@ public class Commonnametx extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Commonnametx[ commonNameTxID=" + commonNameTxID + " ]";
+        return "Commonnametx[ commonNameTxId=" + commonNameTxId + " ]";
     }
     
 }

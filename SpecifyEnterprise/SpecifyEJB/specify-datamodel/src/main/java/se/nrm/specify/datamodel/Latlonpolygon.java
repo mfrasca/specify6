@@ -24,16 +24,16 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Latlonpolygon.findAll", query = "SELECT l FROM Latlonpolygon l"),
-    @NamedQuery(name = "Latlonpolygon.findByLatLonPolygonID", query = "SELECT l FROM Latlonpolygon l WHERE l.latLonPolygonID = :latLonPolygonID"),
+    @NamedQuery(name = "Latlonpolygon.findByLatLonPolygonID", query = "SELECT l FROM Latlonpolygon l WHERE l.latLonPolygonId = :latLonPolygonID"),
     @NamedQuery(name = "Latlonpolygon.findByTimestampCreated", query = "SELECT l FROM Latlonpolygon l WHERE l.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Latlonpolygon.findByTimestampModified", query = "SELECT l FROM Latlonpolygon l WHERE l.timestampModified = :timestampModified"),
     @NamedQuery(name = "Latlonpolygon.findByVersion", query = "SELECT l FROM Latlonpolygon l WHERE l.version = :version"),
     @NamedQuery(name = "Latlonpolygon.findByIsPolyline", query = "SELECT l FROM Latlonpolygon l WHERE l.isPolyline = :isPolyline"),
     @NamedQuery(name = "Latlonpolygon.findByName", query = "SELECT l FROM Latlonpolygon l WHERE l.name = :name"),
-    @NamedQuery(name = "Latlonpolygon.findBySpVisualQueryID", query = "SELECT l FROM Latlonpolygon l WHERE l.spVisualQueryID = :spVisualQueryID"),
-    @NamedQuery(name = "Latlonpolygon.findByLocalityID", query = "SELECT l FROM Latlonpolygon l WHERE l.localityID = :localityID"),
-    @NamedQuery(name = "Latlonpolygon.findByCreatedByAgentID", query = "SELECT l FROM Latlonpolygon l WHERE l.createdByAgentID = :createdByAgentID"),
-    @NamedQuery(name = "Latlonpolygon.findByModifiedByAgentID", query = "SELECT l FROM Latlonpolygon l WHERE l.modifiedByAgentID = :modifiedByAgentID")})
+    @NamedQuery(name = "Latlonpolygon.findBySpVisualQueryID", query = "SELECT l FROM Latlonpolygon l WHERE l.visualQuery = :spVisualQueryID"),
+    @NamedQuery(name = "Latlonpolygon.findByLocalityID", query = "SELECT l FROM Latlonpolygon l WHERE l.locality = :localityID"),
+    @NamedQuery(name = "Latlonpolygon.findByCreatedByAgentID", query = "SELECT l FROM Latlonpolygon l WHERE l.createdByAgent = :createdByAgentID"),
+    @NamedQuery(name = "Latlonpolygon.findByModifiedByAgentID", query = "SELECT l FROM Latlonpolygon l WHERE l.modifiedByAgent = :modifiedByAgentID")})
 public class Latlonpolygon extends BaseEntity {  
     
     private static final long serialVersionUID = 1L;
@@ -43,7 +43,7 @@ public class Latlonpolygon extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "LatLonPolygonID")
-    private Integer latLonPolygonID;
+    private Integer latLonPolygonId;
      
     @Lob
     @Size(max = 65535)
@@ -62,39 +62,31 @@ public class Latlonpolygon extends BaseEntity {
     private String name;
     
     @Column(name = "SpVisualQueryID")
-    private Integer spVisualQueryID;
+    private Integer visualQuery;
     
     @Column(name = "LocalityID") 
-    private Integer localityID;
+    private Integer locality;
     
     @Column(name = "CreatedByAgentID")
-    private Integer createdByAgentID;
+    private Integer createdByAgent;
     
     @Column(name = "ModifiedByAgentID")
-    private Integer modifiedByAgentID;
+    private Integer modifiedByAgent;
      
     public Latlonpolygon() {
     }
 
-    public Latlonpolygon(Integer latLonPolygonID) {
-        this.latLonPolygonID = latLonPolygonID;
+    public Latlonpolygon(Integer latLonPolygonId) {
+        this.latLonPolygonId = latLonPolygonId;
     }
 
-    public Latlonpolygon(Integer latLonPolygonID, Date timestampCreated, boolean isPolyline, String name) {
+    public Latlonpolygon(Integer latLonPolygonId, Date timestampCreated, boolean isPolyline, String name) {
         super(timestampCreated);
-        this.latLonPolygonID = latLonPolygonID; 
+        this.latLonPolygonId = latLonPolygonId; 
         this.isPolyline = isPolyline;
         this.name = name;
     }
-
-    public Integer getLatLonPolygonID() {
-        return latLonPolygonID;
-    }
-
-    public void setLatLonPolygonID(Integer latLonPolygonID) {
-        this.latLonPolygonID = latLonPolygonID;
-    } 
-
+ 
     public String getDescription() {
         return description;
     }
@@ -119,42 +111,52 @@ public class Latlonpolygon extends BaseEntity {
         this.name = name;
     }
 
-    public Integer getSpVisualQueryID() {
-        return spVisualQueryID;
+    public Integer getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setSpVisualQueryID(Integer spVisualQueryID) {
-        this.spVisualQueryID = spVisualQueryID;
+    public void setCreatedByAgent(Integer createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Integer getLocalityID() {
-        return localityID;
+    public Integer getLatLonPolygonId() {
+        return latLonPolygonId;
     }
 
-    public void setLocalityID(Integer localityID) {
-        this.localityID = localityID;
+    public void setLatLonPolygonId(Integer latLonPolygonId) {
+        this.latLonPolygonId = latLonPolygonId;
     }
 
-    public Integer getCreatedByAgentID() {
-        return createdByAgentID;
+    public Integer getLocality() {
+        return locality;
     }
 
-    public void setCreatedByAgentID(Integer createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setLocality(Integer locality) {
+        this.locality = locality;
     }
 
-    public Integer getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Integer getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setModifiedByAgentID(Integer modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setModifiedByAgent(Integer modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
+
+    public Integer getVisualQuery() {
+        return visualQuery;
+    }
+
+    public void setVisualQuery(Integer visualQuery) {
+        this.visualQuery = visualQuery;
+    }
+
+  
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (latLonPolygonID != null ? latLonPolygonID.hashCode() : 0);
+        hash += (latLonPolygonId != null ? latLonPolygonId.hashCode() : 0);
         return hash;
     }
 
@@ -165,7 +167,7 @@ public class Latlonpolygon extends BaseEntity {
             return false;
         }
         Latlonpolygon other = (Latlonpolygon) object;
-        if ((this.latLonPolygonID == null && other.latLonPolygonID != null) || (this.latLonPolygonID != null && !this.latLonPolygonID.equals(other.latLonPolygonID))) {
+        if ((this.latLonPolygonId == null && other.latLonPolygonId != null) || (this.latLonPolygonId != null && !this.latLonPolygonId.equals(other.latLonPolygonId))) {
             return false;
         }
         return true;
@@ -173,7 +175,7 @@ public class Latlonpolygon extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Latlonpolygon[ latLonPolygonID=" + latLonPolygonID + " ]";
+        return "Latlonpolygon[ latLonPolygonID=" + latLonPolygonId + " ]";
     }
     
 }

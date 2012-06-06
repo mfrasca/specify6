@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Permit.findAll", query = "SELECT p FROM Permit p"),
-    @NamedQuery(name = "Permit.findByPermitID", query = "SELECT p FROM Permit p WHERE p.permitID = :permitID"),
+    @NamedQuery(name = "Permit.findByPermitID", query = "SELECT p FROM Permit p WHERE p.permitId = :permitID"),
     @NamedQuery(name = "Permit.findByTimestampCreated", query = "SELECT p FROM Permit p WHERE p.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Permit.findByTimestampModified", query = "SELECT p FROM Permit p WHERE p.timestampModified = :timestampModified"),
     @NamedQuery(name = "Permit.findByVersion", query = "SELECT p FROM Permit p WHERE p.version = :version"),
@@ -55,7 +55,7 @@ public class Permit extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "PermitID")
-    private Integer permitID;
+    private Integer permitId;
      
     @Column(name = "EndDate")
     @Temporal(TemporalType.DATE)
@@ -111,47 +111,43 @@ public class Permit extends BaseEntity {
     @Column(name = "YesNo2")
     private Boolean yesNo2;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "permitID")
-    private Collection<Permitattachment> permitattachmentCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "permit")
+    private Collection<Permitattachment> permitAttachments;
+    
+    
     @JoinColumn(name = "IssuedToID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent issuedToID;
+    private Agent issuedTo;
     
     @JoinColumn(name = "IssuedByID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent issuedByID;
+    private Agent issuedBy;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "permitID")
-    private Collection<Accessionauthorization> accessionauthorizationCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "permit")
+    private Collection<Accessionauthorization> accessionAuthorizations;
 
     public Permit() {
     }
 
-    public Permit(Integer permitID) {
-        this.permitID = permitID;
+    public Permit(Integer permitId) {
+        this.permitId = permitId;
     }
 
-    public Permit(Integer permitID, Date timestampCreated, String permitNumber) {
+    public Permit(Integer permitId, Date timestampCreated, String permitNumber) {
         super(timestampCreated);
-        this.permitID = permitID; 
+        this.permitId = permitId; 
         this.permitNumber = permitNumber;
     }
 
-    public Integer getPermitID() {
-        return permitID;
-    }
-
-    public void setPermitID(Integer permitID) {
-        this.permitID = permitID;
-    }
+ 
  
     public Date getEndDate() {
         return endDate;
@@ -258,59 +254,69 @@ public class Permit extends BaseEntity {
     }
 
     @XmlTransient
-    public Collection<Permitattachment> getPermitattachmentCollection() {
-        return permitattachmentCollection;
+    public Collection<Accessionauthorization> getAccessionAuthorizations() {
+        return accessionAuthorizations;
     }
 
-    public void setPermitattachmentCollection(Collection<Permitattachment> permitattachmentCollection) {
-        this.permitattachmentCollection = permitattachmentCollection;
+    public void setAccessionAuthorizations(Collection<Accessionauthorization> accessionAuthorizations) {
+        this.accessionAuthorizations = accessionAuthorizations;
     }
 
-    public Agent getIssuedToID() {
-        return issuedToID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setIssuedToID(Agent issuedToID) {
-        this.issuedToID = issuedToID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Agent getIssuedByID() {
-        return issuedByID;
+    public Agent getIssuedBy() {
+        return issuedBy;
     }
 
-    public void setIssuedByID(Agent issuedByID) {
-        this.issuedByID = issuedByID;
+    public void setIssuedBy(Agent issuedBy) {
+        this.issuedBy = issuedBy;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Agent getIssuedTo() {
+        return issuedTo;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setIssuedTo(Agent issuedTo) {
+        this.issuedTo = issuedTo;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
 
     @XmlTransient
-    public Collection<Accessionauthorization> getAccessionauthorizationCollection() {
-        return accessionauthorizationCollection;
+    public Collection<Permitattachment> getPermitAttachments() {
+        return permitAttachments;
     }
 
-    public void setAccessionauthorizationCollection(Collection<Accessionauthorization> accessionauthorizationCollection) {
-        this.accessionauthorizationCollection = accessionauthorizationCollection;
+    public void setPermitAttachments(Collection<Permitattachment> permitAttachments) {
+        this.permitAttachments = permitAttachments;
     }
+
+    public Integer getPermitId() {
+        return permitId;
+    }
+
+    public void setPermitId(Integer permitId) {
+        this.permitId = permitId;
+    }
+
+   
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (permitID != null ? permitID.hashCode() : 0);
+        hash += (permitId != null ? permitId.hashCode() : 0);
         return hash;
     }
 
@@ -321,7 +327,7 @@ public class Permit extends BaseEntity {
             return false;
         }
         Permit other = (Permit) object;
-        if ((this.permitID == null && other.permitID != null) || (this.permitID != null && !this.permitID.equals(other.permitID))) {
+        if ((this.permitId == null && other.permitId != null) || (this.permitId != null && !this.permitId.equals(other.permitId))) {
             return false;
         }
         return true;
@@ -329,7 +335,7 @@ public class Permit extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Permit[ permitID=" + permitID + " ]";
+        return "Permit[ permitID=" + permitId + " ]";
     }
     
 }

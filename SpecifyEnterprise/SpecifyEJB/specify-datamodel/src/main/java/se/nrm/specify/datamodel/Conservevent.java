@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Conservevent.findAll", query = "SELECT c FROM Conservevent c"),
-    @NamedQuery(name = "Conservevent.findByConservEventID", query = "SELECT c FROM Conservevent c WHERE c.conservEventID = :conservEventID"),
+    @NamedQuery(name = "Conservevent.findByConservEventID", query = "SELECT c FROM Conservevent c WHERE c.conservEventId = :conservEventID"),
     @NamedQuery(name = "Conservevent.findByTimestampCreated", query = "SELECT c FROM Conservevent c WHERE c.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Conservevent.findByTimestampModified", query = "SELECT c FROM Conservevent c WHERE c.timestampModified = :timestampModified"),
     @NamedQuery(name = "Conservevent.findByVersion", query = "SELECT c FROM Conservevent c WHERE c.version = :version"),
@@ -55,7 +55,7 @@ public class Conservevent extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "ConservEventID")
-    private Integer conservEventID;
+    private Integer conservEventId;
       
     @Lob
     @Size(max = 65535)
@@ -130,51 +130,43 @@ public class Conservevent extends BaseEntity {
     
     @JoinColumn(name = "ConservDescriptionID", referencedColumnName = "ConservDescriptionID")
     @ManyToOne(optional = false)
-    private Conservdescription conservDescriptionID;
+    private Conservdescription conservDescription;
     
     @JoinColumn(name = "CuratorID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent curatorID;
+    private Agent curator;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "TreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent treatedByAgentID;
+    private Agent treatedByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "ExaminedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent examinedByAgentID;
+    private Agent examinedByAgent;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "conservEventID")
-    private Collection<Conserveventattachment> conserveventattachmentCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "conservEvent")
+    private Collection<Conserveventattachment> conservEventAttachments;
 
     public Conservevent() {
     }
 
-    public Conservevent(Integer conservEventID) {
-        this.conservEventID = conservEventID;
+    public Conservevent(Integer conservEventId) {
+        this.conservEventId = conservEventId;
     }
 
-    public Conservevent(Integer conservEventID, Date timestampCreated) {
+    public Conservevent(Integer conservEventId, Date timestampCreated) {
         super(timestampCreated);
-        this.conservEventID = conservEventID; 
+        this.conservEventId = conservEventId; 
     }
-
-    public Integer getConservEventID() {
-        return conservEventID;
-    }
-
-    public void setConservEventID(Integer conservEventID) {
-        this.conservEventID = conservEventID;
-    } 
-    
+ 
     public String getAdvTestingExam() {
         return advTestingExam;
     }
@@ -311,67 +303,77 @@ public class Conservevent extends BaseEntity {
         this.treatmentReport = treatmentReport;
     }
 
-    public Conservdescription getConservDescriptionID() {
-        return conservDescriptionID;
+    public Conservdescription getConservDescription() {
+        return conservDescription;
     }
 
-    public void setConservDescriptionID(Conservdescription conservDescriptionID) {
-        this.conservDescriptionID = conservDescriptionID;
-    }
-
-    public Agent getCuratorID() {
-        return curatorID;
-    }
-
-    public void setCuratorID(Agent curatorID) {
-        this.curatorID = curatorID;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getTreatedByAgentID() {
-        return treatedByAgentID;
-    }
-
-    public void setTreatedByAgentID(Agent treatedByAgentID) {
-        this.treatedByAgentID = treatedByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
-    public Agent getExaminedByAgentID() {
-        return examinedByAgentID;
-    }
-
-    public void setExaminedByAgentID(Agent examinedByAgentID) {
-        this.examinedByAgentID = examinedByAgentID;
+    public void setConservDescription(Conservdescription conservDescription) {
+        this.conservDescription = conservDescription;
     }
 
     @XmlTransient
-    public Collection<Conserveventattachment> getConserveventattachmentCollection() {
-        return conserveventattachmentCollection;
+    public Collection<Conserveventattachment> getConservEventAttachments() {
+        return conservEventAttachments;
     }
 
-    public void setConserveventattachmentCollection(Collection<Conserveventattachment> conserveventattachmentCollection) {
-        this.conserveventattachmentCollection = conserveventattachmentCollection;
+    public void setConservEventAttachments(Collection<Conserveventattachment> conservEventAttachments) {
+        this.conservEventAttachments = conservEventAttachments;
     }
+
+    public Integer getConservEventId() {
+        return conservEventId;
+    }
+
+    public void setConservEventId(Integer conservEventId) {
+        this.conservEventId = conservEventId;
+    }
+
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
+    }
+
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Agent getCurator() {
+        return curator;
+    }
+
+    public void setCurator(Agent curator) {
+        this.curator = curator;
+    }
+
+    public Agent getExaminedByAgent() {
+        return examinedByAgent;
+    }
+
+    public void setExaminedByAgent(Agent examinedByAgent) {
+        this.examinedByAgent = examinedByAgent;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Agent getTreatedByAgent() {
+        return treatedByAgent;
+    }
+
+    public void setTreatedByAgent(Agent treatedByAgent) {
+        this.treatedByAgent = treatedByAgent;
+    }
+
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (conservEventID != null ? conservEventID.hashCode() : 0);
+        hash += (conservEventId != null ? conservEventId.hashCode() : 0);
         return hash;
     }
 
@@ -382,7 +384,7 @@ public class Conservevent extends BaseEntity {
             return false;
         }
         Conservevent other = (Conservevent) object;
-        if ((this.conservEventID == null && other.conservEventID != null) || (this.conservEventID != null && !this.conservEventID.equals(other.conservEventID))) {
+        if ((this.conservEventId == null && other.conservEventId != null) || (this.conservEventId != null && !this.conservEventId.equals(other.conservEventId))) {
             return false;
         }
         return true;
@@ -390,7 +392,7 @@ public class Conservevent extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Conservevent[ conservEventID=" + conservEventID + " ]";
+        return "Conservevent[ conservEventID=" + conservEventId + " ]";
     }
     
 }

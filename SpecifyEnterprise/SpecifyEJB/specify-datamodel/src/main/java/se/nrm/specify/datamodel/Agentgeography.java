@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Agentgeography.findAll", query = "SELECT a FROM Agentgeography a"),
-    @NamedQuery(name = "Agentgeography.findByAgentGeographyID", query = "SELECT a FROM Agentgeography a WHERE a.agentGeographyID = :agentGeographyID"),
+    @NamedQuery(name = "Agentgeography.findByAgentGeographyID", query = "SELECT a FROM Agentgeography a WHERE a.agentGeographyId = :agentGeographyID"),
     @NamedQuery(name = "Agentgeography.findByTimestampCreated", query = "SELECT a FROM Agentgeography a WHERE a.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Agentgeography.findByTimestampModified", query = "SELECT a FROM Agentgeography a WHERE a.timestampModified = :timestampModified"),
     @NamedQuery(name = "Agentgeography.findByVersion", query = "SELECT a FROM Agentgeography a WHERE a.version = :version"),
@@ -40,7 +40,7 @@ public class Agentgeography extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "AgentGeographyID")
-    private Integer agentGeographyID;
+    private Integer agentGeographyId;
      
     @Lob
     @Size(max = 65535)
@@ -53,38 +53,38 @@ public class Agentgeography extends BaseEntity {
     
     @JoinColumn(name = "GeographyID", referencedColumnName = "GeographyID")
     @ManyToOne(optional = false)
-    private Geography geographyID;
+    private Geography geography;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "AgentID", referencedColumnName = "AgentID")
     @ManyToOne(optional = false)
-    private Agent agentID;
+    private Agent agent;
 
     public Agentgeography() {
     }
 
-    public Agentgeography(Integer agentGeographyID) {
-        this.agentGeographyID = agentGeographyID;
+    public Agentgeography(Integer agentGeographyId) {
+        this.agentGeographyId = agentGeographyId;
     }
 
-    public Agentgeography(Integer agentGeographyID, Date timestampCreated) {
+    public Agentgeography(Integer agentGeographyId, Date timestampCreated) {
         super(timestampCreated);
-        this.agentGeographyID = agentGeographyID; 
+        this.agentGeographyId = agentGeographyId; 
     }
 
-    public Integer getAgentGeographyID() {
-        return agentGeographyID;
+    public Integer getAgentGeographyId() {
+        return agentGeographyId;
     }
 
-    public void setAgentGeographyID(Integer agentGeographyID) {
-        this.agentGeographyID = agentGeographyID;
+    public void setAgentGeographyId(Integer agentGeographyId) {
+        this.agentGeographyId = agentGeographyId;
     } 
 
     public String getRemarks() {
@@ -103,42 +103,44 @@ public class Agentgeography extends BaseEntity {
         this.role = role;
     }
 
-    public Geography getGeographyID() {
-        return geographyID;
+    public Agent getAgent() {
+        return agent;
     }
 
-    public void setGeographyID(Geography geographyID) {
-        this.geographyID = geographyID;
+    public void setAgent(Agent agent) {
+        this.agent = agent;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Geography getGeography() {
+        return geography;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setGeography(Geography geography) {
+        this.geography = geography;
     }
 
-    public Agent getAgentID() {
-        return agentID;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setAgentID(Agent agentID) {
-        this.agentID = agentID;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
+ 
+    
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (agentGeographyID != null ? agentGeographyID.hashCode() : 0);
+        hash += (agentGeographyId != null ? agentGeographyId.hashCode() : 0);
         return hash;
     }
 
@@ -149,7 +151,7 @@ public class Agentgeography extends BaseEntity {
             return false;
         }
         Agentgeography other = (Agentgeography) object;
-        if ((this.agentGeographyID == null && other.agentGeographyID != null) || (this.agentGeographyID != null && !this.agentGeographyID.equals(other.agentGeographyID))) {
+        if ((this.agentGeographyId == null && other.agentGeographyId != null) || (this.agentGeographyId != null && !this.agentGeographyId.equals(other.agentGeographyId))) {
             return false;
         }
         return true;
@@ -157,7 +159,7 @@ public class Agentgeography extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Agentgeography[ agentGeographyID=" + agentGeographyID + " ]";
+        return "Agentgeography[ agentGeographyId=" + agentGeographyId + " ]";
     }
     
 }

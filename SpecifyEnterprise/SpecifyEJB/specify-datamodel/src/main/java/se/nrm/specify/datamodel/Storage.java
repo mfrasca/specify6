@@ -31,7 +31,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Storage.findAll", query = "SELECT s FROM Storage s"),
-    @NamedQuery(name = "Storage.findByStorageID", query = "SELECT s FROM Storage s WHERE s.storageID = :storageID"),
+    @NamedQuery(name = "Storage.findByStorageID", query = "SELECT s FROM Storage s WHERE s.storageId = :storageID"),
     @NamedQuery(name = "Storage.findByTimestampCreated", query = "SELECT s FROM Storage s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Storage.findByTimestampModified", query = "SELECT s FROM Storage s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Storage.findByVersion", query = "SELECT s FROM Storage s WHERE s.version = :version"),
@@ -43,7 +43,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Storage.findByNodeNumber", query = "SELECT s FROM Storage s WHERE s.nodeNumber = :nodeNumber"),
     @NamedQuery(name = "Storage.findByNumber1", query = "SELECT s FROM Storage s WHERE s.number1 = :number1"),
     @NamedQuery(name = "Storage.findByNumber2", query = "SELECT s FROM Storage s WHERE s.number2 = :number2"),
-    @NamedQuery(name = "Storage.findByRankID", query = "SELECT s FROM Storage s WHERE s.rankID = :rankID"),
+    @NamedQuery(name = "Storage.findByRankID", query = "SELECT s FROM Storage s WHERE s.rankId = :rankID"),
     @NamedQuery(name = "Storage.findByText1", query = "SELECT s FROM Storage s WHERE s.text1 = :text1"),
     @NamedQuery(name = "Storage.findByText2", query = "SELECT s FROM Storage s WHERE s.text2 = :text2"),
     @NamedQuery(name = "Storage.findByTimestampVersion", query = "SELECT s FROM Storage s WHERE s.timestampVersion = :timestampVersion")})
@@ -56,7 +56,7 @@ public class Storage extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "StorageID")
-    private Integer storageID;
+    private Integer storageId;
      
     @Size(max = 16)
     @Column(name = "Abbrev")
@@ -90,7 +90,7 @@ public class Storage extends BaseEntity {
     @Basic(optional = false)
     @NotNull
     @Column(name = "RankID")
-    private int rankID;
+    private int rankId;
     
     @Lob
     @Size(max = 65535)
@@ -109,63 +109,157 @@ public class Storage extends BaseEntity {
     @Temporal(TemporalType.TIMESTAMP)
     private Date timestampVersion;
     
-    @OneToMany(mappedBy = "storageID")
-    private Collection<Preparation> preparationCollection;
+    @OneToMany(mappedBy = "storage")
+    private Collection<Preparation> preparations;
     
-    @OneToMany(mappedBy = "storageID")
-    private Collection<Container> containerCollection;
+    @OneToMany(mappedBy = "storage")
+    private Collection<Container> containers;
     
-    @OneToMany(mappedBy = "parentID")
-    private Collection<Storage> storageCollection;
+    @OneToMany(mappedBy = "parent")
+    private Collection<Storage> children;
     
     @JoinColumn(name = "ParentID", referencedColumnName = "StorageID")
     @ManyToOne
-    private Storage parentID;
+    private Storage parent;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "StorageTreeDefID", referencedColumnName = "StorageTreeDefID")
     @ManyToOne(optional = false)
-    private Storagetreedef storageTreeDefID;
+    private Storagetreedef definition;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "StorageTreeDefItemID", referencedColumnName = "StorageTreeDefItemID")
     @ManyToOne(optional = false)
-    private Storagetreedefitem storageTreeDefItemID;
+    private Storagetreedefitem definitionItem;
     
-    @OneToMany(mappedBy = "acceptedID")
-    private Collection<Storage> storageCollection1;
+    @OneToMany(mappedBy = "acceptedStorage")
+    private Collection<Storage> acceptedChildren;
     
     @JoinColumn(name = "AcceptedID", referencedColumnName = "StorageID")
     @ManyToOne
-    private Storage acceptedID;
+    private Storage acceptedStorage;
 
     public Storage() {
     }
 
-    public Storage(Integer storageID) {
-        this.storageID = storageID;
+    public Storage(Integer storageId) {
+        this.storageId = storageId;
     }
 
-    public Storage(Integer storageID, Date timestampCreated, String name, int rankID) {
+    public Storage(Integer storageId, Date timestampCreated, String name, int rankId) {
         super(timestampCreated);
-        this.storageID = storageID; 
+        this.storageId = storageId; 
         this.name = name;
-        this.rankID = rankID;
+        this.rankId = rankId;
     }
 
-    public Integer getStorageID() {
-        return storageID;
+    @XmlTransient
+    public Collection<Storage> getAcceptedChildren() {
+        return acceptedChildren;
     }
 
-    public void setStorageID(Integer storageID) {
-        this.storageID = storageID;
+    public void setAcceptedChildren(Collection<Storage> acceptedChildren) {
+        this.acceptedChildren = acceptedChildren;
     }
+
+    public Storage getAcceptedStorage() {
+        return acceptedStorage;
+    }
+
+    public void setAcceptedStorage(Storage acceptedStorage) {
+        this.acceptedStorage = acceptedStorage;
+    }
+
+    @XmlTransient
+    public Collection<Storage> getChildren() {
+        return children;
+    }
+
+    public void setChildren(Collection<Storage> children) {
+        this.children = children;
+    }
+
+    @XmlTransient
+    public Collection<Container> getContainers() {
+        return containers;
+    }
+
+    public void setContainers(Collection<Container> containers) {
+        this.containers = containers;
+    }
+
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
+    }
+
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Storagetreedef getDefinition() {
+        return definition;
+    }
+
+    public void setDefinition(Storagetreedef definition) {
+        this.definition = definition;
+    }
+
+    public Storagetreedefitem getDefinitionItem() {
+        return definitionItem;
+    }
+
+    public void setDefinitionItem(Storagetreedefitem definitionItem) {
+        this.definitionItem = definitionItem;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Storage getParent() {
+        return parent;
+    }
+
+    public void setParent(Storage parent) {
+        this.parent = parent;
+    }
+
+    @XmlTransient
+    public Collection<Preparation> getPreparations() {
+        return preparations;
+    }
+
+    public void setPreparations(Collection<Preparation> preparations) {
+        this.preparations = preparations;
+    }
+
+    public int getRankId() {
+        return rankId;
+    }
+
+    public void setRankId(int rankId) {
+        this.rankId = rankId;
+    }
+
+    public Integer getStorageId() {
+        return storageId;
+    }
+
+    public void setStorageId(Integer storageId) {
+        this.storageId = storageId;
+    }
+
+ 
  
     public String getAbbrev() {
         return abbrev;
@@ -230,14 +324,7 @@ public class Storage extends BaseEntity {
     public void setNumber2(Integer number2) {
         this.number2 = number2;
     }
-
-    public int getRankID() {
-        return rankID;
-    }
-
-    public void setRankID(int rankID) {
-        this.rankID = rankID;
-    }
+ 
 
     public String getRemarks() {
         return remarks;
@@ -271,94 +358,12 @@ public class Storage extends BaseEntity {
         this.timestampVersion = timestampVersion;
     }
 
-    @XmlTransient
-    public Collection<Preparation> getPreparationCollection() {
-        return preparationCollection;
-    }
-
-    public void setPreparationCollection(Collection<Preparation> preparationCollection) {
-        this.preparationCollection = preparationCollection;
-    }
-
-    @XmlTransient
-    public Collection<Container> getContainerCollection() {
-        return containerCollection;
-    }
-
-    public void setContainerCollection(Collection<Container> containerCollection) {
-        this.containerCollection = containerCollection;
-    }
-
-    @XmlTransient
-    public Collection<Storage> getStorageCollection() {
-        return storageCollection;
-    }
-
-    public void setStorageCollection(Collection<Storage> storageCollection) {
-        this.storageCollection = storageCollection;
-    }
-
-    public Storage getParentID() {
-        return parentID;
-    }
-
-    public void setParentID(Storage parentID) {
-        this.parentID = parentID;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Storagetreedef getStorageTreeDefID() {
-        return storageTreeDefID;
-    }
-
-    public void setStorageTreeDefID(Storagetreedef storageTreeDefID) {
-        this.storageTreeDefID = storageTreeDefID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
-    public Storagetreedefitem getStorageTreeDefItemID() {
-        return storageTreeDefItemID;
-    }
-
-    public void setStorageTreeDefItemID(Storagetreedefitem storageTreeDefItemID) {
-        this.storageTreeDefItemID = storageTreeDefItemID;
-    }
-
-    @XmlTransient
-    public Collection<Storage> getStorageCollection1() {
-        return storageCollection1;
-    }
-
-    public void setStorageCollection1(Collection<Storage> storageCollection1) {
-        this.storageCollection1 = storageCollection1;
-    }
-
-    public Storage getAcceptedID() {
-        return acceptedID;
-    }
-
-    public void setAcceptedID(Storage acceptedID) {
-        this.acceptedID = acceptedID;
-    }
+   
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (storageID != null ? storageID.hashCode() : 0);
+        hash += (storageId != null ? storageId.hashCode() : 0);
         return hash;
     }
 
@@ -369,7 +374,7 @@ public class Storage extends BaseEntity {
             return false;
         }
         Storage other = (Storage) object;
-        if ((this.storageID == null && other.storageID != null) || (this.storageID != null && !this.storageID.equals(other.storageID))) {
+        if ((this.storageId == null && other.storageId != null) || (this.storageId != null && !this.storageId.equals(other.storageId))) {
             return false;
         }
         return true;
@@ -377,7 +382,7 @@ public class Storage extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Storage[ storageID=" + storageID + " ]";
+        return "Storage[ storageId=" + storageId + " ]";
     }
     
 }

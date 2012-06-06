@@ -32,11 +32,11 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Borrow.findAll", query = "SELECT b FROM Borrow b"),
-    @NamedQuery(name = "Borrow.findByBorrowID", query = "SELECT b FROM Borrow b WHERE b.borrowID = :borrowID"),
+    @NamedQuery(name = "Borrow.findByBorrowID", query = "SELECT b FROM Borrow b WHERE b.borrowId = :borrowID"),
     @NamedQuery(name = "Borrow.findByTimestampCreated", query = "SELECT b FROM Borrow b WHERE b.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Borrow.findByTimestampModified", query = "SELECT b FROM Borrow b WHERE b.timestampModified = :timestampModified"),
     @NamedQuery(name = "Borrow.findByVersion", query = "SELECT b FROM Borrow b WHERE b.version = :version"),
-    @NamedQuery(name = "Borrow.findByCollectionMemberID", query = "SELECT b FROM Borrow b WHERE b.collectionMemberID = :collectionMemberID"),
+    @NamedQuery(name = "Borrow.findByCollectionMemberID", query = "SELECT b FROM Borrow b WHERE b.collectionMemberId = :collectionMemberID"),
     @NamedQuery(name = "Borrow.findByCurrentDueDate", query = "SELECT b FROM Borrow b WHERE b.currentDueDate = :currentDueDate"),
     @NamedQuery(name = "Borrow.findByDateClosed", query = "SELECT b FROM Borrow b WHERE b.dateClosed = :dateClosed"),
     @NamedQuery(name = "Borrow.findByInvoiceNumber", query = "SELECT b FROM Borrow b WHERE b.invoiceNumber = :invoiceNumber"),
@@ -57,12 +57,12 @@ public class Borrow extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "BorrowID")
-    private Integer borrowID;
+    private Integer borrowId;
       
     @Basic(optional = false)
     @NotNull
     @Column(name = "CollectionMemberID")
-    private int collectionMemberID;
+    private int collectionMemberId;
     
     @Column(name = "CurrentDueDate")
     @Temporal(TemporalType.DATE)
@@ -80,6 +80,7 @@ public class Borrow extends BaseEntity {
     
     @Column(name = "IsClosed")
     private Boolean isClosed;
+    
     @Column(name = "IsFinancialResponsibility")
     private Boolean isFinancialResponsibility;
     
@@ -118,56 +119,58 @@ public class Borrow extends BaseEntity {
     @Column(name = "YesNo2")
     private Boolean yesNo2;
     
-    @OneToMany(mappedBy = "borrowID")
-    private Collection<Shipment> shipmentCollection;
+    @OneToMany(mappedBy = "borrow")
+    private Collection<Shipment> shipments;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "borrowID")
-    private Collection<Borrowmaterial> borrowmaterialCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "borrow")
+    private Collection<Borrowmaterial> borrowMaterials;
     
     @JoinColumn(name = "AddressOfRecordID", referencedColumnName = "AddressOfRecordID")
     @ManyToOne
-    private Addressofrecord addressOfRecordID;
+    private Addressofrecord addressOfRecord;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "borrowID")
-    private Collection<Borrowagent> borrowagentCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "borrow")
+    private Collection<Borrowagent> borrowAgents;
 
     public Borrow() {
     }
 
-    public Borrow(Integer borrowID) {
-        this.borrowID = borrowID;
+    public Borrow(Integer borrowId) {
+        this.borrowId = borrowId;
     }
 
-    public Borrow(Integer borrowID, Date timestampCreated, int collectionMemberID, String invoiceNumber) {
+    public Borrow(Integer borrowId, Date timestampCreated, int collectionMemberId, String invoiceNumber) {
         super(timestampCreated);
-        this.borrowID = borrowID; 
-        this.collectionMemberID = collectionMemberID;
+        this.borrowId = borrowId; 
+        this.collectionMemberId = collectionMemberId;
         this.invoiceNumber = invoiceNumber;
     }
 
-    public Integer getBorrowID() {
-        return borrowID;
+    public Integer getBorrowId() {
+        return borrowId;
     }
 
-    public void setBorrowID(Integer borrowID) {
-        this.borrowID = borrowID;
-    } 
-    
-    public int getCollectionMemberID() {
-        return collectionMemberID;
+    public void setBorrowId(Integer borrowId) {
+        this.borrowId = borrowId;
     }
 
-    public void setCollectionMemberID(int collectionMemberID) {
-        this.collectionMemberID = collectionMemberID;
+    public int getCollectionMemberId() {
+        return collectionMemberId;
     }
+
+    public void setCollectionMemberId(int collectionMemberId) {
+        this.collectionMemberId = collectionMemberId;
+    }
+
+   
 
     public Date getCurrentDueDate() {
         return currentDueDate;
@@ -281,61 +284,60 @@ public class Borrow extends BaseEntity {
         this.yesNo2 = yesNo2;
     }
 
-    @XmlTransient
-    public Collection<Shipment> getShipmentCollection() {
-        return shipmentCollection;
+    public Collection<Borrowagent> getBorrowAgents() {
+        return borrowAgents;
     }
 
-    public void setShipmentCollection(Collection<Shipment> shipmentCollection) {
-        this.shipmentCollection = shipmentCollection;
+    public void setBorrowAgents(Collection<Borrowagent> borrowAgents) {
+        this.borrowAgents = borrowAgents;
     }
 
-    @XmlTransient
-    public Collection<Borrowmaterial> getBorrowmaterialCollection() {
-        return borrowmaterialCollection;
+    public Collection<Borrowmaterial> getBorrowMaterials() {
+        return borrowMaterials;
     }
 
-    public void setBorrowmaterialCollection(Collection<Borrowmaterial> borrowmaterialCollection) {
-        this.borrowmaterialCollection = borrowmaterialCollection;
+    public void setBorrowMaterials(Collection<Borrowmaterial> borrowMaterials) {
+        this.borrowMaterials = borrowMaterials;
     }
 
-    public Addressofrecord getAddressOfRecordID() {
-        return addressOfRecordID;
+    public Collection<Shipment> getShipments() {
+        return shipments;
     }
 
-    public void setAddressOfRecordID(Addressofrecord addressOfRecordID) {
-        this.addressOfRecordID = addressOfRecordID;
+    public void setShipments(Collection<Shipment> shipments) {
+        this.shipments = shipments;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+ 
+
+    public Addressofrecord getAddressOfRecord() {
+        return addressOfRecord;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setAddressOfRecord(Addressofrecord addressOfRecord) {
+        this.addressOfRecord = addressOfRecord;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    @XmlTransient
-    public Collection<Borrowagent> getBorrowagentCollection() {
-        return borrowagentCollection;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setBorrowagentCollection(Collection<Borrowagent> borrowagentCollection) {
-        this.borrowagentCollection = borrowagentCollection;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
-
+  
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (borrowID != null ? borrowID.hashCode() : 0);
+        hash += (borrowId != null ? borrowId.hashCode() : 0);
         return hash;
     }
 
@@ -346,7 +348,7 @@ public class Borrow extends BaseEntity {
             return false;
         }
         Borrow other = (Borrow) object;
-        if ((this.borrowID == null && other.borrowID != null) || (this.borrowID != null && !this.borrowID.equals(other.borrowID))) {
+        if ((this.borrowId == null && other.borrowId != null) || (this.borrowId != null && !this.borrowId.equals(other.borrowId))) {
             return false;
         }
         return true;
@@ -354,7 +356,7 @@ public class Borrow extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Borrow[ borrowID=" + borrowID + " ]";
+        return "Borrow[ borrowID=" + borrowId + " ]";
     }
     
 }

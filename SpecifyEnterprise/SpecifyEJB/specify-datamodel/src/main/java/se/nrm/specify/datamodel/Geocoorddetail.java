@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Geocoorddetail.findAll", query = "SELECT g FROM Geocoorddetail g"),
-    @NamedQuery(name = "Geocoorddetail.findByGeoCoordDetailID", query = "SELECT g FROM Geocoorddetail g WHERE g.geoCoordDetailID = :geoCoordDetailID"),
+    @NamedQuery(name = "Geocoorddetail.findByGeoCoordDetailID", query = "SELECT g FROM Geocoorddetail g WHERE g.geoCoordDetailId = :geoCoordDetailID"),
     @NamedQuery(name = "Geocoorddetail.findByTimestampCreated", query = "SELECT g FROM Geocoorddetail g WHERE g.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Geocoorddetail.findByTimestampModified", query = "SELECT g FROM Geocoorddetail g WHERE g.timestampModified = :timestampModified"),
     @NamedQuery(name = "Geocoorddetail.findByVersion", query = "SELECT g FROM Geocoorddetail g WHERE g.version = :version"),
@@ -54,7 +54,7 @@ public class Geocoorddetail extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "GeoCoordDetailID")
-    private Integer geoCoordDetailID;
+    private Integer geoCoordDetailId;
       
     @Size(max = 20)
     @Column(name = "GeoRefAccuracyUnits")
@@ -110,39 +110,33 @@ public class Geocoorddetail extends BaseEntity {
     
     @JoinColumn(name = "LocalityID", referencedColumnName = "LocalityID")
     @ManyToOne
-    private Locality localityID;
+    private Locality locality;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "AgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent agentID;
+    private Agent geoRefDetBy;
 
     public Geocoorddetail() {
     }
 
-    public Geocoorddetail(Integer geoCoordDetailID) {
-        this.geoCoordDetailID = geoCoordDetailID;
+    public Geocoorddetail(Integer geoCoordDetailId) {
+        this.geoCoordDetailId = geoCoordDetailId;
     }
 
-    public Geocoorddetail(Integer geoCoordDetailID, Date timestampCreated) {
+    public Geocoorddetail(Integer geoCoordDetailId, Date timestampCreated) {
         super(timestampCreated);
-        this.geoCoordDetailID = geoCoordDetailID; 
+        this.geoCoordDetailId = geoCoordDetailId; 
     }
 
-    public Integer getGeoCoordDetailID() {
-        return geoCoordDetailID;
-    }
-
-    public void setGeoCoordDetailID(Integer geoCoordDetailID) {
-        this.geoCoordDetailID = geoCoordDetailID;
-    } 
+ 
 
     public String getGeoRefAccuracyUnits() {
         return geoRefAccuracyUnits;
@@ -248,42 +242,51 @@ public class Geocoorddetail extends BaseEntity {
         this.validation = validation;
     }
 
-    public Locality getLocalityID() {
-        return localityID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setLocalityID(Locality localityID) {
-        this.localityID = localityID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Integer getGeoCoordDetailId() {
+        return geoCoordDetailId;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setGeoCoordDetailId(Integer geoCoordDetailId) {
+        this.geoCoordDetailId = geoCoordDetailId;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Agent getGeoRefDetBy() {
+        return geoRefDetBy;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setGeoRefDetBy(Agent geoRefDetBy) {
+        this.geoRefDetBy = geoRefDetBy;
     }
 
-    public Agent getAgentID() {
-        return agentID;
+    public Locality getLocality() {
+        return locality;
     }
 
-    public void setAgentID(Agent agentID) {
-        this.agentID = agentID;
+    public void setLocality(Locality locality) {
+        this.locality = locality;
     }
 
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+ 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (geoCoordDetailID != null ? geoCoordDetailID.hashCode() : 0);
+        hash += (geoCoordDetailId != null ? geoCoordDetailId.hashCode() : 0);
         return hash;
     }
 
@@ -294,7 +297,7 @@ public class Geocoorddetail extends BaseEntity {
             return false;
         }
         Geocoorddetail other = (Geocoorddetail) object;
-        if ((this.geoCoordDetailID == null && other.geoCoordDetailID != null) || (this.geoCoordDetailID != null && !this.geoCoordDetailID.equals(other.geoCoordDetailID))) {
+        if ((this.geoCoordDetailId == null && other.geoCoordDetailId != null) || (this.geoCoordDetailId != null && !this.geoCoordDetailId.equals(other.geoCoordDetailId))) {
             return false;
         }
         return true;
@@ -302,7 +305,7 @@ public class Geocoorddetail extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Geocoorddetail[ geoCoordDetailID=" + geoCoordDetailID + " ]";
+        return "Geocoorddetail[ geoCoordDetailID=" + geoCoordDetailId + " ]";
     }
     
 }

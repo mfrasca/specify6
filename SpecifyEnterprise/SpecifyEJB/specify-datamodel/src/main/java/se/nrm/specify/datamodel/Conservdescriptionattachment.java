@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Conservdescriptionattachment.findAll", query = "SELECT c FROM Conservdescriptionattachment c"),
-    @NamedQuery(name = "Conservdescriptionattachment.findByConservDescriptionAttachmentID", query = "SELECT c FROM Conservdescriptionattachment c WHERE c.conservDescriptionAttachmentID = :conservDescriptionAttachmentID"),
+    @NamedQuery(name = "Conservdescriptionattachment.findByConservDescriptionAttachmentID", query = "SELECT c FROM Conservdescriptionattachment c WHERE c.conservDescriptionAttachmentId = :conservDescriptionAttachmentID"),
     @NamedQuery(name = "Conservdescriptionattachment.findByTimestampCreated", query = "SELECT c FROM Conservdescriptionattachment c WHERE c.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Conservdescriptionattachment.findByTimestampModified", query = "SELECT c FROM Conservdescriptionattachment c WHERE c.timestampModified = :timestampModified"),
     @NamedQuery(name = "Conservdescriptionattachment.findByVersion", query = "SELECT c FROM Conservdescriptionattachment c WHERE c.version = :version"),
@@ -40,7 +40,7 @@ public class Conservdescriptionattachment extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "ConservDescriptionAttachmentID")
-    private Integer conservDescriptionAttachmentID;
+    private Integer conservDescriptionAttachmentId;
      
     @Column(name = "Ordinal")
     private Integer ordinal;
@@ -52,39 +52,32 @@ public class Conservdescriptionattachment extends BaseEntity {
     
     @JoinColumn(name = "AttachmentID", referencedColumnName = "AttachmentID")
     @ManyToOne(optional = false)
-    private Attachment attachmentID;
+    private Attachment attachment;
     
     @JoinColumn(name = "ConservDescriptionID", referencedColumnName = "ConservDescriptionID")
     @ManyToOne(optional = false)
-    private Conservdescription conservDescriptionID;
+    private Conservdescription conservDescription;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
 
     public Conservdescriptionattachment() {
     }
 
-    public Conservdescriptionattachment(Integer conservDescriptionAttachmentID) {
-        this.conservDescriptionAttachmentID = conservDescriptionAttachmentID;
+    public Conservdescriptionattachment(Integer conservDescriptionAttachmentId) {
+        this.conservDescriptionAttachmentId = conservDescriptionAttachmentId;
     }
 
-    public Conservdescriptionattachment(Integer conservDescriptionAttachmentID, Date timestampCreated) {
+    public Conservdescriptionattachment(Integer conservDescriptionAttachmentId, Date timestampCreated) {
         super(timestampCreated);
-        this.conservDescriptionAttachmentID = conservDescriptionAttachmentID; 
+        this.conservDescriptionAttachmentId = conservDescriptionAttachmentId; 
     }
-
-    public Integer getConservDescriptionAttachmentID() {
-        return conservDescriptionAttachmentID;
-    }
-
-    public void setConservDescriptionAttachmentID(Integer conservDescriptionAttachmentID) {
-        this.conservDescriptionAttachmentID = conservDescriptionAttachmentID;
-    }
+ 
  
     public Integer getOrdinal() {
         return ordinal;
@@ -102,42 +95,52 @@ public class Conservdescriptionattachment extends BaseEntity {
         this.remarks = remarks;
     }
 
-    public Attachment getAttachmentID() {
-        return attachmentID;
+    public Attachment getAttachment() {
+        return attachment;
     }
 
-    public void setAttachmentID(Attachment attachmentID) {
-        this.attachmentID = attachmentID;
+    public void setAttachment(Attachment attachment) {
+        this.attachment = attachment;
     }
 
-    public Conservdescription getConservDescriptionID() {
-        return conservDescriptionID;
+    public Conservdescription getConservDescription() {
+        return conservDescription;
     }
 
-    public void setConservDescriptionID(Conservdescription conservDescriptionID) {
-        this.conservDescriptionID = conservDescriptionID;
+    public void setConservDescription(Conservdescription conservDescription) {
+        this.conservDescription = conservDescription;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Integer getConservDescriptionAttachmentId() {
+        return conservDescriptionAttachmentId;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setConservDescriptionAttachmentId(Integer conservDescriptionAttachmentId) {
+        this.conservDescriptionAttachmentId = conservDescriptionAttachmentId;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (conservDescriptionAttachmentID != null ? conservDescriptionAttachmentID.hashCode() : 0);
+        hash += (conservDescriptionAttachmentId != null ? conservDescriptionAttachmentId.hashCode() : 0);
         return hash;
     }
 
@@ -148,7 +151,7 @@ public class Conservdescriptionattachment extends BaseEntity {
             return false;
         }
         Conservdescriptionattachment other = (Conservdescriptionattachment) object;
-        if ((this.conservDescriptionAttachmentID == null && other.conservDescriptionAttachmentID != null) || (this.conservDescriptionAttachmentID != null && !this.conservDescriptionAttachmentID.equals(other.conservDescriptionAttachmentID))) {
+        if ((this.conservDescriptionAttachmentId == null && other.conservDescriptionAttachmentId != null) || (this.conservDescriptionAttachmentId != null && !this.conservDescriptionAttachmentId.equals(other.conservDescriptionAttachmentId))) {
             return false;
         }
         return true;
@@ -156,7 +159,7 @@ public class Conservdescriptionattachment extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Conservdescriptionattachment[ conservDescriptionAttachmentID=" + conservDescriptionAttachmentID + " ]";
+        return "Conservdescriptionattachment[ conservDescriptionAttachmentId=" + conservDescriptionAttachmentId + " ]";
     }
     
 }

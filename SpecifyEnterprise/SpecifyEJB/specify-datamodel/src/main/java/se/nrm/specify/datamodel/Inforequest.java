@@ -35,12 +35,12 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Inforequest.findByTimestampCreated", query = "SELECT i FROM Inforequest i WHERE i.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Inforequest.findByTimestampModified", query = "SELECT i FROM Inforequest i WHERE i.timestampModified = :timestampModified"),
     @NamedQuery(name = "Inforequest.findByVersion", query = "SELECT i FROM Inforequest i WHERE i.version = :version"),
-    @NamedQuery(name = "Inforequest.findByCollectionMemberID", query = "SELECT i FROM Inforequest i WHERE i.collectionMemberID = :collectionMemberID"),
+    @NamedQuery(name = "Inforequest.findByCollectionMemberID", query = "SELECT i FROM Inforequest i WHERE i.collectionMemberId = :collectionMemberID"),
     @NamedQuery(name = "Inforequest.findByEmail", query = "SELECT i FROM Inforequest i WHERE i.email = :email"),
-    @NamedQuery(name = "Inforequest.findByFirstname", query = "SELECT i FROM Inforequest i WHERE i.firstname = :firstname"),
+    @NamedQuery(name = "Inforequest.findByFirstname", query = "SELECT i FROM Inforequest i WHERE i.firstName = :firstname"),
     @NamedQuery(name = "Inforequest.findByInfoReqNumber", query = "SELECT i FROM Inforequest i WHERE i.infoReqNumber = :infoReqNumber"),
     @NamedQuery(name = "Inforequest.findByInstitution", query = "SELECT i FROM Inforequest i WHERE i.institution = :institution"),
-    @NamedQuery(name = "Inforequest.findByLastname", query = "SELECT i FROM Inforequest i WHERE i.lastname = :lastname"),
+    @NamedQuery(name = "Inforequest.findByLastname", query = "SELECT i FROM Inforequest i WHERE i.lastName = :lastname"),
     @NamedQuery(name = "Inforequest.findByReplyDate", query = "SELECT i FROM Inforequest i WHERE i.replyDate = :replyDate"),
     @NamedQuery(name = "Inforequest.findByRequestDate", query = "SELECT i FROM Inforequest i WHERE i.requestDate = :requestDate")})
 public class Inforequest extends BaseEntity { 
@@ -57,7 +57,7 @@ public class Inforequest extends BaseEntity {
     @Basic(optional = false)
     @NotNull
     @Column(name = "CollectionMemberID")
-    private int collectionMemberID;
+    private int collectionMemberId;
     
     // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
     @Size(max = 50)
@@ -66,7 +66,7 @@ public class Inforequest extends BaseEntity {
     
     @Size(max = 50)
     @Column(name = "Firstname")
-    private String firstname;
+    private String firstName;
     
     @Size(max = 32)
     @Column(name = "InfoReqNumber")
@@ -78,7 +78,7 @@ public class Inforequest extends BaseEntity {
     
     @Size(max = 50)
     @Column(name = "Lastname")
-    private String lastname;
+    private String lastName;
     
     @Lob
     @Size(max = 65535)
@@ -93,20 +93,20 @@ public class Inforequest extends BaseEntity {
     @Temporal(TemporalType.DATE)
     private Date requestDate;
     
-    @OneToMany(mappedBy = "infoRequestID")
-    private Collection<Recordset> recordsetCollection;
+    @OneToMany(mappedBy = "infoRequest")
+    private Collection<Recordset> recordSets;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "AgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent agentID;
+    private Agent agent;
 
     public Inforequest() {
     }
@@ -115,10 +115,10 @@ public class Inforequest extends BaseEntity {
         this.infoRequestID = infoRequestID;
     }
 
-    public Inforequest(Integer infoRequestID, Date timestampCreated, int collectionMemberID) {
+    public Inforequest(Integer infoRequestID, Date timestampCreated, int collectionMemberId) {
         super(timestampCreated);
         this.infoRequestID = infoRequestID; 
-        this.collectionMemberID = collectionMemberID;
+        this.collectionMemberId = collectionMemberId;
     }
 
     public Integer getInfoRequestID() {
@@ -128,14 +128,7 @@ public class Inforequest extends BaseEntity {
     public void setInfoRequestID(Integer infoRequestID) {
         this.infoRequestID = infoRequestID;
     } 
-
-    public int getCollectionMemberID() {
-        return collectionMemberID;
-    }
-
-    public void setCollectionMemberID(int collectionMemberID) {
-        this.collectionMemberID = collectionMemberID;
-    }
+ 
 
     public String getEmail() {
         return email;
@@ -144,14 +137,7 @@ public class Inforequest extends BaseEntity {
     public void setEmail(String email) {
         this.email = email;
     }
-
-    public String getFirstname() {
-        return firstname;
-    }
-
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
+ 
 
     public String getInfoReqNumber() {
         return infoReqNumber;
@@ -169,13 +155,7 @@ public class Inforequest extends BaseEntity {
         this.institution = institution;
     }
 
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
+    
 
     public String getRemarks() {
         return remarks;
@@ -202,37 +182,65 @@ public class Inforequest extends BaseEntity {
     }
 
     @XmlTransient
-    public Collection<Recordset> getRecordsetCollection() {
-        return recordsetCollection;
+    public Collection<Recordset> getRecordSets() {
+        return recordSets;
     }
 
-    public void setRecordsetCollection(Collection<Recordset> recordsetCollection) {
-        this.recordsetCollection = recordsetCollection;
+    public void setRecordSets(Collection<Recordset> recordSets) {
+        this.recordSets = recordSets;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+ 
+
+    public Agent getAgent() {
+        return agent;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setAgent(Agent agent) {
+        this.agent = agent;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public int getCollectionMemberId() {
+        return collectionMemberId;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setCollectionMemberId(int collectionMemberId) {
+        this.collectionMemberId = collectionMemberId;
     }
 
-    public Agent getAgentID() {
-        return agentID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setAgentID(Agent agentID) {
-        this.agentID = agentID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+ 
 
     @Override
     public int hashCode() {

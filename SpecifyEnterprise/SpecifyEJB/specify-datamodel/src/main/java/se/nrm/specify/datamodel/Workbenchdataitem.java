@@ -1,19 +1,7 @@
 package se.nrm.specify.datamodel;
 
 import java.io.Serializable;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-//import javax.validation.constraints.NotNull;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -26,7 +14,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Workbenchdataitem.findAll", query = "SELECT w FROM Workbenchdataitem w"),
-    @NamedQuery(name = "Workbenchdataitem.findByWorkbenchDataItemID", query = "SELECT w FROM Workbenchdataitem w WHERE w.workbenchDataItemID = :workbenchDataItemID"),
+    @NamedQuery(name = "Workbenchdataitem.findByWorkbenchDataItemID", query = "SELECT w FROM Workbenchdataitem w WHERE w.workbenchDataItemId = :workbenchDataItemID"),
     @NamedQuery(name = "Workbenchdataitem.findByRowNumber", query = "SELECT w FROM Workbenchdataitem w WHERE w.rowNumber = :rowNumber"),
     @NamedQuery(name = "Workbenchdataitem.findByValidationStatus", query = "SELECT w FROM Workbenchdataitem w WHERE w.validationStatus = :validationStatus")})
 public class Workbenchdataitem implements Serializable, SpecifyBean {
@@ -38,7 +26,7 @@ public class Workbenchdataitem implements Serializable, SpecifyBean {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "WorkbenchDataItemID")
-    private Integer workbenchDataItemID;
+    private Integer workbenchDataItemId;
     
     @Lob
     @Size(max = 65535)
@@ -53,26 +41,19 @@ public class Workbenchdataitem implements Serializable, SpecifyBean {
     
     @JoinColumn(name = "WorkbenchRowID", referencedColumnName = "WorkbenchRowID")
     @ManyToOne(optional = false)
-    private Workbenchrow workbenchRowID;
+    private Workbenchrow workbenchRow;
     
     @JoinColumn(name = "WorkbenchTemplateMappingItemID", referencedColumnName = "WorkbenchTemplateMappingItemID")
     @ManyToOne(optional = false)
-    private Workbenchtemplatemappingitem workbenchTemplateMappingItemID;
+    private Workbenchtemplatemappingitem workbenchTemplateMappingItem;
 
     public Workbenchdataitem() {
     }
 
-    public Workbenchdataitem(Integer workbenchDataItemID) {
-        this.workbenchDataItemID = workbenchDataItemID;
+    public Workbenchdataitem(Integer workbenchDataItemId) {
+        this.workbenchDataItemId = workbenchDataItemId;
     }
-
-    public Integer getWorkbenchDataItemID() {
-        return workbenchDataItemID;
-    }
-
-    public void setWorkbenchDataItemID(Integer workbenchDataItemID) {
-        this.workbenchDataItemID = workbenchDataItemID;
-    }
+ 
 
     public String getCellData() {
         return cellData;
@@ -98,26 +79,36 @@ public class Workbenchdataitem implements Serializable, SpecifyBean {
         this.validationStatus = validationStatus;
     }
 
-    public Workbenchrow getWorkbenchRowID() {
-        return workbenchRowID;
+    public Integer getWorkbenchDataItemId() {
+        return workbenchDataItemId;
     }
 
-    public void setWorkbenchRowID(Workbenchrow workbenchRowID) {
-        this.workbenchRowID = workbenchRowID;
+    public void setWorkbenchDataItemId(Integer workbenchDataItemId) {
+        this.workbenchDataItemId = workbenchDataItemId;
     }
 
-    public Workbenchtemplatemappingitem getWorkbenchTemplateMappingItemID() {
-        return workbenchTemplateMappingItemID;
+    public Workbenchrow getWorkbenchRow() {
+        return workbenchRow;
     }
 
-    public void setWorkbenchTemplateMappingItemID(Workbenchtemplatemappingitem workbenchTemplateMappingItemID) {
-        this.workbenchTemplateMappingItemID = workbenchTemplateMappingItemID;
+    public void setWorkbenchRow(Workbenchrow workbenchRow) {
+        this.workbenchRow = workbenchRow;
     }
+
+    public Workbenchtemplatemappingitem getWorkbenchTemplateMappingItem() {
+        return workbenchTemplateMappingItem;
+    }
+
+    public void setWorkbenchTemplateMappingItem(Workbenchtemplatemappingitem workbenchTemplateMappingItem) {
+        this.workbenchTemplateMappingItem = workbenchTemplateMappingItem;
+    }
+
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (workbenchDataItemID != null ? workbenchDataItemID.hashCode() : 0);
+        hash += (workbenchDataItemId != null ? workbenchDataItemId.hashCode() : 0);
         return hash;
     }
 
@@ -128,7 +119,7 @@ public class Workbenchdataitem implements Serializable, SpecifyBean {
             return false;
         }
         Workbenchdataitem other = (Workbenchdataitem) object;
-        if ((this.workbenchDataItemID == null && other.workbenchDataItemID != null) || (this.workbenchDataItemID != null && !this.workbenchDataItemID.equals(other.workbenchDataItemID))) {
+        if ((this.workbenchDataItemId == null && other.workbenchDataItemId != null) || (this.workbenchDataItemId != null && !this.workbenchDataItemId.equals(other.workbenchDataItemId))) {
             return false;
         }
         return true;
@@ -136,7 +127,7 @@ public class Workbenchdataitem implements Serializable, SpecifyBean {
 
     @Override
     public String toString() {
-        return "se.nrm.specify.datamodel.Workbenchdataitem[ workbenchDataItemID=" + workbenchDataItemID + " ]";
+        return "se.nrm.specify.datamodel.Workbenchdataitem[ workbenchDataItemID=" + workbenchDataItemId + " ]";
     }
     
 }

@@ -1,18 +1,7 @@
 package se.nrm.specify.datamodel;
  
 import java.util.Date;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -27,7 +16,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Accessionagent.findAll", query = "SELECT a FROM Accessionagent a"),
-    @NamedQuery(name = "Accessionagent.findByAccessionAgentID", query = "SELECT a FROM Accessionagent a WHERE a.accessionAgentID = :accessionAgentID"),
+    @NamedQuery(name = "Accessionagent.findByAccessionAgentID", query = "SELECT a FROM Accessionagent a WHERE a.accessionAgentId = :accessionAgentID"),
     @NamedQuery(name = "Accessionagent.findByTimestampCreated", query = "SELECT a FROM Accessionagent a WHERE a.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Accessionagent.findByTimestampModified", query = "SELECT a FROM Accessionagent a WHERE a.timestampModified = :timestampModified"),
     @NamedQuery(name = "Accessionagent.findByVersion", query = "SELECT a FROM Accessionagent a WHERE a.version = :version"),
@@ -41,7 +30,7 @@ public class Accessionagent extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "AccessionAgentID")
-    private Integer accessionAgentID;
+    private Integer accessionAgentId;
       
     @Lob
     @Size(max = 65535)
@@ -56,45 +45,88 @@ public class Accessionagent extends BaseEntity {
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "RepositoryAgreementID", referencedColumnName = "RepositoryAgreementID")
     @ManyToOne
-    private Repositoryagreement repositoryAgreementID;
+    private Repositoryagreement repositoryAgreement;
     
     @JoinColumn(name = "AccessionID", referencedColumnName = "AccessionID")
     @ManyToOne
-    private Accession accessionID;
+    private Accession accession;
     
     @JoinColumn(name = "AgentID", referencedColumnName = "AgentID")
     @ManyToOne(optional = false)
-    private Agent agentID;
+    private Agent agent;
 
     public Accessionagent() {
     }
 
-    public Accessionagent(Integer accessionAgentID) {
-        this.accessionAgentID = accessionAgentID;
+    public Accessionagent(Integer accessionAgentId) {
+        this.accessionAgentId = accessionAgentId;
     }
 
-    public Accessionagent(Integer accessionAgentID, Date timestampCreated, String role) {
+    public Accessionagent(Integer accessionAgentId, Date timestampCreated, String role) {
         super(timestampCreated);
-        this.accessionAgentID = accessionAgentID;  
+        this.accessionAgentId = accessionAgentId;  
         this.role = role;
     }
 
-    public Integer getAccessionAgentID() {
-        return accessionAgentID;
+    @XmlTransient
+    public Accession getAccession() {
+        return accession;
     }
 
-    public void setAccessionAgentID(Integer accessionAgentID) {
-        this.accessionAgentID = accessionAgentID;
-    } 
+    public void setAccession(Accession accession) {
+        this.accession = accession;
+    }
+
+    public Integer getAccessionAgentId() {
+        return accessionAgentId;
+    }
+
+    public void setAccessionAgentId(Integer accessionAgentId) {
+        this.accessionAgentId = accessionAgentId;
+    }
+
+    public Agent getAgent() {
+        return agent;
+    }
+
+    public void setAgent(Agent agent) {
+        this.agent = agent;
+    }
+
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
+    }
+
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Repositoryagreement getRepositoryAgreement() {
+        return repositoryAgreement;
+    }
+
+    public void setRepositoryAgreement(Repositoryagreement repositoryAgreement) {
+        this.repositoryAgreement = repositoryAgreement;
+    }
+
     
+ 
     public String getRemarks() {
         return remarks;
     }
@@ -111,51 +143,12 @@ public class Accessionagent extends BaseEntity {
         this.role = role;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
-    public Repositoryagreement getRepositoryAgreementID() {
-        return repositoryAgreementID;
-    }
-
-    public void setRepositoryAgreementID(Repositoryagreement repositoryAgreementID) {
-        this.repositoryAgreementID = repositoryAgreementID;
-    }
-
-    @XmlTransient
-    public Accession getAccessionID() {
-        return accessionID;
-    }
-
-    public void setAccessionID(Accession accessionID) {
-        this.accessionID = accessionID;
-    }
-
-    public Agent getAgentID() {
-        return agentID;
-    }
-
-    public void setAgentID(Agent agentID) {
-        this.agentID = agentID;
-    }
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (accessionAgentID != null ? accessionAgentID.hashCode() : 0);
+        hash += (accessionAgentId != null ? accessionAgentId.hashCode() : 0);
         return hash;
     }
 
@@ -166,7 +159,7 @@ public class Accessionagent extends BaseEntity {
             return false;
         }
         Accessionagent other = (Accessionagent) object;
-        if ((this.accessionAgentID == null && other.accessionAgentID != null) || (this.accessionAgentID != null && !this.accessionAgentID.equals(other.accessionAgentID))) {
+        if ((this.accessionAgentId == null && other.accessionAgentId != null) || (this.accessionAgentId != null && !this.accessionAgentId.equals(other.accessionAgentId))) {
             return false;
         }
         return true;
@@ -174,7 +167,7 @@ public class Accessionagent extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Accessionagent[ accessionAgentID=" + accessionAgentID + " ]";
+        return "Accessionagent[ accessionAgentId=" + accessionAgentId + " ]";
     }
     
 }

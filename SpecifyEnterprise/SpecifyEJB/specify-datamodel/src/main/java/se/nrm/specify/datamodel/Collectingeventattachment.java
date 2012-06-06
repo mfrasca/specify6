@@ -26,11 +26,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Collectingeventattachment.findAll", query = "SELECT c FROM Collectingeventattachment c"),
-    @NamedQuery(name = "Collectingeventattachment.findByCollectingEventAttachmentID", query = "SELECT c FROM Collectingeventattachment c WHERE c.collectingEventAttachmentID = :collectingEventAttachmentID"),
+    @NamedQuery(name = "Collectingeventattachment.findByCollectingEventAttachmentID", query = "SELECT c FROM Collectingeventattachment c WHERE c.collectingEventAttachmentId = :collectingEventAttachmentID"),
     @NamedQuery(name = "Collectingeventattachment.findByTimestampCreated", query = "SELECT c FROM Collectingeventattachment c WHERE c.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Collectingeventattachment.findByTimestampModified", query = "SELECT c FROM Collectingeventattachment c WHERE c.timestampModified = :timestampModified"),
     @NamedQuery(name = "Collectingeventattachment.findByVersion", query = "SELECT c FROM Collectingeventattachment c WHERE c.version = :version"),
-    @NamedQuery(name = "Collectingeventattachment.findByCollectionMemberID", query = "SELECT c FROM Collectingeventattachment c WHERE c.collectionMemberID = :collectionMemberID"),
+    @NamedQuery(name = "Collectingeventattachment.findByCollectionMemberID", query = "SELECT c FROM Collectingeventattachment c WHERE c.collectionMemberId = :collectionMemberID"),
     @NamedQuery(name = "Collectingeventattachment.findByOrdinal", query = "SELECT c FROM Collectingeventattachment c WHERE c.ordinal = :ordinal")})
 public class Collectingeventattachment extends BaseEntity {  
     
@@ -41,12 +41,12 @@ public class Collectingeventattachment extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "CollectingEventAttachmentID")
-    private Integer collectingEventAttachmentID;
+    private Integer collectingEventAttachmentId;
      
     @Basic(optional = false)
     @NotNull
     @Column(name = "CollectionMemberID")
-    private int collectionMemberID;
+    private int collectionMemberId;
     
     @Basic(optional = false)
     @NotNull
@@ -60,49 +60,51 @@ public class Collectingeventattachment extends BaseEntity {
     
     @JoinColumn(name = "AttachmentID", referencedColumnName = "AttachmentID")
     @ManyToOne(optional = false)
-    private Attachment attachmentID;
+    private Attachment attachment;
     
     @JoinColumn(name = "CollectingEventID", referencedColumnName = "CollectingEventID")
     @ManyToOne(optional = false)
-    private Collectingevent collectingEventID;
+    private Collectingevent collectingEvent;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
 
     public Collectingeventattachment() {
     }
 
-    public Collectingeventattachment(Integer collectingEventAttachmentID) {
-        this.collectingEventAttachmentID = collectingEventAttachmentID;
+    public Collectingeventattachment(Integer collectingEventAttachmentId) {
+        this.collectingEventAttachmentId = collectingEventAttachmentId;
     }
 
-    public Collectingeventattachment(Integer collectingEventAttachmentID, Date timestampCreated, int collectionMemberID, int ordinal) {
+    public Collectingeventattachment(Integer collectingEventAttachmentId, Date timestampCreated, int collectionMemberId, int ordinal) {
         super(timestampCreated);
-        this.collectingEventAttachmentID = collectingEventAttachmentID; 
-        this.collectionMemberID = collectionMemberID;
+        this.collectingEventAttachmentId = collectingEventAttachmentId; 
+        this.collectionMemberId = collectionMemberId;
         this.ordinal = ordinal;
     }
 
-    public Integer getCollectingEventAttachmentID() {
-        return collectingEventAttachmentID;
+    public Integer getCollectingEventAttachmentId() {
+        return collectingEventAttachmentId;
     }
 
-    public void setCollectingEventAttachmentID(Integer collectingEventAttachmentID) {
-        this.collectingEventAttachmentID = collectingEventAttachmentID;
+    public void setCollectingEventAttachmentId(Integer collectingEventAttachmentId) {
+        this.collectingEventAttachmentId = collectingEventAttachmentId;
     }
+
+    public int getCollectionMemberId() {
+        return collectionMemberId;
+    }
+
+    public void setCollectionMemberId(int collectionMemberId) {
+        this.collectionMemberId = collectionMemberId;
+    }
+
  
-    public int getCollectionMemberID() {
-        return collectionMemberID;
-    }
-
-    public void setCollectionMemberID(int collectionMemberID) {
-        this.collectionMemberID = collectionMemberID;
-    }
 
     public int getOrdinal() {
         return ordinal;
@@ -120,42 +122,43 @@ public class Collectingeventattachment extends BaseEntity {
         this.remarks = remarks;
     }
 
-    public Attachment getAttachmentID() {
-        return attachmentID;
+    public Attachment getAttachment() {
+        return attachment;
     }
 
-    public void setAttachmentID(Attachment attachmentID) {
-        this.attachmentID = attachmentID;
+    public void setAttachment(Attachment attachment) {
+        this.attachment = attachment;
     }
 
-    public Collectingevent getCollectingEventID() {
-        return collectingEventID;
+    public Collectingevent getCollectingEvent() {
+        return collectingEvent;
     }
 
-    public void setCollectingEventID(Collectingevent collectingEventID) {
-        this.collectingEventID = collectingEventID;
+    public void setCollectingEvent(Collectingevent collectingEvent) {
+        this.collectingEvent = collectingEvent;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
 
+ 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (collectingEventAttachmentID != null ? collectingEventAttachmentID.hashCode() : 0);
+        hash += (collectingEventAttachmentId != null ? collectingEventAttachmentId.hashCode() : 0);
         return hash;
     }
 
@@ -166,7 +169,7 @@ public class Collectingeventattachment extends BaseEntity {
             return false;
         }
         Collectingeventattachment other = (Collectingeventattachment) object;
-        if ((this.collectingEventAttachmentID == null && other.collectingEventAttachmentID != null) || (this.collectingEventAttachmentID != null && !this.collectingEventAttachmentID.equals(other.collectingEventAttachmentID))) {
+        if ((this.collectingEventAttachmentId == null && other.collectingEventAttachmentId != null) || (this.collectingEventAttachmentId != null && !this.collectingEventAttachmentId.equals(other.collectingEventAttachmentId))) {
             return false;
         }
         return true;
@@ -174,7 +177,7 @@ public class Collectingeventattachment extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Collectingeventattachment[ collectingEventAttachmentID=" + collectingEventAttachmentID + " ]";
+        return "Collectingeventattachment[ collectingEventAttachmentID=" + collectingEventAttachmentId + " ]";
     }
     
 }

@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Spprincipal.findAll", query = "SELECT s FROM Spprincipal s"),
-    @NamedQuery(name = "Spprincipal.findBySpPrincipalID", query = "SELECT s FROM Spprincipal s WHERE s.spPrincipalID = :spPrincipalID"),
+    @NamedQuery(name = "Spprincipal.findBySpPrincipalID", query = "SELECT s FROM Spprincipal s WHERE s.userGroupId = :spPrincipalID"),
     @NamedQuery(name = "Spprincipal.findByTimestampCreated", query = "SELECT s FROM Spprincipal s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Spprincipal.findByTimestampModified", query = "SELECT s FROM Spprincipal s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Spprincipal.findByVersion", query = "SELECT s FROM Spprincipal s WHERE s.version = :version"),
@@ -38,7 +38,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Spprincipal.findByGroupType", query = "SELECT s FROM Spprincipal s WHERE s.groupType = :groupType"),
     @NamedQuery(name = "Spprincipal.findByName", query = "SELECT s FROM Spprincipal s WHERE s.name = :name"),
     @NamedQuery(name = "Spprincipal.findByPriority", query = "SELECT s FROM Spprincipal s WHERE s.priority = :priority"),
-    @NamedQuery(name = "Spprincipal.findByUserGroupScopeID", query = "SELECT s FROM Spprincipal s WHERE s.userGroupScopeID = :userGroupScopeID")})
+    @NamedQuery(name = "Spprincipal.findByUserGroupScopeID", query = "SELECT s FROM Spprincipal s WHERE s.scope = :scope")})
 public class Spprincipal extends BaseEntity {  
     
     private static final long serialVersionUID = 1L;
@@ -48,7 +48,7 @@ public class Spprincipal extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "SpPrincipalID")
-    private Integer spPrincipalID;
+    private Integer userGroupId;
      
     @Basic(optional = false)
     @NotNull
@@ -77,53 +77,47 @@ public class Spprincipal extends BaseEntity {
     private String remarks;
     
     @Column(name = "userGroupScopeID")
-    private Integer userGroupScopeID;
+    private Integer scope;
     
-    @ManyToMany(mappedBy = "spprincipalCollection")
-    private Collection<Sppermission> sppermissionCollection;
+    @ManyToMany(mappedBy = "principals")
+    private Collection<Sppermission> permissions;
     
-    @ManyToMany(mappedBy = "spprincipalCollection")
-    private Collection<Specifyuser> specifyuserCollection;
+    @ManyToMany(mappedBy = "spPrincipals")
+    private Collection<Specifyuser> specifyUsers;
     
-    @OneToMany(mappedBy = "spPrincipalID")
-    private Collection<Workbench> workbenchCollection;
+    @OneToMany(mappedBy = "group")
+    private Collection<Workbench> workbenchs;
     
-    @OneToMany(mappedBy = "spPrincipalID")
-    private Collection<Recordset> recordsetCollection;
+    @OneToMany(mappedBy = "group")
+    private Collection<Recordset> recordsets;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
-    @OneToMany(mappedBy = "spPrincipalID")
-    private Collection<Spappresource> spappresourceCollection;
+    @OneToMany(mappedBy = "group")
+    private Collection<Spappresource> spappresources;
 
     public Spprincipal() {
     }
 
-    public Spprincipal(Integer spPrincipalID) {
-        this.spPrincipalID = spPrincipalID;
+    public Spprincipal(Integer userGroupId) {
+        this.userGroupId = userGroupId;
     }
 
-    public Spprincipal(Integer spPrincipalID, Date timestampCreated, String groupSubClass, String name, short priority) {
+    public Spprincipal(Integer userGroupId, Date timestampCreated, String groupSubClass, String name, short priority) {
         super(timestampCreated);
-        this.spPrincipalID = spPrincipalID; 
+        this.userGroupId = userGroupId; 
         this.groupSubClass = groupSubClass;
         this.name = name;
         this.priority = priority;
     }
 
-    public Integer getSpPrincipalID() {
-        return spPrincipalID;
-    }
-
-    public void setSpPrincipalID(Integer spPrincipalID) {
-        this.spPrincipalID = spPrincipalID;
-    }
+    
  
     public String getGroupSubClass() {
         return groupSubClass;
@@ -165,79 +159,90 @@ public class Spprincipal extends BaseEntity {
         this.remarks = remarks;
     }
 
-    public Integer getUserGroupScopeID() {
-        return userGroupScopeID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setUserGroupScopeID(Integer userGroupScopeID) {
-        this.userGroupScopeID = userGroupScopeID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    @XmlTransient
-    public Collection<Sppermission> getSppermissionCollection() {
-        return sppermissionCollection;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setSppermissionCollection(Collection<Sppermission> sppermissionCollection) {
-        this.sppermissionCollection = sppermissionCollection;
-    }
-
-    @XmlTransient
-    public Collection<Specifyuser> getSpecifyuserCollection() {
-        return specifyuserCollection;
-    }
-
-    public void setSpecifyuserCollection(Collection<Specifyuser> specifyuserCollection) {
-        this.specifyuserCollection = specifyuserCollection;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
 
     @XmlTransient
-    public Collection<Workbench> getWorkbenchCollection() {
-        return workbenchCollection;
+    public Collection<Sppermission> getPermissions() {
+        return permissions;
     }
 
-    public void setWorkbenchCollection(Collection<Workbench> workbenchCollection) {
-        this.workbenchCollection = workbenchCollection;
-    }
-
-    @XmlTransient
-    public Collection<Recordset> getRecordsetCollection() {
-        return recordsetCollection;
-    }
-
-    public void setRecordsetCollection(Collection<Recordset> recordsetCollection) {
-        this.recordsetCollection = recordsetCollection;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setPermissions(Collection<Sppermission> permissions) {
+        this.permissions = permissions;
     }
 
     @XmlTransient
-    public Collection<Spappresource> getSpappresourceCollection() {
-        return spappresourceCollection;
+    public Collection<Recordset> getRecordsets() {
+        return recordsets;
     }
 
-    public void setSpappresourceCollection(Collection<Spappresource> spappresourceCollection) {
-        this.spappresourceCollection = spappresourceCollection;
+    public void setRecordsets(Collection<Recordset> recordsets) {
+        this.recordsets = recordsets;
     }
+
+    public Integer getScope() {
+        return scope;
+    }
+
+    public void setScope(Integer scope) {
+        this.scope = scope;
+    }
+
+    @XmlTransient
+    public Collection<Spappresource> getSpappresources() {
+        return spappresources;
+    }
+
+    public void setSpappresources(Collection<Spappresource> spappresources) {
+        this.spappresources = spappresources;
+    }
+
+    @XmlTransient
+    public Collection<Specifyuser> getSpecifyUsers() {
+        return specifyUsers;
+    }
+
+    public void setSpecifyUsers(Collection<Specifyuser> specifyUsers) {
+        this.specifyUsers = specifyUsers;
+    }
+
+    public Integer getUserGroupId() {
+        return userGroupId;
+    }
+
+    public void setUserGroupId(Integer userGroupId) {
+        this.userGroupId = userGroupId;
+    }
+
+    @XmlTransient
+    public Collection<Workbench> getWorkbenchs() {
+        return workbenchs;
+    }
+
+    public void setWorkbenchs(Collection<Workbench> workbenchs) {
+        this.workbenchs = workbenchs;
+    }
+
+     
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (spPrincipalID != null ? spPrincipalID.hashCode() : 0);
+        hash += (userGroupId != null ? userGroupId.hashCode() : 0);
         return hash;
     }
 
@@ -248,7 +253,7 @@ public class Spprincipal extends BaseEntity {
             return false;
         }
         Spprincipal other = (Spprincipal) object;
-        if ((this.spPrincipalID == null && other.spPrincipalID != null) || (this.spPrincipalID != null && !this.spPrincipalID.equals(other.spPrincipalID))) {
+        if ((this.userGroupId == null && other.userGroupId != null) || (this.userGroupId != null && !this.userGroupId.equals(other.userGroupId))) {
             return false;
         }
         return true;
@@ -256,7 +261,7 @@ public class Spprincipal extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Spprincipal[ spPrincipalID=" + spPrincipalID + " ]";
+        return "Spprincipal[ spPrincipalID=" + userGroupId + " ]";
     }
     
 }

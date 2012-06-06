@@ -33,7 +33,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Agent.findAll", query = "SELECT a FROM Agent a"),
-    @NamedQuery(name = "Agent.findByAgentID", query = "SELECT a FROM Agent a WHERE a.agentID = :agentID"),
+    @NamedQuery(name = "Agent.findByAgentID", query = "SELECT a FROM Agent a WHERE a.agentId = :agentID"),
     @NamedQuery(name = "Agent.findByTimestampCreated", query = "SELECT a FROM Agent a WHERE a.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Agent.findByTimestampModified", query = "SELECT a FROM Agent a WHERE a.timestampModified = :timestampModified"),
     @NamedQuery(name = "Agent.findByVersion", query = "SELECT a FROM Agent a WHERE a.version = :version"),
@@ -52,7 +52,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Agent.findByLastName", query = "SELECT a FROM Agent a WHERE a.lastName = :lastName"),
     @NamedQuery(name = "Agent.findByMiddleInitial", query = "SELECT a FROM Agent a WHERE a.middleInitial = :middleInitial"),
     @NamedQuery(name = "Agent.findByTitle", query = "SELECT a FROM Agent a WHERE a.title = :title"),
-    @NamedQuery(name = "Agent.findBySpecifyuserid", query = "SELECT a FROM Agent a WHERE a.specifyUserID.specifyUserID = :specifyUserID"),
+    @NamedQuery(name = "Agent.findBySpecifyuserid", query = "SELECT a FROM Agent a WHERE a.specifyUser.specifyUserId = :specifyUserID"),
     @NamedQuery(name = "Agent.findByDateType", query = "SELECT a FROM Agent a WHERE a.dateType = :dateType")})
 public class Agent extends BaseEntity { 
     
@@ -63,7 +63,7 @@ public class Agent extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "AgentID")
-    private Integer agentID;
+    private Integer agentId;
       
     @Size(max = 50)
     @Column(name = "Abbreviation")
@@ -138,1050 +138,1049 @@ public class Agent extends BaseEntity {
     @Column(name = "URL")
     private String url;
     
-    @OneToMany(mappedBy = "createdByAgentID", cascade= CascadeType.ALL)
-    private Collection<Localitynamealias> localitynamealiasCollection;
+    @OneToMany(mappedBy = "createdByAgent", cascade= CascadeType.ALL)
+    private Collection<Localitynamealias> localitynamealiases;
     
-    @OneToMany(mappedBy = "modifiedByAgentID", cascade= CascadeType.ALL)
-    private Collection<Localitynamealias> localitynamealiasCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent", cascade= CascadeType.ALL)
+    private Collection<Localitynamealias> localitynamealiases1;
     
-    @OneToMany(mappedBy = "shipperID")
-    private Collection<Shipment> shipmentCollection;
+    @OneToMany(mappedBy = "shipper")
+    private Collection<Shipment> shipments;
     
-    @OneToMany(mappedBy = "shippedToID")
-    private Collection<Shipment> shipmentCollection1;
+    @OneToMany(mappedBy = "shippedTo")
+    private Collection<Shipment> shipments1;
     
-    @OneToMany(mappedBy = "shippedByID")
-    private Collection<Shipment> shipmentCollection2;
+    @OneToMany(mappedBy = "shippedBy")
+    private Collection<Shipment> shipments2;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Shipment> shipmentCollection3;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Shipment> shipments3;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Shipment> shipmentCollection4;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Shipment> shipments4;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Loanagent> loanagentCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Loanagent> loanagents;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Loanagent> loanagentCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Loanagent> loanagents1;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "agentID")
-    private Collection<Loanagent> loanagentCollection2;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "agent")
+    private Collection<Loanagent> loanagents2;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Preptype> preptypeCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Preptype> preptypes;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Preptype> preptypeCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Preptype> preptypes1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Agentgeography> agentgeographyCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Agentgeography> agentGeographies1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Agentgeography> agentgeographyCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Agentgeography> agentGeographies2;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "agentID")  
-    private Collection<Agentgeography> agentgeographyCollection2;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "agent")  
+    private Collection<Agentgeography> agentGeographies;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Deaccessionagent> deaccessionagentCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Deaccessionagent> deaccessionagents;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Deaccessionagent> deaccessionagentCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Deaccessionagent> deaccessionagents1;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "agentID")
-    private Collection<Deaccessionagent> deaccessionagentCollection2;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "agent")
+    private Collection<Deaccessionagent> deaccessionagents2;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Loanattachment> loanattachmentCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Loanattachment> loanattachments;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Loanattachment> loanattachmentCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Loanattachment> loanattachments1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Treatmentevent> treatmenteventCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Treatmentevent> treatmentevents3;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Treatmentevent> treatmenteventCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Treatmentevent> treatmentevents4;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Workbench> workbenchCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Workbench> workbenchs;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Workbench> workbenchCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Workbench> workbenchs1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Attachmentmetadata> attachmentmetadataCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Attachmentmetadata> attachmentmetadata;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Attachmentmetadata> attachmentmetadataCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Attachmentmetadata> attachmentmetadata1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Taxon> taxonCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Taxon> taxons;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Taxon> taxonCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Taxon> taxons1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Collectingeventattr> collectingeventattrCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Collectingeventattr> collectingeventattrs;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Collectingeventattr> collectingeventattrCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Collectingeventattr> collectingeventattrs1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Splocaleitemstr> splocaleitemstrCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Splocaleitemstr> splocaleitemstrs;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Splocaleitemstr> splocaleitemstrCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Splocaleitemstr> splocaleitemstrs1;
     
-    @OneToMany(mappedBy = "preparedByAgentID")
-    private Collection<Preparation> preparationCollection;
+    @OneToMany(mappedBy = "preparedByAgent")
+    private Collection<Preparation> preparations;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Preparation> preparationCollection1;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Preparation> preparations1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Preparation> preparationCollection2;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Preparation> preparations2;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Workbenchtemplate> workbenchtemplateCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Workbenchtemplate> workbenchtemplates;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Workbenchtemplate> workbenchtemplateCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Workbenchtemplate> workbenchtemplates1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Sptasksemaphore> sptasksemaphoreCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Sptasksemaphore> sptasksemaphores;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Sptasksemaphore> sptasksemaphoreCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Sptasksemaphore> sptasksemaphores1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Picklistitem> picklistitemCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Picklistitem> picklistitems;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Picklistitem> picklistitemCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Picklistitem> picklistitems1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Loan> loanCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Loan> loans;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Loan> loanCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Loan> loans1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Geologictimeperiodtreedefitem> geologictimeperiodtreedefitemCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Geologictimeperiodtreedefitem> geologictimeperiodtreedefitems;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Geologictimeperiodtreedefitem> geologictimeperiodtreedefitemCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Geologictimeperiodtreedefitem> geologictimeperiodtreedefitems1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Collectingtrip> collectingtripCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Collectingtrip> collectingtrips;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Collectingtrip> collectingtripCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Collectingtrip> collectingtrips1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Project> projectCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Project> projects;
     
-    @OneToMany(mappedBy = "projectAgentID")
-    private Collection<Project> projectCollection1;
+    @OneToMany(mappedBy = "agent")
+    private Collection<Project> projects1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Project> projectCollection2;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Project> projects2;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Agentattachment> agentattachmentCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Agentattachment> agentAttachments1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Agentattachment> agentattachmentCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Agentattachment> agentAttachments2;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "agentID")
-    private Collection<Agentattachment> agentattachmentCollection2;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "agent")
+    private Collection<Agentattachment> agentAttachments;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Preparationattribute> preparationattributeCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Preparationattribute> preparationattributes;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Preparationattribute> preparationattributeCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Preparationattribute> preparationattributes1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Container> containerCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Container> containers;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Container> containerCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Container> containers1;
     
-    @OneToMany(mappedBy = "curatorID")
-    private Collection<Conservevent> conserveventCollection;
+    @OneToMany(mappedBy = "curator")
+    private Collection<Conservevent> conservevents;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Conservevent> conserveventCollection1;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Conservevent> conservevents1;
     
-    @OneToMany(mappedBy = "treatedByAgentID")
-    private Collection<Conservevent> conserveventCollection2;
+    @OneToMany(mappedBy = "treatedByAgent")
+    private Collection<Conservevent> conservevents2;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Conservevent> conserveventCollection3;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Conservevent> conservevents3;
     
-    @OneToMany(mappedBy = "examinedByAgentID")
-    private Collection<Conservevent> conserveventCollection4;
+    @OneToMany(mappedBy = "examinedByAgent")
+    private Collection<Conservevent> conservevents4;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Lithostrattreedefitem> lithostrattreedefitemCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Lithostrattreedefitem> lithostrattreedefitems;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Lithostrattreedefitem> lithostrattreedefitemCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Lithostrattreedefitem> lithostrattreedefitems1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Lithostrattreedef> lithostrattreedefCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Lithostrattreedef> lithostrattreedefs;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Lithostrattreedef> lithostrattreedefCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Lithostrattreedef> lithostrattreedefs1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Fieldnotebookpagesetattachment> fieldnotebookpagesetattachmentCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Fieldnotebookpagesetattachment> fieldnotebookpagesetattachments;
     
-    @OneToMany(mappedBy = "modifiedByAgentID") 
-    private Collection<Fieldnotebookpagesetattachment> fieldnotebookpagesetattachmentCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent") 
+    private Collection<Fieldnotebookpagesetattachment> fieldnotebookpagesetattachments1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Repositoryagreementattachment> repositoryagreementattachmentCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Repositoryagreementattachment> repositoryagreementattachments;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Repositoryagreementattachment> repositoryagreementattachmentCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Repositoryagreementattachment> repositoryagreementattachments1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Permitattachment> permitattachmentCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Permitattachment> permitattachments;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Permitattachment> permitattachmentCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Permitattachment> permitattachments1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Dnasequenceattachment> dnasequenceattachmentCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Dnasequenceattachment> dnasequenceattachments;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Dnasequenceattachment> dnasequenceattachmentCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Dnasequenceattachment> dnasequenceattachments1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Appraisal> appraisalCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Appraisal> appraisals;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Appraisal> appraisalCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Appraisal> appraisals1;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "agentID")
-    private Collection<Appraisal> appraisalCollection2;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "agent")
+    private Collection<Appraisal> appraisals2;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Picklist> picklistCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Picklist> picklists;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Picklist> picklistCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Picklist> picklists1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Spappresourcedata> spappresourcedataCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Spappresourcedata> spappresourcedata;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Spappresourcedata> spappresourcedataCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Spappresourcedata> spappresourcedata1;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "receivedFromOrganizationID")
-    private Collection<Exchangein> exchangeinCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "agentReceivedFrom")
+    private Collection<Exchangein> exchangeins;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Exchangein> exchangeinCollection1;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Exchangein> exchangeins1;
      
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Exchangein> exchangeinCollection2;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Exchangein> exchangeins2;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "catalogedByID")
-    private Collection<Exchangein> exchangeinCollection3;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "agentCatalogedBy")
+    private Collection<Exchangein> exchangeins3;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Gift> giftCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Gift> gifts;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Gift> giftCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Gift> gifts1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Agentvariant> agentvariantCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Agentvariant> agentvariants;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Agentvariant> agentvariantCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Agentvariant> agentvariants1;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "agentID")
-    private Collection<Agentvariant> agentvariantCollection2;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "agent")
+    private Collection<Agentvariant> variants;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Spauditlog> spauditlogCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Spauditlog> spauditlogs;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Spauditlog> spauditlogCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Spauditlog> spauditlogs1;
     
-    @OneToMany(mappedBy = "createdByAgentID") 
-    private Collection<Otheridentifier> otheridentifierCollection;
+    @OneToMany(mappedBy = "createdByAgent") 
+    private Collection<Otheridentifier> otheridentifiers;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Otheridentifier> otheridentifierCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Otheridentifier> otheridentifiers1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Splocalecontaineritem> splocalecontaineritemCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Splocalecontaineritem> splocalecontaineritems;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Splocalecontaineritem> splocalecontaineritemCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Splocalecontaineritem> splocalecontaineritems1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Recordset> recordsetCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Recordset> recordsets;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Recordset> recordsetCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Recordset> recordsets1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Fieldnotebookpageset> fieldnotebookpagesetCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Fieldnotebookpageset> fieldnotebookpagesets;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Fieldnotebookpageset> fieldnotebookpagesetCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Fieldnotebookpageset> fieldnotebookpagesets1;
     
-    @OneToMany(mappedBy = "agentID")
-    private Collection<Fieldnotebookpageset> fieldnotebookpagesetCollection2;
+    @OneToMany(mappedBy = "sourceAgent")
+    private Collection<Fieldnotebookpageset> fieldnotebookpagesets2;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Giftagent> giftagentCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Giftagent> giftagents;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Giftagent> giftagentCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Giftagent> giftagents1;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "agentID")
-    private Collection<Giftagent> giftagentCollection2;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "agent")
+    private Collection<Giftagent> giftagents2;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<se.nrm.specify.datamodel.Collection> collectionCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<se.nrm.specify.datamodel.Collection> collections;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<se.nrm.specify.datamodel.Collection> collectionCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<se.nrm.specify.datamodel.Collection> collections1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Spversion> spversionCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Spversion> spversions;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Spversion> spversionCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Spversion> spversions1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Geologictimeperiodtreedef> geologictimeperiodtreedefCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Geologictimeperiodtreedef> geologictimeperiodtreedefs;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Geologictimeperiodtreedef> geologictimeperiodtreedefCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Geologictimeperiodtreedef> geologictimeperiodtreedefs1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Conservdescription> conservdescriptionCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Conservdescription> conservdescriptions;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Conservdescription> conservdescriptionCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Conservdescription> conservdescriptions1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Addressofrecord> addressofrecordCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Addressofrecord> addressofrecords;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Addressofrecord> addressofrecordCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Addressofrecord> addressofrecords1;
     
-    @OneToMany(mappedBy = "agentID", cascade= CascadeType.ALL)
-    private Collection<Addressofrecord> addressofrecordCollection2;
+    @OneToMany(mappedBy = "agent", cascade= CascadeType.ALL)
+    private Collection<Addressofrecord> addressofrecords2;
     
-    @OneToMany(mappedBy = "createdByAgentID")
+    @OneToMany(mappedBy = "createdByAgent") 
+    private Collection<Division> divisions;
+    
+    @OneToMany(mappedBy = "modifiedByAgent")
 //    @XmlElement
-    private Collection<Division> divisionCollection;
+    private Collection<Division> divisions1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-//    @XmlElement
-    private Collection<Division> divisionCollection1;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Storagetreedefitem> storagetreedefitems;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Storagetreedefitem> storagetreedefitemCollection;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Storagetreedefitem> storagetreedefitems1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Storagetreedefitem> storagetreedefitemCollection1;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "agentSentTo")
+    private Collection<Exchangeout> exchangeouts;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "sentToOrganizationID")
-    private Collection<Exchangeout> exchangeoutCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Exchangeout> exchangeouts1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Exchangeout> exchangeoutCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Exchangeout> exchangeouts2;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Exchangeout> exchangeoutCollection2;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "agentCatalogedBy")
+    private Collection<Exchangeout> exchangeouts3;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "catalogedByID")
-    private Collection<Exchangeout> exchangeoutCollection3;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Spprincipal> spprincipals;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Spprincipal> spprincipalCollection;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Spprincipal> spprincipals1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Spprincipal> spprincipalCollection1;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Autonumberingscheme> autonumberingschemes;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Autonumberingscheme> autonumberingschemeCollection;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Autonumberingscheme> autonumberingschemes1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Autonumberingscheme> autonumberingschemeCollection1;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Determinationcitation> determinationcitations;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Determinationcitation> determinationcitationCollection;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Determinationcitation> determinationcitations1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Determinationcitation> determinationcitationCollection1;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Specifyuser> specifyusers;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Specifyuser> specifyuserCollection;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Specifyuser> specifyusers1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Specifyuser> specifyuserCollection1;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Preparationattachment> preparationattachments;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Preparationattachment> preparationattachmentCollection;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Preparationattachment> preparationattachments1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Preparationattachment> preparationattachmentCollection1;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Localitydetail> localitydetails;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Localitydetail> localitydetailCollection;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Localitydetail> localitydetails1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Localitydetail> localitydetailCollection1;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Collectionrelationship> collectionrelationships;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Collectionrelationship> collectionrelationshipCollection;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Collectionrelationship> collectionrelationships1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Collectionrelationship> collectionrelationshipCollection1;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Collectionobjectattr> collectionobjectattrs;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Collectionobjectattr> collectionobjectattrCollection;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Collectionobjectattr> collectionobjectattrs1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Collectionobjectattr> collectionobjectattrCollection1;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Collectingeventattribute> collectingeventattributes;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Collectingeventattribute> collectingeventattributeCollection;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Collectingeventattribute> collectingeventattributes1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Collectingeventattribute> collectingeventattributeCollection1;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Spviewsetobj> spviewsetobjs;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Spviewsetobj> spviewsetobjCollection;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Spviewsetobj> spviewsetobjs1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Spviewsetobj> spviewsetobjCollection1;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Spfieldvaluedefault> spfieldvaluedefaults;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Spfieldvaluedefault> spfieldvaluedefaultCollection;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Spfieldvaluedefault> spfieldvaluedefaults1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Spfieldvaluedefault> spfieldvaluedefaultCollection1;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Commonnametx> commonnametxs;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Commonnametx> commonnametxCollection;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Commonnametx> commonnametxs1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Commonnametx> commonnametxCollection1;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Borrowmaterial> borrowmaterials;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Borrowmaterial> borrowmaterialCollection;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Borrowmaterial> borrowmaterials1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Borrowmaterial> borrowmaterialCollection1;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Accessionagent> accessionagents;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Accessionagent> accessionagentCollection;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Accessionagent> accessionagents1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Accessionagent> accessionagentCollection1;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "agent")
+    private Collection<Accessionagent> accessionagents2;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "agentID")
-    private Collection<Accessionagent> accessionagentCollection2;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Spappresource> spappresources;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Spappresource> spappresourceCollection;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Spappresource> spappresources1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Spappresource> spappresourceCollection1;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Geologictimeperiod> geologictimeperiods;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Geologictimeperiod> geologictimeperiodCollection;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Geologictimeperiod> geologictimeperiods1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Geologictimeperiod> geologictimeperiodCollection1;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Workbenchtemplatemappingitem> workbenchtemplatemappingitems;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Workbenchtemplatemappingitem> workbenchtemplatemappingitemCollection;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Workbenchtemplatemappingitem> workbenchtemplatemappingitems1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Workbenchtemplatemappingitem> workbenchtemplatemappingitemCollection1;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Repositoryagreement> repositoryagreements;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Repositoryagreement> repositoryagreementCollection;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Repositoryagreement> repositoryagreements1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Repositoryagreement> repositoryagreementCollection1;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "originator")
+    private Collection<Repositoryagreement> repositoryagreements2;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "agentID")
-    private Collection<Repositoryagreement> repositoryagreementCollection2;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Spqueryfield> spqueryfields;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Spqueryfield> spqueryfieldCollection;
+    @OneToMany(mappedBy = "modifiedByAgent",  cascade= CascadeType.ALL)
+    private Collection<Spqueryfield> spqueryfields1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID",  cascade= CascadeType.ALL)
-    private Collection<Spqueryfield> spqueryfieldCollection1;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Spreport> spreports;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Spreport> spreportCollection;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Spreport> spreports1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Spreport> spreportCollection1;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Referencework> referenceworks;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Referencework> referenceworkCollection;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Referencework> referenceworks1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Referencework> referenceworkCollection1;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Localityattachment> localityattachments;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Localityattachment> localityattachmentCollection;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Localityattachment> localityattachments1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Localityattachment> localityattachmentCollection1;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Accession> accessions;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Accession> accessionCollection;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Accession> accessions1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Accession> accessionCollection1;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "group")
+    private Collection<Groupperson> groups;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "groupID")
-    private Collection<Groupperson> grouppersonCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Groupperson> groups1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Groupperson> grouppersonCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Groupperson> groups2;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Groupperson> grouppersonCollection2;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "member")
+    private Collection<Groupperson> members;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "memberID")
-    private Collection<Groupperson> grouppersonCollection3;
+    @OneToMany(mappedBy = "agent")
+    private Collection<Borrowreturnmaterial> borrowreturnmaterials;
     
-    @OneToMany(mappedBy = "returnedByID")
-    private Collection<Borrowreturnmaterial> borrowreturnmaterialCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Borrowreturnmaterial> borrowreturnmaterials1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Borrowreturnmaterial> borrowreturnmaterialCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Borrowreturnmaterial> borrowreturnmaterials2;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Borrowreturnmaterial> borrowreturnmaterialCollection2;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Preparationattr> preparationattrs;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Preparationattr> preparationattrCollection;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Preparationattr> preparationattrs1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Preparationattr> preparationattrCollection1;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Datatype> datatypes;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Datatype> datatypeCollection;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Datatype> datatypes1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Datatype> datatypeCollection1;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Storagetreedef> storagetreedefs;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Storagetreedef> storagetreedefCollection;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Storagetreedef> storagetreedefs1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Storagetreedef> storagetreedefCollection1;
+    @OneToMany(mappedBy = "issuedTo")
+    private Collection<Permit> permits;
     
-    @OneToMany(mappedBy = "issuedToID")
-    private Collection<Permit> permitCollection;
+    @OneToMany(mappedBy = "issuedBy")
+    private Collection<Permit> permits1;
     
-    @OneToMany(mappedBy = "issuedByID")
-    private Collection<Permit> permitCollection1;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Permit> permits2;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Permit> permitCollection2;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Permit> permits3;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Permit> permitCollection3;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Commonnametxcitation> commonnametxcitations;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Commonnametxcitation> commonnametxcitationCollection;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Commonnametxcitation> commonnametxcitations1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Commonnametxcitation> commonnametxcitationCollection1;
+    @OneToMany(mappedBy = "determiner")
+    private Collection<Determination> determinations;
     
-    @OneToMany(mappedBy = "determinerID")
-    private Collection<Determination> determinationCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Determination> determinations1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Determination> determinationCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Determination> determinations2;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Determination> determinationCollection2;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Spexportschema> spexportschemas;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Spexportschema> spexportschemaCollection;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Spexportschema> spexportschemas1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Spexportschema> spexportschemaCollection1;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Collectingevent> collectingevents;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Collectingevent> collectingeventCollection;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Collectingevent> collectingevents1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Collectingevent> collectingeventCollection1;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Collectionreltype> collectionreltypes;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Collectionreltype> collectionreltypeCollection;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Collectionreltype> collectionreltypes1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Collectionreltype> collectionreltypeCollection1;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Spexportschemaitemmapping> spexportschemaitemmappings;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Spexportschemaitemmapping> spexportschemaitemmappingCollection;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Spexportschemaitemmapping> spexportschemaitemmappings1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Spexportschemaitemmapping> spexportschemaitemmappingCollection1;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Dnasequence> dnasequences;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Dnasequence> dnasequenceCollection;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Dnasequence> dnasequences1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Dnasequence> dnasequenceCollection1;
+    @OneToMany(mappedBy = "sequencer")
+    private Collection<Dnasequence> dnasequences2;
     
-    @OneToMany(mappedBy = "agentID")
-    private Collection<Dnasequence> dnasequenceCollection2;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Spauditlogfield> spauditlogfields;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Spauditlogfield> spauditlogfieldCollection;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Spauditlogfield> spauditlogfields1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Spauditlogfield> spauditlogfieldCollection1;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Geographytreedef> geographytreedefs;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Geographytreedef> geographytreedefCollection;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Geographytreedef> geographytreedefs1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Geographytreedef> geographytreedefCollection1;
+    @OneToMany(mappedBy = "createdByAgent") 
+    private Collection<Collectionobjectattachment> collectionobjectattachments;
     
-    @OneToMany(mappedBy = "createdByAgentID") 
-    private Collection<Collectionobjectattachment> collectionobjectattachmentCollection;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Collectionobjectattachment> collectionobjectattachments1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Collectionobjectattachment> collectionobjectattachmentCollection1;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Taxoncitation> taxoncitations;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Taxoncitation> taxoncitationCollection;
+    @OneToMany(mappedBy = "modifiedByAgent") 
+    private Collection<Taxoncitation> taxoncitations1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID") 
-    private Collection<Taxoncitation> taxoncitationCollection1;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Dnasequencingruncitation> dnasequencingruncitations;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Dnasequencingruncitation> dnasequencingruncitationCollection;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Dnasequencingruncitation> dnasequencingruncitations1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Dnasequencingruncitation> dnasequencingruncitationCollection1;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Inforequest> inforequests;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Inforequest> inforequestCollection;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Inforequest> inforequests1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Inforequest> inforequestCollection1;
+    @OneToMany(mappedBy = "agent")
+    private Collection<Inforequest> inforequests2;
     
-    @OneToMany(mappedBy = "agentID")
-    private Collection<Inforequest> inforequestCollection2;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Lithostrat> lithostrats;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Lithostrat> lithostratCollection;
-    
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Lithostrat> lithostratCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Lithostrat> lithostrats1;
     
     @JoinColumn(name = "DivisionID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne 
-    private Division divisionID;
+    private Division division;
     
     @JoinColumn(name = "InstitutionTCID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne
-    private Institution institutionTCID;
+    private Institution instTechContact;
     
     @JoinColumn(name = "InstitutionCCID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne
-    private Institution institutionCCID;
+    private Institution instContentContact;
     
-    @OneToMany(mappedBy = "parentOrganizationID")
-    private Collection<Agent> agentCollection;
+    @OneToMany(mappedBy = "organization")
+    private Collection<Agent> orgMembers;
     
     @JoinColumn(name = "ParentOrganizationID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent parentOrganizationID;
+    private Agent organization;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Agent> agentCollection1;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Agent> agents1;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Agent> agentCollection2;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Agent> agents2;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "SpecifyUserID", referencedColumnName = "SpecifyUserID")
     @ManyToOne
-    private Specifyuser specifyUserID;
+    private Specifyuser specifyUser;
     
     @JoinColumn(name = "CollectionTCID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne
-    private se.nrm.specify.datamodel.Collection collectionTCID;
+    private se.nrm.specify.datamodel.Collection collTechContact;
     
     @JoinColumn(name = "CollectionCCID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne
-    private se.nrm.specify.datamodel.Collection collectionCCID;
+    private se.nrm.specify.datamodel.Collection collContentContact;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Borrow> borrowCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Borrow> borrows;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Borrow> borrowCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Borrow> borrows1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Spexportschemaitem> spexportschemaitemCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Spexportschemaitem> spexportschemaitems;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Spexportschemaitem> spexportschemaitemCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Spexportschemaitem> spexportschemaitems1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Attributedef> attributedefCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Attributedef> attributedefs;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Attributedef> attributedefCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Attributedef> attributedefs1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Exsiccata> exsiccataCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Exsiccata> exsiccatas;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Exsiccata> exsiccataCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Exsiccata> exsiccatas1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Taxontreedefitem> taxontreedefitemCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Taxontreedefitem> taxontreedefitems;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Taxontreedefitem> taxontreedefitemCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Taxontreedefitem> taxontreedefitems1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Taxonattachment> taxonattachmentCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Taxonattachment> taxonattachments;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Taxonattachment> taxonattachmentCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Taxonattachment> taxonattachments1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Loanreturnpreparation> loanreturnpreparationCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Loanreturnpreparation> loanreturnpreparations;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Loanreturnpreparation> loanreturnpreparationCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Loanreturnpreparation> loanreturnpreparations1;
     
-    @OneToMany(mappedBy = "receivedByID")
-    private Collection<Loanreturnpreparation> loanreturnpreparationCollection2;
+    @OneToMany(mappedBy = "receivedBy")
+    private Collection<Loanreturnpreparation> loanreturnpreparations2;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Spexportschemamapping> spexportschemamappingCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Spexportschemamapping> spexportschemamappings;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Spexportschemamapping> spexportschemamappingCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Spexportschemamapping> spexportschemamappings1;
     
-    @OneToMany(mappedBy = "createdByAgentID") 
-    private Collection<Fieldnotebookpageattachment> fieldnotebookpageattachmentCollection;
+    @OneToMany(mappedBy = "createdByAgent") 
+    private Collection<Fieldnotebookpageattachment> fieldnotebookpageattachments;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Fieldnotebookpageattachment> fieldnotebookpageattachmentCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Fieldnotebookpageattachment> fieldnotebookpageattachments1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Giftpreparation> giftpreparationCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Giftpreparation> giftpreparations;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Giftpreparation> giftpreparationCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Giftpreparation> giftpreparations1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Fieldnotebookattachment> fieldnotebookattachmentCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Fieldnotebookattachment> fieldnotebookattachments;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Fieldnotebookattachment> fieldnotebookattachmentCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Fieldnotebookattachment> fieldnotebookattachments1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Geographytreedefitem> geographytreedefitemCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Geographytreedefitem> geographytreedefitems;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Geographytreedefitem> geographytreedefitemCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Geographytreedefitem> geographytreedefitems1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Splocalecontainer> splocalecontainerCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Splocalecontainer> splocalecontainers;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Splocalecontainer> splocalecontainerCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Splocalecontainer> splocalecontainers1;
     
-    @OneToMany(mappedBy = "catalogerID")
-    private Collection<Collectionobject> collectionobjectCollection;
+    @OneToMany(mappedBy = "cataloger")
+    private Collection<Collectionobject> collectionobjects;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Collectionobject> collectionobjectCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Collectionobject> collectionobjects1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Collectionobject> collectionobjectCollection2;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Collectionobject> collectionobjects2;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Borrowagent> borrowagentCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Borrowagent> borrowagents;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Borrowagent> borrowagentCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Borrowagent> borrowagents1;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "agentID")
-    private Collection<Borrowagent> borrowagentCollection2;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "agent")
+    private Collection<Borrowagent> borrowagents2;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Conserveventattachment> conserveventattachmentCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Conserveventattachment> conserveventattachments;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Conserveventattachment> conserveventattachmentCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Conserveventattachment> conserveventattachments1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Collectionobjectcitation> collectionobjectcitationCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Collectionobjectcitation> collectionobjectcitations;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Collectionobjectcitation> collectionobjectcitationCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Collectionobjectcitation> collectionobjectcitations1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Deaccession> deaccessionCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Deaccession> deaccessions;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Deaccession> deaccessionCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Deaccession> deaccessions1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Journal> journalCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Journal> journals;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Journal> journalCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Journal> journals1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Fieldnotebookpage> fieldnotebookpageCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Fieldnotebookpage> fieldnotebookpages;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Fieldnotebookpage> fieldnotebookpageCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Fieldnotebookpage> fieldnotebookpages1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Author> authorCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Author> authors;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Author> authorCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Author> authors1;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "agentID")
-    private Collection<Author> authorCollection2;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "agent")
+    private Collection<Author> authors2;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Collector> collectorCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Collector> collectors1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Collector> collectorCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Collector> collectors2;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "agentID")
-    private Collection<Collector> collectorCollection2;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "agent")
+    private Collection<Collector> collectors;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Geography> geographyCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Geography> geographys;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Geography> geographyCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Geography> geographys1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Accessionattachment> accessionattachmentCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Accessionattachment> accessionattachments;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Accessionattachment> accessionattachmentCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Accessionattachment> accessionattachments1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Exsiccataitem> exsiccataitemCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Exsiccataitem> exsiccataitems;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Exsiccataitem> exsiccataitemCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Exsiccataitem> exsiccataitems1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Fieldnotebook> fieldnotebookCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Fieldnotebook> fieldnotebooks;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Fieldnotebook> fieldnotebookCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Fieldnotebook> fieldnotebooks1;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "agentID")
-    private Collection<Fieldnotebook> fieldnotebookCollection2;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ownerAgent")
+    private Collection<Fieldnotebook> fieldnotebooks2;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Discipline> disciplineCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Discipline> disciplines;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Discipline> disciplineCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Discipline> disciplines1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Institution> institutionCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Institution> institutions;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Institution> institutionCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Institution> institutions1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Conservdescriptionattachment> conservdescriptionattachmentCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Conservdescriptionattachment> conservdescriptionattachments;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Conservdescriptionattachment> conservdescriptionattachmentCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Conservdescriptionattachment> conservdescriptionattachments1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Geocoorddetail> geocoorddetailCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Geocoorddetail> geocoorddetails;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Geocoorddetail> geocoorddetailCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Geocoorddetail> geocoorddetails1;
     
-    @OneToMany(mappedBy = "agentID")
-    private Collection<Geocoorddetail> geocoorddetailCollection2;
+    @OneToMany(mappedBy = "geoRefDetBy")
+    private Collection<Geocoorddetail> geocoorddetails2;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Deaccessionpreparation> deaccessionpreparationCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Deaccessionpreparation> deaccessionpreparations;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Deaccessionpreparation> deaccessionpreparationCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Deaccessionpreparation> deaccessionpreparations1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Collectingeventattachment> collectingeventattachmentCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Collectingeventattachment> collectingeventattachments;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Collectingeventattachment> collectingeventattachmentCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Collectingeventattachment> collectingeventattachments1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Accessionauthorization> accessionauthorizationCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Accessionauthorization> accessionauthorizations;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Accessionauthorization> accessionauthorizationCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Accessionauthorization> accessionauthorizations1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Attachment> attachmentCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Attachment> attachments;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Attachment> attachmentCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Attachment> attachments1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Spappresourcedir> spappresourcedirCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Spappresourcedir> spappresourcedirs;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Spappresourcedir> spappresourcedirCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Spappresourcedir> spappresourcedirs1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Spquery> spqueryCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Spquery> spquerys;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Spquery> spqueryCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Spquery> spquerys1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Collectionobjectattribute> collectionobjectattributeCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Collectionobjectattribute> collectionobjectattributes;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Collectionobjectattribute> collectionobjectattributeCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Collectionobjectattribute> collectionobjectattributes1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Attachmenttag> attachmenttagCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Attachmenttag> attachmenttags;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Attachmenttag> attachmenttagCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Attachmenttag> attachmenttagsn1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Paleocontext> paleocontextCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Paleocontext> paleocontexts;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Paleocontext> paleocontextCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Paleocontext> paleocontexts1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Loanpreparation> loanpreparationCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Loanpreparation> loanpreparations;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Loanpreparation> loanpreparationCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Loanpreparation> loanpreparations1;
     
     
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "modifiedByAgentID")
-//    @XmlElement
-    private Collection<Address> addressCollection2;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "modifiedByAgent") 
+    private Collection<Address> addresses2;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "createdByAgentID")
-//    @XmlElement 
-    private Collection<Address> addressCollection1;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "createdByAgent") 
+    private Collection<Address> addresses1;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "agentID")  
-    private Collection<Address> addressCollection;  // change addressCollection2 to addressCollection to match global.views.xml
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "agent")  
+    private Collection<Address> addresses;   
      
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Locality> localityCollection1;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Locality> localities1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Locality> localityCollection;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Locality> localities;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Agentspecialty> agentspecialtyCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Agentspecialty> agentSpecialties2;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Agentspecialty> agentspecialtyCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Agentspecialty> agentspecialties1;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "agentID") 
-    private Collection<Agentspecialty> agentspecialtyCollection2;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "agent") 
+    private Collection<Agentspecialty> agentSpecialties;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Taxontreedef> taxontreedefCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Taxontreedef> taxontreedefs;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Taxontreedef> taxontreedefCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Taxontreedef> taxontreedefs1;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Localitycitation> localitycitationCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Localitycitation> localitycitations;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Localitycitation> localitycitationCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Localitycitation> localitycitations1;
     
-    @OneToMany(mappedBy = "runByAgentID")
-    private Collection<Dnasequencingrun> dnasequencingrunCollection;
+    @OneToMany(mappedBy = "runByAgent")
+    private Collection<Dnasequencingrun> dnasequencingruns;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Dnasequencingrun> dnasequencingrunCollection1;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Dnasequencingrun> dnasequencingruns1;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Dnasequencingrun> dnasequencingrunCollection2;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Dnasequencingrun> dnasequencingruns2;
     
-    @OneToMany(mappedBy = "preparedByAgentID")
-    private Collection<Dnasequencingrun> dnasequencingrunCollection3;
+    @OneToMany(mappedBy = "preparedByAgent")
+    private Collection<Dnasequencingrun> dnasequencingruns3;
     
-    @OneToMany(mappedBy = "createdByAgentID")
-    private Collection<Storage> storageCollection;
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Storage> storages;
     
-    @OneToMany(mappedBy = "modifiedByAgentID")
-    private Collection<Storage> storageCollection1;
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Storage> storages1;
     
 
     public Agent() {
     }
 
-    public Agent(Integer agentID) {
-        this.agentID = agentID;
+    public Agent(Integer agentId) {
+        this.agentId = agentId;
     }
 
-    public Agent(Integer agentID, Date timestampCreated, short agentType) {
+    public Agent(Integer agentId, Date timestampCreated, short agentType) {
         super(timestampCreated);
-        this.agentID = agentID; 
+        this.agentId = agentId; 
         this.agentType = agentType;
     }
 
-    public Integer getAgentID() {
-        return agentID;
+    public Integer getAgentId() {
+        return agentId;
     }
 
-    public void setAgentID(Integer agentID) {
-        this.agentID = agentID;
-    } 
+    public void setAgentId(Integer agentId) {
+        this.agentId = agentId;
+    }
+
+ 
     
     public String getAbbreviation() {
         return abbreviation;
@@ -1327,3028 +1326,3056 @@ public class Agent extends BaseEntity {
         this.url = url;
     }
 
+     
+
     @XmlTransient
-    public Collection<Localitynamealias> getLocalitynamealiasCollection() {
-        return localitynamealiasCollection;
+    public Collection<Agentgeography> getAgentGeographies() {
+        return agentGeographies;
     }
 
-    public void setLocalitynamealiasCollection(Collection<Localitynamealias> localitynamealiasCollection) {
-        this.localitynamealiasCollection = localitynamealiasCollection;
+    public void setAgentGeographies(Collection<Agentgeography> agentGeographies) {
+        this.agentGeographies = agentGeographies;
     }
 
+  
+ 
+
     @XmlTransient
-    public Collection<Localitynamealias> getLocalitynamealiasCollection1() {
-        return localitynamealiasCollection1;
+    public Collection<Agentattachment> getAgentAttachments() {
+        return agentAttachments;
     }
 
-    public void setLocalitynamealiasCollection1(Collection<Localitynamealias> localitynamealiasCollection1) {
-        this.localitynamealiasCollection1 = localitynamealiasCollection1;
+    public void setAgentAttachments(Collection<Agentattachment> agentAttachments) {
+        this.agentAttachments = agentAttachments;
     }
+
+  
 
     @XmlTransient
-    public Collection<Shipment> getShipmentCollection() {
-        return shipmentCollection;
+    public Collection<Agentvariant> getVariants() {
+        return variants;
     }
 
-    public void setShipmentCollection(Collection<Shipment> shipmentCollection) {
-        this.shipmentCollection = shipmentCollection;
+    public void setVariants(Collection<Agentvariant> variants) {
+        this.variants = variants;
     }
 
+   
+  
+
+   
+
     @XmlTransient
-    public Collection<Shipment> getShipmentCollection1() {
-        return shipmentCollection1;
+    public Collection<Groupperson> getGroups() {
+        return groups;
     }
 
-    public void setShipmentCollection1(Collection<Shipment> shipmentCollection1) {
-        this.shipmentCollection1 = shipmentCollection1;
+    public void setGroups(Collection<Groupperson> groups) {
+        this.groups = groups;
     }
-
-    @XmlTransient
-    public Collection<Shipment> getShipmentCollection2() {
-        return shipmentCollection2;
+  
+    public Division getDivision() {
+        return division;
     }
 
-    public void setShipmentCollection2(Collection<Shipment> shipmentCollection2) {
-        this.shipmentCollection2 = shipmentCollection2;
+    public void setDivision(Division division) {
+        this.division = division;
     }
 
-    @XmlTransient
-    public Collection<Shipment> getShipmentCollection3() {
-        return shipmentCollection3;
+    public Institution getInstContentContact() {
+        return instContentContact;
     }
 
-    public void setShipmentCollection3(Collection<Shipment> shipmentCollection3) {
-        this.shipmentCollection3 = shipmentCollection3;
+    public void setInstContentContact(Institution instContentContact) {
+        this.instContentContact = instContentContact;
     }
 
-    @XmlTransient
-    public Collection<Shipment> getShipmentCollection4() {
-        return shipmentCollection4;
+    public Institution getInstTechContact() {
+        return instTechContact;
     }
 
-    public void setShipmentCollection4(Collection<Shipment> shipmentCollection4) {
-        this.shipmentCollection4 = shipmentCollection4;
+    public void setInstTechContact(Institution instTechContact) {
+        this.instTechContact = instTechContact;
     }
 
-    @XmlTransient
-    public Collection<Loanagent> getLoanagentCollection() {
-        return loanagentCollection;
+    public Collection<Agent> getOrgMembers() {
+        return orgMembers;
     }
 
-    public void setLoanagentCollection(Collection<Loanagent> loanagentCollection) {
-        this.loanagentCollection = loanagentCollection;
+    public void setOrgMembers(Collection<Agent> orgMembers) {
+        this.orgMembers = orgMembers;
     }
+
+ 
 
+ 
+
     @XmlTransient
-    public Collection<Loanagent> getLoanagentCollection1() {
-        return loanagentCollection1;
+    public Agent getOrganization() {  
+        return organization;
     }
 
-    public void setLoanagentCollection1(Collection<Loanagent> loanagentCollection1) {
-        this.loanagentCollection1 = loanagentCollection1;
+    public void setOrganization(Agent organization) {
+        this.organization = organization;
     }
 
+ 
+ 
     @XmlTransient
-    public Collection<Loanagent> getLoanagentCollection2() {
-        return loanagentCollection2;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setLoanagentCollection2(Collection<Loanagent> loanagentCollection2) {
-        this.loanagentCollection2 = loanagentCollection2;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
     @XmlTransient
-    public Collection<Preptype> getPreptypeCollection() {
-        return preptypeCollection;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setPreptypeCollection(Collection<Preptype> preptypeCollection) {
-        this.preptypeCollection = preptypeCollection;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
 
-    @XmlTransient
-    public Collection<Preptype> getPreptypeCollection1() {
-        return preptypeCollection1;
+    public Specifyuser getSpecifyUser() {
+        return specifyUser;
     }
 
-    public void setPreptypeCollection1(Collection<Preptype> preptypeCollection1) {
-        this.preptypeCollection1 = preptypeCollection1;
+    public void setSpecifyUser(Specifyuser specifyUser) {
+        this.specifyUser = specifyUser;
     }
 
-    @XmlTransient
-    public Collection<Agentgeography> getAgentgeographyCollection() {
-        return agentgeographyCollection;
+ 
+
+ 
+
+    public se.nrm.specify.datamodel.Collection getCollContentContact() {
+        return collContentContact;
     }
 
-    public void setAgentgeographyCollection(Collection<Agentgeography> agentgeographyCollection) {
-        this.agentgeographyCollection = agentgeographyCollection;
+    public void setCollContentContact(se.nrm.specify.datamodel.Collection collContentContact) {
+        this.collContentContact = collContentContact;
     }
 
-    @XmlTransient
-    public Collection<Agentgeography> getAgentgeographyCollection1() {
-        return agentgeographyCollection1;
+    public se.nrm.specify.datamodel.Collection getCollTechContact() {
+        return collTechContact;
     }
 
-    public void setAgentgeographyCollection1(Collection<Agentgeography> agentgeographyCollection1) {
-        this.agentgeographyCollection1 = agentgeographyCollection1;
+    public void setCollTechContact(se.nrm.specify.datamodel.Collection collTechContact) {
+        this.collTechContact = collTechContact;
     }
 
+   
     @XmlTransient
-    public Collection<Agentgeography> getAgentgeographyCollection2() {
-        return agentgeographyCollection2;
+    public Collection<Collector> getCollectors() {
+        return collectors;
     }
 
-    public void setAgentgeographyCollection2(Collection<Agentgeography> agentgeographyCollection2) {
-        this.agentgeographyCollection2 = agentgeographyCollection2;
+    public void setCollectors(Collection<Collector> collectors) {
+        this.collectors = collectors;
     }
 
-    @XmlTransient
-    public Collection<Deaccessionagent> getDeaccessionagentCollection() {
-        return deaccessionagentCollection;
+    
+    public Collection<Address> getAddresses() {
+        return addresses;
     }
 
-    public void setDeaccessionagentCollection(Collection<Deaccessionagent> deaccessionagentCollection) {
-        this.deaccessionagentCollection = deaccessionagentCollection;
+    public void setAddresses(Collection<Address> addresses) {
+        this.addresses = addresses;
     }
 
     @XmlTransient
-    public Collection<Deaccessionagent> getDeaccessionagentCollection1() {
-        return deaccessionagentCollection1;
+    public Collection<Accessionagent> getAccessionagents() {
+        return accessionagents;
     }
 
-    public void setDeaccessionagentCollection1(Collection<Deaccessionagent> deaccessionagentCollection1) {
-        this.deaccessionagentCollection1 = deaccessionagentCollection1;
+    public void setAccessionagents(Collection<Accessionagent> accessionagents) {
+        this.accessionagents = accessionagents;
     }
 
     @XmlTransient
-    public Collection<Deaccessionagent> getDeaccessionagentCollection2() {
-        return deaccessionagentCollection2;
+    public Collection<Accessionagent> getAccessionagents1() {
+        return accessionagents1;
     }
 
-    public void setDeaccessionagentCollection2(Collection<Deaccessionagent> deaccessionagentCollection2) {
-        this.deaccessionagentCollection2 = deaccessionagentCollection2;
+    public void setAccessionagents1(Collection<Accessionagent> accessionagents1) {
+        this.accessionagents1 = accessionagents1;
     }
 
     @XmlTransient
-    public Collection<Loanattachment> getLoanattachmentCollection() {
-        return loanattachmentCollection;
+    public Collection<Accessionagent> getAccessionagents2() {
+        return accessionagents2;
     }
 
-    public void setLoanattachmentCollection(Collection<Loanattachment> loanattachmentCollection) {
-        this.loanattachmentCollection = loanattachmentCollection;
+    public void setAccessionagents2(Collection<Accessionagent> accessionagents2) {
+        this.accessionagents2 = accessionagents2;
     }
 
     @XmlTransient
-    public Collection<Loanattachment> getLoanattachmentCollection1() {
-        return loanattachmentCollection1;
+    public Collection<Accessionattachment> getAccessionattachments() {
+        return accessionattachments;
     }
 
-    public void setLoanattachmentCollection1(Collection<Loanattachment> loanattachmentCollection1) {
-        this.loanattachmentCollection1 = loanattachmentCollection1;
+    public void setAccessionattachments(Collection<Accessionattachment> accessionattachments) {
+        this.accessionattachments = accessionattachments;
     }
 
     @XmlTransient
-    public Collection<Treatmentevent> getTreatmenteventCollection() {
-        return treatmenteventCollection;
+    public Collection<Accessionattachment> getAccessionattachments1() {
+        return accessionattachments1;
     }
 
-    public void setTreatmenteventCollection(Collection<Treatmentevent> treatmenteventCollection) {
-        this.treatmenteventCollection = treatmenteventCollection;
+    public void setAccessionattachments1(Collection<Accessionattachment> accessionattachments1) {
+        this.accessionattachments1 = accessionattachments1;
     }
 
     @XmlTransient
-    public Collection<Treatmentevent> getTreatmenteventCollection1() {
-        return treatmenteventCollection1;
+    public Collection<Accessionauthorization> getAccessionauthorizations() {
+        return accessionauthorizations;
     }
 
-    public void setTreatmenteventCollection1(Collection<Treatmentevent> treatmenteventCollection1) {
-        this.treatmenteventCollection1 = treatmenteventCollection1;
+    public void setAccessionauthorizations(Collection<Accessionauthorization> accessionauthorizations) {
+        this.accessionauthorizations = accessionauthorizations;
     }
 
     @XmlTransient
-    public Collection<Workbench> getWorkbenchCollection() {
-        return workbenchCollection;
+    public Collection<Accessionauthorization> getAccessionauthorizations1() {
+        return accessionauthorizations1;
     }
 
-    public void setWorkbenchCollection(Collection<Workbench> workbenchCollection) {
-        this.workbenchCollection = workbenchCollection;
+    public void setAccessionauthorizations1(Collection<Accessionauthorization> accessionauthorizations1) {
+        this.accessionauthorizations1 = accessionauthorizations1;
     }
 
     @XmlTransient
-    public Collection<Workbench> getWorkbenchCollection1() {
-        return workbenchCollection1;
+    public Collection<Accession> getAccessions() {
+        return accessions;
     }
 
-    public void setWorkbenchCollection1(Collection<Workbench> workbenchCollection1) {
-        this.workbenchCollection1 = workbenchCollection1;
+    public void setAccessions(Collection<Accession> accessions) {
+        this.accessions = accessions;
     }
 
     @XmlTransient
-    public Collection<Attachmentmetadata> getAttachmentmetadataCollection() {
-        return attachmentmetadataCollection;
+    public Collection<Accession> getAccessions1() {
+        return accessions1;
     }
 
-    public void setAttachmentmetadataCollection(Collection<Attachmentmetadata> attachmentmetadataCollection) {
-        this.attachmentmetadataCollection = attachmentmetadataCollection;
+    public void setAccessions1(Collection<Accession> accessions1) {
+        this.accessions1 = accessions1;
     }
 
-    @XmlTransient
-    public Collection<Attachmentmetadata> getAttachmentmetadataCollection1() {
-        return attachmentmetadataCollection1;
+    
+    public Collection<Address> getAddresses1() {
+        return addresses1;
     }
 
-    public void setAttachmentmetadataCollection1(Collection<Attachmentmetadata> attachmentmetadataCollection1) {
-        this.attachmentmetadataCollection1 = attachmentmetadataCollection1;
+    public void setAddresses1(Collection<Address> addresses1) {
+        this.addresses1 = addresses1;
     }
 
-    @XmlTransient
-    public Collection<Taxon> getTaxonCollection() {
-        return taxonCollection;
+    public Collection<Address> getAddresses2() {
+        return addresses2;
     }
 
-    public void setTaxonCollection(Collection<Taxon> taxonCollection) {
-        this.taxonCollection = taxonCollection;
+    public void setAddresses2(Collection<Address> addresses2) {
+        this.addresses2 = addresses2;
     }
 
     @XmlTransient
-    public Collection<Taxon> getTaxonCollection1() {
-        return taxonCollection1;
+    public Collection<Addressofrecord> getAddressofrecords() {
+        return addressofrecords;
     }
 
-    public void setTaxonCollection1(Collection<Taxon> taxonCollection1) {
-        this.taxonCollection1 = taxonCollection1;
+    public void setAddressofrecords(Collection<Addressofrecord> addressofrecords) {
+        this.addressofrecords = addressofrecords;
     }
 
     @XmlTransient
-    public Collection<Collectingeventattr> getCollectingeventattrCollection() {
-        return collectingeventattrCollection;
+    public Collection<Addressofrecord> getAddressofrecords1() {
+        return addressofrecords1;
     }
 
-    public void setCollectingeventattrCollection(Collection<Collectingeventattr> collectingeventattrCollection) {
-        this.collectingeventattrCollection = collectingeventattrCollection;
+    public void setAddressofrecords1(Collection<Addressofrecord> addressofrecords1) {
+        this.addressofrecords1 = addressofrecords1;
     }
 
     @XmlTransient
-    public Collection<Collectingeventattr> getCollectingeventattrCollection1() {
-        return collectingeventattrCollection1;
+    public Collection<Addressofrecord> getAddressofrecords2() {
+        return addressofrecords2;
     }
 
-    public void setCollectingeventattrCollection1(Collection<Collectingeventattr> collectingeventattrCollection1) {
-        this.collectingeventattrCollection1 = collectingeventattrCollection1;
+    public void setAddressofrecords2(Collection<Addressofrecord> addressofrecords2) {
+        this.addressofrecords2 = addressofrecords2;
     }
 
     @XmlTransient
-    public Collection<Splocaleitemstr> getSplocaleitemstrCollection() {
-        return splocaleitemstrCollection;
+    public Collection<Agentattachment> getAgentAttachments1() {
+        return agentAttachments1;
     }
 
-    public void setSplocaleitemstrCollection(Collection<Splocaleitemstr> splocaleitemstrCollection) {
-        this.splocaleitemstrCollection = splocaleitemstrCollection;
+    public void setAgentAttachments1(Collection<Agentattachment> agentAttachments1) {
+        this.agentAttachments1 = agentAttachments1;
     }
 
     @XmlTransient
-    public Collection<Splocaleitemstr> getSplocaleitemstrCollection1() {
-        return splocaleitemstrCollection1;
+    public Collection<Agentattachment> getAgentAttachments2() {
+        return agentAttachments2;
     }
 
-    public void setSplocaleitemstrCollection1(Collection<Splocaleitemstr> splocaleitemstrCollection1) {
-        this.splocaleitemstrCollection1 = splocaleitemstrCollection1;
+    public void setAgentAttachments2(Collection<Agentattachment> agentAttachments2) {
+        this.agentAttachments2 = agentAttachments2;
     }
 
     @XmlTransient
-    public Collection<Preparation> getPreparationCollection() {
-        return preparationCollection;
+    public Collection<Agentgeography> getAgentGeographies1() {
+        return agentGeographies1;
     }
 
-    public void setPreparationCollection(Collection<Preparation> preparationCollection) {
-        this.preparationCollection = preparationCollection;
+    public void setAgentGeographies1(Collection<Agentgeography> agentGeographies1) {
+        this.agentGeographies1 = agentGeographies1;
     }
 
     @XmlTransient
-    public Collection<Preparation> getPreparationCollection1() {
-        return preparationCollection1;
+    public Collection<Agentgeography> getAgentGeographies2() {
+        return agentGeographies2;
     }
 
-    public void setPreparationCollection1(Collection<Preparation> preparationCollection1) {
-        this.preparationCollection1 = preparationCollection1;
+    public void setAgentGeographies2(Collection<Agentgeography> agentGeographies2) {
+        this.agentGeographies2 = agentGeographies2;
     }
 
     @XmlTransient
-    public Collection<Preparation> getPreparationCollection2() {
-        return preparationCollection2;
+    public Collection<Agentspecialty> getAgentSpecialties() {
+        return agentSpecialties;
     }
 
-    public void setPreparationCollection2(Collection<Preparation> preparationCollection2) {
-        this.preparationCollection2 = preparationCollection2;
+    public void setAgentSpecialties(Collection<Agentspecialty> agentSpecialties) {
+        this.agentSpecialties = agentSpecialties;
     }
 
     @XmlTransient
-    public Collection<Workbenchtemplate> getWorkbenchtemplateCollection() {
-        return workbenchtemplateCollection;
+    public Collection<Agentspecialty> getAgentSpecialties2() {
+        return agentSpecialties2;
     }
 
-    public void setWorkbenchtemplateCollection(Collection<Workbenchtemplate> workbenchtemplateCollection) {
-        this.workbenchtemplateCollection = workbenchtemplateCollection;
+    public void setAgentSpecialties2(Collection<Agentspecialty> agentSpecialties2) {
+        this.agentSpecialties2 = agentSpecialties2;
     }
 
     @XmlTransient
-    public Collection<Workbenchtemplate> getWorkbenchtemplateCollection1() {
-        return workbenchtemplateCollection1;
+    public Collection<Agent> getAgents1() {
+        return agents1;
     }
 
-    public void setWorkbenchtemplateCollection1(Collection<Workbenchtemplate> workbenchtemplateCollection1) {
-        this.workbenchtemplateCollection1 = workbenchtemplateCollection1;
+    public void setAgents1(Collection<Agent> agents1) {
+        this.agents1 = agents1;
     }
 
     @XmlTransient
-    public Collection<Sptasksemaphore> getSptasksemaphoreCollection() {
-        return sptasksemaphoreCollection;
+    public Collection<Agent> getAgents2() {
+        return agents2;
     }
 
-    public void setSptasksemaphoreCollection(Collection<Sptasksemaphore> sptasksemaphoreCollection) {
-        this.sptasksemaphoreCollection = sptasksemaphoreCollection;
+    public void setAgents2(Collection<Agent> agents2) {
+        this.agents2 = agents2;
     }
 
     @XmlTransient
-    public Collection<Sptasksemaphore> getSptasksemaphoreCollection1() {
-        return sptasksemaphoreCollection1;
+    public Collection<Agentspecialty> getAgentspecialties1() {
+        return agentspecialties1;
     }
 
-    public void setSptasksemaphoreCollection1(Collection<Sptasksemaphore> sptasksemaphoreCollection1) {
-        this.sptasksemaphoreCollection1 = sptasksemaphoreCollection1;
+    public void setAgentspecialties1(Collection<Agentspecialty> agentspecialties1) {
+        this.agentspecialties1 = agentspecialties1;
     }
 
     @XmlTransient
-    public Collection<Picklistitem> getPicklistitemCollection() {
-        return picklistitemCollection;
+    public Collection<Agentvariant> getAgentvariants() {
+        return agentvariants;
     }
 
-    public void setPicklistitemCollection(Collection<Picklistitem> picklistitemCollection) {
-        this.picklistitemCollection = picklistitemCollection;
+    public void setAgentvariants(Collection<Agentvariant> agentvariants) {
+        this.agentvariants = agentvariants;
     }
 
     @XmlTransient
-    public Collection<Picklistitem> getPicklistitemCollection1() {
-        return picklistitemCollection1;
+    public Collection<Agentvariant> getAgentvariants1() {
+        return agentvariants1;
     }
 
-    public void setPicklistitemCollection1(Collection<Picklistitem> picklistitemCollection1) {
-        this.picklistitemCollection1 = picklistitemCollection1;
+    public void setAgentvariants1(Collection<Agentvariant> agentvariants1) {
+        this.agentvariants1 = agentvariants1;
     }
 
     @XmlTransient
-    public Collection<Loan> getLoanCollection() {
-        return loanCollection;
+    public Collection<Appraisal> getAppraisals() {
+        return appraisals;
     }
 
-    public void setLoanCollection(Collection<Loan> loanCollection) {
-        this.loanCollection = loanCollection;
+    public void setAppraisals(Collection<Appraisal> appraisals) {
+        this.appraisals = appraisals;
     }
 
     @XmlTransient
-    public Collection<Loan> getLoanCollection1() {
-        return loanCollection1;
+    public Collection<Appraisal> getAppraisals1() {
+        return appraisals1;
     }
 
-    public void setLoanCollection1(Collection<Loan> loanCollection1) {
-        this.loanCollection1 = loanCollection1;
+    public void setAppraisals1(Collection<Appraisal> appraisals1) {
+        this.appraisals1 = appraisals1;
     }
 
     @XmlTransient
-    public Collection<Geologictimeperiodtreedefitem> getGeologictimeperiodtreedefitemCollection() {
-        return geologictimeperiodtreedefitemCollection;
+    public Collection<Appraisal> getAppraisals2() {
+        return appraisals2;
     }
 
-    public void setGeologictimeperiodtreedefitemCollection(Collection<Geologictimeperiodtreedefitem> geologictimeperiodtreedefitemCollection) {
-        this.geologictimeperiodtreedefitemCollection = geologictimeperiodtreedefitemCollection;
+    public void setAppraisals2(Collection<Appraisal> appraisals2) {
+        this.appraisals2 = appraisals2;
     }
 
     @XmlTransient
-    public Collection<Geologictimeperiodtreedefitem> getGeologictimeperiodtreedefitemCollection1() {
-        return geologictimeperiodtreedefitemCollection1;
+    public Collection<Attachmentmetadata> getAttachmentmetadata() {
+        return attachmentmetadata;
     }
 
-    public void setGeologictimeperiodtreedefitemCollection1(Collection<Geologictimeperiodtreedefitem> geologictimeperiodtreedefitemCollection1) {
-        this.geologictimeperiodtreedefitemCollection1 = geologictimeperiodtreedefitemCollection1;
+    public void setAttachmentmetadata(Collection<Attachmentmetadata> attachmentmetadata) {
+        this.attachmentmetadata = attachmentmetadata;
     }
 
     @XmlTransient
-    public Collection<Collectingtrip> getCollectingtripCollection() {
-        return collectingtripCollection;
+    public Collection<Attachmentmetadata> getAttachmentmetadata1() {
+        return attachmentmetadata1;
     }
 
-    public void setCollectingtripCollection(Collection<Collectingtrip> collectingtripCollection) {
-        this.collectingtripCollection = collectingtripCollection;
+    public void setAttachmentmetadata1(Collection<Attachmentmetadata> attachmentmetadata1) {
+        this.attachmentmetadata1 = attachmentmetadata1;
     }
 
     @XmlTransient
-    public Collection<Collectingtrip> getCollectingtripCollection1() {
-        return collectingtripCollection1;
+    public Collection<Attachment> getAttachments() {
+        return attachments;
     }
 
-    public void setCollectingtripCollection1(Collection<Collectingtrip> collectingtripCollection1) {
-        this.collectingtripCollection1 = collectingtripCollection1;
+    public void setAttachments(Collection<Attachment> attachments) {
+        this.attachments = attachments;
     }
 
     @XmlTransient
-    public Collection<Project> getProjectCollection() {
-        return projectCollection;
+    public Collection<Attachment> getAttachments1() {
+        return attachments1;
     }
 
-    public void setProjectCollection(Collection<Project> projectCollection) {
-        this.projectCollection = projectCollection;
+    public void setAttachments1(Collection<Attachment> attachments1) {
+        this.attachments1 = attachments1;
     }
 
     @XmlTransient
-    public Collection<Project> getProjectCollection1() {
-        return projectCollection1;
+    public Collection<Attachmenttag> getAttachmenttags() {
+        return attachmenttags;
     }
 
-    public void setProjectCollection1(Collection<Project> projectCollection1) {
-        this.projectCollection1 = projectCollection1;
+    public void setAttachmenttags(Collection<Attachmenttag> attachmenttags) {
+        this.attachmenttags = attachmenttags;
     }
 
     @XmlTransient
-    public Collection<Project> getProjectCollection2() {
-        return projectCollection2;
+    public Collection<Attachmenttag> getAttachmenttagsn1() {
+        return attachmenttagsn1;
     }
 
-    public void setProjectCollection2(Collection<Project> projectCollection2) {
-        this.projectCollection2 = projectCollection2;
+    public void setAttachmenttagsn1(Collection<Attachmenttag> attachmenttagsn1) {
+        this.attachmenttagsn1 = attachmenttagsn1;
     }
 
     @XmlTransient
-    public Collection<Agentattachment> getAgentattachmentCollection() {
-        return agentattachmentCollection;
+    public Collection<Attributedef> getAttributedefs() {
+        return attributedefs;
     }
 
-    public void setAgentattachmentCollection(Collection<Agentattachment> agentattachmentCollection) {
-        this.agentattachmentCollection = agentattachmentCollection;
+    public void setAttributedefs(Collection<Attributedef> attributedefs) {
+        this.attributedefs = attributedefs;
     }
 
     @XmlTransient
-    public Collection<Agentattachment> getAgentattachmentCollection1() {
-        return agentattachmentCollection1;
+    public Collection<Attributedef> getAttributedefs1() {
+        return attributedefs1;
     }
 
-    public void setAgentattachmentCollection1(Collection<Agentattachment> agentattachmentCollection1) {
-        this.agentattachmentCollection1 = agentattachmentCollection1;
+    public void setAttributedefs1(Collection<Attributedef> attributedefs1) {
+        this.attributedefs1 = attributedefs1;
     }
 
     @XmlTransient
-    public Collection<Agentattachment> getAgentattachmentCollection2() {
-        return agentattachmentCollection2;
+    public Collection<Author> getAuthors() {
+        return authors;
     }
 
-    public void setAgentattachmentCollection2(Collection<Agentattachment> agentattachmentCollection2) {
-        this.agentattachmentCollection2 = agentattachmentCollection2;
+    public void setAuthors(Collection<Author> authors) {
+        this.authors = authors;
     }
 
     @XmlTransient
-    public Collection<Preparationattribute> getPreparationattributeCollection() {
-        return preparationattributeCollection;
+    public Collection<Author> getAuthors1() {
+        return authors1;
     }
 
-    public void setPreparationattributeCollection(Collection<Preparationattribute> preparationattributeCollection) {
-        this.preparationattributeCollection = preparationattributeCollection;
+    public void setAuthors1(Collection<Author> authors1) {
+        this.authors1 = authors1;
     }
 
     @XmlTransient
-    public Collection<Preparationattribute> getPreparationattributeCollection1() {
-        return preparationattributeCollection1;
+    public Collection<Author> getAuthors2() {
+        return authors2;
     }
 
-    public void setPreparationattributeCollection1(Collection<Preparationattribute> preparationattributeCollection1) {
-        this.preparationattributeCollection1 = preparationattributeCollection1;
+    public void setAuthors2(Collection<Author> authors2) {
+        this.authors2 = authors2;
     }
 
     @XmlTransient
-    public Collection<Container> getContainerCollection() {
-        return containerCollection;
+    public Collection<Autonumberingscheme> getAutonumberingschemes() {
+        return autonumberingschemes;
     }
 
-    public void setContainerCollection(Collection<Container> containerCollection) {
-        this.containerCollection = containerCollection;
+    public void setAutonumberingschemes(Collection<Autonumberingscheme> autonumberingschemes) {
+        this.autonumberingschemes = autonumberingschemes;
     }
 
     @XmlTransient
-    public Collection<Container> getContainerCollection1() {
-        return containerCollection1;
+    public Collection<Autonumberingscheme> getAutonumberingschemes1() {
+        return autonumberingschemes1;
     }
 
-    public void setContainerCollection1(Collection<Container> containerCollection1) {
-        this.containerCollection1 = containerCollection1;
+    public void setAutonumberingschemes1(Collection<Autonumberingscheme> autonumberingschemes1) {
+        this.autonumberingschemes1 = autonumberingschemes1;
     }
 
     @XmlTransient
-    public Collection<Conservevent> getConserveventCollection() {
-        return conserveventCollection;
+    public Collection<Borrowagent> getBorrowagents() {
+        return borrowagents;
     }
 
-    public void setConserveventCollection(Collection<Conservevent> conserveventCollection) {
-        this.conserveventCollection = conserveventCollection;
+    public void setBorrowagents(Collection<Borrowagent> borrowagents) {
+        this.borrowagents = borrowagents;
     }
 
     @XmlTransient
-    public Collection<Conservevent> getConserveventCollection1() {
-        return conserveventCollection1;
+    public Collection<Borrowagent> getBorrowagents1() {
+        return borrowagents1;
     }
 
-    public void setConserveventCollection1(Collection<Conservevent> conserveventCollection1) {
-        this.conserveventCollection1 = conserveventCollection1;
+    public void setBorrowagents1(Collection<Borrowagent> borrowagents1) {
+        this.borrowagents1 = borrowagents1;
     }
 
     @XmlTransient
-    public Collection<Conservevent> getConserveventCollection2() {
-        return conserveventCollection2;
+    public Collection<Borrowagent> getBorrowagents2() {
+        return borrowagents2;
     }
 
-    public void setConserveventCollection2(Collection<Conservevent> conserveventCollection2) {
-        this.conserveventCollection2 = conserveventCollection2;
+    public void setBorrowagents2(Collection<Borrowagent> borrowagents2) {
+        this.borrowagents2 = borrowagents2;
     }
 
     @XmlTransient
-    public Collection<Conservevent> getConserveventCollection3() {
-        return conserveventCollection3;
+    public Collection<Borrowmaterial> getBorrowmaterials() {
+        return borrowmaterials;
     }
 
-    public void setConserveventCollection3(Collection<Conservevent> conserveventCollection3) {
-        this.conserveventCollection3 = conserveventCollection3;
+    public void setBorrowmaterials(Collection<Borrowmaterial> borrowmaterials) {
+        this.borrowmaterials = borrowmaterials;
     }
 
     @XmlTransient
-    public Collection<Conservevent> getConserveventCollection4() {
-        return conserveventCollection4;
+    public Collection<Borrowmaterial> getBorrowmaterials1() {
+        return borrowmaterials1;
     }
 
-    public void setConserveventCollection4(Collection<Conservevent> conserveventCollection4) {
-        this.conserveventCollection4 = conserveventCollection4;
+    public void setBorrowmaterials1(Collection<Borrowmaterial> borrowmaterials1) {
+        this.borrowmaterials1 = borrowmaterials1;
     }
 
     @XmlTransient
-    public Collection<Lithostrattreedefitem> getLithostrattreedefitemCollection() {
-        return lithostrattreedefitemCollection;
+    public Collection<Borrowreturnmaterial> getBorrowreturnmaterials() {
+        return borrowreturnmaterials;
     }
 
-    public void setLithostrattreedefitemCollection(Collection<Lithostrattreedefitem> lithostrattreedefitemCollection) {
-        this.lithostrattreedefitemCollection = lithostrattreedefitemCollection;
+    public void setBorrowreturnmaterials(Collection<Borrowreturnmaterial> borrowreturnmaterials) {
+        this.borrowreturnmaterials = borrowreturnmaterials;
     }
 
     @XmlTransient
-    public Collection<Lithostrattreedefitem> getLithostrattreedefitemCollection1() {
-        return lithostrattreedefitemCollection1;
+    public Collection<Borrowreturnmaterial> getBorrowreturnmaterials1() {
+        return borrowreturnmaterials1;
     }
 
-    public void setLithostrattreedefitemCollection1(Collection<Lithostrattreedefitem> lithostrattreedefitemCollection1) {
-        this.lithostrattreedefitemCollection1 = lithostrattreedefitemCollection1;
+    public void setBorrowreturnmaterials1(Collection<Borrowreturnmaterial> borrowreturnmaterials1) {
+        this.borrowreturnmaterials1 = borrowreturnmaterials1;
     }
 
     @XmlTransient
-    public Collection<Lithostrattreedef> getLithostrattreedefCollection() {
-        return lithostrattreedefCollection;
+    public Collection<Borrowreturnmaterial> getBorrowreturnmaterials2() {
+        return borrowreturnmaterials2;
     }
 
-    public void setLithostrattreedefCollection(Collection<Lithostrattreedef> lithostrattreedefCollection) {
-        this.lithostrattreedefCollection = lithostrattreedefCollection;
+    public void setBorrowreturnmaterials2(Collection<Borrowreturnmaterial> borrowreturnmaterials2) {
+        this.borrowreturnmaterials2 = borrowreturnmaterials2;
     }
 
     @XmlTransient
-    public Collection<Lithostrattreedef> getLithostrattreedefCollection1() {
-        return lithostrattreedefCollection1;
+    public Collection<Borrow> getBorrows() {
+        return borrows;
     }
 
-    public void setLithostrattreedefCollection1(Collection<Lithostrattreedef> lithostrattreedefCollection1) {
-        this.lithostrattreedefCollection1 = lithostrattreedefCollection1;
+    public void setBorrows(Collection<Borrow> borrows) {
+        this.borrows = borrows;
     }
 
     @XmlTransient
-    public Collection<Fieldnotebookpagesetattachment> getFieldnotebookpagesetattachmentCollection() {
-        return fieldnotebookpagesetattachmentCollection;
+    public Collection<Borrow> getBorrows1() {
+        return borrows1;
     }
 
-    public void setFieldnotebookpagesetattachmentCollection(Collection<Fieldnotebookpagesetattachment> fieldnotebookpagesetattachmentCollection) {
-        this.fieldnotebookpagesetattachmentCollection = fieldnotebookpagesetattachmentCollection;
+    public void setBorrows1(Collection<Borrow> borrows1) {
+        this.borrows1 = borrows1;
     }
 
     @XmlTransient
-    public Collection<Fieldnotebookpagesetattachment> getFieldnotebookpagesetattachmentCollection1() {
-        return fieldnotebookpagesetattachmentCollection1;
+    public Collection<Collectingeventattachment> getCollectingeventattachments() {
+        return collectingeventattachments;
     }
 
-    public void setFieldnotebookpagesetattachmentCollection1(Collection<Fieldnotebookpagesetattachment> fieldnotebookpagesetattachmentCollection1) {
-        this.fieldnotebookpagesetattachmentCollection1 = fieldnotebookpagesetattachmentCollection1;
+    public void setCollectingeventattachments(Collection<Collectingeventattachment> collectingeventattachments) {
+        this.collectingeventattachments = collectingeventattachments;
     }
 
     @XmlTransient
-    public Collection<Repositoryagreementattachment> getRepositoryagreementattachmentCollection() {
-        return repositoryagreementattachmentCollection;
+    public Collection<Collectingeventattachment> getCollectingeventattachments1() {
+        return collectingeventattachments1;
     }
 
-    public void setRepositoryagreementattachmentCollection(Collection<Repositoryagreementattachment> repositoryagreementattachmentCollection) {
-        this.repositoryagreementattachmentCollection = repositoryagreementattachmentCollection;
+    public void setCollectingeventattachments1(Collection<Collectingeventattachment> collectingeventattachments1) {
+        this.collectingeventattachments1 = collectingeventattachments1;
     }
 
     @XmlTransient
-    public Collection<Repositoryagreementattachment> getRepositoryagreementattachmentCollection1() {
-        return repositoryagreementattachmentCollection1;
+    public Collection<Collectingeventattribute> getCollectingeventattributes() {
+        return collectingeventattributes;
     }
 
-    public void setRepositoryagreementattachmentCollection1(Collection<Repositoryagreementattachment> repositoryagreementattachmentCollection1) {
-        this.repositoryagreementattachmentCollection1 = repositoryagreementattachmentCollection1;
+    public void setCollectingeventattributes(Collection<Collectingeventattribute> collectingeventattributes) {
+        this.collectingeventattributes = collectingeventattributes;
     }
 
     @XmlTransient
-    public Collection<Permitattachment> getPermitattachmentCollection() {
-        return permitattachmentCollection;
+    public Collection<Collectingeventattribute> getCollectingeventattributes1() {
+        return collectingeventattributes1;
     }
 
-    public void setPermitattachmentCollection(Collection<Permitattachment> permitattachmentCollection) {
-        this.permitattachmentCollection = permitattachmentCollection;
+    public void setCollectingeventattributes1(Collection<Collectingeventattribute> collectingeventattributes1) {
+        this.collectingeventattributes1 = collectingeventattributes1;
     }
 
     @XmlTransient
-    public Collection<Permitattachment> getPermitattachmentCollection1() {
-        return permitattachmentCollection1;
+    public Collection<Collectingeventattr> getCollectingeventattrs() {
+        return collectingeventattrs;
     }
 
-    public void setPermitattachmentCollection1(Collection<Permitattachment> permitattachmentCollection1) {
-        this.permitattachmentCollection1 = permitattachmentCollection1;
+    public void setCollectingeventattrs(Collection<Collectingeventattr> collectingeventattrs) {
+        this.collectingeventattrs = collectingeventattrs;
     }
 
     @XmlTransient
-    public Collection<Dnasequenceattachment> getDnasequenceattachmentCollection() {
-        return dnasequenceattachmentCollection;
+    public Collection<Collectingeventattr> getCollectingeventattrs1() {
+        return collectingeventattrs1;
     }
 
-    public void setDnasequenceattachmentCollection(Collection<Dnasequenceattachment> dnasequenceattachmentCollection) {
-        this.dnasequenceattachmentCollection = dnasequenceattachmentCollection;
+    public void setCollectingeventattrs1(Collection<Collectingeventattr> collectingeventattrs1) {
+        this.collectingeventattrs1 = collectingeventattrs1;
     }
 
     @XmlTransient
-    public Collection<Dnasequenceattachment> getDnasequenceattachmentCollection1() {
-        return dnasequenceattachmentCollection1;
+    public Collection<Collectingevent> getCollectingevents() {
+        return collectingevents;
     }
 
-    public void setDnasequenceattachmentCollection1(Collection<Dnasequenceattachment> dnasequenceattachmentCollection1) {
-        this.dnasequenceattachmentCollection1 = dnasequenceattachmentCollection1;
+    public void setCollectingevents(Collection<Collectingevent> collectingevents) {
+        this.collectingevents = collectingevents;
     }
 
     @XmlTransient
-    public Collection<Appraisal> getAppraisalCollection() {
-        return appraisalCollection;
+    public Collection<Collectingevent> getCollectingevents1() {
+        return collectingevents1;
     }
 
-    public void setAppraisalCollection(Collection<Appraisal> appraisalCollection) {
-        this.appraisalCollection = appraisalCollection;
+    public void setCollectingevents1(Collection<Collectingevent> collectingevents1) {
+        this.collectingevents1 = collectingevents1;
     }
 
     @XmlTransient
-    public Collection<Appraisal> getAppraisalCollection1() {
-        return appraisalCollection1;
+    public Collection<Collectingtrip> getCollectingtrips() {
+        return collectingtrips;
     }
 
-    public void setAppraisalCollection1(Collection<Appraisal> appraisalCollection1) {
-        this.appraisalCollection1 = appraisalCollection1;
+    public void setCollectingtrips(Collection<Collectingtrip> collectingtrips) {
+        this.collectingtrips = collectingtrips;
     }
 
     @XmlTransient
-    public Collection<Appraisal> getAppraisalCollection2() {
-        return appraisalCollection2;
+    public Collection<Collectingtrip> getCollectingtrips1() {
+        return collectingtrips1;
     }
 
-    public void setAppraisalCollection2(Collection<Appraisal> appraisalCollection2) {
-        this.appraisalCollection2 = appraisalCollection2;
+    public void setCollectingtrips1(Collection<Collectingtrip> collectingtrips1) {
+        this.collectingtrips1 = collectingtrips1;
     }
 
     @XmlTransient
-    public Collection<Picklist> getPicklistCollection() {
-        return picklistCollection;
+    public Collection<Collectionobjectattachment> getCollectionobjectattachments() {
+        return collectionobjectattachments;
     }
 
-    public void setPicklistCollection(Collection<Picklist> picklistCollection) {
-        this.picklistCollection = picklistCollection;
+    public void setCollectionobjectattachments(Collection<Collectionobjectattachment> collectionobjectattachments) {
+        this.collectionobjectattachments = collectionobjectattachments;
     }
 
     @XmlTransient
-    public Collection<Picklist> getPicklistCollection1() {
-        return picklistCollection1;
+    public Collection<Collectionobjectattachment> getCollectionobjectattachments1() {
+        return collectionobjectattachments1;
     }
 
-    public void setPicklistCollection1(Collection<Picklist> picklistCollection1) {
-        this.picklistCollection1 = picklistCollection1;
+    public void setCollectionobjectattachments1(Collection<Collectionobjectattachment> collectionobjectattachments1) {
+        this.collectionobjectattachments1 = collectionobjectattachments1;
     }
 
     @XmlTransient
-    public Collection<Spappresourcedata> getSpappresourcedataCollection() {
-        return spappresourcedataCollection;
+    public Collection<Collectionobjectattribute> getCollectionobjectattributes() {
+        return collectionobjectattributes;
     }
 
-    public void setSpappresourcedataCollection(Collection<Spappresourcedata> spappresourcedataCollection) {
-        this.spappresourcedataCollection = spappresourcedataCollection;
+    public void setCollectionobjectattributes(Collection<Collectionobjectattribute> collectionobjectattributes) {
+        this.collectionobjectattributes = collectionobjectattributes;
     }
 
     @XmlTransient
-    public Collection<Spappresourcedata> getSpappresourcedataCollection1() {
-        return spappresourcedataCollection1;
+    public Collection<Collectionobjectattribute> getCollectionobjectattributes1() {
+        return collectionobjectattributes1;
     }
 
-    public void setSpappresourcedataCollection1(Collection<Spappresourcedata> spappresourcedataCollection1) {
-        this.spappresourcedataCollection1 = spappresourcedataCollection1;
+    public void setCollectionobjectattributes1(Collection<Collectionobjectattribute> collectionobjectattributes1) {
+        this.collectionobjectattributes1 = collectionobjectattributes1;
     }
 
     @XmlTransient
-    public Collection<Exchangein> getExchangeinCollection() {
-        return exchangeinCollection;
+    public Collection<Collectionobjectattr> getCollectionobjectattrs() {
+        return collectionobjectattrs;
     }
 
-    public void setExchangeinCollection(Collection<Exchangein> exchangeinCollection) {
-        this.exchangeinCollection = exchangeinCollection;
+    public void setCollectionobjectattrs(Collection<Collectionobjectattr> collectionobjectattrs) {
+        this.collectionobjectattrs = collectionobjectattrs;
     }
 
     @XmlTransient
-    public Collection<Exchangein> getExchangeinCollection1() {
-        return exchangeinCollection1;
+    public Collection<Collectionobjectattr> getCollectionobjectattrs1() {
+        return collectionobjectattrs1;
     }
 
-    public void setExchangeinCollection1(Collection<Exchangein> exchangeinCollection1) {
-        this.exchangeinCollection1 = exchangeinCollection1;
+    public void setCollectionobjectattrs1(Collection<Collectionobjectattr> collectionobjectattrs1) {
+        this.collectionobjectattrs1 = collectionobjectattrs1;
     }
 
     @XmlTransient
-    public Collection<Exchangein> getExchangeinCollection2() {
-        return exchangeinCollection2;
+    public Collection<Collectionobjectcitation> getCollectionobjectcitations() {
+        return collectionobjectcitations;
     }
 
-    public void setExchangeinCollection2(Collection<Exchangein> exchangeinCollection2) {
-        this.exchangeinCollection2 = exchangeinCollection2;
+    public void setCollectionobjectcitations(Collection<Collectionobjectcitation> collectionobjectcitations) {
+        this.collectionobjectcitations = collectionobjectcitations;
     }
 
     @XmlTransient
-    public Collection<Exchangein> getExchangeinCollection3() {
-        return exchangeinCollection3;
+    public Collection<Collectionobjectcitation> getCollectionobjectcitations1() {
+        return collectionobjectcitations1;
     }
 
-    public void setExchangeinCollection3(Collection<Exchangein> exchangeinCollection3) {
-        this.exchangeinCollection3 = exchangeinCollection3;
+    public void setCollectionobjectcitations1(Collection<Collectionobjectcitation> collectionobjectcitations1) {
+        this.collectionobjectcitations1 = collectionobjectcitations1;
     }
 
     @XmlTransient
-    public Collection<Gift> getGiftCollection() {
-        return giftCollection;
+    public Collection<Collectionobject> getCollectionobjects() {
+        return collectionobjects;
     }
 
-    public void setGiftCollection(Collection<Gift> giftCollection) {
-        this.giftCollection = giftCollection;
+    public void setCollectionobjects(Collection<Collectionobject> collectionobjects) {
+        this.collectionobjects = collectionobjects;
     }
 
     @XmlTransient
-    public Collection<Gift> getGiftCollection1() {
-        return giftCollection1;
+    public Collection<Collectionobject> getCollectionobjects1() {
+        return collectionobjects1;
     }
 
-    public void setGiftCollection1(Collection<Gift> giftCollection1) {
-        this.giftCollection1 = giftCollection1;
+    public void setCollectionobjects1(Collection<Collectionobject> collectionobjects1) {
+        this.collectionobjects1 = collectionobjects1;
     }
 
     @XmlTransient
-    public Collection<Agentvariant> getAgentvariantCollection() {
-        return agentvariantCollection;
+    public Collection<Collectionobject> getCollectionobjects2() {
+        return collectionobjects2;
     }
 
-    public void setAgentvariantCollection(Collection<Agentvariant> agentvariantCollection) {
-        this.agentvariantCollection = agentvariantCollection;
+    public void setCollectionobjects2(Collection<Collectionobject> collectionobjects2) {
+        this.collectionobjects2 = collectionobjects2;
     }
 
     @XmlTransient
-    public Collection<Agentvariant> getAgentvariantCollection1() {
-        return agentvariantCollection1;
+    public Collection<Collectionrelationship> getCollectionrelationships() {
+        return collectionrelationships;
     }
 
-    public void setAgentvariantCollection1(Collection<Agentvariant> agentvariantCollection1) {
-        this.agentvariantCollection1 = agentvariantCollection1;
+    public void setCollectionrelationships(Collection<Collectionrelationship> collectionrelationships) {
+        this.collectionrelationships = collectionrelationships;
     }
 
     @XmlTransient
-    public Collection<Agentvariant> getAgentvariantCollection2() {
-        return agentvariantCollection2;
+    public Collection<Collectionrelationship> getCollectionrelationships1() {
+        return collectionrelationships1;
     }
 
-    public void setAgentvariantCollection2(Collection<Agentvariant> agentvariantCollection2) {
-        this.agentvariantCollection2 = agentvariantCollection2;
+    public void setCollectionrelationships1(Collection<Collectionrelationship> collectionrelationships1) {
+        this.collectionrelationships1 = collectionrelationships1;
     }
 
     @XmlTransient
-    public Collection<Spauditlog> getSpauditlogCollection() {
-        return spauditlogCollection;
+    public Collection<Collectionreltype> getCollectionreltypes() {
+        return collectionreltypes;
     }
 
-    public void setSpauditlogCollection(Collection<Spauditlog> spauditlogCollection) {
-        this.spauditlogCollection = spauditlogCollection;
+    public void setCollectionreltypes(Collection<Collectionreltype> collectionreltypes) {
+        this.collectionreltypes = collectionreltypes;
     }
 
     @XmlTransient
-    public Collection<Spauditlog> getSpauditlogCollection1() {
-        return spauditlogCollection1;
+    public Collection<Collectionreltype> getCollectionreltypes1() {
+        return collectionreltypes1;
     }
 
-    public void setSpauditlogCollection1(Collection<Spauditlog> spauditlogCollection1) {
-        this.spauditlogCollection1 = spauditlogCollection1;
+    public void setCollectionreltypes1(Collection<Collectionreltype> collectionreltypes1) {
+        this.collectionreltypes1 = collectionreltypes1;
     }
 
     @XmlTransient
-    public Collection<Otheridentifier> getOtheridentifierCollection() {
-        return otheridentifierCollection;
+    public Collection<se.nrm.specify.datamodel.Collection> getCollections() {
+        return collections;
     }
 
-    public void setOtheridentifierCollection(Collection<Otheridentifier> otheridentifierCollection) {
-        this.otheridentifierCollection = otheridentifierCollection;
+    public void setCollections(Collection<se.nrm.specify.datamodel.Collection> collections) {
+        this.collections = collections;
     }
 
     @XmlTransient
-    public Collection<Otheridentifier> getOtheridentifierCollection1() {
-        return otheridentifierCollection1;
+    public Collection<se.nrm.specify.datamodel.Collection> getCollections1() {
+        return collections1;
     }
 
-    public void setOtheridentifierCollection1(Collection<Otheridentifier> otheridentifierCollection1) {
-        this.otheridentifierCollection1 = otheridentifierCollection1;
+    public void setCollections1(Collection<se.nrm.specify.datamodel.Collection> collections1) {
+        this.collections1 = collections1;
     }
 
     @XmlTransient
-    public Collection<Splocalecontaineritem> getSplocalecontaineritemCollection() {
-        return splocalecontaineritemCollection;
+    public Collection<Collector> getCollectors1() {
+        return collectors1;
     }
 
-    public void setSplocalecontaineritemCollection(Collection<Splocalecontaineritem> splocalecontaineritemCollection) {
-        this.splocalecontaineritemCollection = splocalecontaineritemCollection;
+    public void setCollectors1(Collection<Collector> collectors1) {
+        this.collectors1 = collectors1;
     }
 
     @XmlTransient
-    public Collection<Splocalecontaineritem> getSplocalecontaineritemCollection1() {
-        return splocalecontaineritemCollection1;
+    public Collection<Collector> getCollectors2() {
+        return collectors2;
     }
 
-    public void setSplocalecontaineritemCollection1(Collection<Splocalecontaineritem> splocalecontaineritemCollection1) {
-        this.splocalecontaineritemCollection1 = splocalecontaineritemCollection1;
+    public void setCollectors2(Collection<Collector> collectors2) {
+        this.collectors2 = collectors2;
     }
 
     @XmlTransient
-    public Collection<Recordset> getRecordsetCollection() {
-        return recordsetCollection;
+    public Collection<Commonnametxcitation> getCommonnametxcitations() {
+        return commonnametxcitations;
     }
 
-    public void setRecordsetCollection(Collection<Recordset> recordsetCollection) {
-        this.recordsetCollection = recordsetCollection;
+    public void setCommonnametxcitations(Collection<Commonnametxcitation> commonnametxcitations) {
+        this.commonnametxcitations = commonnametxcitations;
     }
 
     @XmlTransient
-    public Collection<Recordset> getRecordsetCollection1() {
-        return recordsetCollection1;
+    public Collection<Commonnametxcitation> getCommonnametxcitations1() {
+        return commonnametxcitations1;
     }
 
-    public void setRecordsetCollection1(Collection<Recordset> recordsetCollection1) {
-        this.recordsetCollection1 = recordsetCollection1;
+    public void setCommonnametxcitations1(Collection<Commonnametxcitation> commonnametxcitations1) {
+        this.commonnametxcitations1 = commonnametxcitations1;
     }
 
     @XmlTransient
-    public Collection<Fieldnotebookpageset> getFieldnotebookpagesetCollection() {
-        return fieldnotebookpagesetCollection;
+    public Collection<Commonnametx> getCommonnametxs() {
+        return commonnametxs;
     }
 
-    public void setFieldnotebookpagesetCollection(Collection<Fieldnotebookpageset> fieldnotebookpagesetCollection) {
-        this.fieldnotebookpagesetCollection = fieldnotebookpagesetCollection;
+    public void setCommonnametxs(Collection<Commonnametx> commonnametxs) {
+        this.commonnametxs = commonnametxs;
     }
 
     @XmlTransient
-    public Collection<Fieldnotebookpageset> getFieldnotebookpagesetCollection1() {
-        return fieldnotebookpagesetCollection1;
+    public Collection<Commonnametx> getCommonnametxs1() {
+        return commonnametxs1;
     }
 
-    public void setFieldnotebookpagesetCollection1(Collection<Fieldnotebookpageset> fieldnotebookpagesetCollection1) {
-        this.fieldnotebookpagesetCollection1 = fieldnotebookpagesetCollection1;
+    public void setCommonnametxs1(Collection<Commonnametx> commonnametxs1) {
+        this.commonnametxs1 = commonnametxs1;
     }
 
     @XmlTransient
-    public Collection<Fieldnotebookpageset> getFieldnotebookpagesetCollection2() {
-        return fieldnotebookpagesetCollection2;
+    public Collection<Conservdescriptionattachment> getConservdescriptionattachments() {
+        return conservdescriptionattachments;
     }
 
-    public void setFieldnotebookpagesetCollection2(Collection<Fieldnotebookpageset> fieldnotebookpagesetCollection2) {
-        this.fieldnotebookpagesetCollection2 = fieldnotebookpagesetCollection2;
+    public void setConservdescriptionattachments(Collection<Conservdescriptionattachment> conservdescriptionattachments) {
+        this.conservdescriptionattachments = conservdescriptionattachments;
     }
 
     @XmlTransient
-    public Collection<Giftagent> getGiftagentCollection() {
-        return giftagentCollection;
+    public Collection<Conservdescriptionattachment> getConservdescriptionattachments1() {
+        return conservdescriptionattachments1;
     }
 
-    public void setGiftagentCollection(Collection<Giftagent> giftagentCollection) {
-        this.giftagentCollection = giftagentCollection;
+    public void setConservdescriptionattachments1(Collection<Conservdescriptionattachment> conservdescriptionattachments1) {
+        this.conservdescriptionattachments1 = conservdescriptionattachments1;
     }
 
     @XmlTransient
-    public Collection<Giftagent> getGiftagentCollection1() {
-        return giftagentCollection1;
+    public Collection<Conservdescription> getConservdescriptions() {
+        return conservdescriptions;
     }
 
-    public void setGiftagentCollection1(Collection<Giftagent> giftagentCollection1) {
-        this.giftagentCollection1 = giftagentCollection1;
+    public void setConservdescriptions(Collection<Conservdescription> conservdescriptions) {
+        this.conservdescriptions = conservdescriptions;
     }
 
     @XmlTransient
-    public Collection<Giftagent> getGiftagentCollection2() {
-        return giftagentCollection2;
+    public Collection<Conservdescription> getConservdescriptions1() {
+        return conservdescriptions1;
     }
 
-    public void setGiftagentCollection2(Collection<Giftagent> giftagentCollection2) {
-        this.giftagentCollection2 = giftagentCollection2;
+    public void setConservdescriptions1(Collection<Conservdescription> conservdescriptions1) {
+        this.conservdescriptions1 = conservdescriptions1;
     }
 
     @XmlTransient
-    public Collection<se.nrm.specify.datamodel.Collection> getCollectionCollection() {
-        return collectionCollection;
+    public Collection<Conserveventattachment> getConserveventattachments() {
+        return conserveventattachments;
     }
 
-    public void setCollectionCollection(Collection<se.nrm.specify.datamodel.Collection> collectionCollection) {
-        this.collectionCollection = collectionCollection;
+    public void setConserveventattachments(Collection<Conserveventattachment> conserveventattachments) {
+        this.conserveventattachments = conserveventattachments;
     }
 
     @XmlTransient
-    public Collection<se.nrm.specify.datamodel.Collection> getCollectionCollection1() {
-        return collectionCollection1;
+    public Collection<Conserveventattachment> getConserveventattachments1() {
+        return conserveventattachments1;
     }
 
-    public void setCollectionCollection1(Collection<se.nrm.specify.datamodel.Collection> collectionCollection1) {
-        this.collectionCollection1 = collectionCollection1;
+    public void setConserveventattachments1(Collection<Conserveventattachment> conserveventattachments1) {
+        this.conserveventattachments1 = conserveventattachments1;
     }
 
     @XmlTransient
-    public Collection<Spversion> getSpversionCollection() {
-        return spversionCollection;
+    public Collection<Conservevent> getConservevents() {
+        return conservevents;
     }
 
-    public void setSpversionCollection(Collection<Spversion> spversionCollection) {
-        this.spversionCollection = spversionCollection;
+    public void setConservevents(Collection<Conservevent> conservevents) {
+        this.conservevents = conservevents;
     }
 
     @XmlTransient
-    public Collection<Spversion> getSpversionCollection1() {
-        return spversionCollection1;
+    public Collection<Conservevent> getConservevents1() {
+        return conservevents1;
     }
 
-    public void setSpversionCollection1(Collection<Spversion> spversionCollection1) {
-        this.spversionCollection1 = spversionCollection1;
+    public void setConservevents1(Collection<Conservevent> conservevents1) {
+        this.conservevents1 = conservevents1;
     }
 
     @XmlTransient
-    public Collection<Geologictimeperiodtreedef> getGeologictimeperiodtreedefCollection() {
-        return geologictimeperiodtreedefCollection;
+    public Collection<Conservevent> getConservevents2() {
+        return conservevents2;
     }
 
-    public void setGeologictimeperiodtreedefCollection(Collection<Geologictimeperiodtreedef> geologictimeperiodtreedefCollection) {
-        this.geologictimeperiodtreedefCollection = geologictimeperiodtreedefCollection;
+    public void setConservevents2(Collection<Conservevent> conservevents2) {
+        this.conservevents2 = conservevents2;
     }
 
     @XmlTransient
-    public Collection<Geologictimeperiodtreedef> getGeologictimeperiodtreedefCollection1() {
-        return geologictimeperiodtreedefCollection1;
+    public Collection<Conservevent> getConservevents3() {
+        return conservevents3;
     }
 
-    public void setGeologictimeperiodtreedefCollection1(Collection<Geologictimeperiodtreedef> geologictimeperiodtreedefCollection1) {
-        this.geologictimeperiodtreedefCollection1 = geologictimeperiodtreedefCollection1;
+    public void setConservevents3(Collection<Conservevent> conservevents3) {
+        this.conservevents3 = conservevents3;
     }
 
     @XmlTransient
-    public Collection<Conservdescription> getConservdescriptionCollection() {
-        return conservdescriptionCollection;
+    public Collection<Conservevent> getConservevents4() {
+        return conservevents4;
     }
 
-    public void setConservdescriptionCollection(Collection<Conservdescription> conservdescriptionCollection) {
-        this.conservdescriptionCollection = conservdescriptionCollection;
+    public void setConservevents4(Collection<Conservevent> conservevents4) {
+        this.conservevents4 = conservevents4;
     }
 
     @XmlTransient
-    public Collection<Conservdescription> getConservdescriptionCollection1() {
-        return conservdescriptionCollection1;
+    public Collection<Container> getContainers() {
+        return containers;
     }
 
-    public void setConservdescriptionCollection1(Collection<Conservdescription> conservdescriptionCollection1) {
-        this.conservdescriptionCollection1 = conservdescriptionCollection1;
+    public void setContainers(Collection<Container> containers) {
+        this.containers = containers;
     }
 
     @XmlTransient
-    public Collection<Addressofrecord> getAddressofrecordCollection() {
-        return addressofrecordCollection;
+    public Collection<Container> getContainers1() {
+        return containers1;
     }
 
-    public void setAddressofrecordCollection(Collection<Addressofrecord> addressofrecordCollection) {
-        this.addressofrecordCollection = addressofrecordCollection;
+    public void setContainers1(Collection<Container> containers1) {
+        this.containers1 = containers1;
     }
 
     @XmlTransient
-    public Collection<Addressofrecord> getAddressofrecordCollection1() {
-        return addressofrecordCollection1;
+    public Collection<Datatype> getDatatypes() {
+        return datatypes;
     }
 
-    public void setAddressofrecordCollection1(Collection<Addressofrecord> addressofrecordCollection1) {
-        this.addressofrecordCollection1 = addressofrecordCollection1;
+    public void setDatatypes(Collection<Datatype> datatypes) {
+        this.datatypes = datatypes;
     }
 
     @XmlTransient
-    public Collection<Addressofrecord> getAddressofrecordCollection2() {
-        return addressofrecordCollection2;
+    public Collection<Datatype> getDatatypes1() {
+        return datatypes1;
     }
 
-    public void setAddressofrecordCollection2(Collection<Addressofrecord> addressofrecordCollection2) {
-        this.addressofrecordCollection2 = addressofrecordCollection2;
+    public void setDatatypes1(Collection<Datatype> datatypes1) {
+        this.datatypes1 = datatypes1;
     }
 
     @XmlTransient
-    public Collection<Division> getDivisionCollection() {
-        return divisionCollection;
+    public Collection<Deaccessionagent> getDeaccessionagents() {
+        return deaccessionagents;
     }
 
-    public void setDivisionCollection(Collection<Division> divisionCollection) {
-        this.divisionCollection = divisionCollection;
+    public void setDeaccessionagents(Collection<Deaccessionagent> deaccessionagents) {
+        this.deaccessionagents = deaccessionagents;
     }
 
     @XmlTransient
-    public Collection<Division> getDivisionCollection1() {
-        return divisionCollection1;
+    public Collection<Deaccessionagent> getDeaccessionagents1() {
+        return deaccessionagents1;
     }
 
-    public void setDivisionCollection1(Collection<Division> divisionCollection1) {
-        this.divisionCollection1 = divisionCollection1;
+    public void setDeaccessionagents1(Collection<Deaccessionagent> deaccessionagents1) {
+        this.deaccessionagents1 = deaccessionagents1;
     }
 
     @XmlTransient
-    public Collection<Storagetreedefitem> getStoragetreedefitemCollection() {
-        return storagetreedefitemCollection;
+    public Collection<Deaccessionagent> getDeaccessionagents2() {
+        return deaccessionagents2;
     }
 
-    public void setStoragetreedefitemCollection(Collection<Storagetreedefitem> storagetreedefitemCollection) {
-        this.storagetreedefitemCollection = storagetreedefitemCollection;
+    public void setDeaccessionagents2(Collection<Deaccessionagent> deaccessionagents2) {
+        this.deaccessionagents2 = deaccessionagents2;
     }
 
     @XmlTransient
-    public Collection<Storagetreedefitem> getStoragetreedefitemCollection1() {
-        return storagetreedefitemCollection1;
+    public Collection<Deaccessionpreparation> getDeaccessionpreparations() {
+        return deaccessionpreparations;
     }
 
-    public void setStoragetreedefitemCollection1(Collection<Storagetreedefitem> storagetreedefitemCollection1) {
-        this.storagetreedefitemCollection1 = storagetreedefitemCollection1;
+    public void setDeaccessionpreparations(Collection<Deaccessionpreparation> deaccessionpreparations) {
+        this.deaccessionpreparations = deaccessionpreparations;
     }
 
     @XmlTransient
-    public Collection<Exchangeout> getExchangeoutCollection() {
-        return exchangeoutCollection;
+    public Collection<Deaccessionpreparation> getDeaccessionpreparations1() {
+        return deaccessionpreparations1;
     }
 
-    public void setExchangeoutCollection(Collection<Exchangeout> exchangeoutCollection) {
-        this.exchangeoutCollection = exchangeoutCollection;
+    public void setDeaccessionpreparations1(Collection<Deaccessionpreparation> deaccessionpreparations1) {
+        this.deaccessionpreparations1 = deaccessionpreparations1;
     }
 
     @XmlTransient
-    public Collection<Exchangeout> getExchangeoutCollection1() {
-        return exchangeoutCollection1;
+    public Collection<Deaccession> getDeaccessions() {
+        return deaccessions;
     }
 
-    public void setExchangeoutCollection1(Collection<Exchangeout> exchangeoutCollection1) {
-        this.exchangeoutCollection1 = exchangeoutCollection1;
+    public void setDeaccessions(Collection<Deaccession> deaccessions) {
+        this.deaccessions = deaccessions;
     }
 
     @XmlTransient
-    public Collection<Exchangeout> getExchangeoutCollection2() {
-        return exchangeoutCollection2;
+    public Collection<Deaccession> getDeaccessions1() {
+        return deaccessions1;
     }
 
-    public void setExchangeoutCollection2(Collection<Exchangeout> exchangeoutCollection2) {
-        this.exchangeoutCollection2 = exchangeoutCollection2;
+    public void setDeaccessions1(Collection<Deaccession> deaccessions1) {
+        this.deaccessions1 = deaccessions1;
     }
 
     @XmlTransient
-    public Collection<Exchangeout> getExchangeoutCollection3() {
-        return exchangeoutCollection3;
+    public Collection<Determinationcitation> getDeterminationcitations() {
+        return determinationcitations;
     }
 
-    public void setExchangeoutCollection3(Collection<Exchangeout> exchangeoutCollection3) {
-        this.exchangeoutCollection3 = exchangeoutCollection3;
+    public void setDeterminationcitations(Collection<Determinationcitation> determinationcitations) {
+        this.determinationcitations = determinationcitations;
     }
 
     @XmlTransient
-    public Collection<Spprincipal> getSpprincipalCollection() {
-        return spprincipalCollection;
+    public Collection<Determinationcitation> getDeterminationcitations1() {
+        return determinationcitations1;
     }
 
-    public void setSpprincipalCollection(Collection<Spprincipal> spprincipalCollection) {
-        this.spprincipalCollection = spprincipalCollection;
+    public void setDeterminationcitations1(Collection<Determinationcitation> determinationcitations1) {
+        this.determinationcitations1 = determinationcitations1;
     }
 
     @XmlTransient
-    public Collection<Spprincipal> getSpprincipalCollection1() {
-        return spprincipalCollection1;
+    public Collection<Determination> getDeterminations() {
+        return determinations;
     }
 
-    public void setSpprincipalCollection1(Collection<Spprincipal> spprincipalCollection1) {
-        this.spprincipalCollection1 = spprincipalCollection1;
+    public void setDeterminations(Collection<Determination> determinations) {
+        this.determinations = determinations;
     }
 
     @XmlTransient
-    public Collection<Autonumberingscheme> getAutonumberingschemeCollection() {
-        return autonumberingschemeCollection;
+    public Collection<Determination> getDeterminations1() {
+        return determinations1;
     }
 
-    public void setAutonumberingschemeCollection(Collection<Autonumberingscheme> autonumberingschemeCollection) {
-        this.autonumberingschemeCollection = autonumberingschemeCollection;
+    public void setDeterminations1(Collection<Determination> determinations1) {
+        this.determinations1 = determinations1;
     }
 
     @XmlTransient
-    public Collection<Autonumberingscheme> getAutonumberingschemeCollection1() {
-        return autonumberingschemeCollection1;
+    public Collection<Determination> getDeterminations2() {
+        return determinations2;
     }
 
-    public void setAutonumberingschemeCollection1(Collection<Autonumberingscheme> autonumberingschemeCollection1) {
-        this.autonumberingschemeCollection1 = autonumberingschemeCollection1;
+    public void setDeterminations2(Collection<Determination> determinations2) {
+        this.determinations2 = determinations2;
     }
 
     @XmlTransient
-    public Collection<Determinationcitation> getDeterminationcitationCollection() {
-        return determinationcitationCollection;
+    public Collection<Discipline> getDisciplines() {
+        return disciplines;
     }
 
-    public void setDeterminationcitationCollection(Collection<Determinationcitation> determinationcitationCollection) {
-        this.determinationcitationCollection = determinationcitationCollection;
+    public void setDisciplines(Collection<Discipline> disciplines) {
+        this.disciplines = disciplines;
     }
 
     @XmlTransient
-    public Collection<Determinationcitation> getDeterminationcitationCollection1() {
-        return determinationcitationCollection1;
+    public Collection<Discipline> getDisciplines1() {
+        return disciplines1;
     }
 
-    public void setDeterminationcitationCollection1(Collection<Determinationcitation> determinationcitationCollection1) {
-        this.determinationcitationCollection1 = determinationcitationCollection1;
+    public void setDisciplines1(Collection<Discipline> disciplines1) {
+        this.disciplines1 = disciplines1;
     }
 
     @XmlTransient
-    public Collection<Specifyuser> getSpecifyuserCollection() {
-        return specifyuserCollection;
+    public Collection<Division> getDivisions() {
+        return divisions;
     }
 
-    public void setSpecifyuserCollection(Collection<Specifyuser> specifyuserCollection) {
-        this.specifyuserCollection = specifyuserCollection;
+    public void setDivisions(Collection<Division> divisions) {
+        this.divisions = divisions;
     }
 
     @XmlTransient
-    public Collection<Specifyuser> getSpecifyuserCollection1() {
-        return specifyuserCollection1;
+    public Collection<Division> getDivisions1() {
+        return divisions1;
     }
 
-    public void setSpecifyuserCollection1(Collection<Specifyuser> specifyuserCollection1) {
-        this.specifyuserCollection1 = specifyuserCollection1;
+    public void setDivisions1(Collection<Division> divisions1) {
+        this.divisions1 = divisions1;
     }
 
     @XmlTransient
-    public Collection<Preparationattachment> getPreparationattachmentCollection() {
-        return preparationattachmentCollection;
+    public Collection<Dnasequenceattachment> getDnasequenceattachments() {
+        return dnasequenceattachments;
     }
 
-    public void setPreparationattachmentCollection(Collection<Preparationattachment> preparationattachmentCollection) {
-        this.preparationattachmentCollection = preparationattachmentCollection;
+    public void setDnasequenceattachments(Collection<Dnasequenceattachment> dnasequenceattachments) {
+        this.dnasequenceattachments = dnasequenceattachments;
     }
 
     @XmlTransient
-    public Collection<Preparationattachment> getPreparationattachmentCollection1() {
-        return preparationattachmentCollection1;
+    public Collection<Dnasequenceattachment> getDnasequenceattachments1() {
+        return dnasequenceattachments1;
     }
 
-    public void setPreparationattachmentCollection1(Collection<Preparationattachment> preparationattachmentCollection1) {
-        this.preparationattachmentCollection1 = preparationattachmentCollection1;
+    public void setDnasequenceattachments1(Collection<Dnasequenceattachment> dnasequenceattachments1) {
+        this.dnasequenceattachments1 = dnasequenceattachments1;
     }
 
     @XmlTransient
-    public Collection<Localitydetail> getLocalitydetailCollection() {
-        return localitydetailCollection;
+    public Collection<Dnasequence> getDnasequences() {
+        return dnasequences;
     }
 
-    public void setLocalitydetailCollection(Collection<Localitydetail> localitydetailCollection) {
-        this.localitydetailCollection = localitydetailCollection;
+    public void setDnasequences(Collection<Dnasequence> dnasequences) {
+        this.dnasequences = dnasequences;
     }
 
     @XmlTransient
-    public Collection<Localitydetail> getLocalitydetailCollection1() {
-        return localitydetailCollection1;
+    public Collection<Dnasequence> getDnasequences1() {
+        return dnasequences1;
     }
 
-    public void setLocalitydetailCollection1(Collection<Localitydetail> localitydetailCollection1) {
-        this.localitydetailCollection1 = localitydetailCollection1;
+    public void setDnasequences1(Collection<Dnasequence> dnasequences1) {
+        this.dnasequences1 = dnasequences1;
     }
 
     @XmlTransient
-    public Collection<Collectionrelationship> getCollectionrelationshipCollection() {
-        return collectionrelationshipCollection;
+    public Collection<Dnasequence> getDnasequences2() {
+        return dnasequences2;
     }
 
-    public void setCollectionrelationshipCollection(Collection<Collectionrelationship> collectionrelationshipCollection) {
-        this.collectionrelationshipCollection = collectionrelationshipCollection;
+    public void setDnasequences2(Collection<Dnasequence> dnasequences2) {
+        this.dnasequences2 = dnasequences2;
     }
 
     @XmlTransient
-    public Collection<Collectionrelationship> getCollectionrelationshipCollection1() {
-        return collectionrelationshipCollection1;
+    public Collection<Dnasequencingruncitation> getDnasequencingruncitations() {
+        return dnasequencingruncitations;
     }
 
-    public void setCollectionrelationshipCollection1(Collection<Collectionrelationship> collectionrelationshipCollection1) {
-        this.collectionrelationshipCollection1 = collectionrelationshipCollection1;
+    public void setDnasequencingruncitations(Collection<Dnasequencingruncitation> dnasequencingruncitations) {
+        this.dnasequencingruncitations = dnasequencingruncitations;
     }
 
     @XmlTransient
-    public Collection<Collectionobjectattr> getCollectionobjectattrCollection() {
-        return collectionobjectattrCollection;
+    public Collection<Dnasequencingruncitation> getDnasequencingruncitations1() {
+        return dnasequencingruncitations1;
     }
 
-    public void setCollectionobjectattrCollection(Collection<Collectionobjectattr> collectionobjectattrCollection) {
-        this.collectionobjectattrCollection = collectionobjectattrCollection;
+    public void setDnasequencingruncitations1(Collection<Dnasequencingruncitation> dnasequencingruncitations1) {
+        this.dnasequencingruncitations1 = dnasequencingruncitations1;
     }
 
     @XmlTransient
-    public Collection<Collectionobjectattr> getCollectionobjectattrCollection1() {
-        return collectionobjectattrCollection1;
+    public Collection<Dnasequencingrun> getDnasequencingruns() {
+        return dnasequencingruns;
     }
 
-    public void setCollectionobjectattrCollection1(Collection<Collectionobjectattr> collectionobjectattrCollection1) {
-        this.collectionobjectattrCollection1 = collectionobjectattrCollection1;
+    public void setDnasequencingruns(Collection<Dnasequencingrun> dnasequencingruns) {
+        this.dnasequencingruns = dnasequencingruns;
     }
 
     @XmlTransient
-    public Collection<Collectingeventattribute> getCollectingeventattributeCollection() {
-        return collectingeventattributeCollection;
+    public Collection<Dnasequencingrun> getDnasequencingruns1() {
+        return dnasequencingruns1;
     }
 
-    public void setCollectingeventattributeCollection(Collection<Collectingeventattribute> collectingeventattributeCollection) {
-        this.collectingeventattributeCollection = collectingeventattributeCollection;
+    public void setDnasequencingruns1(Collection<Dnasequencingrun> dnasequencingruns1) {
+        this.dnasequencingruns1 = dnasequencingruns1;
     }
 
     @XmlTransient
-    public Collection<Collectingeventattribute> getCollectingeventattributeCollection1() {
-        return collectingeventattributeCollection1;
+    public Collection<Dnasequencingrun> getDnasequencingruns2() {
+        return dnasequencingruns2;
     }
 
-    public void setCollectingeventattributeCollection1(Collection<Collectingeventattribute> collectingeventattributeCollection1) {
-        this.collectingeventattributeCollection1 = collectingeventattributeCollection1;
+    public void setDnasequencingruns2(Collection<Dnasequencingrun> dnasequencingruns2) {
+        this.dnasequencingruns2 = dnasequencingruns2;
     }
 
     @XmlTransient
-    public Collection<Spviewsetobj> getSpviewsetobjCollection() {
-        return spviewsetobjCollection;
+    public Collection<Dnasequencingrun> getDnasequencingruns3() {
+        return dnasequencingruns3;
     }
 
-    public void setSpviewsetobjCollection(Collection<Spviewsetobj> spviewsetobjCollection) {
-        this.spviewsetobjCollection = spviewsetobjCollection;
+    public void setDnasequencingruns3(Collection<Dnasequencingrun> dnasequencingruns3) {
+        this.dnasequencingruns3 = dnasequencingruns3;
     }
 
     @XmlTransient
-    public Collection<Spviewsetobj> getSpviewsetobjCollection1() {
-        return spviewsetobjCollection1;
+    public Collection<Exchangein> getExchangeins() {
+        return exchangeins;
     }
 
-    public void setSpviewsetobjCollection1(Collection<Spviewsetobj> spviewsetobjCollection1) {
-        this.spviewsetobjCollection1 = spviewsetobjCollection1;
+    public void setExchangeins(Collection<Exchangein> exchangeins) {
+        this.exchangeins = exchangeins;
     }
 
     @XmlTransient
-    public Collection<Spfieldvaluedefault> getSpfieldvaluedefaultCollection() {
-        return spfieldvaluedefaultCollection;
+    public Collection<Exchangein> getExchangeins1() {
+        return exchangeins1;
     }
 
-    public void setSpfieldvaluedefaultCollection(Collection<Spfieldvaluedefault> spfieldvaluedefaultCollection) {
-        this.spfieldvaluedefaultCollection = spfieldvaluedefaultCollection;
+    public void setExchangeins1(Collection<Exchangein> exchangeins1) {
+        this.exchangeins1 = exchangeins1;
     }
 
     @XmlTransient
-    public Collection<Spfieldvaluedefault> getSpfieldvaluedefaultCollection1() {
-        return spfieldvaluedefaultCollection1;
+    public Collection<Exchangein> getExchangeins2() {
+        return exchangeins2;
     }
 
-    public void setSpfieldvaluedefaultCollection1(Collection<Spfieldvaluedefault> spfieldvaluedefaultCollection1) {
-        this.spfieldvaluedefaultCollection1 = spfieldvaluedefaultCollection1;
+    public void setExchangeins2(Collection<Exchangein> exchangeins2) {
+        this.exchangeins2 = exchangeins2;
     }
 
     @XmlTransient
-    public Collection<Commonnametx> getCommonnametxCollection() {
-        return commonnametxCollection;
+    public Collection<Exchangein> getExchangeins3() {
+        return exchangeins3;
     }
 
-    public void setCommonnametxCollection(Collection<Commonnametx> commonnametxCollection) {
-        this.commonnametxCollection = commonnametxCollection;
+    public void setExchangeins3(Collection<Exchangein> exchangeins3) {
+        this.exchangeins3 = exchangeins3;
     }
 
     @XmlTransient
-    public Collection<Commonnametx> getCommonnametxCollection1() {
-        return commonnametxCollection1;
+    public Collection<Exchangeout> getExchangeouts() {
+        return exchangeouts;
     }
 
-    public void setCommonnametxCollection1(Collection<Commonnametx> commonnametxCollection1) {
-        this.commonnametxCollection1 = commonnametxCollection1;
+    public void setExchangeouts(Collection<Exchangeout> exchangeouts) {
+        this.exchangeouts = exchangeouts;
     }
 
     @XmlTransient
-    public Collection<Borrowmaterial> getBorrowmaterialCollection() {
-        return borrowmaterialCollection;
+    public Collection<Exchangeout> getExchangeouts1() {
+        return exchangeouts1;
     }
 
-    public void setBorrowmaterialCollection(Collection<Borrowmaterial> borrowmaterialCollection) {
-        this.borrowmaterialCollection = borrowmaterialCollection;
+    public void setExchangeouts1(Collection<Exchangeout> exchangeouts1) {
+        this.exchangeouts1 = exchangeouts1;
     }
 
     @XmlTransient
-    public Collection<Borrowmaterial> getBorrowmaterialCollection1() {
-        return borrowmaterialCollection1;
+    public Collection<Exchangeout> getExchangeouts2() {
+        return exchangeouts2;
     }
 
-    public void setBorrowmaterialCollection1(Collection<Borrowmaterial> borrowmaterialCollection1) {
-        this.borrowmaterialCollection1 = borrowmaterialCollection1;
+    public void setExchangeouts2(Collection<Exchangeout> exchangeouts2) {
+        this.exchangeouts2 = exchangeouts2;
     }
 
     @XmlTransient
-    public Collection<Accessionagent> getAccessionagentCollection() {
-        return accessionagentCollection;
+    public Collection<Exchangeout> getExchangeouts3() {
+        return exchangeouts3;
     }
 
-    public void setAccessionagentCollection(Collection<Accessionagent> accessionagentCollection) {
-        this.accessionagentCollection = accessionagentCollection;
+    public void setExchangeouts3(Collection<Exchangeout> exchangeouts3) {
+        this.exchangeouts3 = exchangeouts3;
     }
 
     @XmlTransient
-    public Collection<Accessionagent> getAccessionagentCollection1() {
-        return accessionagentCollection1;
+    public Collection<Exsiccataitem> getExsiccataitems() {
+        return exsiccataitems;
     }
 
-    public void setAccessionagentCollection1(Collection<Accessionagent> accessionagentCollection1) {
-        this.accessionagentCollection1 = accessionagentCollection1;
+    public void setExsiccataitems(Collection<Exsiccataitem> exsiccataitems) {
+        this.exsiccataitems = exsiccataitems;
     }
 
     @XmlTransient
-    public Collection<Accessionagent> getAccessionagentCollection2() {
-        return accessionagentCollection2;
+    public Collection<Exsiccataitem> getExsiccataitems1() {
+        return exsiccataitems1;
     }
 
-    public void setAccessionagentCollection2(Collection<Accessionagent> accessionagentCollection2) {
-        this.accessionagentCollection2 = accessionagentCollection2;
+    public void setExsiccataitems1(Collection<Exsiccataitem> exsiccataitems1) {
+        this.exsiccataitems1 = exsiccataitems1;
     }
 
     @XmlTransient
-    public Collection<Spappresource> getSpappresourceCollection() {
-        return spappresourceCollection;
+    public Collection<Exsiccata> getExsiccatas() {
+        return exsiccatas;
     }
 
-    public void setSpappresourceCollection(Collection<Spappresource> spappresourceCollection) {
-        this.spappresourceCollection = spappresourceCollection;
+    public void setExsiccatas(Collection<Exsiccata> exsiccatas) {
+        this.exsiccatas = exsiccatas;
     }
 
     @XmlTransient
-    public Collection<Spappresource> getSpappresourceCollection1() {
-        return spappresourceCollection1;
+    public Collection<Exsiccata> getExsiccatas1() {
+        return exsiccatas1;
     }
 
-    public void setSpappresourceCollection1(Collection<Spappresource> spappresourceCollection1) {
-        this.spappresourceCollection1 = spappresourceCollection1;
+    public void setExsiccatas1(Collection<Exsiccata> exsiccatas1) {
+        this.exsiccatas1 = exsiccatas1;
     }
 
     @XmlTransient
-    public Collection<Geologictimeperiod> getGeologictimeperiodCollection() {
-        return geologictimeperiodCollection;
+    public Collection<Fieldnotebookattachment> getFieldnotebookattachments() {
+        return fieldnotebookattachments;
     }
 
-    public void setGeologictimeperiodCollection(Collection<Geologictimeperiod> geologictimeperiodCollection) {
-        this.geologictimeperiodCollection = geologictimeperiodCollection;
+    public void setFieldnotebookattachments(Collection<Fieldnotebookattachment> fieldnotebookattachments) {
+        this.fieldnotebookattachments = fieldnotebookattachments;
     }
 
     @XmlTransient
-    public Collection<Geologictimeperiod> getGeologictimeperiodCollection1() {
-        return geologictimeperiodCollection1;
+    public Collection<Fieldnotebookattachment> getFieldnotebookattachments1() {
+        return fieldnotebookattachments1;
     }
 
-    public void setGeologictimeperiodCollection1(Collection<Geologictimeperiod> geologictimeperiodCollection1) {
-        this.geologictimeperiodCollection1 = geologictimeperiodCollection1;
+    public void setFieldnotebookattachments1(Collection<Fieldnotebookattachment> fieldnotebookattachments1) {
+        this.fieldnotebookattachments1 = fieldnotebookattachments1;
     }
 
     @XmlTransient
-    public Collection<Workbenchtemplatemappingitem> getWorkbenchtemplatemappingitemCollection() {
-        return workbenchtemplatemappingitemCollection;
+    public Collection<Fieldnotebookpageattachment> getFieldnotebookpageattachments() {
+        return fieldnotebookpageattachments;
     }
 
-    public void setWorkbenchtemplatemappingitemCollection(Collection<Workbenchtemplatemappingitem> workbenchtemplatemappingitemCollection) {
-        this.workbenchtemplatemappingitemCollection = workbenchtemplatemappingitemCollection;
+    public void setFieldnotebookpageattachments(Collection<Fieldnotebookpageattachment> fieldnotebookpageattachments) {
+        this.fieldnotebookpageattachments = fieldnotebookpageattachments;
     }
 
     @XmlTransient
-    public Collection<Workbenchtemplatemappingitem> getWorkbenchtemplatemappingitemCollection1() {
-        return workbenchtemplatemappingitemCollection1;
+    public Collection<Fieldnotebookpageattachment> getFieldnotebookpageattachments1() {
+        return fieldnotebookpageattachments1;
     }
 
-    public void setWorkbenchtemplatemappingitemCollection1(Collection<Workbenchtemplatemappingitem> workbenchtemplatemappingitemCollection1) {
-        this.workbenchtemplatemappingitemCollection1 = workbenchtemplatemappingitemCollection1;
+    public void setFieldnotebookpageattachments1(Collection<Fieldnotebookpageattachment> fieldnotebookpageattachments1) {
+        this.fieldnotebookpageattachments1 = fieldnotebookpageattachments1;
     }
 
     @XmlTransient
-    public Collection<Repositoryagreement> getRepositoryagreementCollection() {
-        return repositoryagreementCollection;
+    public Collection<Fieldnotebookpage> getFieldnotebookpages() {
+        return fieldnotebookpages;
     }
 
-    public void setRepositoryagreementCollection(Collection<Repositoryagreement> repositoryagreementCollection) {
-        this.repositoryagreementCollection = repositoryagreementCollection;
+    public void setFieldnotebookpages(Collection<Fieldnotebookpage> fieldnotebookpages) {
+        this.fieldnotebookpages = fieldnotebookpages;
     }
 
     @XmlTransient
-    public Collection<Repositoryagreement> getRepositoryagreementCollection1() {
-        return repositoryagreementCollection1;
+    public Collection<Fieldnotebookpage> getFieldnotebookpages1() {
+        return fieldnotebookpages1;
     }
 
-    public void setRepositoryagreementCollection1(Collection<Repositoryagreement> repositoryagreementCollection1) {
-        this.repositoryagreementCollection1 = repositoryagreementCollection1;
+    public void setFieldnotebookpages1(Collection<Fieldnotebookpage> fieldnotebookpages1) {
+        this.fieldnotebookpages1 = fieldnotebookpages1;
     }
 
     @XmlTransient
-    public Collection<Repositoryagreement> getRepositoryagreementCollection2() {
-        return repositoryagreementCollection2;
+    public Collection<Fieldnotebookpagesetattachment> getFieldnotebookpagesetattachments() {
+        return fieldnotebookpagesetattachments;
     }
 
-    public void setRepositoryagreementCollection2(Collection<Repositoryagreement> repositoryagreementCollection2) {
-        this.repositoryagreementCollection2 = repositoryagreementCollection2;
+    public void setFieldnotebookpagesetattachments(Collection<Fieldnotebookpagesetattachment> fieldnotebookpagesetattachments) {
+        this.fieldnotebookpagesetattachments = fieldnotebookpagesetattachments;
     }
 
     @XmlTransient
-    public Collection<Spqueryfield> getSpqueryfieldCollection() {
-        return spqueryfieldCollection;
+    public Collection<Fieldnotebookpagesetattachment> getFieldnotebookpagesetattachments1() {
+        return fieldnotebookpagesetattachments1;
     }
 
-    public void setSpqueryfieldCollection(Collection<Spqueryfield> spqueryfieldCollection) {
-        this.spqueryfieldCollection = spqueryfieldCollection;
+    public void setFieldnotebookpagesetattachments1(Collection<Fieldnotebookpagesetattachment> fieldnotebookpagesetattachments1) {
+        this.fieldnotebookpagesetattachments1 = fieldnotebookpagesetattachments1;
     }
 
     @XmlTransient
-    public Collection<Spqueryfield> getSpqueryfieldCollection1() {
-        return spqueryfieldCollection1;
+    public Collection<Fieldnotebookpageset> getFieldnotebookpagesets() {
+        return fieldnotebookpagesets;
     }
 
-    public void setSpqueryfieldCollection1(Collection<Spqueryfield> spqueryfieldCollection1) {
-        this.spqueryfieldCollection1 = spqueryfieldCollection1;
+    public void setFieldnotebookpagesets(Collection<Fieldnotebookpageset> fieldnotebookpagesets) {
+        this.fieldnotebookpagesets = fieldnotebookpagesets;
     }
 
     @XmlTransient
-    public Collection<Spreport> getSpreportCollection() {
-        return spreportCollection;
+    public Collection<Fieldnotebookpageset> getFieldnotebookpagesets1() {
+        return fieldnotebookpagesets1;
     }
 
-    public void setSpreportCollection(Collection<Spreport> spreportCollection) {
-        this.spreportCollection = spreportCollection;
+    public void setFieldnotebookpagesets1(Collection<Fieldnotebookpageset> fieldnotebookpagesets1) {
+        this.fieldnotebookpagesets1 = fieldnotebookpagesets1;
     }
 
     @XmlTransient
-    public Collection<Spreport> getSpreportCollection1() {
-        return spreportCollection1;
+    public Collection<Fieldnotebookpageset> getFieldnotebookpagesets2() {
+        return fieldnotebookpagesets2;
     }
 
-    public void setSpreportCollection1(Collection<Spreport> spreportCollection1) {
-        this.spreportCollection1 = spreportCollection1;
+    public void setFieldnotebookpagesets2(Collection<Fieldnotebookpageset> fieldnotebookpagesets2) {
+        this.fieldnotebookpagesets2 = fieldnotebookpagesets2;
     }
 
     @XmlTransient
-    public Collection<Referencework> getReferenceworkCollection() {
-        return referenceworkCollection;
+    public Collection<Fieldnotebook> getFieldnotebooks() {
+        return fieldnotebooks;
     }
 
-    public void setReferenceworkCollection(Collection<Referencework> referenceworkCollection) {
-        this.referenceworkCollection = referenceworkCollection;
+    public void setFieldnotebooks(Collection<Fieldnotebook> fieldnotebooks) {
+        this.fieldnotebooks = fieldnotebooks;
     }
 
     @XmlTransient
-    public Collection<Referencework> getReferenceworkCollection1() {
-        return referenceworkCollection1;
+    public Collection<Fieldnotebook> getFieldnotebooks1() {
+        return fieldnotebooks1;
     }
 
-    public void setReferenceworkCollection1(Collection<Referencework> referenceworkCollection1) {
-        this.referenceworkCollection1 = referenceworkCollection1;
+    public void setFieldnotebooks1(Collection<Fieldnotebook> fieldnotebooks1) {
+        this.fieldnotebooks1 = fieldnotebooks1;
     }
 
     @XmlTransient
-    public Collection<Localityattachment> getLocalityattachmentCollection() {
-        return localityattachmentCollection;
+    public Collection<Fieldnotebook> getFieldnotebooks2() {
+        return fieldnotebooks2;
     }
 
-    public void setLocalityattachmentCollection(Collection<Localityattachment> localityattachmentCollection) {
-        this.localityattachmentCollection = localityattachmentCollection;
+    public void setFieldnotebooks2(Collection<Fieldnotebook> fieldnotebooks2) {
+        this.fieldnotebooks2 = fieldnotebooks2;
     }
 
     @XmlTransient
-    public Collection<Localityattachment> getLocalityattachmentCollection1() {
-        return localityattachmentCollection1;
+    public Collection<Geocoorddetail> getGeocoorddetails() {
+        return geocoorddetails;
     }
 
-    public void setLocalityattachmentCollection1(Collection<Localityattachment> localityattachmentCollection1) {
-        this.localityattachmentCollection1 = localityattachmentCollection1;
+    public void setGeocoorddetails(Collection<Geocoorddetail> geocoorddetails) {
+        this.geocoorddetails = geocoorddetails;
     }
 
     @XmlTransient
-    public Collection<Accession> getAccessionCollection() {
-        return accessionCollection;
+    public Collection<Geocoorddetail> getGeocoorddetails1() {
+        return geocoorddetails1;
     }
 
-    public void setAccessionCollection(Collection<Accession> accessionCollection) {
-        this.accessionCollection = accessionCollection;
+    public void setGeocoorddetails1(Collection<Geocoorddetail> geocoorddetails1) {
+        this.geocoorddetails1 = geocoorddetails1;
     }
 
     @XmlTransient
-    public Collection<Accession> getAccessionCollection1() {
-        return accessionCollection1;
+    public Collection<Geocoorddetail> getGeocoorddetails2() {
+        return geocoorddetails2;
     }
 
-    public void setAccessionCollection1(Collection<Accession> accessionCollection1) {
-        this.accessionCollection1 = accessionCollection1;
+    public void setGeocoorddetails2(Collection<Geocoorddetail> geocoorddetails2) {
+        this.geocoorddetails2 = geocoorddetails2;
     }
 
     @XmlTransient
-    public Collection<Groupperson> getGrouppersonCollection() {
-        return grouppersonCollection;
+    public Collection<Geography> getGeographys() {
+        return geographys;
     }
 
-    public void setGrouppersonCollection(Collection<Groupperson> grouppersonCollection) {
-        this.grouppersonCollection = grouppersonCollection;
+    public void setGeographys(Collection<Geography> geographys) {
+        this.geographys = geographys;
     }
 
     @XmlTransient
-    public Collection<Groupperson> getGrouppersonCollection1() {
-        return grouppersonCollection1;
+    public Collection<Geography> getGeographys1() {
+        return geographys1;
     }
 
-    public void setGrouppersonCollection1(Collection<Groupperson> grouppersonCollection1) {
-        this.grouppersonCollection1 = grouppersonCollection1;
+    public void setGeographys1(Collection<Geography> geographys1) {
+        this.geographys1 = geographys1;
     }
 
     @XmlTransient
-    public Collection<Groupperson> getGrouppersonCollection2() {
-        return grouppersonCollection2;
+    public Collection<Geographytreedefitem> getGeographytreedefitems() {
+        return geographytreedefitems;
     }
 
-    public void setGrouppersonCollection2(Collection<Groupperson> grouppersonCollection2) {
-        this.grouppersonCollection2 = grouppersonCollection2;
+    public void setGeographytreedefitems(Collection<Geographytreedefitem> geographytreedefitems) {
+        this.geographytreedefitems = geographytreedefitems;
     }
 
     @XmlTransient
-    public Collection<Groupperson> getGrouppersonCollection3() {
-        return grouppersonCollection3;
+    public Collection<Geographytreedefitem> getGeographytreedefitems1() {
+        return geographytreedefitems1;
     }
 
-    public void setGrouppersonCollection3(Collection<Groupperson> grouppersonCollection3) {
-        this.grouppersonCollection3 = grouppersonCollection3;
+    public void setGeographytreedefitems1(Collection<Geographytreedefitem> geographytreedefitems1) {
+        this.geographytreedefitems1 = geographytreedefitems1;
     }
 
     @XmlTransient
-    public Collection<Borrowreturnmaterial> getBorrowreturnmaterialCollection() {
-        return borrowreturnmaterialCollection;
+    public Collection<Geographytreedef> getGeographytreedefs() {
+        return geographytreedefs;
     }
 
-    public void setBorrowreturnmaterialCollection(Collection<Borrowreturnmaterial> borrowreturnmaterialCollection) {
-        this.borrowreturnmaterialCollection = borrowreturnmaterialCollection;
+    public void setGeographytreedefs(Collection<Geographytreedef> geographytreedefs) {
+        this.geographytreedefs = geographytreedefs;
     }
 
     @XmlTransient
-    public Collection<Borrowreturnmaterial> getBorrowreturnmaterialCollection1() {
-        return borrowreturnmaterialCollection1;
+    public Collection<Geographytreedef> getGeographytreedefs1() {
+        return geographytreedefs1;
     }
 
-    public void setBorrowreturnmaterialCollection1(Collection<Borrowreturnmaterial> borrowreturnmaterialCollection1) {
-        this.borrowreturnmaterialCollection1 = borrowreturnmaterialCollection1;
+    public void setGeographytreedefs1(Collection<Geographytreedef> geographytreedefs1) {
+        this.geographytreedefs1 = geographytreedefs1;
     }
 
     @XmlTransient
-    public Collection<Borrowreturnmaterial> getBorrowreturnmaterialCollection2() {
-        return borrowreturnmaterialCollection2;
+    public Collection<Geologictimeperiod> getGeologictimeperiods() {
+        return geologictimeperiods;
     }
 
-    public void setBorrowreturnmaterialCollection2(Collection<Borrowreturnmaterial> borrowreturnmaterialCollection2) {
-        this.borrowreturnmaterialCollection2 = borrowreturnmaterialCollection2;
+    public void setGeologictimeperiods(Collection<Geologictimeperiod> geologictimeperiods) {
+        this.geologictimeperiods = geologictimeperiods;
     }
 
     @XmlTransient
-    public Collection<Preparationattr> getPreparationattrCollection() {
-        return preparationattrCollection;
+    public Collection<Geologictimeperiod> getGeologictimeperiods1() {
+        return geologictimeperiods1;
     }
 
-    public void setPreparationattrCollection(Collection<Preparationattr> preparationattrCollection) {
-        this.preparationattrCollection = preparationattrCollection;
+    public void setGeologictimeperiods1(Collection<Geologictimeperiod> geologictimeperiods1) {
+        this.geologictimeperiods1 = geologictimeperiods1;
     }
 
     @XmlTransient
-    public Collection<Preparationattr> getPreparationattrCollection1() {
-        return preparationattrCollection1;
+    public Collection<Geologictimeperiodtreedefitem> getGeologictimeperiodtreedefitems() {
+        return geologictimeperiodtreedefitems;
     }
 
-    public void setPreparationattrCollection1(Collection<Preparationattr> preparationattrCollection1) {
-        this.preparationattrCollection1 = preparationattrCollection1;
+    public void setGeologictimeperiodtreedefitems(Collection<Geologictimeperiodtreedefitem> geologictimeperiodtreedefitems) {
+        this.geologictimeperiodtreedefitems = geologictimeperiodtreedefitems;
     }
 
     @XmlTransient
-    public Collection<Datatype> getDatatypeCollection() {
-        return datatypeCollection;
+    public Collection<Geologictimeperiodtreedefitem> getGeologictimeperiodtreedefitems1() {
+        return geologictimeperiodtreedefitems1;
     }
 
-    public void setDatatypeCollection(Collection<Datatype> datatypeCollection) {
-        this.datatypeCollection = datatypeCollection;
+    public void setGeologictimeperiodtreedefitems1(Collection<Geologictimeperiodtreedefitem> geologictimeperiodtreedefitems1) {
+        this.geologictimeperiodtreedefitems1 = geologictimeperiodtreedefitems1;
     }
 
     @XmlTransient
-    public Collection<Datatype> getDatatypeCollection1() {
-        return datatypeCollection1;
+    public Collection<Geologictimeperiodtreedef> getGeologictimeperiodtreedefs() {
+        return geologictimeperiodtreedefs;
     }
 
-    public void setDatatypeCollection1(Collection<Datatype> datatypeCollection1) {
-        this.datatypeCollection1 = datatypeCollection1;
+    public void setGeologictimeperiodtreedefs(Collection<Geologictimeperiodtreedef> geologictimeperiodtreedefs) {
+        this.geologictimeperiodtreedefs = geologictimeperiodtreedefs;
     }
 
     @XmlTransient
-    public Collection<Storagetreedef> getStoragetreedefCollection() {
-        return storagetreedefCollection;
+    public Collection<Geologictimeperiodtreedef> getGeologictimeperiodtreedefs1() {
+        return geologictimeperiodtreedefs1;
     }
 
-    public void setStoragetreedefCollection(Collection<Storagetreedef> storagetreedefCollection) {
-        this.storagetreedefCollection = storagetreedefCollection;
+    public void setGeologictimeperiodtreedefs1(Collection<Geologictimeperiodtreedef> geologictimeperiodtreedefs1) {
+        this.geologictimeperiodtreedefs1 = geologictimeperiodtreedefs1;
     }
 
     @XmlTransient
-    public Collection<Storagetreedef> getStoragetreedefCollection1() {
-        return storagetreedefCollection1;
+    public Collection<Giftagent> getGiftagents() {
+        return giftagents;
     }
 
-    public void setStoragetreedefCollection1(Collection<Storagetreedef> storagetreedefCollection1) {
-        this.storagetreedefCollection1 = storagetreedefCollection1;
+    public void setGiftagents(Collection<Giftagent> giftagents) {
+        this.giftagents = giftagents;
     }
 
     @XmlTransient
-    public Collection<Permit> getPermitCollection() {
-        return permitCollection;
+    public Collection<Giftagent> getGiftagents1() {
+        return giftagents1;
     }
 
-    public void setPermitCollection(Collection<Permit> permitCollection) {
-        this.permitCollection = permitCollection;
+    public void setGiftagents1(Collection<Giftagent> giftagents1) {
+        this.giftagents1 = giftagents1;
     }
 
     @XmlTransient
-    public Collection<Permit> getPermitCollection1() {
-        return permitCollection1;
+    public Collection<Giftagent> getGiftagents2() {
+        return giftagents2;
     }
 
-    public void setPermitCollection1(Collection<Permit> permitCollection1) {
-        this.permitCollection1 = permitCollection1;
+    public void setGiftagents2(Collection<Giftagent> giftagents2) {
+        this.giftagents2 = giftagents2;
     }
 
     @XmlTransient
-    public Collection<Permit> getPermitCollection2() {
-        return permitCollection2;
+    public Collection<Giftpreparation> getGiftpreparations() {
+        return giftpreparations;
     }
 
-    public void setPermitCollection2(Collection<Permit> permitCollection2) {
-        this.permitCollection2 = permitCollection2;
+    public void setGiftpreparations(Collection<Giftpreparation> giftpreparations) {
+        this.giftpreparations = giftpreparations;
     }
 
     @XmlTransient
-    public Collection<Permit> getPermitCollection3() {
-        return permitCollection3;
+    public Collection<Giftpreparation> getGiftpreparations1() {
+        return giftpreparations1;
     }
 
-    public void setPermitCollection3(Collection<Permit> permitCollection3) {
-        this.permitCollection3 = permitCollection3;
+    public void setGiftpreparations1(Collection<Giftpreparation> giftpreparations1) {
+        this.giftpreparations1 = giftpreparations1;
     }
 
     @XmlTransient
-    public Collection<Commonnametxcitation> getCommonnametxcitationCollection() {
-        return commonnametxcitationCollection;
+    public Collection<Gift> getGifts() {
+        return gifts;
     }
 
-    public void setCommonnametxcitationCollection(Collection<Commonnametxcitation> commonnametxcitationCollection) {
-        this.commonnametxcitationCollection = commonnametxcitationCollection;
+    public void setGifts(Collection<Gift> gifts) {
+        this.gifts = gifts;
     }
 
     @XmlTransient
-    public Collection<Commonnametxcitation> getCommonnametxcitationCollection1() {
-        return commonnametxcitationCollection1;
+    public Collection<Gift> getGifts1() {
+        return gifts1;
     }
 
-    public void setCommonnametxcitationCollection1(Collection<Commonnametxcitation> commonnametxcitationCollection1) {
-        this.commonnametxcitationCollection1 = commonnametxcitationCollection1;
+    public void setGifts1(Collection<Gift> gifts1) {
+        this.gifts1 = gifts1;
     }
 
     @XmlTransient
-    public Collection<Determination> getDeterminationCollection() {
-        return determinationCollection;
+    public Collection<Groupperson> getGroups1() {
+        return groups1;
     }
 
-    public void setDeterminationCollection(Collection<Determination> determinationCollection) {
-        this.determinationCollection = determinationCollection;
+    public void setGroups1(Collection<Groupperson> groups1) {
+        this.groups1 = groups1;
     }
 
     @XmlTransient
-    public Collection<Determination> getDeterminationCollection1() {
-        return determinationCollection1;
+    public Collection<Groupperson> getGroups2() {
+        return groups2;
     }
 
-    public void setDeterminationCollection1(Collection<Determination> determinationCollection1) {
-        this.determinationCollection1 = determinationCollection1;
+    public void setGroups2(Collection<Groupperson> groups2) {
+        this.groups2 = groups2;
     }
 
     @XmlTransient
-    public Collection<Determination> getDeterminationCollection2() {
-        return determinationCollection2;
+    public Collection<Inforequest> getInforequests() {
+        return inforequests;
     }
 
-    public void setDeterminationCollection2(Collection<Determination> determinationCollection2) {
-        this.determinationCollection2 = determinationCollection2;
+    public void setInforequests(Collection<Inforequest> inforequests) {
+        this.inforequests = inforequests;
     }
 
     @XmlTransient
-    public Collection<Spexportschema> getSpexportschemaCollection() {
-        return spexportschemaCollection;
+    public Collection<Inforequest> getInforequests1() {
+        return inforequests1;
     }
 
-    public void setSpexportschemaCollection(Collection<Spexportschema> spexportschemaCollection) {
-        this.spexportschemaCollection = spexportschemaCollection;
+    public void setInforequests1(Collection<Inforequest> inforequests1) {
+        this.inforequests1 = inforequests1;
     }
 
     @XmlTransient
-    public Collection<Spexportschema> getSpexportschemaCollection1() {
-        return spexportschemaCollection1;
+    public Collection<Inforequest> getInforequests2() {
+        return inforequests2;
     }
 
-    public void setSpexportschemaCollection1(Collection<Spexportschema> spexportschemaCollection1) {
-        this.spexportschemaCollection1 = spexportschemaCollection1;
+    public void setInforequests2(Collection<Inforequest> inforequests2) {
+        this.inforequests2 = inforequests2;
     }
 
     @XmlTransient
-    public Collection<Collectingevent> getCollectingeventCollection() {
-        return collectingeventCollection;
+    public Collection<Institution> getInstitutions() {
+        return institutions;
     }
 
-    public void setCollectingeventCollection(Collection<Collectingevent> collectingeventCollection) {
-        this.collectingeventCollection = collectingeventCollection;
+    public void setInstitutions(Collection<Institution> institutions) {
+        this.institutions = institutions;
     }
 
     @XmlTransient
-    public Collection<Collectingevent> getCollectingeventCollection1() {
-        return collectingeventCollection1;
+    public Collection<Institution> getInstitutions1() {
+        return institutions1;
     }
 
-    public void setCollectingeventCollection1(Collection<Collectingevent> collectingeventCollection1) {
-        this.collectingeventCollection1 = collectingeventCollection1;
+    public void setInstitutions1(Collection<Institution> institutions1) {
+        this.institutions1 = institutions1;
     }
 
     @XmlTransient
-    public Collection<Collectionreltype> getCollectionreltypeCollection() {
-        return collectionreltypeCollection;
+    public Collection<Journal> getJournals() {
+        return journals;
     }
 
-    public void setCollectionreltypeCollection(Collection<Collectionreltype> collectionreltypeCollection) {
-        this.collectionreltypeCollection = collectionreltypeCollection;
+    public void setJournals(Collection<Journal> journals) {
+        this.journals = journals;
     }
 
     @XmlTransient
-    public Collection<Collectionreltype> getCollectionreltypeCollection1() {
-        return collectionreltypeCollection1;
+    public Collection<Journal> getJournals1() {
+        return journals1;
     }
 
-    public void setCollectionreltypeCollection1(Collection<Collectionreltype> collectionreltypeCollection1) {
-        this.collectionreltypeCollection1 = collectionreltypeCollection1;
+    public void setJournals1(Collection<Journal> journals1) {
+        this.journals1 = journals1;
     }
 
     @XmlTransient
-    public Collection<Spexportschemaitemmapping> getSpexportschemaitemmappingCollection() {
-        return spexportschemaitemmappingCollection;
+    public Collection<Lithostrat> getLithostrats() {
+        return lithostrats;
     }
 
-    public void setSpexportschemaitemmappingCollection(Collection<Spexportschemaitemmapping> spexportschemaitemmappingCollection) {
-        this.spexportschemaitemmappingCollection = spexportschemaitemmappingCollection;
+    public void setLithostrats(Collection<Lithostrat> lithostrats) {
+        this.lithostrats = lithostrats;
     }
 
     @XmlTransient
-    public Collection<Spexportschemaitemmapping> getSpexportschemaitemmappingCollection1() {
-        return spexportschemaitemmappingCollection1;
+    public Collection<Lithostrat> getLithostrats1() {
+        return lithostrats1;
     }
 
-    public void setSpexportschemaitemmappingCollection1(Collection<Spexportschemaitemmapping> spexportschemaitemmappingCollection1) {
-        this.spexportschemaitemmappingCollection1 = spexportschemaitemmappingCollection1;
+    public void setLithostrats1(Collection<Lithostrat> lithostrats1) {
+        this.lithostrats1 = lithostrats1;
     }
 
     @XmlTransient
-    public Collection<Dnasequence> getDnasequenceCollection() {
-        return dnasequenceCollection;
+    public Collection<Lithostrattreedefitem> getLithostrattreedefitems() {
+        return lithostrattreedefitems;
     }
 
-    public void setDnasequenceCollection(Collection<Dnasequence> dnasequenceCollection) {
-        this.dnasequenceCollection = dnasequenceCollection;
+    public void setLithostrattreedefitems(Collection<Lithostrattreedefitem> lithostrattreedefitems) {
+        this.lithostrattreedefitems = lithostrattreedefitems;
     }
 
     @XmlTransient
-    public Collection<Dnasequence> getDnasequenceCollection1() {
-        return dnasequenceCollection1;
+    public Collection<Lithostrattreedefitem> getLithostrattreedefitems1() {
+        return lithostrattreedefitems1;
     }
 
-    public void setDnasequenceCollection1(Collection<Dnasequence> dnasequenceCollection1) {
-        this.dnasequenceCollection1 = dnasequenceCollection1;
+    public void setLithostrattreedefitems1(Collection<Lithostrattreedefitem> lithostrattreedefitems1) {
+        this.lithostrattreedefitems1 = lithostrattreedefitems1;
     }
 
     @XmlTransient
-    public Collection<Dnasequence> getDnasequenceCollection2() {
-        return dnasequenceCollection2;
+    public Collection<Lithostrattreedef> getLithostrattreedefs() {
+        return lithostrattreedefs;
     }
 
-    public void setDnasequenceCollection2(Collection<Dnasequence> dnasequenceCollection2) {
-        this.dnasequenceCollection2 = dnasequenceCollection2;
+    public void setLithostrattreedefs(Collection<Lithostrattreedef> lithostrattreedefs) {
+        this.lithostrattreedefs = lithostrattreedefs;
     }
 
     @XmlTransient
-    public Collection<Spauditlogfield> getSpauditlogfieldCollection() {
-        return spauditlogfieldCollection;
+    public Collection<Lithostrattreedef> getLithostrattreedefs1() {
+        return lithostrattreedefs1;
     }
 
-    public void setSpauditlogfieldCollection(Collection<Spauditlogfield> spauditlogfieldCollection) {
-        this.spauditlogfieldCollection = spauditlogfieldCollection;
+    public void setLithostrattreedefs1(Collection<Lithostrattreedef> lithostrattreedefs1) {
+        this.lithostrattreedefs1 = lithostrattreedefs1;
     }
 
     @XmlTransient
-    public Collection<Spauditlogfield> getSpauditlogfieldCollection1() {
-        return spauditlogfieldCollection1;
+    public Collection<Loanagent> getLoanagents() {
+        return loanagents;
     }
 
-    public void setSpauditlogfieldCollection1(Collection<Spauditlogfield> spauditlogfieldCollection1) {
-        this.spauditlogfieldCollection1 = spauditlogfieldCollection1;
+    public void setLoanagents(Collection<Loanagent> loanagents) {
+        this.loanagents = loanagents;
     }
 
     @XmlTransient
-    public Collection<Geographytreedef> getGeographytreedefCollection() {
-        return geographytreedefCollection;
+    public Collection<Loanagent> getLoanagents1() {
+        return loanagents1;
     }
 
-    public void setGeographytreedefCollection(Collection<Geographytreedef> geographytreedefCollection) {
-        this.geographytreedefCollection = geographytreedefCollection;
+    public void setLoanagents1(Collection<Loanagent> loanagents1) {
+        this.loanagents1 = loanagents1;
     }
 
     @XmlTransient
-    public Collection<Geographytreedef> getGeographytreedefCollection1() {
-        return geographytreedefCollection1;
+    public Collection<Loanagent> getLoanagents2() {
+        return loanagents2;
     }
 
-    public void setGeographytreedefCollection1(Collection<Geographytreedef> geographytreedefCollection1) {
-        this.geographytreedefCollection1 = geographytreedefCollection1;
+    public void setLoanagents2(Collection<Loanagent> loanagents2) {
+        this.loanagents2 = loanagents2;
     }
 
     @XmlTransient
-    public Collection<Collectionobjectattachment> getCollectionobjectattachmentCollection() {
-        return collectionobjectattachmentCollection;
+    public Collection<Loanattachment> getLoanattachments() {
+        return loanattachments;
     }
 
-    public void setCollectionobjectattachmentCollection(Collection<Collectionobjectattachment> collectionobjectattachmentCollection) {
-        this.collectionobjectattachmentCollection = collectionobjectattachmentCollection;
+    public void setLoanattachments(Collection<Loanattachment> loanattachments) {
+        this.loanattachments = loanattachments;
     }
 
     @XmlTransient
-    public Collection<Collectionobjectattachment> getCollectionobjectattachmentCollection1() {
-        return collectionobjectattachmentCollection1;
+    public Collection<Loanattachment> getLoanattachments1() {
+        return loanattachments1;
     }
 
-    public void setCollectionobjectattachmentCollection1(Collection<Collectionobjectattachment> collectionobjectattachmentCollection1) {
-        this.collectionobjectattachmentCollection1 = collectionobjectattachmentCollection1;
+    public void setLoanattachments1(Collection<Loanattachment> loanattachments1) {
+        this.loanattachments1 = loanattachments1;
     }
 
     @XmlTransient
-    public Collection<Taxoncitation> getTaxoncitationCollection() {
-        return taxoncitationCollection;
+    public Collection<Loanpreparation> getLoanpreparations() {
+        return loanpreparations;
     }
 
-    public void setTaxoncitationCollection(Collection<Taxoncitation> taxoncitationCollection) {
-        this.taxoncitationCollection = taxoncitationCollection;
+    public void setLoanpreparations(Collection<Loanpreparation> loanpreparations) {
+        this.loanpreparations = loanpreparations;
     }
 
     @XmlTransient
-    public Collection<Taxoncitation> getTaxoncitationCollection1() {
-        return taxoncitationCollection1;
+    public Collection<Loanpreparation> getLoanpreparations1() {
+        return loanpreparations1;
     }
 
-    public void setTaxoncitationCollection1(Collection<Taxoncitation> taxoncitationCollection1) {
-        this.taxoncitationCollection1 = taxoncitationCollection1;
+    public void setLoanpreparations1(Collection<Loanpreparation> loanpreparations1) {
+        this.loanpreparations1 = loanpreparations1;
     }
 
     @XmlTransient
-    public Collection<Dnasequencingruncitation> getDnasequencingruncitationCollection() {
-        return dnasequencingruncitationCollection;
+    public Collection<Loanreturnpreparation> getLoanreturnpreparations() {
+        return loanreturnpreparations;
     }
 
-    public void setDnasequencingruncitationCollection(Collection<Dnasequencingruncitation> dnasequencingruncitationCollection) {
-        this.dnasequencingruncitationCollection = dnasequencingruncitationCollection;
+    public void setLoanreturnpreparations(Collection<Loanreturnpreparation> loanreturnpreparations) {
+        this.loanreturnpreparations = loanreturnpreparations;
     }
 
     @XmlTransient
-    public Collection<Dnasequencingruncitation> getDnasequencingruncitationCollection1() {
-        return dnasequencingruncitationCollection1;
+    public Collection<Loanreturnpreparation> getLoanreturnpreparations1() {
+        return loanreturnpreparations1;
     }
 
-    public void setDnasequencingruncitationCollection1(Collection<Dnasequencingruncitation> dnasequencingruncitationCollection1) {
-        this.dnasequencingruncitationCollection1 = dnasequencingruncitationCollection1;
+    public void setLoanreturnpreparations1(Collection<Loanreturnpreparation> loanreturnpreparations1) {
+        this.loanreturnpreparations1 = loanreturnpreparations1;
     }
 
     @XmlTransient
-    public Collection<Inforequest> getInforequestCollection() {
-        return inforequestCollection;
+    public Collection<Loanreturnpreparation> getLoanreturnpreparations2() {
+        return loanreturnpreparations2;
     }
 
-    public void setInforequestCollection(Collection<Inforequest> inforequestCollection) {
-        this.inforequestCollection = inforequestCollection;
+    public void setLoanreturnpreparations2(Collection<Loanreturnpreparation> loanreturnpreparations2) {
+        this.loanreturnpreparations2 = loanreturnpreparations2;
     }
 
     @XmlTransient
-    public Collection<Inforequest> getInforequestCollection1() {
-        return inforequestCollection1;
+    public Collection<Loan> getLoans() {
+        return loans;
     }
 
-    public void setInforequestCollection1(Collection<Inforequest> inforequestCollection1) {
-        this.inforequestCollection1 = inforequestCollection1;
+    public void setLoans(Collection<Loan> loans) {
+        this.loans = loans;
     }
 
     @XmlTransient
-    public Collection<Inforequest> getInforequestCollection2() {
-        return inforequestCollection2;
+    public Collection<Loan> getLoans1() {
+        return loans1;
     }
 
-    public void setInforequestCollection2(Collection<Inforequest> inforequestCollection2) {
-        this.inforequestCollection2 = inforequestCollection2;
+    public void setLoans1(Collection<Loan> loans1) {
+        this.loans1 = loans1;
     }
 
     @XmlTransient
-    public Collection<Lithostrat> getLithostratCollection() {
-        return lithostratCollection;
+    public Collection<Locality> getLocalities() {
+        return localities;
     }
 
-    public void setLithostratCollection(Collection<Lithostrat> lithostratCollection) {
-        this.lithostratCollection = lithostratCollection;
+    public void setLocalities(Collection<Locality> localities) {
+        this.localities = localities;
     }
 
     @XmlTransient
-    public Collection<Lithostrat> getLithostratCollection1() {
-        return lithostratCollection1;
+    public Collection<Locality> getLocalities1() {
+        return localities1;
     }
 
-    public void setLithostratCollection1(Collection<Lithostrat> lithostratCollection1) {
-        this.lithostratCollection1 = lithostratCollection1;
+    public void setLocalities1(Collection<Locality> localities1) {
+        this.localities1 = localities1;
     }
 
-    public Division getDivisionID() {
-        return divisionID;
+    @XmlTransient
+    public Collection<Localityattachment> getLocalityattachments() {
+        return localityattachments;
     }
 
-    public void setDivisionID(Division divisionID) {
-        this.divisionID = divisionID;
+    public void setLocalityattachments(Collection<Localityattachment> localityattachments) {
+        this.localityattachments = localityattachments;
     }
 
-    public Institution getInstitutionTCID() {
-        return institutionTCID;
+    @XmlTransient
+    public Collection<Localityattachment> getLocalityattachments1() {
+        return localityattachments1;
     }
 
-    public void setInstitutionTCID(Institution institutionTCID) {
-        this.institutionTCID = institutionTCID;
+    public void setLocalityattachments1(Collection<Localityattachment> localityattachments1) {
+        this.localityattachments1 = localityattachments1;
     }
 
-    public Institution getInstitutionCCID() {
-        return institutionCCID;
+    @XmlTransient
+    public Collection<Localitycitation> getLocalitycitations() {
+        return localitycitations;
     }
 
-    public void setInstitutionCCID(Institution institutionCCID) {
-        this.institutionCCID = institutionCCID;
+    public void setLocalitycitations(Collection<Localitycitation> localitycitations) {
+        this.localitycitations = localitycitations;
     }
 
     @XmlTransient
-    public Collection<Agent> getAgentCollection() {
-        return agentCollection;
+    public Collection<Localitycitation> getLocalitycitations1() {
+        return localitycitations1;
     }
 
-    public void setAgentCollection(Collection<Agent> agentCollection) {
-        this.agentCollection = agentCollection;
+    public void setLocalitycitations1(Collection<Localitycitation> localitycitations1) {
+        this.localitycitations1 = localitycitations1;
     }
 
     @XmlTransient
-    public Agent getParentOrganizationID() {
-        return parentOrganizationID;
+    public Collection<Localitydetail> getLocalitydetails() {
+        return localitydetails;
     }
 
-    public void setParentOrganizationID(Agent parentOrganizationID) {
-        this.parentOrganizationID = parentOrganizationID;
+    public void setLocalitydetails(Collection<Localitydetail> localitydetails) {
+        this.localitydetails = localitydetails;
     }
 
     @XmlTransient
-    public Collection<Agent> getAgentCollection1() {
-        return agentCollection1;
+    public Collection<Localitydetail> getLocalitydetails1() {
+        return localitydetails1;
     }
 
-    public void setAgentCollection1(Collection<Agent> agentCollection1) {
-        this.agentCollection1 = agentCollection1;
+    public void setLocalitydetails1(Collection<Localitydetail> localitydetails1) {
+        this.localitydetails1 = localitydetails1;
     }
 
     @XmlTransient
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Collection<Localitynamealias> getLocalitynamealiases() {
+        return localitynamealiases;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setLocalitynamealiases(Collection<Localitynamealias> localitynamealiases) {
+        this.localitynamealiases = localitynamealiases;
     }
 
     @XmlTransient
-    public Collection<Agent> getAgentCollection2() {
-        return agentCollection2;
+    public Collection<Localitynamealias> getLocalitynamealiases1() {
+        return localitynamealiases1;
     }
 
-    public void setAgentCollection2(Collection<Agent> agentCollection2) {
-        this.agentCollection2 = agentCollection2;
+    public void setLocalitynamealiases1(Collection<Localitynamealias> localitynamealiases1) {
+        this.localitynamealiases1 = localitynamealiases1;
     }
 
     @XmlTransient
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Collection<Groupperson> getMembers() {
+        return members;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setMembers(Collection<Groupperson> members) {
+        this.members = members;
     }
 
-    public Specifyuser getSpecifyUserID() {
-        return specifyUserID;
+    @XmlTransient
+    public Collection<Otheridentifier> getOtheridentifiers() {
+        return otheridentifiers;
     }
 
-    public void setSpecifyUserID(Specifyuser specifyUserID) {
-        this.specifyUserID = specifyUserID;
+    public void setOtheridentifiers(Collection<Otheridentifier> otheridentifiers) {
+        this.otheridentifiers = otheridentifiers;
     }
 
-    public se.nrm.specify.datamodel.Collection getCollectionTCID() {
-        return collectionTCID;
+    @XmlTransient
+    public Collection<Otheridentifier> getOtheridentifiers1() {
+        return otheridentifiers1;
     }
 
-    public void setCollectionTCID(se.nrm.specify.datamodel.Collection collectionTCID) {
-        this.collectionTCID = collectionTCID;
+    public void setOtheridentifiers1(Collection<Otheridentifier> otheridentifiers1) {
+        this.otheridentifiers1 = otheridentifiers1;
     }
 
-    public se.nrm.specify.datamodel.Collection getCollectionCCID() {
-        return collectionCCID;
+    @XmlTransient
+    public Collection<Paleocontext> getPaleocontexts() {
+        return paleocontexts;
     }
 
-    public void setCollectionCCID(se.nrm.specify.datamodel.Collection collectionCCID) {
-        this.collectionCCID = collectionCCID;
+    public void setPaleocontexts(Collection<Paleocontext> paleocontexts) {
+        this.paleocontexts = paleocontexts;
     }
 
     @XmlTransient
-    public Collection<Borrow> getBorrowCollection() {
-        return borrowCollection;
+    public Collection<Paleocontext> getPaleocontexts1() {
+        return paleocontexts1;
     }
 
-    public void setBorrowCollection(Collection<Borrow> borrowCollection) {
-        this.borrowCollection = borrowCollection;
+    public void setPaleocontexts1(Collection<Paleocontext> paleocontexts1) {
+        this.paleocontexts1 = paleocontexts1;
     }
 
     @XmlTransient
-    public Collection<Borrow> getBorrowCollection1() {
-        return borrowCollection1;
+    public Collection<Permitattachment> getPermitattachments() {
+        return permitattachments;
     }
 
-    public void setBorrowCollection1(Collection<Borrow> borrowCollection1) {
-        this.borrowCollection1 = borrowCollection1;
+    public void setPermitattachments(Collection<Permitattachment> permitattachments) {
+        this.permitattachments = permitattachments;
     }
 
     @XmlTransient
-    public Collection<Spexportschemaitem> getSpexportschemaitemCollection() {
-        return spexportschemaitemCollection;
+    public Collection<Permitattachment> getPermitattachments1() {
+        return permitattachments1;
     }
 
-    public void setSpexportschemaitemCollection(Collection<Spexportschemaitem> spexportschemaitemCollection) {
-        this.spexportschemaitemCollection = spexportschemaitemCollection;
+    public void setPermitattachments1(Collection<Permitattachment> permitattachments1) {
+        this.permitattachments1 = permitattachments1;
     }
 
     @XmlTransient
-    public Collection<Spexportschemaitem> getSpexportschemaitemCollection1() {
-        return spexportschemaitemCollection1;
+    public Collection<Permit> getPermits() {
+        return permits;
     }
 
-    public void setSpexportschemaitemCollection1(Collection<Spexportschemaitem> spexportschemaitemCollection1) {
-        this.spexportschemaitemCollection1 = spexportschemaitemCollection1;
+    public void setPermits(Collection<Permit> permits) {
+        this.permits = permits;
     }
 
     @XmlTransient
-    public Collection<Attributedef> getAttributedefCollection() {
-        return attributedefCollection;
+    public Collection<Permit> getPermits1() {
+        return permits1;
     }
 
-    public void setAttributedefCollection(Collection<Attributedef> attributedefCollection) {
-        this.attributedefCollection = attributedefCollection;
+    public void setPermits1(Collection<Permit> permits1) {
+        this.permits1 = permits1;
     }
 
     @XmlTransient
-    public Collection<Attributedef> getAttributedefCollection1() {
-        return attributedefCollection1;
+    public Collection<Permit> getPermits2() {
+        return permits2;
     }
 
-    public void setAttributedefCollection1(Collection<Attributedef> attributedefCollection1) {
-        this.attributedefCollection1 = attributedefCollection1;
+    public void setPermits2(Collection<Permit> permits2) {
+        this.permits2 = permits2;
     }
 
     @XmlTransient
-    public Collection<Exsiccata> getExsiccataCollection() {
-        return exsiccataCollection;
+    public Collection<Permit> getPermits3() {
+        return permits3;
     }
 
-    public void setExsiccataCollection(Collection<Exsiccata> exsiccataCollection) {
-        this.exsiccataCollection = exsiccataCollection;
+    public void setPermits3(Collection<Permit> permits3) {
+        this.permits3 = permits3;
     }
 
     @XmlTransient
-    public Collection<Exsiccata> getExsiccataCollection1() {
-        return exsiccataCollection1;
+    public Collection<Picklistitem> getPicklistitems() {
+        return picklistitems;
     }
 
-    public void setExsiccataCollection1(Collection<Exsiccata> exsiccataCollection1) {
-        this.exsiccataCollection1 = exsiccataCollection1;
+    public void setPicklistitems(Collection<Picklistitem> picklistitems) {
+        this.picklistitems = picklistitems;
     }
 
     @XmlTransient
-    public Collection<Taxontreedefitem> getTaxontreedefitemCollection() {
-        return taxontreedefitemCollection;
+    public Collection<Picklistitem> getPicklistitems1() {
+        return picklistitems1;
     }
 
-    public void setTaxontreedefitemCollection(Collection<Taxontreedefitem> taxontreedefitemCollection) {
-        this.taxontreedefitemCollection = taxontreedefitemCollection;
+    public void setPicklistitems1(Collection<Picklistitem> picklistitems1) {
+        this.picklistitems1 = picklistitems1;
     }
 
     @XmlTransient
-    public Collection<Taxontreedefitem> getTaxontreedefitemCollection1() {
-        return taxontreedefitemCollection1;
+    public Collection<Picklist> getPicklists() {
+        return picklists;
     }
 
-    public void setTaxontreedefitemCollection1(Collection<Taxontreedefitem> taxontreedefitemCollection1) {
-        this.taxontreedefitemCollection1 = taxontreedefitemCollection1;
+    public void setPicklists(Collection<Picklist> picklists) {
+        this.picklists = picklists;
     }
 
     @XmlTransient
-    public Collection<Taxonattachment> getTaxonattachmentCollection() {
-        return taxonattachmentCollection;
+    public Collection<Picklist> getPicklists1() {
+        return picklists1;
     }
 
-    public void setTaxonattachmentCollection(Collection<Taxonattachment> taxonattachmentCollection) {
-        this.taxonattachmentCollection = taxonattachmentCollection;
+    public void setPicklists1(Collection<Picklist> picklists1) {
+        this.picklists1 = picklists1;
     }
 
     @XmlTransient
-    public Collection<Taxonattachment> getTaxonattachmentCollection1() {
-        return taxonattachmentCollection1;
+    public Collection<Preparationattachment> getPreparationattachments() {
+        return preparationattachments;
     }
 
-    public void setTaxonattachmentCollection1(Collection<Taxonattachment> taxonattachmentCollection1) {
-        this.taxonattachmentCollection1 = taxonattachmentCollection1;
+    public void setPreparationattachments(Collection<Preparationattachment> preparationattachments) {
+        this.preparationattachments = preparationattachments;
     }
 
     @XmlTransient
-    public Collection<Loanreturnpreparation> getLoanreturnpreparationCollection() {
-        return loanreturnpreparationCollection;
+    public Collection<Preparationattachment> getPreparationattachments1() {
+        return preparationattachments1;
     }
 
-    public void setLoanreturnpreparationCollection(Collection<Loanreturnpreparation> loanreturnpreparationCollection) {
-        this.loanreturnpreparationCollection = loanreturnpreparationCollection;
+    public void setPreparationattachments1(Collection<Preparationattachment> preparationattachments1) {
+        this.preparationattachments1 = preparationattachments1;
     }
 
     @XmlTransient
-    public Collection<Loanreturnpreparation> getLoanreturnpreparationCollection1() {
-        return loanreturnpreparationCollection1;
+    public Collection<Preparationattribute> getPreparationattributes() {
+        return preparationattributes;
     }
 
-    public void setLoanreturnpreparationCollection1(Collection<Loanreturnpreparation> loanreturnpreparationCollection1) {
-        this.loanreturnpreparationCollection1 = loanreturnpreparationCollection1;
+    public void setPreparationattributes(Collection<Preparationattribute> preparationattributes) {
+        this.preparationattributes = preparationattributes;
     }
 
     @XmlTransient
-    public Collection<Loanreturnpreparation> getLoanreturnpreparationCollection2() {
-        return loanreturnpreparationCollection2;
+    public Collection<Preparationattribute> getPreparationattributes1() {
+        return preparationattributes1;
     }
 
-    public void setLoanreturnpreparationCollection2(Collection<Loanreturnpreparation> loanreturnpreparationCollection2) {
-        this.loanreturnpreparationCollection2 = loanreturnpreparationCollection2;
+    public void setPreparationattributes1(Collection<Preparationattribute> preparationattributes1) {
+        this.preparationattributes1 = preparationattributes1;
     }
 
     @XmlTransient
-    public Collection<Spexportschemamapping> getSpexportschemamappingCollection() {
-        return spexportschemamappingCollection;
+    public Collection<Preparationattr> getPreparationattrs() {
+        return preparationattrs;
     }
 
-    public void setSpexportschemamappingCollection(Collection<Spexportschemamapping> spexportschemamappingCollection) {
-        this.spexportschemamappingCollection = spexportschemamappingCollection;
+    public void setPreparationattrs(Collection<Preparationattr> preparationattrs) {
+        this.preparationattrs = preparationattrs;
     }
 
     @XmlTransient
-    public Collection<Spexportschemamapping> getSpexportschemamappingCollection1() {
-        return spexportschemamappingCollection1;
+    public Collection<Preparationattr> getPreparationattrs1() {
+        return preparationattrs1;
     }
 
-    public void setSpexportschemamappingCollection1(Collection<Spexportschemamapping> spexportschemamappingCollection1) {
-        this.spexportschemamappingCollection1 = spexportschemamappingCollection1;
+    public void setPreparationattrs1(Collection<Preparationattr> preparationattrs1) {
+        this.preparationattrs1 = preparationattrs1;
     }
 
     @XmlTransient
-    public Collection<Fieldnotebookpageattachment> getFieldnotebookpageattachmentCollection() {
-        return fieldnotebookpageattachmentCollection;
+    public Collection<Preparation> getPreparations() {
+        return preparations;
     }
 
-    public void setFieldnotebookpageattachmentCollection(Collection<Fieldnotebookpageattachment> fieldnotebookpageattachmentCollection) {
-        this.fieldnotebookpageattachmentCollection = fieldnotebookpageattachmentCollection;
+    public void setPreparations(Collection<Preparation> preparations) {
+        this.preparations = preparations;
     }
 
     @XmlTransient
-    public Collection<Fieldnotebookpageattachment> getFieldnotebookpageattachmentCollection1() {
-        return fieldnotebookpageattachmentCollection1;
+    public Collection<Preparation> getPreparations1() {
+        return preparations1;
     }
 
-    public void setFieldnotebookpageattachmentCollection1(Collection<Fieldnotebookpageattachment> fieldnotebookpageattachmentCollection1) {
-        this.fieldnotebookpageattachmentCollection1 = fieldnotebookpageattachmentCollection1;
+    public void setPreparations1(Collection<Preparation> preparations1) {
+        this.preparations1 = preparations1;
     }
 
     @XmlTransient
-    public Collection<Giftpreparation> getGiftpreparationCollection() {
-        return giftpreparationCollection;
+    public Collection<Preparation> getPreparations2() {
+        return preparations2;
     }
 
-    public void setGiftpreparationCollection(Collection<Giftpreparation> giftpreparationCollection) {
-        this.giftpreparationCollection = giftpreparationCollection;
+    public void setPreparations2(Collection<Preparation> preparations2) {
+        this.preparations2 = preparations2;
     }
 
     @XmlTransient
-    public Collection<Giftpreparation> getGiftpreparationCollection1() {
-        return giftpreparationCollection1;
+    public Collection<Preptype> getPreptypes() {
+        return preptypes;
     }
 
-    public void setGiftpreparationCollection1(Collection<Giftpreparation> giftpreparationCollection1) {
-        this.giftpreparationCollection1 = giftpreparationCollection1;
+    public void setPreptypes(Collection<Preptype> preptypes) {
+        this.preptypes = preptypes;
     }
 
     @XmlTransient
-    public Collection<Fieldnotebookattachment> getFieldnotebookattachmentCollection() {
-        return fieldnotebookattachmentCollection;
+    public Collection<Preptype> getPreptypes1() {
+        return preptypes1;
     }
 
-    public void setFieldnotebookattachmentCollection(Collection<Fieldnotebookattachment> fieldnotebookattachmentCollection) {
-        this.fieldnotebookattachmentCollection = fieldnotebookattachmentCollection;
+    public void setPreptypes1(Collection<Preptype> preptypes1) {
+        this.preptypes1 = preptypes1;
     }
 
     @XmlTransient
-    public Collection<Fieldnotebookattachment> getFieldnotebookattachmentCollection1() {
-        return fieldnotebookattachmentCollection1;
+    public Collection<Project> getProjects() {
+        return projects;
     }
 
-    public void setFieldnotebookattachmentCollection1(Collection<Fieldnotebookattachment> fieldnotebookattachmentCollection1) {
-        this.fieldnotebookattachmentCollection1 = fieldnotebookattachmentCollection1;
+    public void setProjects(Collection<Project> projects) {
+        this.projects = projects;
     }
 
+    
     @XmlTransient
-    public Collection<Geographytreedefitem> getGeographytreedefitemCollection() {
-        return geographytreedefitemCollection;
+    public Collection<Project> getProjects1() {
+        return projects1;
     }
 
-    public void setGeographytreedefitemCollection(Collection<Geographytreedefitem> geographytreedefitemCollection) {
-        this.geographytreedefitemCollection = geographytreedefitemCollection;
+    public void setProjects1(Collection<Project> projects1) {
+        this.projects1 = projects1;
     }
 
     @XmlTransient
-    public Collection<Geographytreedefitem> getGeographytreedefitemCollection1() {
-        return geographytreedefitemCollection1;
+    public Collection<Project> getProjects2() {
+        return projects2;
     }
 
-    public void setGeographytreedefitemCollection1(Collection<Geographytreedefitem> geographytreedefitemCollection1) {
-        this.geographytreedefitemCollection1 = geographytreedefitemCollection1;
+    public void setProjects2(Collection<Project> projects2) {
+        this.projects2 = projects2;
     }
 
     @XmlTransient
-    public Collection<Splocalecontainer> getSplocalecontainerCollection() {
-        return splocalecontainerCollection;
+    public Collection<Recordset> getRecordsets() {
+        return recordsets;
     }
 
-    public void setSplocalecontainerCollection(Collection<Splocalecontainer> splocalecontainerCollection) {
-        this.splocalecontainerCollection = splocalecontainerCollection;
+    public void setRecordsets(Collection<Recordset> recordsets) {
+        this.recordsets = recordsets;
     }
 
     @XmlTransient
-    public Collection<Splocalecontainer> getSplocalecontainerCollection1() {
-        return splocalecontainerCollection1;
+    public Collection<Recordset> getRecordsets1() {
+        return recordsets1;
     }
 
-    public void setSplocalecontainerCollection1(Collection<Splocalecontainer> splocalecontainerCollection1) {
-        this.splocalecontainerCollection1 = splocalecontainerCollection1;
+    public void setRecordsets1(Collection<Recordset> recordsets1) {
+        this.recordsets1 = recordsets1;
     }
 
     @XmlTransient
-    public Collection<Collectionobject> getCollectionobjectCollection() {
-        return collectionobjectCollection;
+    public Collection<Referencework> getReferenceworks() {
+        return referenceworks;
     }
 
-    public void setCollectionobjectCollection(Collection<Collectionobject> collectionobjectCollection) {
-        this.collectionobjectCollection = collectionobjectCollection;
+    public void setReferenceworks(Collection<Referencework> referenceworks) {
+        this.referenceworks = referenceworks;
     }
 
     @XmlTransient
-    public Collection<Collectionobject> getCollectionobjectCollection1() {
-        return collectionobjectCollection1;
+    public Collection<Referencework> getReferenceworks1() {
+        return referenceworks1;
     }
 
-    public void setCollectionobjectCollection1(Collection<Collectionobject> collectionobjectCollection1) {
-        this.collectionobjectCollection1 = collectionobjectCollection1;
+    public void setReferenceworks1(Collection<Referencework> referenceworks1) {
+        this.referenceworks1 = referenceworks1;
     }
 
     @XmlTransient
-    public Collection<Collectionobject> getCollectionobjectCollection2() {
-        return collectionobjectCollection2;
+    public Collection<Repositoryagreementattachment> getRepositoryagreementattachments() {
+        return repositoryagreementattachments;
     }
 
-    public void setCollectionobjectCollection2(Collection<Collectionobject> collectionobjectCollection2) {
-        this.collectionobjectCollection2 = collectionobjectCollection2;
+    public void setRepositoryagreementattachments(Collection<Repositoryagreementattachment> repositoryagreementattachments) {
+        this.repositoryagreementattachments = repositoryagreementattachments;
     }
 
     @XmlTransient
-    public Collection<Borrowagent> getBorrowagentCollection() {
-        return borrowagentCollection;
+    public Collection<Repositoryagreementattachment> getRepositoryagreementattachments1() {
+        return repositoryagreementattachments1;
     }
 
-    public void setBorrowagentCollection(Collection<Borrowagent> borrowagentCollection) {
-        this.borrowagentCollection = borrowagentCollection;
+    public void setRepositoryagreementattachments1(Collection<Repositoryagreementattachment> repositoryagreementattachments1) {
+        this.repositoryagreementattachments1 = repositoryagreementattachments1;
     }
 
     @XmlTransient
-    public Collection<Borrowagent> getBorrowagentCollection1() {
-        return borrowagentCollection1;
+    public Collection<Repositoryagreement> getRepositoryagreements() {
+        return repositoryagreements;
     }
 
-    public void setBorrowagentCollection1(Collection<Borrowagent> borrowagentCollection1) {
-        this.borrowagentCollection1 = borrowagentCollection1;
+    public void setRepositoryagreements(Collection<Repositoryagreement> repositoryagreements) {
+        this.repositoryagreements = repositoryagreements;
     }
 
     @XmlTransient
-    public Collection<Borrowagent> getBorrowagentCollection2() {
-        return borrowagentCollection2;
+    public Collection<Repositoryagreement> getRepositoryagreements1() {
+        return repositoryagreements1;
     }
 
-    public void setBorrowagentCollection2(Collection<Borrowagent> borrowagentCollection2) {
-        this.borrowagentCollection2 = borrowagentCollection2;
+    public void setRepositoryagreements1(Collection<Repositoryagreement> repositoryagreements1) {
+        this.repositoryagreements1 = repositoryagreements1;
     }
 
     @XmlTransient
-    public Collection<Conserveventattachment> getConserveventattachmentCollection() {
-        return conserveventattachmentCollection;
+    public Collection<Repositoryagreement> getRepositoryagreements2() {
+        return repositoryagreements2;
     }
 
-    public void setConserveventattachmentCollection(Collection<Conserveventattachment> conserveventattachmentCollection) {
-        this.conserveventattachmentCollection = conserveventattachmentCollection;
+    public void setRepositoryagreements2(Collection<Repositoryagreement> repositoryagreements2) {
+        this.repositoryagreements2 = repositoryagreements2;
     }
 
     @XmlTransient
-    public Collection<Conserveventattachment> getConserveventattachmentCollection1() {
-        return conserveventattachmentCollection1;
+    public Collection<Shipment> getShipments() {
+        return shipments;
     }
 
-    public void setConserveventattachmentCollection1(Collection<Conserveventattachment> conserveventattachmentCollection1) {
-        this.conserveventattachmentCollection1 = conserveventattachmentCollection1;
+    public void setShipments(Collection<Shipment> shipments) {
+        this.shipments = shipments;
     }
 
     @XmlTransient
-    public Collection<Collectionobjectcitation> getCollectionobjectcitationCollection() {
-        return collectionobjectcitationCollection;
+    public Collection<Shipment> getShipments1() {
+        return shipments1;
     }
 
-    public void setCollectionobjectcitationCollection(Collection<Collectionobjectcitation> collectionobjectcitationCollection) {
-        this.collectionobjectcitationCollection = collectionobjectcitationCollection;
+    public void setShipments1(Collection<Shipment> shipments1) {
+        this.shipments1 = shipments1;
     }
 
     @XmlTransient
-    public Collection<Collectionobjectcitation> getCollectionobjectcitationCollection1() {
-        return collectionobjectcitationCollection1;
+    public Collection<Shipment> getShipments2() {
+        return shipments2;
     }
 
-    public void setCollectionobjectcitationCollection1(Collection<Collectionobjectcitation> collectionobjectcitationCollection1) {
-        this.collectionobjectcitationCollection1 = collectionobjectcitationCollection1;
+    public void setShipments2(Collection<Shipment> shipments2) {
+        this.shipments2 = shipments2;
     }
 
     @XmlTransient
-    public Collection<Deaccession> getDeaccessionCollection() {
-        return deaccessionCollection;
+    public Collection<Shipment> getShipments3() {
+        return shipments3;
     }
 
-    public void setDeaccessionCollection(Collection<Deaccession> deaccessionCollection) {
-        this.deaccessionCollection = deaccessionCollection;
+    public void setShipments3(Collection<Shipment> shipments3) {
+        this.shipments3 = shipments3;
     }
 
     @XmlTransient
-    public Collection<Deaccession> getDeaccessionCollection1() {
-        return deaccessionCollection1;
+    public Collection<Shipment> getShipments4() {
+        return shipments4;
     }
 
-    public void setDeaccessionCollection1(Collection<Deaccession> deaccessionCollection1) {
-        this.deaccessionCollection1 = deaccessionCollection1;
+    public void setShipments4(Collection<Shipment> shipments4) {
+        this.shipments4 = shipments4;
     }
 
     @XmlTransient
-    public Collection<Journal> getJournalCollection() {
-        return journalCollection;
+    public Collection<Spappresourcedata> getSpappresourcedata() {
+        return spappresourcedata;
     }
 
-    public void setJournalCollection(Collection<Journal> journalCollection) {
-        this.journalCollection = journalCollection;
+    public void setSpappresourcedata(Collection<Spappresourcedata> spappresourcedata) {
+        this.spappresourcedata = spappresourcedata;
     }
 
     @XmlTransient
-    public Collection<Journal> getJournalCollection1() {
-        return journalCollection1;
+    public Collection<Spappresourcedata> getSpappresourcedata1() {
+        return spappresourcedata1;
     }
 
-    public void setJournalCollection1(Collection<Journal> journalCollection1) {
-        this.journalCollection1 = journalCollection1;
+    public void setSpappresourcedata1(Collection<Spappresourcedata> spappresourcedata1) {
+        this.spappresourcedata1 = spappresourcedata1;
     }
 
     @XmlTransient
-    public Collection<Fieldnotebookpage> getFieldnotebookpageCollection() {
-        return fieldnotebookpageCollection;
+    public Collection<Spappresourcedir> getSpappresourcedirs() {
+        return spappresourcedirs;
     }
 
-    public void setFieldnotebookpageCollection(Collection<Fieldnotebookpage> fieldnotebookpageCollection) {
-        this.fieldnotebookpageCollection = fieldnotebookpageCollection;
+    public void setSpappresourcedirs(Collection<Spappresourcedir> spappresourcedirs) {
+        this.spappresourcedirs = spappresourcedirs;
     }
 
     @XmlTransient
-    public Collection<Fieldnotebookpage> getFieldnotebookpageCollection1() {
-        return fieldnotebookpageCollection1;
+    public Collection<Spappresourcedir> getSpappresourcedirs1() {
+        return spappresourcedirs1;
     }
 
-    public void setFieldnotebookpageCollection1(Collection<Fieldnotebookpage> fieldnotebookpageCollection1) {
-        this.fieldnotebookpageCollection1 = fieldnotebookpageCollection1;
+    public void setSpappresourcedirs1(Collection<Spappresourcedir> spappresourcedirs1) {
+        this.spappresourcedirs1 = spappresourcedirs1;
     }
 
     @XmlTransient
-    public Collection<Author> getAuthorCollection() {
-        return authorCollection;
+    public Collection<Spappresource> getSpappresources() {
+        return spappresources;
     }
 
-    public void setAuthorCollection(Collection<Author> authorCollection) {
-        this.authorCollection = authorCollection;
+    public void setSpappresources(Collection<Spappresource> spappresources) {
+        this.spappresources = spappresources;
     }
 
     @XmlTransient
-    public Collection<Author> getAuthorCollection1() {
-        return authorCollection1;
+    public Collection<Spappresource> getSpappresources1() {
+        return spappresources1;
     }
 
-    public void setAuthorCollection1(Collection<Author> authorCollection1) {
-        this.authorCollection1 = authorCollection1;
+    public void setSpappresources1(Collection<Spappresource> spappresources1) {
+        this.spappresources1 = spappresources1;
     }
 
     @XmlTransient
-    public Collection<Author> getAuthorCollection2() {
-        return authorCollection2;
+    public Collection<Spauditlogfield> getSpauditlogfields() {
+        return spauditlogfields;
     }
 
-    public void setAuthorCollection2(Collection<Author> authorCollection2) {
-        this.authorCollection2 = authorCollection2;
+    public void setSpauditlogfields(Collection<Spauditlogfield> spauditlogfields) {
+        this.spauditlogfields = spauditlogfields;
     }
 
     @XmlTransient
-    public Collection<Collector> getCollectorCollection() {
-        return collectorCollection;
+    public Collection<Spauditlogfield> getSpauditlogfields1() {
+        return spauditlogfields1;
     }
 
-    public void setCollectorCollection(Collection<Collector> collectorCollection) {
-        this.collectorCollection = collectorCollection;
+    public void setSpauditlogfields1(Collection<Spauditlogfield> spauditlogfields1) {
+        this.spauditlogfields1 = spauditlogfields1;
     }
 
     @XmlTransient
-    public Collection<Collector> getCollectorCollection1() {
-        return collectorCollection1;
+    public Collection<Spauditlog> getSpauditlogs() {
+        return spauditlogs;
     }
 
-    public void setCollectorCollection1(Collection<Collector> collectorCollection1) {
-        this.collectorCollection1 = collectorCollection1;
+    public void setSpauditlogs(Collection<Spauditlog> spauditlogs) {
+        this.spauditlogs = spauditlogs;
     }
 
     @XmlTransient
-    public Collection<Collector> getCollectorCollection2() {
-        return collectorCollection2;
+    public Collection<Spauditlog> getSpauditlogs1() {
+        return spauditlogs1;
     }
 
-    public void setCollectorCollection2(Collection<Collector> collectorCollection2) {
-        this.collectorCollection2 = collectorCollection2;
+    public void setSpauditlogs1(Collection<Spauditlog> spauditlogs1) {
+        this.spauditlogs1 = spauditlogs1;
     }
 
     @XmlTransient
-    public Collection<Geography> getGeographyCollection() {
-        return geographyCollection;
+    public Collection<Specifyuser> getSpecifyusers() {
+        return specifyusers;
     }
 
-    public void setGeographyCollection(Collection<Geography> geographyCollection) {
-        this.geographyCollection = geographyCollection;
+    public void setSpecifyusers(Collection<Specifyuser> specifyusers) {
+        this.specifyusers = specifyusers;
     }
 
     @XmlTransient
-    public Collection<Geography> getGeographyCollection1() {
-        return geographyCollection1;
+    public Collection<Specifyuser> getSpecifyusers1() {
+        return specifyusers1;
     }
 
-    public void setGeographyCollection1(Collection<Geography> geographyCollection1) {
-        this.geographyCollection1 = geographyCollection1;
+    public void setSpecifyusers1(Collection<Specifyuser> specifyusers1) {
+        this.specifyusers1 = specifyusers1;
     }
 
     @XmlTransient
-    public Collection<Accessionattachment> getAccessionattachmentCollection() {
-        return accessionattachmentCollection;
+    public Collection<Spexportschemaitemmapping> getSpexportschemaitemmappings() {
+        return spexportschemaitemmappings;
     }
 
-    public void setAccessionattachmentCollection(Collection<Accessionattachment> accessionattachmentCollection) {
-        this.accessionattachmentCollection = accessionattachmentCollection;
+    public void setSpexportschemaitemmappings(Collection<Spexportschemaitemmapping> spexportschemaitemmappings) {
+        this.spexportschemaitemmappings = spexportschemaitemmappings;
     }
 
     @XmlTransient
-    public Collection<Accessionattachment> getAccessionattachmentCollection1() {
-        return accessionattachmentCollection1;
+    public Collection<Spexportschemaitemmapping> getSpexportschemaitemmappings1() {
+        return spexportschemaitemmappings1;
     }
 
-    public void setAccessionattachmentCollection1(Collection<Accessionattachment> accessionattachmentCollection1) {
-        this.accessionattachmentCollection1 = accessionattachmentCollection1;
+    public void setSpexportschemaitemmappings1(Collection<Spexportschemaitemmapping> spexportschemaitemmappings1) {
+        this.spexportschemaitemmappings1 = spexportschemaitemmappings1;
     }
 
     @XmlTransient
-    public Collection<Exsiccataitem> getExsiccataitemCollection() {
-        return exsiccataitemCollection;
+    public Collection<Spexportschemaitem> getSpexportschemaitems() {
+        return spexportschemaitems;
     }
 
-    public void setExsiccataitemCollection(Collection<Exsiccataitem> exsiccataitemCollection) {
-        this.exsiccataitemCollection = exsiccataitemCollection;
+    public void setSpexportschemaitems(Collection<Spexportschemaitem> spexportschemaitems) {
+        this.spexportschemaitems = spexportschemaitems;
     }
 
     @XmlTransient
-    public Collection<Exsiccataitem> getExsiccataitemCollection1() {
-        return exsiccataitemCollection1;
+    public Collection<Spexportschemaitem> getSpexportschemaitems1() {
+        return spexportschemaitems1;
     }
 
-    public void setExsiccataitemCollection1(Collection<Exsiccataitem> exsiccataitemCollection1) {
-        this.exsiccataitemCollection1 = exsiccataitemCollection1;
+    public void setSpexportschemaitems1(Collection<Spexportschemaitem> spexportschemaitems1) {
+        this.spexportschemaitems1 = spexportschemaitems1;
     }
 
     @XmlTransient
-    public Collection<Fieldnotebook> getFieldnotebookCollection() {
-        return fieldnotebookCollection;
+    public Collection<Spexportschemamapping> getSpexportschemamappings() {
+        return spexportschemamappings;
     }
 
-    public void setFieldnotebookCollection(Collection<Fieldnotebook> fieldnotebookCollection) {
-        this.fieldnotebookCollection = fieldnotebookCollection;
+    public void setSpexportschemamappings(Collection<Spexportschemamapping> spexportschemamappings) {
+        this.spexportschemamappings = spexportschemamappings;
     }
 
     @XmlTransient
-    public Collection<Fieldnotebook> getFieldnotebookCollection1() {
-        return fieldnotebookCollection1;
+    public Collection<Spexportschemamapping> getSpexportschemamappings1() {
+        return spexportschemamappings1;
     }
 
-    public void setFieldnotebookCollection1(Collection<Fieldnotebook> fieldnotebookCollection1) {
-        this.fieldnotebookCollection1 = fieldnotebookCollection1;
+    public void setSpexportschemamappings1(Collection<Spexportschemamapping> spexportschemamappings1) {
+        this.spexportschemamappings1 = spexportschemamappings1;
     }
 
     @XmlTransient
-    public Collection<Fieldnotebook> getFieldnotebookCollection2() {
-        return fieldnotebookCollection2;
+    public Collection<Spexportschema> getSpexportschemas() {
+        return spexportschemas;
     }
 
-    public void setFieldnotebookCollection2(Collection<Fieldnotebook> fieldnotebookCollection2) {
-        this.fieldnotebookCollection2 = fieldnotebookCollection2;
+    public void setSpexportschemas(Collection<Spexportschema> spexportschemas) {
+        this.spexportschemas = spexportschemas;
     }
 
     @XmlTransient
-    public Collection<Discipline> getDisciplineCollection() {
-        return disciplineCollection;
+    public Collection<Spexportschema> getSpexportschemas1() {
+        return spexportschemas1;
     }
 
-    public void setDisciplineCollection(Collection<Discipline> disciplineCollection) {
-        this.disciplineCollection = disciplineCollection;
+    public void setSpexportschemas1(Collection<Spexportschema> spexportschemas1) {
+        this.spexportschemas1 = spexportschemas1;
     }
 
     @XmlTransient
-    public Collection<Discipline> getDisciplineCollection1() {
-        return disciplineCollection1;
+    public Collection<Spfieldvaluedefault> getSpfieldvaluedefaults() {
+        return spfieldvaluedefaults;
     }
 
-    public void setDisciplineCollection1(Collection<Discipline> disciplineCollection1) {
-        this.disciplineCollection1 = disciplineCollection1;
+    public void setSpfieldvaluedefaults(Collection<Spfieldvaluedefault> spfieldvaluedefaults) {
+        this.spfieldvaluedefaults = spfieldvaluedefaults;
     }
 
     @XmlTransient
-    public Collection<Institution> getInstitutionCollection() {
-        return institutionCollection;
+    public Collection<Spfieldvaluedefault> getSpfieldvaluedefaults1() {
+        return spfieldvaluedefaults1;
     }
 
-    public void setInstitutionCollection(Collection<Institution> institutionCollection) {
-        this.institutionCollection = institutionCollection;
+    public void setSpfieldvaluedefaults1(Collection<Spfieldvaluedefault> spfieldvaluedefaults1) {
+        this.spfieldvaluedefaults1 = spfieldvaluedefaults1;
     }
 
     @XmlTransient
-    public Collection<Institution> getInstitutionCollection1() {
-        return institutionCollection1;
+    public Collection<Splocalecontaineritem> getSplocalecontaineritems() {
+        return splocalecontaineritems;
     }
 
-    public void setInstitutionCollection1(Collection<Institution> institutionCollection1) {
-        this.institutionCollection1 = institutionCollection1;
+    public void setSplocalecontaineritems(Collection<Splocalecontaineritem> splocalecontaineritems) {
+        this.splocalecontaineritems = splocalecontaineritems;
     }
 
     @XmlTransient
-    public Collection<Conservdescriptionattachment> getConservdescriptionattachmentCollection() {
-        return conservdescriptionattachmentCollection;
+    public Collection<Splocalecontaineritem> getSplocalecontaineritems1() {
+        return splocalecontaineritems1;
     }
 
-    public void setConservdescriptionattachmentCollection(Collection<Conservdescriptionattachment> conservdescriptionattachmentCollection) {
-        this.conservdescriptionattachmentCollection = conservdescriptionattachmentCollection;
+    public void setSplocalecontaineritems1(Collection<Splocalecontaineritem> splocalecontaineritems1) {
+        this.splocalecontaineritems1 = splocalecontaineritems1;
     }
 
     @XmlTransient
-    public Collection<Conservdescriptionattachment> getConservdescriptionattachmentCollection1() {
-        return conservdescriptionattachmentCollection1;
+    public Collection<Splocalecontainer> getSplocalecontainers() {
+        return splocalecontainers;
     }
 
-    public void setConservdescriptionattachmentCollection1(Collection<Conservdescriptionattachment> conservdescriptionattachmentCollection1) {
-        this.conservdescriptionattachmentCollection1 = conservdescriptionattachmentCollection1;
+    public void setSplocalecontainers(Collection<Splocalecontainer> splocalecontainers) {
+        this.splocalecontainers = splocalecontainers;
     }
 
     @XmlTransient
-    public Collection<Geocoorddetail> getGeocoorddetailCollection() {
-        return geocoorddetailCollection;
+    public Collection<Splocalecontainer> getSplocalecontainers1() {
+        return splocalecontainers1;
     }
 
-    public void setGeocoorddetailCollection(Collection<Geocoorddetail> geocoorddetailCollection) {
-        this.geocoorddetailCollection = geocoorddetailCollection;
+    public void setSplocalecontainers1(Collection<Splocalecontainer> splocalecontainers1) {
+        this.splocalecontainers1 = splocalecontainers1;
     }
 
     @XmlTransient
-    public Collection<Geocoorddetail> getGeocoorddetailCollection1() {
-        return geocoorddetailCollection1;
+    public Collection<Splocaleitemstr> getSplocaleitemstrs() {
+        return splocaleitemstrs;
     }
 
-    public void setGeocoorddetailCollection1(Collection<Geocoorddetail> geocoorddetailCollection1) {
-        this.geocoorddetailCollection1 = geocoorddetailCollection1;
+    public void setSplocaleitemstrs(Collection<Splocaleitemstr> splocaleitemstrs) {
+        this.splocaleitemstrs = splocaleitemstrs;
     }
 
     @XmlTransient
-    public Collection<Geocoorddetail> getGeocoorddetailCollection2() {
-        return geocoorddetailCollection2;
+    public Collection<Splocaleitemstr> getSplocaleitemstrs1() {
+        return splocaleitemstrs1;
     }
 
-    public void setGeocoorddetailCollection2(Collection<Geocoorddetail> geocoorddetailCollection2) {
-        this.geocoorddetailCollection2 = geocoorddetailCollection2;
+    public void setSplocaleitemstrs1(Collection<Splocaleitemstr> splocaleitemstrs1) {
+        this.splocaleitemstrs1 = splocaleitemstrs1;
     }
 
     @XmlTransient
-    public Collection<Deaccessionpreparation> getDeaccessionpreparationCollection() {
-        return deaccessionpreparationCollection;
+    public Collection<Spprincipal> getSpprincipals() {
+        return spprincipals;
     }
 
-    public void setDeaccessionpreparationCollection(Collection<Deaccessionpreparation> deaccessionpreparationCollection) {
-        this.deaccessionpreparationCollection = deaccessionpreparationCollection;
+    public void setSpprincipals(Collection<Spprincipal> spprincipals) {
+        this.spprincipals = spprincipals;
     }
 
     @XmlTransient
-    public Collection<Deaccessionpreparation> getDeaccessionpreparationCollection1() {
-        return deaccessionpreparationCollection1;
+    public Collection<Spprincipal> getSpprincipals1() {
+        return spprincipals1;
     }
 
-    public void setDeaccessionpreparationCollection1(Collection<Deaccessionpreparation> deaccessionpreparationCollection1) {
-        this.deaccessionpreparationCollection1 = deaccessionpreparationCollection1;
+    public void setSpprincipals1(Collection<Spprincipal> spprincipals1) {
+        this.spprincipals1 = spprincipals1;
     }
 
     @XmlTransient
-    public Collection<Collectingeventattachment> getCollectingeventattachmentCollection() {
-        return collectingeventattachmentCollection;
+    public Collection<Spqueryfield> getSpqueryfields() {
+        return spqueryfields;
     }
 
-    public void setCollectingeventattachmentCollection(Collection<Collectingeventattachment> collectingeventattachmentCollection) {
-        this.collectingeventattachmentCollection = collectingeventattachmentCollection;
+    public void setSpqueryfields(Collection<Spqueryfield> spqueryfields) {
+        this.spqueryfields = spqueryfields;
     }
 
     @XmlTransient
-    public Collection<Collectingeventattachment> getCollectingeventattachmentCollection1() {
-        return collectingeventattachmentCollection1;
+    public Collection<Spqueryfield> getSpqueryfields1() {
+        return spqueryfields1;
     }
 
-    public void setCollectingeventattachmentCollection1(Collection<Collectingeventattachment> collectingeventattachmentCollection1) {
-        this.collectingeventattachmentCollection1 = collectingeventattachmentCollection1;
+    public void setSpqueryfields1(Collection<Spqueryfield> spqueryfields1) {
+        this.spqueryfields1 = spqueryfields1;
     }
 
     @XmlTransient
-    public Collection<Accessionauthorization> getAccessionauthorizationCollection() {
-        return accessionauthorizationCollection;
+    public Collection<Spquery> getSpquerys() {
+        return spquerys;
     }
 
-    public void setAccessionauthorizationCollection(Collection<Accessionauthorization> accessionauthorizationCollection) {
-        this.accessionauthorizationCollection = accessionauthorizationCollection;
+    public void setSpquerys(Collection<Spquery> spquerys) {
+        this.spquerys = spquerys;
     }
 
     @XmlTransient
-    public Collection<Accessionauthorization> getAccessionauthorizationCollection1() {
-        return accessionauthorizationCollection1;
+    public Collection<Spquery> getSpquerys1() {
+        return spquerys1;
     }
 
-    public void setAccessionauthorizationCollection1(Collection<Accessionauthorization> accessionauthorizationCollection1) {
-        this.accessionauthorizationCollection1 = accessionauthorizationCollection1;
+    public void setSpquerys1(Collection<Spquery> spquerys1) {
+        this.spquerys1 = spquerys1;
     }
 
     @XmlTransient
-    public Collection<Attachment> getAttachmentCollection() {
-        return attachmentCollection;
+    public Collection<Spreport> getSpreports() {
+        return spreports;
     }
 
-    public void setAttachmentCollection(Collection<Attachment> attachmentCollection) {
-        this.attachmentCollection = attachmentCollection;
+    public void setSpreports(Collection<Spreport> spreports) {
+        this.spreports = spreports;
     }
 
     @XmlTransient
-    public Collection<Attachment> getAttachmentCollection1() {
-        return attachmentCollection1;
+    public Collection<Spreport> getSpreports1() {
+        return spreports1;
     }
 
-    public void setAttachmentCollection1(Collection<Attachment> attachmentCollection1) {
-        this.attachmentCollection1 = attachmentCollection1;
+    public void setSpreports1(Collection<Spreport> spreports1) {
+        this.spreports1 = spreports1;
     }
 
     @XmlTransient
-    public Collection<Spappresourcedir> getSpappresourcedirCollection() {
-        return spappresourcedirCollection;
+    public Collection<Sptasksemaphore> getSptasksemaphores() {
+        return sptasksemaphores;
     }
 
-    public void setSpappresourcedirCollection(Collection<Spappresourcedir> spappresourcedirCollection) {
-        this.spappresourcedirCollection = spappresourcedirCollection;
+    public void setSptasksemaphores(Collection<Sptasksemaphore> sptasksemaphores) {
+        this.sptasksemaphores = sptasksemaphores;
     }
 
     @XmlTransient
-    public Collection<Spappresourcedir> getSpappresourcedirCollection1() {
-        return spappresourcedirCollection1;
+    public Collection<Sptasksemaphore> getSptasksemaphores1() {
+        return sptasksemaphores1;
     }
 
-    public void setSpappresourcedirCollection1(Collection<Spappresourcedir> spappresourcedirCollection1) {
-        this.spappresourcedirCollection1 = spappresourcedirCollection1;
+    public void setSptasksemaphores1(Collection<Sptasksemaphore> sptasksemaphores1) {
+        this.sptasksemaphores1 = sptasksemaphores1;
     }
 
     @XmlTransient
-    public Collection<Spquery> getSpqueryCollection() {
-        return spqueryCollection;
+    public Collection<Spversion> getSpversions() {
+        return spversions;
     }
 
-    public void setSpqueryCollection(Collection<Spquery> spqueryCollection) {
-        this.spqueryCollection = spqueryCollection;
+    public void setSpversions(Collection<Spversion> spversions) {
+        this.spversions = spversions;
     }
 
     @XmlTransient
-    public Collection<Spquery> getSpqueryCollection1() {
-        return spqueryCollection1;
+    public Collection<Spversion> getSpversions1() {
+        return spversions1;
     }
 
-    public void setSpqueryCollection1(Collection<Spquery> spqueryCollection1) {
-        this.spqueryCollection1 = spqueryCollection1;
+    public void setSpversions1(Collection<Spversion> spversions1) {
+        this.spversions1 = spversions1;
     }
 
     @XmlTransient
-    public Collection<Collectionobjectattribute> getCollectionobjectattributeCollection() {
-        return collectionobjectattributeCollection;
+    public Collection<Spviewsetobj> getSpviewsetobjs() {
+        return spviewsetobjs;
     }
 
-    public void setCollectionobjectattributeCollection(Collection<Collectionobjectattribute> collectionobjectattributeCollection) {
-        this.collectionobjectattributeCollection = collectionobjectattributeCollection;
+    public void setSpviewsetobjs(Collection<Spviewsetobj> spviewsetobjs) {
+        this.spviewsetobjs = spviewsetobjs;
     }
 
     @XmlTransient
-    public Collection<Collectionobjectattribute> getCollectionobjectattributeCollection1() {
-        return collectionobjectattributeCollection1;
+    public Collection<Spviewsetobj> getSpviewsetobjs1() {
+        return spviewsetobjs1;
     }
 
-    public void setCollectionobjectattributeCollection1(Collection<Collectionobjectattribute> collectionobjectattributeCollection1) {
-        this.collectionobjectattributeCollection1 = collectionobjectattributeCollection1;
+    public void setSpviewsetobjs1(Collection<Spviewsetobj> spviewsetobjs1) {
+        this.spviewsetobjs1 = spviewsetobjs1;
     }
 
     @XmlTransient
-    public Collection<Attachmenttag> getAttachmenttagCollection() {
-        return attachmenttagCollection;
+    public Collection<Storage> getStorages() {
+        return storages;
     }
 
-    public void setAttachmenttagCollection(Collection<Attachmenttag> attachmenttagCollection) {
-        this.attachmenttagCollection = attachmenttagCollection;
+    public void setStorages(Collection<Storage> storages) {
+        this.storages = storages;
     }
 
     @XmlTransient
-    public Collection<Attachmenttag> getAttachmenttagCollection1() {
-        return attachmenttagCollection1;
+    public Collection<Storage> getStorages1() {
+        return storages1;
     }
 
-    public void setAttachmenttagCollection1(Collection<Attachmenttag> attachmenttagCollection1) {
-        this.attachmenttagCollection1 = attachmenttagCollection1;
+    public void setStorages1(Collection<Storage> storages1) {
+        this.storages1 = storages1;
     }
 
     @XmlTransient
-    public Collection<Paleocontext> getPaleocontextCollection() {
-        return paleocontextCollection;
+    public Collection<Storagetreedefitem> getStoragetreedefitems() {
+        return storagetreedefitems;
     }
 
-    public void setPaleocontextCollection(Collection<Paleocontext> paleocontextCollection) {
-        this.paleocontextCollection = paleocontextCollection;
+    public void setStoragetreedefitems(Collection<Storagetreedefitem> storagetreedefitems) {
+        this.storagetreedefitems = storagetreedefitems;
     }
 
     @XmlTransient
-    public Collection<Paleocontext> getPaleocontextCollection1() {
-        return paleocontextCollection1;
+    public Collection<Storagetreedefitem> getStoragetreedefitems1() {
+        return storagetreedefitems1;
     }
 
-    public void setPaleocontextCollection1(Collection<Paleocontext> paleocontextCollection1) {
-        this.paleocontextCollection1 = paleocontextCollection1;
+    public void setStoragetreedefitems1(Collection<Storagetreedefitem> storagetreedefitems1) {
+        this.storagetreedefitems1 = storagetreedefitems1;
     }
 
     @XmlTransient
-    public Collection<Loanpreparation> getLoanpreparationCollection() {
-        return loanpreparationCollection;
+    public Collection<Storagetreedef> getStoragetreedefs() {
+        return storagetreedefs;
     }
 
-    public void setLoanpreparationCollection(Collection<Loanpreparation> loanpreparationCollection) {
-        this.loanpreparationCollection = loanpreparationCollection;
+    public void setStoragetreedefs(Collection<Storagetreedef> storagetreedefs) {
+        this.storagetreedefs = storagetreedefs;
     }
 
     @XmlTransient
-    public Collection<Loanpreparation> getLoanpreparationCollection1() {
-        return loanpreparationCollection1;
+    public Collection<Storagetreedef> getStoragetreedefs1() {
+        return storagetreedefs1;
     }
 
-    public void setLoanpreparationCollection1(Collection<Loanpreparation> loanpreparationCollection1) {
-        this.loanpreparationCollection1 = loanpreparationCollection1;
+    public void setStoragetreedefs1(Collection<Storagetreedef> storagetreedefs1) {
+        this.storagetreedefs1 = storagetreedefs1;
     }
 
-//    @XmlTransient
-    public Collection<Address> getAddressCollection() {
-        return addressCollection;
+    @XmlTransient
+    public Collection<Taxonattachment> getTaxonattachments() {
+        return taxonattachments;
     }
 
-    public void setAddressCollection(Collection<Address> addressCollection) {
-        this.addressCollection = addressCollection;
+    public void setTaxonattachments(Collection<Taxonattachment> taxonattachments) {
+        this.taxonattachments = taxonattachments;
     }
 
-//    @XmlTransient
-    public Collection<Address> getAddressCollection1() {
-        return addressCollection1;
+    @XmlTransient
+    public Collection<Taxonattachment> getTaxonattachments1() {
+        return taxonattachments1;
     }
 
-    public void setAddressCollection1(Collection<Address> addressCollection1) {
-        this.addressCollection1 = addressCollection1;
+    public void setTaxonattachments1(Collection<Taxonattachment> taxonattachments1) {
+        this.taxonattachments1 = taxonattachments1;
     }
 
-//    @XmlTransient
-    public Collection<Address> getAddressCollection2() {
-        return addressCollection2;
+    @XmlTransient
+    public Collection<Taxoncitation> getTaxoncitations() {
+        return taxoncitations;
     }
 
-    public void setAddressCollection2(Collection<Address> addressCollection2) {
-        this.addressCollection2 = addressCollection2;
+    public void setTaxoncitations(Collection<Taxoncitation> taxoncitations) {
+        this.taxoncitations = taxoncitations;
     }
 
     @XmlTransient
-    public Collection<Locality> getLocalityCollection() {
-        return localityCollection;
+    public Collection<Taxoncitation> getTaxoncitations1() {
+        return taxoncitations1;
     }
 
-    public void setLocalityCollection(Collection<Locality> localityCollection) {
-        this.localityCollection = localityCollection;
+    public void setTaxoncitations1(Collection<Taxoncitation> taxoncitations1) {
+        this.taxoncitations1 = taxoncitations1;
     }
 
     @XmlTransient
-    public Collection<Locality> getLocalityCollection1() {
-        return localityCollection1;
+    public Collection<Taxon> getTaxons() {
+        return taxons;
     }
 
-    public void setLocalityCollection1(Collection<Locality> localityCollection1) {
-        this.localityCollection1 = localityCollection1;
+    public void setTaxons(Collection<Taxon> taxons) {
+        this.taxons = taxons;
     }
 
     @XmlTransient
-    public Collection<Agentspecialty> getAgentspecialtyCollection() {
-        return agentspecialtyCollection;
+    public Collection<Taxon> getTaxons1() {
+        return taxons1;
     }
 
-    public void setAgentspecialtyCollection(Collection<Agentspecialty> agentspecialtyCollection) {
-        this.agentspecialtyCollection = agentspecialtyCollection;
+    public void setTaxons1(Collection<Taxon> taxons1) {
+        this.taxons1 = taxons1;
     }
 
     @XmlTransient
-    public Collection<Agentspecialty> getAgentspecialtyCollection1() {
-        return agentspecialtyCollection1;
+    public Collection<Taxontreedefitem> getTaxontreedefitems() {
+        return taxontreedefitems;
     }
 
-    public void setAgentspecialtyCollection1(Collection<Agentspecialty> agentspecialtyCollection1) {
-        this.agentspecialtyCollection1 = agentspecialtyCollection1;
+    public void setTaxontreedefitems(Collection<Taxontreedefitem> taxontreedefitems) {
+        this.taxontreedefitems = taxontreedefitems;
     }
 
     @XmlTransient
-    public Collection<Agentspecialty> getAgentspecialtyCollection2() {
-        return agentspecialtyCollection2;
+    public Collection<Taxontreedefitem> getTaxontreedefitems1() {
+        return taxontreedefitems1;
     }
 
-    public void setAgentspecialtyCollection2(Collection<Agentspecialty> agentspecialtyCollection2) {
-        this.agentspecialtyCollection2 = agentspecialtyCollection2;
+    public void setTaxontreedefitems1(Collection<Taxontreedefitem> taxontreedefitems1) {
+        this.taxontreedefitems1 = taxontreedefitems1;
     }
 
     @XmlTransient
-    public Collection<Taxontreedef> getTaxontreedefCollection() {
-        return taxontreedefCollection;
+    public Collection<Taxontreedef> getTaxontreedefs() {
+        return taxontreedefs;
     }
 
-    public void setTaxontreedefCollection(Collection<Taxontreedef> taxontreedefCollection) {
-        this.taxontreedefCollection = taxontreedefCollection;
+    public void setTaxontreedefs(Collection<Taxontreedef> taxontreedefs) {
+        this.taxontreedefs = taxontreedefs;
     }
 
     @XmlTransient
-    public Collection<Taxontreedef> getTaxontreedefCollection1() {
-        return taxontreedefCollection1;
+    public Collection<Taxontreedef> getTaxontreedefs1() {
+        return taxontreedefs1;
     }
 
-    public void setTaxontreedefCollection1(Collection<Taxontreedef> taxontreedefCollection1) {
-        this.taxontreedefCollection1 = taxontreedefCollection1;
+    public void setTaxontreedefs1(Collection<Taxontreedef> taxontreedefs1) {
+        this.taxontreedefs1 = taxontreedefs1;
     }
 
     @XmlTransient
-    public Collection<Localitycitation> getLocalitycitationCollection() {
-        return localitycitationCollection;
+    public Collection<Treatmentevent> getTreatmentevents3() {
+        return treatmentevents3;
     }
 
-    public void setLocalitycitationCollection(Collection<Localitycitation> localitycitationCollection) {
-        this.localitycitationCollection = localitycitationCollection;
+    public void setTreatmentevents3(Collection<Treatmentevent> treatmentevents3) {
+        this.treatmentevents3 = treatmentevents3;
     }
 
     @XmlTransient
-    public Collection<Localitycitation> getLocalitycitationCollection1() {
-        return localitycitationCollection1;
+    public Collection<Treatmentevent> getTreatmentevents4() {
+        return treatmentevents4;
     }
 
-    public void setLocalitycitationCollection1(Collection<Localitycitation> localitycitationCollection1) {
-        this.localitycitationCollection1 = localitycitationCollection1;
+    public void setTreatmentevents4(Collection<Treatmentevent> treatmentevents4) {
+        this.treatmentevents4 = treatmentevents4;
     }
 
     @XmlTransient
-    public Collection<Dnasequencingrun> getDnasequencingrunCollection() {
-        return dnasequencingrunCollection;
+    public Collection<Workbench> getWorkbenchs() {
+        return workbenchs;
     }
 
-    public void setDnasequencingrunCollection(Collection<Dnasequencingrun> dnasequencingrunCollection) {
-        this.dnasequencingrunCollection = dnasequencingrunCollection;
+    public void setWorkbenchs(Collection<Workbench> workbenchs) {
+        this.workbenchs = workbenchs;
     }
 
     @XmlTransient
-    public Collection<Dnasequencingrun> getDnasequencingrunCollection1() {
-        return dnasequencingrunCollection1;
+    public Collection<Workbench> getWorkbenchs1() {
+        return workbenchs1;
     }
 
-    public void setDnasequencingrunCollection1(Collection<Dnasequencingrun> dnasequencingrunCollection1) {
-        this.dnasequencingrunCollection1 = dnasequencingrunCollection1;
+    public void setWorkbenchs1(Collection<Workbench> workbenchs1) {
+        this.workbenchs1 = workbenchs1;
     }
 
     @XmlTransient
-    public Collection<Dnasequencingrun> getDnasequencingrunCollection2() {
-        return dnasequencingrunCollection2;
+    public Collection<Workbenchtemplatemappingitem> getWorkbenchtemplatemappingitems() {
+        return workbenchtemplatemappingitems;
     }
 
-    public void setDnasequencingrunCollection2(Collection<Dnasequencingrun> dnasequencingrunCollection2) {
-        this.dnasequencingrunCollection2 = dnasequencingrunCollection2;
+    public void setWorkbenchtemplatemappingitems(Collection<Workbenchtemplatemappingitem> workbenchtemplatemappingitems) {
+        this.workbenchtemplatemappingitems = workbenchtemplatemappingitems;
     }
 
     @XmlTransient
-    public Collection<Dnasequencingrun> getDnasequencingrunCollection3() {
-        return dnasequencingrunCollection3;
+    public Collection<Workbenchtemplatemappingitem> getWorkbenchtemplatemappingitems1() {
+        return workbenchtemplatemappingitems1;
     }
 
-    public void setDnasequencingrunCollection3(Collection<Dnasequencingrun> dnasequencingrunCollection3) {
-        this.dnasequencingrunCollection3 = dnasequencingrunCollection3;
+    public void setWorkbenchtemplatemappingitems1(Collection<Workbenchtemplatemappingitem> workbenchtemplatemappingitems1) {
+        this.workbenchtemplatemappingitems1 = workbenchtemplatemappingitems1;
     }
 
     @XmlTransient
-    public Collection<Storage> getStorageCollection() {
-        return storageCollection;
+    public Collection<Workbenchtemplate> getWorkbenchtemplates() {
+        return workbenchtemplates;
     }
 
-    public void setStorageCollection(Collection<Storage> storageCollection) {
-        this.storageCollection = storageCollection;
+    public void setWorkbenchtemplates(Collection<Workbenchtemplate> workbenchtemplates) {
+        this.workbenchtemplates = workbenchtemplates;
     }
 
     @XmlTransient
-    public Collection<Storage> getStorageCollection1() {
-        return storageCollection1;
+    public Collection<Workbenchtemplate> getWorkbenchtemplates1() {
+        return workbenchtemplates1;
     }
 
-    public void setStorageCollection1(Collection<Storage> storageCollection1) {
-        this.storageCollection1 = storageCollection1;
+    public void setWorkbenchtemplates1(Collection<Workbenchtemplate> workbenchtemplates1) {
+        this.workbenchtemplates1 = workbenchtemplates1;
     }
+
+  
+   
+
+   
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (agentID != null ? agentID.hashCode() : 0);
+        hash += (agentId != null ? agentId.hashCode() : 0);
         return hash;
     }
 
@@ -4359,7 +4386,7 @@ public class Agent extends BaseEntity {
             return false;
         }
         Agent other = (Agent) object;
-        if ((this.agentID == null && other.agentID != null) || (this.agentID != null && !this.agentID.equals(other.agentID))) {
+        if ((this.agentId == null && other.agentId != null) || (this.agentId != null && !this.agentId.equals(other.agentId))) {
             return false;
         }
         return true;
@@ -4367,7 +4394,7 @@ public class Agent extends BaseEntity {
 
     @Override
     public String toString() {
-        return "se.nrm.specify.datamodel.Agent[ agentID=" + agentID + " ]";
+        return "Agent[ agentId=" + agentId + " ]";
     }
     
 }

@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Loanpreparation.findAll", query = "SELECT l FROM Loanpreparation l"),
-    @NamedQuery(name = "Loanpreparation.findByLoanPreparationID", query = "SELECT l FROM Loanpreparation l WHERE l.loanPreparationID = :loanPreparationID"),
+    @NamedQuery(name = "Loanpreparation.findByLoanPreparationID", query = "SELECT l FROM Loanpreparation l WHERE l.loanPreparationId = :loanPreparationID"),
     @NamedQuery(name = "Loanpreparation.findByTimestampCreated", query = "SELECT l FROM Loanpreparation l WHERE l.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Loanpreparation.findByTimestampModified", query = "SELECT l FROM Loanpreparation l WHERE l.timestampModified = :timestampModified"),
     @NamedQuery(name = "Loanpreparation.findByVersion", query = "SELECT l FROM Loanpreparation l WHERE l.version = :version"),
@@ -47,7 +47,7 @@ public class Loanpreparation extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "LoanPreparationID")
-    private Integer loanPreparationID;
+    private Integer loanPreparationId;
      
     @Lob
     @Size(max = 65535)
@@ -83,50 +83,42 @@ public class Loanpreparation extends BaseEntity {
     @Column(name = "ReceivedComments")
     private String receivedComments;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "loanPreparationID")
-    private Collection<Loanreturnpreparation> loanreturnpreparationCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "loanPreparation")
+    private Collection<Loanreturnpreparation> loanreturnpreparations;
     
     @JoinColumn(name = "LoanID", referencedColumnName = "LoanID")
     @ManyToOne(optional = false)
-    private Loan loanID;
+    private Loan loan;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "DisciplineID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne
-    private Discipline disciplineID;
+    private Discipline discipline;
     
     @JoinColumn(name = "PreparationID", referencedColumnName = "PreparationID")
     @ManyToOne
-    private Preparation preparationID;
+    private Preparation preparation;
 
     public Loanpreparation() {
     }
 
-    public Loanpreparation(Integer loanPreparationID) {
-        this.loanPreparationID = loanPreparationID;
+    public Loanpreparation(Integer loanPreparationId) {
+        this.loanPreparationId = loanPreparationId;
     }
 
-    public Loanpreparation(Integer loanPreparationID, Date timestampCreated, boolean isResolved) {
+    public Loanpreparation(Integer loanPreparationId, Date timestampCreated, boolean isResolved) {
         super(timestampCreated);
-        this.loanPreparationID = loanPreparationID; 
+        this.loanPreparationId = loanPreparationId; 
         this.isResolved = isResolved;
     }
-
-    public Integer getLoanPreparationID() {
-        return loanPreparationID;
-    }
-
-    public void setLoanPreparationID(Integer loanPreparationID) {
-        this.loanPreparationID = loanPreparationID;
-    } 
-    
+ 
     public String getDescriptionOfMaterial() {
         return descriptionOfMaterial;
     }
@@ -192,58 +184,70 @@ public class Loanpreparation extends BaseEntity {
     }
 
     @XmlTransient
-    public Collection<Loanreturnpreparation> getLoanreturnpreparationCollection() {
-        return loanreturnpreparationCollection;
+    public Collection<Loanreturnpreparation> getLoanreturnpreparations() {
+        return loanreturnpreparations;
     }
 
-    public void setLoanreturnpreparationCollection(Collection<Loanreturnpreparation> loanreturnpreparationCollection) {
-        this.loanreturnpreparationCollection = loanreturnpreparationCollection;
+    public void setLoanreturnpreparations(Collection<Loanreturnpreparation> loanreturnpreparations) {
+        this.loanreturnpreparations = loanreturnpreparations;
     }
 
-    public Loan getLoanID() {
-        return loanID;
+ 
+
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setLoanID(Loan loanID) {
-        this.loanID = loanID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Discipline getDiscipline() {
+        return discipline;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setDiscipline(Discipline discipline) {
+        this.discipline = discipline;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Loan getLoan() {
+        return loan;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setLoan(Loan loan) {
+        this.loan = loan;
     }
 
-    public Discipline getDisciplineID() {
-        return disciplineID;
+    public Integer getLoanPreparationId() {
+        return loanPreparationId;
     }
 
-    public void setDisciplineID(Discipline disciplineID) {
-        this.disciplineID = disciplineID;
+    public void setLoanPreparationId(Integer loanPreparationId) {
+        this.loanPreparationId = loanPreparationId;
     }
 
-    public Preparation getPreparationID() {
-        return preparationID;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setPreparationID(Preparation preparationID) {
-        this.preparationID = preparationID;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
+
+    public Preparation getPreparation() {
+        return preparation;
+    }
+
+    public void setPreparation(Preparation preparation) {
+        this.preparation = preparation;
+    }
+
+    
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (loanPreparationID != null ? loanPreparationID.hashCode() : 0);
+        hash += (loanPreparationId != null ? loanPreparationId.hashCode() : 0);
         return hash;
     }
 
@@ -254,7 +258,7 @@ public class Loanpreparation extends BaseEntity {
             return false;
         }
         Loanpreparation other = (Loanpreparation) object;
-        if ((this.loanPreparationID == null && other.loanPreparationID != null) || (this.loanPreparationID != null && !this.loanPreparationID.equals(other.loanPreparationID))) {
+        if ((this.loanPreparationId == null && other.loanPreparationId != null) || (this.loanPreparationId != null && !this.loanPreparationId.equals(other.loanPreparationId))) {
             return false;
         }
         return true;
@@ -262,7 +266,7 @@ public class Loanpreparation extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Loanpreparation[ loanPreparationID=" + loanPreparationID + " ]";
+        return "Loanpreparation[ loanPreparationID=" + loanPreparationId + " ]";
     }
     
 }

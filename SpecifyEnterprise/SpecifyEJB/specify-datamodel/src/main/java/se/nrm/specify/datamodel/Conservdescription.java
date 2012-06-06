@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Conservdescription.findAll", query = "SELECT c FROM Conservdescription c"),
-    @NamedQuery(name = "Conservdescription.findByConservDescriptionID", query = "SELECT c FROM Conservdescription c WHERE c.conservDescriptionID = :conservDescriptionID"),
+    @NamedQuery(name = "Conservdescription.findByConservDescriptionID", query = "SELECT c FROM Conservdescription c WHERE c.conservDescriptionId = :conservDescriptionID"),
     @NamedQuery(name = "Conservdescription.findByTimestampCreated", query = "SELECT c FROM Conservdescription c WHERE c.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Conservdescription.findByTimestampModified", query = "SELECT c FROM Conservdescription c WHERE c.timestampModified = :timestampModified"),
     @NamedQuery(name = "Conservdescription.findByVersion", query = "SELECT c FROM Conservdescription c WHERE c.version = :version"),
@@ -48,7 +48,7 @@ public class Conservdescription extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "ConservDescriptionID")
-    private Integer conservDescriptionID;
+    private Integer conservDescriptionId;
       
     @Lob
     @Size(max = 65535)
@@ -107,47 +107,40 @@ public class Conservdescription extends BaseEntity {
     @Column(name = "Width")
     private Float width;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "conservDescriptionID")
-    private Collection<Conservevent> conserveventCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "conservDescription")
+    private Collection<Conservevent> events;
     
     @JoinColumn(name = "DivisionID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne
-    private Division divisionID;
+    private Division division;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "CollectionObjectID", referencedColumnName = "CollectionObjectID")
     @ManyToOne
-    private Collectionobject collectionObjectID;
+    private Collectionobject collectionObject;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "conservDescriptionID")
-    private Collection<Conservdescriptionattachment> conservdescriptionattachmentCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "conservDescription")
+    private Collection<Conservdescriptionattachment> conservDescriptionAttachments;
 
     public Conservdescription() {
     }
 
-    public Conservdescription(Integer conservDescriptionID) {
-        this.conservDescriptionID = conservDescriptionID;
+    public Conservdescription(Integer conservDescriptionId) {
+        this.conservDescriptionId = conservDescriptionId;
     }
 
-    public Conservdescription(Integer conservDescriptionID, Date timestampCreated) {
+    public Conservdescription(Integer conservDescriptionId, Date timestampCreated) {
         super(timestampCreated);
-        this.conservDescriptionID = conservDescriptionID; 
+        this.conservDescriptionId = conservDescriptionId; 
     }
-
-    public Integer getConservDescriptionID() {
-        return conservDescriptionID;
-    }
-
-    public void setConservDescriptionID(Integer conservDescriptionID) {
-        this.conservDescriptionID = conservDescriptionID;
-    }
+ 
  
     public String getBackgroundInfo() {
         return backgroundInfo;
@@ -253,60 +246,76 @@ public class Conservdescription extends BaseEntity {
         this.width = width;
     }
 
+ 
+
+    public Collectionobject getCollectionObject() {
+        return collectionObject;
+    }
+
+    public void setCollectionObject(Collectionobject collectionObject) {
+        this.collectionObject = collectionObject;
+    }
+
+    public Integer getConservDescriptionId() {
+        return conservDescriptionId;
+    }
+
+    public void setConservDescriptionId(Integer conservDescriptionId) {
+        this.conservDescriptionId = conservDescriptionId;
+    }
+
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
+    }
+
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Division getDivision() {
+        return division;
+    }
+
+    public void setDivision(Division division) {
+        this.division = division;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
     @XmlTransient
-    public Collection<Conservevent> getConserveventCollection() {
-        return conserveventCollection;
+    public Collection<Conservdescriptionattachment> getConservDescriptionAttachments() {
+        return conservDescriptionAttachments;
     }
 
-    public void setConserveventCollection(Collection<Conservevent> conserveventCollection) {
-        this.conserveventCollection = conserveventCollection;
-    }
-
-    public Division getDivisionID() {
-        return divisionID;
-    }
-
-    public void setDivisionID(Division divisionID) {
-        this.divisionID = divisionID;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Collectionobject getCollectionObjectID() {
-        return collectionObjectID;
-    }
-
-    public void setCollectionObjectID(Collectionobject collectionObjectID) {
-        this.collectionObjectID = collectionObjectID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setConservDescriptionAttachments(Collection<Conservdescriptionattachment> conservDescriptionAttachments) {
+        this.conservDescriptionAttachments = conservDescriptionAttachments;
     }
 
     @XmlTransient
-    public Collection<Conservdescriptionattachment> getConservdescriptionattachmentCollection() {
-        return conservdescriptionattachmentCollection;
+    public Collection<Conservevent> getEvents() {
+        return events;
     }
 
-    public void setConservdescriptionattachmentCollection(Collection<Conservdescriptionattachment> conservdescriptionattachmentCollection) {
-        this.conservdescriptionattachmentCollection = conservdescriptionattachmentCollection;
+    public void setEvents(Collection<Conservevent> events) {
+        this.events = events;
     }
+
+   
+
+    
+
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (conservDescriptionID != null ? conservDescriptionID.hashCode() : 0);
+        hash += (conservDescriptionId != null ? conservDescriptionId.hashCode() : 0);
         return hash;
     }
 
@@ -317,7 +326,7 @@ public class Conservdescription extends BaseEntity {
             return false;
         }
         Conservdescription other = (Conservdescription) object;
-        if ((this.conservDescriptionID == null && other.conservDescriptionID != null) || (this.conservDescriptionID != null && !this.conservDescriptionID.equals(other.conservDescriptionID))) {
+        if ((this.conservDescriptionId == null && other.conservDescriptionId != null) || (this.conservDescriptionId != null && !this.conservDescriptionId.equals(other.conservDescriptionId))) {
             return false;
         }
         return true;
@@ -325,7 +334,7 @@ public class Conservdescription extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Conservdescription[ conservDescriptionID=" + conservDescriptionID + " ]";
+        return "Conservdescription[ conservDescriptionId=" + conservDescriptionId + " ]";
     }
     
 }

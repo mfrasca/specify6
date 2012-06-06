@@ -30,13 +30,13 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Recordset.findAll", query = "SELECT r FROM Recordset r"),
-    @NamedQuery(name = "Recordset.findByRecordSetID", query = "SELECT r FROM Recordset r WHERE r.recordSetID = :recordSetID"),
+    @NamedQuery(name = "Recordset.findByRecordSetID", query = "SELECT r FROM Recordset r WHERE r.recordSetId = :recordSetID"),
     @NamedQuery(name = "Recordset.findByTimestampCreated", query = "SELECT r FROM Recordset r WHERE r.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Recordset.findByTimestampModified", query = "SELECT r FROM Recordset r WHERE r.timestampModified = :timestampModified"),
     @NamedQuery(name = "Recordset.findByVersion", query = "SELECT r FROM Recordset r WHERE r.version = :version"),
-    @NamedQuery(name = "Recordset.findByCollectionMemberID", query = "SELECT r FROM Recordset r WHERE r.collectionMemberID = :collectionMemberID"),
+    @NamedQuery(name = "Recordset.findByCollectionMemberID", query = "SELECT r FROM Recordset r WHERE r.collectionMemberId = :collectionMemberID"),
     @NamedQuery(name = "Recordset.findByAllPermissionLevel", query = "SELECT r FROM Recordset r WHERE r.allPermissionLevel = :allPermissionLevel"),
-    @NamedQuery(name = "Recordset.findByTableID", query = "SELECT r FROM Recordset r WHERE r.tableID = :tableID"),
+    @NamedQuery(name = "Recordset.findByTableID", query = "SELECT r FROM Recordset r WHERE r.dbTableId = :tableID"),
     @NamedQuery(name = "Recordset.findByGroupPermissionLevel", query = "SELECT r FROM Recordset r WHERE r.groupPermissionLevel = :groupPermissionLevel"),
     @NamedQuery(name = "Recordset.findByName", query = "SELECT r FROM Recordset r WHERE r.name = :name"),
     @NamedQuery(name = "Recordset.findByOwnerPermissionLevel", query = "SELECT r FROM Recordset r WHERE r.ownerPermissionLevel = :ownerPermissionLevel"),
@@ -50,12 +50,12 @@ public class Recordset extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "RecordSetID")
-    private Integer recordSetID;
+    private Integer recordSetId;
      
     @Basic(optional = false)
     @NotNull
     @Column(name = "CollectionMemberID")
-    private int collectionMemberID;
+    private int collectionMemberId;
     
     @Column(name = "AllPermissionLevel")
     private Integer allPermissionLevel;
@@ -63,7 +63,7 @@ public class Recordset extends BaseEntity {
     @Basic(optional = false)
     @NotNull
     @Column(name = "TableID")
-    private int tableID;
+    private int dbTableId;
     
     @Column(name = "GroupPermissionLevel")
     private Integer groupPermissionLevel;
@@ -89,59 +89,44 @@ public class Recordset extends BaseEntity {
     
     @JoinColumn(name = "SpPrincipalID", referencedColumnName = "SpPrincipalID")
     @ManyToOne
-    private Spprincipal spPrincipalID;
+    private Spprincipal group;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "SpecifyUserID", referencedColumnName = "SpecifyUserID")
     @ManyToOne(optional = false)
-    private Specifyuser specifyUserID;
+    private Specifyuser specifyUser;
     
     @JoinColumn(name = "InfoRequestID", referencedColumnName = "InfoRequestID")
     @ManyToOne
-    private Inforequest infoRequestID;
+    private Inforequest infoRequest;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "recordSetID")
-    private Collection<Recordsetitem> recordsetitemCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "recordSet")
+    private Collection<Recordsetitem> recordSetItems;
 
     public Recordset() {
     }
 
-    public Recordset(Integer recordSetID) {
-        this.recordSetID = recordSetID;
+    public Recordset(Integer recordSetId) {
+        this.recordSetId = recordSetId;
     }
 
-    public Recordset(Integer recordSetID, Date timestampCreated, int collectionMemberID, int tableID, String name, short type) {
+    public Recordset(Integer recordSetId, Date timestampCreated, int collectionMemberId, int tableID, String name, short type) {
         super(timestampCreated);
-        this.recordSetID = recordSetID; 
-        this.collectionMemberID = collectionMemberID;
-        this.tableID = tableID;
+        this.recordSetId = recordSetId; 
+        this.collectionMemberId = collectionMemberId;
+        this.dbTableId = tableID;
         this.name = name;
         this.type = type;
     }
 
-    public Integer getRecordSetID() {
-        return recordSetID;
-    }
-
-    public void setRecordSetID(Integer recordSetID) {
-        this.recordSetID = recordSetID;
-    } 
-    
-    public int getCollectionMemberID() {
-        return collectionMemberID;
-    }
-
-    public void setCollectionMemberID(int collectionMemberID) {
-        this.collectionMemberID = collectionMemberID;
-    }
-
+   
     public Integer getAllPermissionLevel() {
         return allPermissionLevel;
     }
@@ -150,13 +135,7 @@ public class Recordset extends BaseEntity {
         this.allPermissionLevel = allPermissionLevel;
     }
 
-    public int getTableID() {
-        return tableID;
-    }
-
-    public void setTableID(int tableID) {
-        this.tableID = tableID;
-    }
+    
 
     public Integer getGroupPermissionLevel() {
         return groupPermissionLevel;
@@ -198,59 +177,85 @@ public class Recordset extends BaseEntity {
         this.type = type;
     }
 
-    public Spprincipal getSpPrincipalID() {
-        return spPrincipalID;
+    public int getCollectionMemberId() {
+        return collectionMemberId;
     }
 
-    public void setSpPrincipalID(Spprincipal spPrincipalID) {
-        this.spPrincipalID = spPrincipalID;
+    public void setCollectionMemberId(int collectionMemberId) {
+        this.collectionMemberId = collectionMemberId;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public int getDbTableId() {
+        return dbTableId;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setDbTableId(int dbTableId) {
+        this.dbTableId = dbTableId;
     }
 
-    public Specifyuser getSpecifyUserID() {
-        return specifyUserID;
+    public Spprincipal getGroup() {
+        return group;
     }
 
-    public void setSpecifyUserID(Specifyuser specifyUserID) {
-        this.specifyUserID = specifyUserID;
+    public void setGroup(Spprincipal group) {
+        this.group = group;
     }
 
-    public Inforequest getInfoRequestID() {
-        return infoRequestID;
+    public Inforequest getInfoRequest() {
+        return infoRequest;
     }
 
-    public void setInfoRequestID(Inforequest infoRequestID) {
-        this.infoRequestID = infoRequestID;
+    public void setInfoRequest(Inforequest infoRequest) {
+        this.infoRequest = infoRequest;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Integer getRecordSetId() {
+        return recordSetId;
+    }
+
+    public void setRecordSetId(Integer recordSetId) {
+        this.recordSetId = recordSetId;
     }
 
     @XmlTransient
-    public Collection<Recordsetitem> getRecordsetitemCollection() {
-        return recordsetitemCollection;
+    public Collection<Recordsetitem> getRecordSetItems() {
+        return recordSetItems;
     }
 
-    public void setRecordsetitemCollection(Collection<Recordsetitem> recordsetitemCollection) {
-        this.recordsetitemCollection = recordsetitemCollection;
+    public void setRecordSetItems(Collection<Recordsetitem> recordSetItems) {
+        this.recordSetItems = recordSetItems;
     }
+
+    public Specifyuser getSpecifyUser() {
+        return specifyUser;
+    }
+
+    public void setSpecifyUser(Specifyuser specifyUser) {
+        this.specifyUser = specifyUser;
+    }
+
+    
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (recordSetID != null ? recordSetID.hashCode() : 0);
+        hash += (recordSetId != null ? recordSetId.hashCode() : 0);
         return hash;
     }
 
@@ -261,7 +266,7 @@ public class Recordset extends BaseEntity {
             return false;
         }
         Recordset other = (Recordset) object;
-        if ((this.recordSetID == null && other.recordSetID != null) || (this.recordSetID != null && !this.recordSetID.equals(other.recordSetID))) {
+        if ((this.recordSetId == null && other.recordSetId != null) || (this.recordSetId != null && !this.recordSetId.equals(other.recordSetId))) {
             return false;
         }
         return true;
@@ -269,7 +274,7 @@ public class Recordset extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Recordset[ recordSetID=" + recordSetID + " ]";
+        return "Recordset[ recordSetID=" + recordSetId + " ]";
     }
     
 }

@@ -20,7 +20,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlRootElement; 
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Loan.findAll", query = "SELECT l FROM Loan l"),
-    @NamedQuery(name = "Loan.findByLoanID", query = "SELECT l FROM Loan l WHERE l.loanID = :loanID"),
+    @NamedQuery(name = "Loan.findByLoanID", query = "SELECT l FROM Loan l WHERE l.loanId = :loanID"),
     @NamedQuery(name = "Loan.findByTimestampCreated", query = "SELECT l FROM Loan l WHERE l.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Loan.findByTimestampModified", query = "SELECT l FROM Loan l WHERE l.timestampModified = :timestampModified"),
     @NamedQuery(name = "Loan.findByVersion", query = "SELECT l FROM Loan l WHERE l.version = :version"),
@@ -46,7 +46,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Loan.findByNumber1", query = "SELECT l FROM Loan l WHERE l.number1 = :number1"),
     @NamedQuery(name = "Loan.findByNumber2", query = "SELECT l FROM Loan l WHERE l.number2 = :number2"),
     @NamedQuery(name = "Loan.findByOriginalDueDate", query = "SELECT l FROM Loan l WHERE l.originalDueDate = :originalDueDate"),
-    @NamedQuery(name = "Loan.findByOverdueNotiSetDate", query = "SELECT l FROM Loan l WHERE l.overdueNotiSetDate = :overdueNotiSetDate"),
+    @NamedQuery(name = "Loan.findByOverdueNotiSetDate", query = "SELECT l FROM Loan l WHERE l.overdueNotiSentDate = :overdueNotiSetDate"),
     @NamedQuery(name = "Loan.findByPurposeOfLoan", query = "SELECT l FROM Loan l WHERE l.purposeOfLoan = :purposeOfLoan"),
     @NamedQuery(name = "Loan.findByReceivedComments", query = "SELECT l FROM Loan l WHERE l.receivedComments = :receivedComments"),
     @NamedQuery(name = "Loan.findBySrcGeography", query = "SELECT l FROM Loan l WHERE l.srcGeography = :srcGeography"),
@@ -62,7 +62,7 @@ public class Loan extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "LoanID")
-    private Integer loanID;
+    private Integer loanId;
  
     @Column(name = "CurrentDueDate")
     @Temporal(TemporalType.DATE)
@@ -105,7 +105,7 @@ public class Loan extends BaseEntity {
     
     @Column(name = "OverdueNotiSetDate")
     @Temporal(TemporalType.DATE)
-    private Date overdueNotiSetDate;
+    private Date overdueNotiSentDate;
     
     @Size(max = 64)
     @Column(name = "PurposeOfLoan")
@@ -148,58 +148,67 @@ public class Loan extends BaseEntity {
     @Column(name = "YesNo2")
     private Boolean yesNo2;
     
-    @OneToMany(mappedBy = "loanID")
-    private Collection<Shipment> shipmentCollection;
+    @OneToMany(mappedBy = "loan")
+    private Collection<Shipment> shipments;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "loanID")
-    private Collection<Loanagent> loanagentCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "loan")
+    private Collection<Loanagent> loanAgents;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "loanID")
-    private Collection<Loanattachment> loanattachmentCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "loan")
+    private Collection<Loanattachment> loanAttachments;
     
     @JoinColumn(name = "AddressOfRecordID", referencedColumnName = "AddressOfRecordID")
     @ManyToOne
-    private Addressofrecord addressOfRecordID;
+    private Addressofrecord addressOfRecord;
     
     @JoinColumn(name = "DivisionID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne
-    private Division divisionID;
+    private Division division;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "DisciplineID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne(optional = false)
-    private Discipline disciplineID;
+    private Discipline discipline;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "loanID")
-    private Collection<Loanpreparation> loanpreparationCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "loan")
+    private Collection<Loanpreparation> loanPreparations;
 
     public Loan() {
     }
 
-    public Loan(Integer loanID) {
-        this.loanID = loanID;
+    public Loan(Integer loanId) {
+        this.loanId = loanId;
     }
 
-    public Loan(Integer loanID, Date timestampCreated, String loanNumber) {
+    public Loan(Integer loanId, Date timestampCreated, String loanNumber) {
         super(timestampCreated);
-        this.loanID = loanID; 
+        this.loanId = loanId; 
         this.loanNumber = loanNumber;
     }
 
-    public Integer getLoanID() {
-        return loanID;
+    public Integer getLoanId() {
+        return loanId;
     }
 
-    public void setLoanID(Integer loanID) {
-        this.loanID = loanID;
+    public void setLoanId(Integer loanId) {
+        this.loanId = loanId;
     }
+
+    public Date getOverdueNotiSentDate() {
+        return overdueNotiSentDate;
+    }
+
+    public void setOverdueNotiSentDate(Date overdueNotiSentDate) {
+        this.overdueNotiSentDate = overdueNotiSentDate;
+    }
+ 
  
     public Date getCurrentDueDate() {
         return currentDueDate;
@@ -281,13 +290,7 @@ public class Loan extends BaseEntity {
         this.originalDueDate = originalDueDate;
     }
 
-    public Date getOverdueNotiSetDate() {
-        return overdueNotiSetDate;
-    }
-
-    public void setOverdueNotiSetDate(Date overdueNotiSetDate) {
-        this.overdueNotiSetDate = overdueNotiSetDate;
-    }
+ 
 
     public String getPurposeOfLoan() {
         return purposeOfLoan;
@@ -368,87 +371,89 @@ public class Loan extends BaseEntity {
     public void setYesNo2(Boolean yesNo2) {
         this.yesNo2 = yesNo2;
     }
+ 
 
-    @XmlTransient
-    public Collection<Shipment> getShipmentCollection() {
-        return shipmentCollection;
+    public Addressofrecord getAddressOfRecord() {
+        return addressOfRecord;
     }
 
-    public void setShipmentCollection(Collection<Shipment> shipmentCollection) {
-        this.shipmentCollection = shipmentCollection;
+    public void setAddressOfRecord(Addressofrecord addressOfRecord) {
+        this.addressOfRecord = addressOfRecord;
     }
 
-    @XmlTransient
-    public Collection<Loanagent> getLoanagentCollection() {
-        return loanagentCollection;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setLoanagentCollection(Collection<Loanagent> loanagentCollection) {
-        this.loanagentCollection = loanagentCollection;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    @XmlTransient
-    public Collection<Loanattachment> getLoanattachmentCollection() {
-        return loanattachmentCollection;
+    public Discipline getDiscipline() {
+        return discipline;
     }
 
-    public void setLoanattachmentCollection(Collection<Loanattachment> loanattachmentCollection) {
-        this.loanattachmentCollection = loanattachmentCollection;
+    public void setDiscipline(Discipline discipline) {
+        this.discipline = discipline;
     }
 
-    public Addressofrecord getAddressOfRecordID() {
-        return addressOfRecordID;
+    public Division getDivision() {
+        return division;
     }
 
-    public void setAddressOfRecordID(Addressofrecord addressOfRecordID) {
-        this.addressOfRecordID = addressOfRecordID;
+    public void setDivision(Division division) {
+        this.division = division;
     }
 
-    public Division getDivisionID() {
-        return divisionID;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setDivisionID(Division divisionID) {
-        this.divisionID = divisionID;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
-    public Discipline getDisciplineID() {
-        return disciplineID;
-    }
-
-    public void setDisciplineID(Discipline disciplineID) {
-        this.disciplineID = disciplineID;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
 
     @XmlTransient
-    public Collection<Loanpreparation> getLoanpreparationCollection() {
-        return loanpreparationCollection;
+    public Collection<Loanagent> getLoanAgents() {
+        return loanAgents;
     }
 
-    public void setLoanpreparationCollection(Collection<Loanpreparation> loanpreparationCollection) {
-        this.loanpreparationCollection = loanpreparationCollection;
+    public void setLoanAgents(Collection<Loanagent> loanAgents) {
+        this.loanAgents = loanAgents;
     }
+
+    @XmlTransient
+    public Collection<Loanattachment> getLoanAttachments() {
+        return loanAttachments;
+    }
+
+    public void setLoanAttachments(Collection<Loanattachment> loanAttachments) {
+        this.loanAttachments = loanAttachments;
+    }
+
+    @XmlTransient
+    public Collection<Loanpreparation> getLoanPreparations() {
+        return loanPreparations;
+    }
+
+    public void setLoanPreparations(Collection<Loanpreparation> loanPreparations) {
+        this.loanPreparations = loanPreparations;
+    }
+
+    @XmlTransient
+    public Collection<Shipment> getShipments() {
+        return shipments;
+    }
+
+    public void setShipments(Collection<Shipment> shipments) {
+        this.shipments = shipments;
+    }
+  
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (loanID != null ? loanID.hashCode() : 0);
+        hash += (loanId != null ? loanId.hashCode() : 0);
         return hash;
     }
 
@@ -459,7 +464,7 @@ public class Loan extends BaseEntity {
             return false;
         }
         Loan other = (Loan) object;
-        if ((this.loanID == null && other.loanID != null) || (this.loanID != null && !this.loanID.equals(other.loanID))) {
+        if ((this.loanId == null && other.loanId != null) || (this.loanId != null && !this.loanId.equals(other.loanId))) {
             return false;
         }
         return true;
@@ -467,7 +472,7 @@ public class Loan extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Loan[ loanID=" + loanID + " ]";
+        return "Loan[ loanID=" + loanId + " ]";
     }
     
 }

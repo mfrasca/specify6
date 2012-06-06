@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Repositoryagreementattachment.findAll", query = "SELECT r FROM Repositoryagreementattachment r"),
-    @NamedQuery(name = "Repositoryagreementattachment.findByRepositoryAgreementAttachmentID", query = "SELECT r FROM Repositoryagreementattachment r WHERE r.repositoryAgreementAttachmentID = :repositoryAgreementAttachmentID"),
+    @NamedQuery(name = "Repositoryagreementattachment.findByRepositoryAgreementAttachmentID", query = "SELECT r FROM Repositoryagreementattachment r WHERE r.repositoryAgreementAttachmentId = :repositoryAgreementAttachmentID"),
     @NamedQuery(name = "Repositoryagreementattachment.findByTimestampCreated", query = "SELECT r FROM Repositoryagreementattachment r WHERE r.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Repositoryagreementattachment.findByTimestampModified", query = "SELECT r FROM Repositoryagreementattachment r WHERE r.timestampModified = :timestampModified"),
     @NamedQuery(name = "Repositoryagreementattachment.findByVersion", query = "SELECT r FROM Repositoryagreementattachment r WHERE r.version = :version"),
@@ -40,7 +40,7 @@ public class Repositoryagreementattachment extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "RepositoryAgreementAttachmentID")
-    private Integer repositoryAgreementAttachmentID;
+    private Integer repositoryAgreementAttachmentId;
      
     @Column(name = "Ordinal")
     private Integer ordinal;
@@ -52,39 +52,74 @@ public class Repositoryagreementattachment extends BaseEntity {
     
     @JoinColumn(name = "AttachmentID", referencedColumnName = "AttachmentID")
     @ManyToOne(optional = false)
-    private Attachment attachmentID;
+    private Attachment attachment;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "RepositoryAgreementID", referencedColumnName = "RepositoryAgreementID")
     @ManyToOne(optional = false)
-    private Repositoryagreement repositoryAgreementID;
+    private Repositoryagreement repositoryAgreement;
 
     public Repositoryagreementattachment() {
     }
 
-    public Repositoryagreementattachment(Integer repositoryAgreementAttachmentID) {
-        this.repositoryAgreementAttachmentID = repositoryAgreementAttachmentID;
+    public Repositoryagreementattachment(Integer repositoryAgreementAttachmentId) {
+        this.repositoryAgreementAttachmentId = repositoryAgreementAttachmentId;
     }
 
-    public Repositoryagreementattachment(Integer repositoryAgreementAttachmentID, Date timestampCreated) {
+    public Repositoryagreementattachment(Integer repositoryAgreementAttachmentId, Date timestampCreated) {
         super(timestampCreated);
-        this.repositoryAgreementAttachmentID = repositoryAgreementAttachmentID; 
+        this.repositoryAgreementAttachmentId = repositoryAgreementAttachmentId; 
     }
 
-    public Integer getRepositoryAgreementAttachmentID() {
-        return repositoryAgreementAttachmentID;
+    public Attachment getAttachment() {
+        return attachment;
     }
 
-    public void setRepositoryAgreementAttachmentID(Integer repositoryAgreementAttachmentID) {
-        this.repositoryAgreementAttachmentID = repositoryAgreementAttachmentID;
-    } 
+    public void setAttachment(Attachment attachment) {
+        this.attachment = attachment;
+    }
+
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
+    }
+
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+ 
+
+    public Repositoryagreement getRepositoryAgreement() {
+        return repositoryAgreement;
+    }
+
+    public void setRepositoryAgreement(Repositoryagreement repositoryAgreement) {
+        this.repositoryAgreement = repositoryAgreement;
+    }
+
+    public Integer getRepositoryAgreementAttachmentId() {
+        return repositoryAgreementAttachmentId;
+    }
+
+    public void setRepositoryAgreementAttachmentId(Integer repositoryAgreementAttachmentId) {
+        this.repositoryAgreementAttachmentId = repositoryAgreementAttachmentId;
+    }
+ 
 
     public Integer getOrdinal() {
         return ordinal;
@@ -102,42 +137,12 @@ public class Repositoryagreementattachment extends BaseEntity {
         this.remarks = remarks;
     }
 
-    public Attachment getAttachmentID() {
-        return attachmentID;
-    }
-
-    public void setAttachmentID(Attachment attachmentID) {
-        this.attachmentID = attachmentID;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
-    public Repositoryagreement getRepositoryAgreementID() {
-        return repositoryAgreementID;
-    }
-
-    public void setRepositoryAgreementID(Repositoryagreement repositoryAgreementID) {
-        this.repositoryAgreementID = repositoryAgreementID;
-    }
+   
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (repositoryAgreementAttachmentID != null ? repositoryAgreementAttachmentID.hashCode() : 0);
+        hash += (repositoryAgreementAttachmentId != null ? repositoryAgreementAttachmentId.hashCode() : 0);
         return hash;
     }
 
@@ -148,7 +153,7 @@ public class Repositoryagreementattachment extends BaseEntity {
             return false;
         }
         Repositoryagreementattachment other = (Repositoryagreementattachment) object;
-        if ((this.repositoryAgreementAttachmentID == null && other.repositoryAgreementAttachmentID != null) || (this.repositoryAgreementAttachmentID != null && !this.repositoryAgreementAttachmentID.equals(other.repositoryAgreementAttachmentID))) {
+        if ((this.repositoryAgreementAttachmentId == null && other.repositoryAgreementAttachmentId != null) || (this.repositoryAgreementAttachmentId != null && !this.repositoryAgreementAttachmentId.equals(other.repositoryAgreementAttachmentId))) {
             return false;
         }
         return true;
@@ -156,7 +161,7 @@ public class Repositoryagreementattachment extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Repositoryagreementattachment[ repositoryAgreementAttachmentID=" + repositoryAgreementAttachmentID + " ]";
+        return "Repositoryagreementattachment[ repositoryAgreementAttachmentID=" + repositoryAgreementAttachmentId + " ]";
     }
     
 }

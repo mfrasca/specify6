@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Localitycitation.findAll", query = "SELECT l FROM Localitycitation l"),
-    @NamedQuery(name = "Localitycitation.findByLocalityCitationID", query = "SELECT l FROM Localitycitation l WHERE l.localityCitationID = :localityCitationID"),
+    @NamedQuery(name = "Localitycitation.findByLocalityCitationID", query = "SELECT l FROM Localitycitation l WHERE l.localityCitationId = :localityCitationID"),
     @NamedQuery(name = "Localitycitation.findByTimestampCreated", query = "SELECT l FROM Localitycitation l WHERE l.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Localitycitation.findByTimestampModified", query = "SELECT l FROM Localitycitation l WHERE l.timestampModified = :timestampModified"),
     @NamedQuery(name = "Localitycitation.findByVersion", query = "SELECT l FROM Localitycitation l WHERE l.version = :version")})
@@ -39,7 +39,7 @@ public class Localitycitation extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "LocalityCitationID")
-    private Integer localityCitationID;
+    private Integer localityCitationId;
      
     @Lob
     @Size(max = 65535)
@@ -48,43 +48,84 @@ public class Localitycitation extends BaseEntity {
     
     @JoinColumn(name = "LocalityID", referencedColumnName = "LocalityID")
     @ManyToOne(optional = false)
-    private Locality localityID;
+    private Locality locality;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ReferenceWorkID", referencedColumnName = "ReferenceWorkID")
     @ManyToOne(optional = false)
-    private Referencework referenceWorkID;
+    private Referencework referenceWork;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "DisciplineID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne
-    private Discipline disciplineID;
+    private Discipline discipline;
 
     public Localitycitation() {
     }
 
-    public Localitycitation(Integer localityCitationID) {
-        this.localityCitationID = localityCitationID;
+    public Localitycitation(Integer localityCitationId) {
+        this.localityCitationId = localityCitationId;
     }
 
-    public Localitycitation(Integer localityCitationID, Date timestampCreated) {
+    public Localitycitation(Integer localityCitationId, Date timestampCreated) {
         super(timestampCreated);
-        this.localityCitationID = localityCitationID; 
+        this.localityCitationId = localityCitationId; 
     }
 
-    public Integer getLocalityCitationID() {
-        return localityCitationID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setLocalityCitationID(Integer localityCitationID) {
-        this.localityCitationID = localityCitationID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
+
+    public Discipline getDiscipline() {
+        return discipline;
+    }
+
+    public void setDiscipline(Discipline discipline) {
+        this.discipline = discipline;
+    }
+
+    public Locality getLocality() {
+        return locality;
+    }
+
+    public void setLocality(Locality locality) {
+        this.locality = locality;
+    }
+
+    public Integer getLocalityCitationId() {
+        return localityCitationId;
+    }
+
+    public void setLocalityCitationId(Integer localityCitationId) {
+        this.localityCitationId = localityCitationId;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Referencework getReferenceWork() {
+        return referenceWork;
+    }
+
+    public void setReferenceWork(Referencework referenceWork) {
+        this.referenceWork = referenceWork;
+    }
+ 
  
     public String getRemarks() {
         return remarks;
@@ -94,50 +135,13 @@ public class Localitycitation extends BaseEntity {
         this.remarks = remarks;
     }
 
-    public Locality getLocalityID() {
-        return localityID;
-    }
+   
 
-    public void setLocalityID(Locality localityID) {
-        this.localityID = localityID;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Referencework getReferenceWorkID() {
-        return referenceWorkID;
-    }
-
-    public void setReferenceWorkID(Referencework referenceWorkID) {
-        this.referenceWorkID = referenceWorkID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
-    public Discipline getDisciplineID() {
-        return disciplineID;
-    }
-
-    public void setDisciplineID(Discipline disciplineID) {
-        this.disciplineID = disciplineID;
-    }
-
+  
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (localityCitationID != null ? localityCitationID.hashCode() : 0);
+        hash += (localityCitationId != null ? localityCitationId.hashCode() : 0);
         return hash;
     }
 
@@ -148,7 +152,7 @@ public class Localitycitation extends BaseEntity {
             return false;
         }
         Localitycitation other = (Localitycitation) object;
-        if ((this.localityCitationID == null && other.localityCitationID != null) || (this.localityCitationID != null && !this.localityCitationID.equals(other.localityCitationID))) {
+        if ((this.localityCitationId == null && other.localityCitationId != null) || (this.localityCitationId != null && !this.localityCitationId.equals(other.localityCitationId))) {
             return false;
         }
         return true;
@@ -156,7 +160,7 @@ public class Localitycitation extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Localitycitation[ localityCitationID=" + localityCitationID + " ]";
+        return "Localitycitation[ localityCitationID=" + localityCitationId + " ]";
     }
     
 }

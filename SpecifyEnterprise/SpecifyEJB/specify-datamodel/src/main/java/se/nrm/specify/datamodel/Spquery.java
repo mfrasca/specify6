@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Spquery.findAll", query = "SELECT s FROM Spquery s"),
-    @NamedQuery(name = "Spquery.findBySpQueryID", query = "SELECT s FROM Spquery s WHERE s.spQueryID = :spQueryID"),
+    @NamedQuery(name = "Spquery.findBySpQueryID", query = "SELECT s FROM Spquery s WHERE s.spQueryId = :spQueryID"),
     @NamedQuery(name = "Spquery.findByTimestampCreated", query = "SELECT s FROM Spquery s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Spquery.findByTimestampModified", query = "SELECT s FROM Spquery s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Spquery.findByVersion", query = "SELECT s FROM Spquery s WHERE s.version = :version"),
@@ -51,7 +51,7 @@ public class Spquery extends BaseEntity {
     @Basic(optional = false)
     @NotNull
     @Column(name = "SpQueryID")
-    private Integer spQueryID;
+    private Integer spQueryId;
      
     @Basic(optional = false)
 //    @NotNull
@@ -94,47 +94,40 @@ public class Spquery extends BaseEntity {
     @Column(name = "SqlStr")
     private String sqlStr;
     
-    @OneToMany(mappedBy = "spQueryID")
-    private Collection<Spqueryfield> spqueryfieldCollection;
+    @OneToMany(mappedBy = "query")
+    private Collection<Spqueryfield> fields;
     
-    @OneToMany(mappedBy = "spQueryID")
-    private Collection<Spreport> spreportCollection;
+    @OneToMany(mappedBy = "query")
+    private Collection<Spreport> reports;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "SpecifyUserID", referencedColumnName = "SpecifyUserID")
     @ManyToOne(optional = false)
-    private Specifyuser specifyUserID;
+    private Specifyuser specifyUser;
 
     public Spquery() {
     }
 
-    public Spquery(Integer spQueryID) {
-        this.spQueryID = spQueryID;
+    public Spquery(Integer spQueryId) {
+        this.spQueryId = spQueryId;
     }
 
-    public Spquery(Integer spQueryID, Date timestampCreated, String contextName, short contextTableId, String name) {
+    public Spquery(Integer spQueryId, Date timestampCreated, String contextName, short contextTableId, String name) {
         super(timestampCreated);
-        this.spQueryID = spQueryID; 
+        this.spQueryId = spQueryId; 
         this.contextName = contextName;
         this.contextTableId = contextTableId;
         this.name = name;
     }
 
-    public Integer getSpQueryID() {
-        return spQueryID;
-    }
-
-    public void setSpQueryID(Integer spQueryID) {
-        this.spQueryID = spQueryID;
-    } 
-
+    
     public String getContextName() {
         return contextName;
     }
@@ -215,52 +208,62 @@ public class Spquery extends BaseEntity {
         this.sqlStr = sqlStr;
     }
 
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
+    }
+
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
     @XmlTransient
-    public Collection<Spqueryfield> getSpqueryfieldCollection() {
-        return spqueryfieldCollection;
+    public Collection<Spqueryfield> getFields() {
+        return fields;
     }
 
-    public void setSpqueryfieldCollection(Collection<Spqueryfield> spqueryfieldCollection) {
-        this.spqueryfieldCollection = spqueryfieldCollection;
+    public void setFields(Collection<Spqueryfield> fields) {
+        this.fields = fields;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
 
     @XmlTransient
-    public Collection<Spreport> getSpreportCollection() {
-        return spreportCollection;
+    public Collection<Spreport> getReports() {
+        return reports;
     }
 
-    public void setSpreportCollection(Collection<Spreport> spreportCollection) {
-        this.spreportCollection = spreportCollection;
+    public void setReports(Collection<Spreport> reports) {
+        this.reports = reports;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Integer getSpQueryId() {
+        return spQueryId;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setSpQueryId(Integer spQueryId) {
+        this.spQueryId = spQueryId;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Specifyuser getSpecifyUser() {
+        return specifyUser;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setSpecifyUser(Specifyuser specifyUser) {
+        this.specifyUser = specifyUser;
     }
 
-    public Specifyuser getSpecifyUserID() {
-        return specifyUserID;
-    }
-
-    public void setSpecifyUserID(Specifyuser specifyUserID) {
-        this.specifyUserID = specifyUserID;
-    }
+   
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (spQueryID != null ? spQueryID.hashCode() : 0);
+        hash += (spQueryId != null ? spQueryId.hashCode() : 0);
         return hash;
     }
 
@@ -271,7 +274,7 @@ public class Spquery extends BaseEntity {
             return false;
         }
         Spquery other = (Spquery) object;
-        if ((this.spQueryID == null && other.spQueryID != null) || (this.spQueryID != null && !this.spQueryID.equals(other.spQueryID))) {
+        if ((this.spQueryId == null && other.spQueryId != null) || (this.spQueryId != null && !this.spQueryId.equals(other.spQueryId))) {
             return false;
         }
         return true;
@@ -279,7 +282,7 @@ public class Spquery extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Spquery[ spQueryID=" + spQueryID + " ]";
+        return "Spquery[ spQueryID=" + spQueryId + " ]";
     }
     
 }

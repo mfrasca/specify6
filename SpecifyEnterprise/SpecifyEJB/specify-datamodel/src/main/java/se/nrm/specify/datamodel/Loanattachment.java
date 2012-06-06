@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Loanattachment.findAll", query = "SELECT l FROM Loanattachment l"),
-    @NamedQuery(name = "Loanattachment.findByLoanAttachmentID", query = "SELECT l FROM Loanattachment l WHERE l.loanAttachmentID = :loanAttachmentID"),
+    @NamedQuery(name = "Loanattachment.findByLoanAttachmentID", query = "SELECT l FROM Loanattachment l WHERE l.loanAttachmentId = :loanAttachmentID"),
     @NamedQuery(name = "Loanattachment.findByTimestampCreated", query = "SELECT l FROM Loanattachment l WHERE l.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Loanattachment.findByTimestampModified", query = "SELECT l FROM Loanattachment l WHERE l.timestampModified = :timestampModified"),
     @NamedQuery(name = "Loanattachment.findByVersion", query = "SELECT l FROM Loanattachment l WHERE l.version = :version"),
@@ -40,7 +40,7 @@ public class Loanattachment extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "LoanAttachmentID")
-    private Integer loanAttachmentID;
+    private Integer loanAttachmentId;
       
     @Column(name = "Ordinal")
     private Integer ordinal;
@@ -52,39 +52,72 @@ public class Loanattachment extends BaseEntity {
     
     @JoinColumn(name = "AttachmentID", referencedColumnName = "AttachmentID")
     @ManyToOne(optional = false)
-    private Attachment attachmentID;
+    private Attachment attachment;
     
     @JoinColumn(name = "LoanID", referencedColumnName = "LoanID")
     @ManyToOne(optional = false)
-    private Loan loanID;
+    private Loan loan;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
 
     public Loanattachment() {
     }
 
-    public Loanattachment(Integer loanAttachmentID) {
-        this.loanAttachmentID = loanAttachmentID;
+    public Loanattachment(Integer loanAttachmentId) {
+        this.loanAttachmentId = loanAttachmentId;
     }
 
-    public Loanattachment(Integer loanAttachmentID, Date timestampCreated) {
+    public Loanattachment(Integer loanAttachmentId, Date timestampCreated) {
         super(timestampCreated);
-        this.loanAttachmentID = loanAttachmentID; 
+        this.loanAttachmentId = loanAttachmentId; 
     }
 
-    public Integer getLoanAttachmentID() {
-        return loanAttachmentID;
+    public Attachment getAttachment() {
+        return attachment;
     }
 
-    public void setLoanAttachmentID(Integer loanAttachmentID) {
-        this.loanAttachmentID = loanAttachmentID;
+    public void setAttachment(Attachment attachment) {
+        this.attachment = attachment;
     }
+
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
+    }
+
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Loan getLoan() {
+        return loan;
+    }
+
+    public void setLoan(Loan loan) {
+        this.loan = loan;
+    }
+
+    public Integer getLoanAttachmentId() {
+        return loanAttachmentId;
+    }
+
+    public void setLoanAttachmentId(Integer loanAttachmentId) {
+        this.loanAttachmentId = loanAttachmentId;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
  
     public Integer getOrdinal() {
         return ordinal;
@@ -102,42 +135,12 @@ public class Loanattachment extends BaseEntity {
         this.remarks = remarks;
     }
 
-    public Attachment getAttachmentID() {
-        return attachmentID;
-    }
-
-    public void setAttachmentID(Attachment attachmentID) {
-        this.attachmentID = attachmentID;
-    }
-
-    public Loan getLoanID() {
-        return loanID;
-    }
-
-    public void setLoanID(Loan loanID) {
-        this.loanID = loanID;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (loanAttachmentID != null ? loanAttachmentID.hashCode() : 0);
+        hash += (loanAttachmentId != null ? loanAttachmentId.hashCode() : 0);
         return hash;
     }
 
@@ -148,7 +151,7 @@ public class Loanattachment extends BaseEntity {
             return false;
         }
         Loanattachment other = (Loanattachment) object;
-        if ((this.loanAttachmentID == null && other.loanAttachmentID != null) || (this.loanAttachmentID != null && !this.loanAttachmentID.equals(other.loanAttachmentID))) {
+        if ((this.loanAttachmentId == null && other.loanAttachmentId != null) || (this.loanAttachmentId != null && !this.loanAttachmentId.equals(other.loanAttachmentId))) {
             return false;
         }
         return true;
@@ -156,7 +159,7 @@ public class Loanattachment extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Loanattachment[ loanAttachmentID=" + loanAttachmentID + " ]";
+        return "Loanattachment[ loanAttachmentID=" + loanAttachmentId + " ]";
     }
     
 }

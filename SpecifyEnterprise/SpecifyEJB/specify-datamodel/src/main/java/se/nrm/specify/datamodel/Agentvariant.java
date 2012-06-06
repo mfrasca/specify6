@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Agentvariant.findAll", query = "SELECT a FROM Agentvariant a"),
-    @NamedQuery(name = "Agentvariant.findByAgentVariantID", query = "SELECT a FROM Agentvariant a WHERE a.agentVariantID = :agentVariantID"),
+    @NamedQuery(name = "Agentvariant.findByAgentVariantID", query = "SELECT a FROM Agentvariant a WHERE a.agentVariantId = :agentVariantID"),
     @NamedQuery(name = "Agentvariant.findByTimestampCreated", query = "SELECT a FROM Agentvariant a WHERE a.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Agentvariant.findByTimestampModified", query = "SELECT a FROM Agentvariant a WHERE a.timestampModified = :timestampModified"),
     @NamedQuery(name = "Agentvariant.findByVersion", query = "SELECT a FROM Agentvariant a WHERE a.version = :version"),
@@ -43,7 +43,7 @@ public class Agentvariant extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "AgentVariantID")
-    private Integer agentVariantID;
+    private Integer agentVariantId;
      
     @Size(max = 2)
     @Column(name = "Country")
@@ -68,36 +68,29 @@ public class Agentvariant extends BaseEntity {
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "AgentID", referencedColumnName = "AgentID")
     @ManyToOne(optional = false)
-    private Agent agentID;
+    private Agent agent;
 
     public Agentvariant() {
     }
 
-    public Agentvariant(Integer agentVariantID) {
-        this.agentVariantID = agentVariantID;
+    public Agentvariant(Integer agentVariantId) {
+        this.agentVariantId = agentVariantId;
     }
 
-    public Agentvariant(Integer agentVariantID, Date timestampCreated, short varType) {
-        this.agentVariantID = agentVariantID; 
+    public Agentvariant(Integer agentVariantId, Date timestampCreated, short varType) {
+        this.agentVariantId = agentVariantId; 
         this.varType = varType;
     }
 
-    public Integer getAgentVariantID() {
-        return agentVariantID;
-    }
-
-    public void setAgentVariantID(Integer agentVariantID) {
-        this.agentVariantID = agentVariantID;
-    } 
-    
+ 
     public String getCountry() {
         return country;
     }
@@ -138,34 +131,44 @@ public class Agentvariant extends BaseEntity {
         this.variant = variant;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Agent getAgent() {
+        return agent;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setAgent(Agent agent) {
+        this.agent = agent;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Integer getAgentVariantId() {
+        return agentVariantId;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setAgentVariantId(Integer agentVariantId) {
+        this.agentVariantId = agentVariantId;
     }
 
-    public Agent getAgentID() {
-        return agentID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setAgentID(Agent agentID) {
-        this.agentID = agentID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+ 
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (agentVariantID != null ? agentVariantID.hashCode() : 0);
+        hash += (agentVariantId != null ? agentVariantId.hashCode() : 0);
         return hash;
     }
 
@@ -176,7 +179,7 @@ public class Agentvariant extends BaseEntity {
             return false;
         }
         Agentvariant other = (Agentvariant) object;
-        if ((this.agentVariantID == null && other.agentVariantID != null) || (this.agentVariantID != null && !this.agentVariantID.equals(other.agentVariantID))) {
+        if ((this.agentVariantId == null && other.agentVariantId != null) || (this.agentVariantId != null && !this.agentVariantId.equals(other.agentVariantId))) {
             return false;
         }
         return true;
@@ -184,7 +187,7 @@ public class Agentvariant extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Agentvariant[ agentVariantID=" + agentVariantID + " ]";
+        return "Agentvariant[ agentVariantId=" + agentVariantId + " ]";
     }
     
 }

@@ -24,18 +24,18 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Exchangeoutprep.findAll", query = "SELECT e FROM Exchangeoutprep e"),
-    @NamedQuery(name = "Exchangeoutprep.findByExchangeOutPrepID", query = "SELECT e FROM Exchangeoutprep e WHERE e.exchangeOutPrepID = :exchangeOutPrepID"),
+    @NamedQuery(name = "Exchangeoutprep.findByExchangeOutPrepID", query = "SELECT e FROM Exchangeoutprep e WHERE e.exchangeOutPrepId = :exchangeOutPrepID"),
     @NamedQuery(name = "Exchangeoutprep.findByTimestampCreated", query = "SELECT e FROM Exchangeoutprep e WHERE e.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Exchangeoutprep.findByTimestampModified", query = "SELECT e FROM Exchangeoutprep e WHERE e.timestampModified = :timestampModified"),
     @NamedQuery(name = "Exchangeoutprep.findByVersion", query = "SELECT e FROM Exchangeoutprep e WHERE e.version = :version"),
     @NamedQuery(name = "Exchangeoutprep.findByDescriptionOfMaterial", query = "SELECT e FROM Exchangeoutprep e WHERE e.descriptionOfMaterial = :descriptionOfMaterial"),
     @NamedQuery(name = "Exchangeoutprep.findByNumber1", query = "SELECT e FROM Exchangeoutprep e WHERE e.number1 = :number1"),
     @NamedQuery(name = "Exchangeoutprep.findByQuantity", query = "SELECT e FROM Exchangeoutprep e WHERE e.quantity = :quantity"),
-    @NamedQuery(name = "Exchangeoutprep.findByPreparationID", query = "SELECT e FROM Exchangeoutprep e WHERE e.preparationID = :preparationID"),
-    @NamedQuery(name = "Exchangeoutprep.findByCreatedByAgentID", query = "SELECT e FROM Exchangeoutprep e WHERE e.createdByAgentID = :createdByAgentID"),
-    @NamedQuery(name = "Exchangeoutprep.findByExchangeOutID", query = "SELECT e FROM Exchangeoutprep e WHERE e.exchangeOutID = :exchangeOutID"),
-    @NamedQuery(name = "Exchangeoutprep.findByModifiedByAgentID", query = "SELECT e FROM Exchangeoutprep e WHERE e.modifiedByAgentID = :modifiedByAgentID"),
-    @NamedQuery(name = "Exchangeoutprep.findByDisciplineID", query = "SELECT e FROM Exchangeoutprep e WHERE e.disciplineID = :disciplineID")})
+    @NamedQuery(name = "Exchangeoutprep.findByPreparationID", query = "SELECT e FROM Exchangeoutprep e WHERE e.preparation = :preparationID"),
+    @NamedQuery(name = "Exchangeoutprep.findByCreatedByAgentID", query = "SELECT e FROM Exchangeoutprep e WHERE e.createdByAgent = :createdByAgentID"),
+    @NamedQuery(name = "Exchangeoutprep.findByExchangeOutID", query = "SELECT e FROM Exchangeoutprep e WHERE e.exchangeOut = :exchangeOutID"),
+    @NamedQuery(name = "Exchangeoutprep.findByModifiedByAgentID", query = "SELECT e FROM Exchangeoutprep e WHERE e.modifiedByAgent = :modifiedByAgentID"),
+    @NamedQuery(name = "Exchangeoutprep.findByDisciplineID", query = "SELECT e FROM Exchangeoutprep e WHERE e.discipline = :disciplineID")})
 public class Exchangeoutprep extends BaseEntity {  
     
     private static final long serialVersionUID = 1L;
@@ -45,7 +45,7 @@ public class Exchangeoutprep extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "ExchangeOutPrepID")
-    private Integer exchangeOutPrepID;
+    private Integer exchangeOutPrepId;
       
     @Lob 
     @Size(max = 65535)
@@ -73,42 +73,44 @@ public class Exchangeoutprep extends BaseEntity {
     private String text2;
     
     @Column(name = "PreparationID")
-    private Integer preparationID;
+    private Integer preparation;
     
     @Column(name = "CreatedByAgentID")
-    private Integer createdByAgentID;
+    private Integer createdByAgent;
     
     @Column(name = "ExchangeOutID")
-    private Integer exchangeOutID;
+    private Integer exchangeOut;
     
     @Column(name = "ModifiedByAgentID")
-    private Integer modifiedByAgentID;
+    private Integer modifiedByAgent;
     
     @Basic(optional = false)
     @NotNull
     @Column(name = "DisciplineID")
-    private int disciplineID;
+    private int discipline;
 
     public Exchangeoutprep() {
     }
 
-    public Exchangeoutprep(Integer exchangeOutPrepID) {
-        this.exchangeOutPrepID = exchangeOutPrepID;
+    public Exchangeoutprep(Integer exchangeOutPrepId) {
+        this.exchangeOutPrepId = exchangeOutPrepId;
     }
 
-    public Exchangeoutprep(Integer exchangeOutPrepID, Date timestampCreated, int disciplineID) {
+    public Exchangeoutprep(Integer exchangeOutPrepId, Date timestampCreated, int discipline) {
         super(timestampCreated);
-        this.exchangeOutPrepID = exchangeOutPrepID; 
-        this.disciplineID = disciplineID;
+        this.exchangeOutPrepId = exchangeOutPrepId; 
+        this.discipline = discipline;
     }
 
-    public Integer getExchangeOutPrepID() {
-        return exchangeOutPrepID;
+    public Integer getExchangeOutPrepId() {
+        return exchangeOutPrepId;
     }
 
-    public void setExchangeOutPrepID(Integer exchangeOutPrepID) {
-        this.exchangeOutPrepID = exchangeOutPrepID;
-    } 
+    public void setExchangeOutPrepId(Integer exchangeOutPrepId) {
+        this.exchangeOutPrepId = exchangeOutPrepId;
+    }
+
+ 
     
     public String getComments() {
         return comments;
@@ -158,50 +160,52 @@ public class Exchangeoutprep extends BaseEntity {
         this.text2 = text2;
     }
 
-    public Integer getPreparationID() {
-        return preparationID;
+    public Integer getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setPreparationID(Integer preparationID) {
-        this.preparationID = preparationID;
+    public void setCreatedByAgent(Integer createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Integer getCreatedByAgentID() {
-        return createdByAgentID;
+    public int getDiscipline() {
+        return discipline;
     }
 
-    public void setCreatedByAgentID(Integer createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setDiscipline(int discipline) {
+        this.discipline = discipline;
     }
 
-    public Integer getExchangeOutID() {
-        return exchangeOutID;
+    public Integer getExchangeOut() {
+        return exchangeOut;
     }
 
-    public void setExchangeOutID(Integer exchangeOutID) {
-        this.exchangeOutID = exchangeOutID;
+    public void setExchangeOut(Integer exchangeOut) {
+        this.exchangeOut = exchangeOut;
     }
 
-    public Integer getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Integer getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setModifiedByAgentID(Integer modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setModifiedByAgent(Integer modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
 
-    public int getDisciplineID() {
-        return disciplineID;
+    public Integer getPreparation() {
+        return preparation;
     }
 
-    public void setDisciplineID(int disciplineID) {
-        this.disciplineID = disciplineID;
+    public void setPreparation(Integer preparation) {
+        this.preparation = preparation;
     }
+
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (exchangeOutPrepID != null ? exchangeOutPrepID.hashCode() : 0);
+        hash += (exchangeOutPrepId != null ? exchangeOutPrepId.hashCode() : 0);
         return hash;
     }
 
@@ -212,7 +216,7 @@ public class Exchangeoutprep extends BaseEntity {
             return false;
         }
         Exchangeoutprep other = (Exchangeoutprep) object;
-        if ((this.exchangeOutPrepID == null && other.exchangeOutPrepID != null) || (this.exchangeOutPrepID != null && !this.exchangeOutPrepID.equals(other.exchangeOutPrepID))) {
+        if ((this.exchangeOutPrepId == null && other.exchangeOutPrepId != null) || (this.exchangeOutPrepId != null && !this.exchangeOutPrepId.equals(other.exchangeOutPrepId))) {
             return false;
         }
         return true;
@@ -220,7 +224,7 @@ public class Exchangeoutprep extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Exchangeoutprep[ exchangeOutPrepID=" + exchangeOutPrepID + " ]";
+        return "Exchangeoutprep[ exchangeOutPrepID=" + exchangeOutPrepId + " ]";
     }
     
 }

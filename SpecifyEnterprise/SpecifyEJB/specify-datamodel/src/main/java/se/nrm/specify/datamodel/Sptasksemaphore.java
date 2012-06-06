@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Sptasksemaphore.findAll", query = "SELECT s FROM Sptasksemaphore s"),
-    @NamedQuery(name = "Sptasksemaphore.findByTaskSemaphoreID", query = "SELECT s FROM Sptasksemaphore s WHERE s.taskSemaphoreID = :taskSemaphoreID"),
+    @NamedQuery(name = "Sptasksemaphore.findByTaskSemaphoreID", query = "SELECT s FROM Sptasksemaphore s WHERE s.spTaskSemaphoreId = :taskSemaphoreID"),
     @NamedQuery(name = "Sptasksemaphore.findByTimestampCreated", query = "SELECT s FROM Sptasksemaphore s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Sptasksemaphore.findByTimestampModified", query = "SELECT s FROM Sptasksemaphore s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Sptasksemaphore.findByVersion", query = "SELECT s FROM Sptasksemaphore s WHERE s.version = :version"),
@@ -48,7 +48,7 @@ public class Sptasksemaphore extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "TaskSemaphoreID")
-    private Integer taskSemaphoreID;
+    private Integer spTaskSemaphoreId;
      
     @Size(max = 32)
     @Column(name = "Context")
@@ -77,43 +77,36 @@ public class Sptasksemaphore extends BaseEntity {
     
     @JoinColumn(name = "CollectionID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne
-    private Collection collectionID;
+    private Collection collection;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "OwnerID", referencedColumnName = "SpecifyUserID")
     @ManyToOne
-    private Specifyuser ownerID;
+    private Specifyuser owner;
     
     @JoinColumn(name = "DisciplineID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne
-    private Discipline disciplineID;
+    private Discipline discipline;
 
     public Sptasksemaphore() {
     }
 
-    public Sptasksemaphore(Integer taskSemaphoreID) {
-        this.taskSemaphoreID = taskSemaphoreID;
+    public Sptasksemaphore(Integer spTaskSemaphoreId) {
+        this.spTaskSemaphoreId = spTaskSemaphoreId;
     }
 
-    public Sptasksemaphore(Integer taskSemaphoreID, Date timestampCreated) {
+    public Sptasksemaphore(Integer spTaskSemaphoreId, Date timestampCreated) {
         super(timestampCreated);
-        this.taskSemaphoreID = taskSemaphoreID; 
+        this.spTaskSemaphoreId = spTaskSemaphoreId; 
     }
-
-    public Integer getTaskSemaphoreID() {
-        return taskSemaphoreID;
-    }
-
-    public void setTaskSemaphoreID(Integer taskSemaphoreID) {
-        this.taskSemaphoreID = taskSemaphoreID;
-    }
+ 
  
     public String getContext() {
         return context;
@@ -171,50 +164,59 @@ public class Sptasksemaphore extends BaseEntity {
         this.usageCount = usageCount;
     }
 
-    public Collection getCollectionID() {
-        return collectionID;
+    public Collection getCollection() {
+        return collection;
     }
 
-    public void setCollectionID(Collection collectionID) {
-        this.collectionID = collectionID;
+    public void setCollection(Collection collection) {
+        this.collection = collection;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Discipline getDiscipline() {
+        return discipline;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setDiscipline(Discipline discipline) {
+        this.discipline = discipline;
     }
 
-    public Specifyuser getOwnerID() {
-        return ownerID;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setOwnerID(Specifyuser ownerID) {
-        this.ownerID = ownerID;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
 
-    public Discipline getDisciplineID() {
-        return disciplineID;
+    public Specifyuser getOwner() {
+        return owner;
     }
 
-    public void setDisciplineID(Discipline disciplineID) {
-        this.disciplineID = disciplineID;
+    public void setOwner(Specifyuser owner) {
+        this.owner = owner;
     }
+
+    public Integer getSpTaskSemaphoreId() {
+        return spTaskSemaphoreId;
+    }
+
+    public void setSpTaskSemaphoreId(Integer spTaskSemaphoreId) {
+        this.spTaskSemaphoreId = spTaskSemaphoreId;
+    }
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (taskSemaphoreID != null ? taskSemaphoreID.hashCode() : 0);
+        hash += (spTaskSemaphoreId != null ? spTaskSemaphoreId.hashCode() : 0);
         return hash;
     }
 
@@ -225,7 +227,7 @@ public class Sptasksemaphore extends BaseEntity {
             return false;
         }
         Sptasksemaphore other = (Sptasksemaphore) object;
-        if ((this.taskSemaphoreID == null && other.taskSemaphoreID != null) || (this.taskSemaphoreID != null && !this.taskSemaphoreID.equals(other.taskSemaphoreID))) {
+        if ((this.spTaskSemaphoreId == null && other.spTaskSemaphoreId != null) || (this.spTaskSemaphoreId != null && !this.spTaskSemaphoreId.equals(other.spTaskSemaphoreId))) {
             return false;
         }
         return true;
@@ -233,7 +235,7 @@ public class Sptasksemaphore extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Sptasksemaphore[ taskSemaphoreID=" + taskSemaphoreID + " ]";
+        return "Sptasksemaphore[ taskSemaphoreID=" + spTaskSemaphoreId + " ]";
     }
     
 }

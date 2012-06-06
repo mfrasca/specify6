@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Spexportschemaitemmapping.findAll", query = "SELECT s FROM Spexportschemaitemmapping s"),
-    @NamedQuery(name = "Spexportschemaitemmapping.findBySpExportSchemaItemMappingID", query = "SELECT s FROM Spexportschemaitemmapping s WHERE s.spExportSchemaItemMappingID = :spExportSchemaItemMappingID"),
+    @NamedQuery(name = "Spexportschemaitemmapping.findBySpExportSchemaItemMappingID", query = "SELECT s FROM Spexportschemaitemmapping s WHERE s.spExportSchemaItemMappingId = :spExportSchemaItemMappingID"),
     @NamedQuery(name = "Spexportschemaitemmapping.findByTimestampCreated", query = "SELECT s FROM Spexportschemaitemmapping s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Spexportschemaitemmapping.findByTimestampModified", query = "SELECT s FROM Spexportschemaitemmapping s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Spexportschemaitemmapping.findByVersion", query = "SELECT s FROM Spexportschemaitemmapping s WHERE s.version = :version"),
@@ -39,7 +39,7 @@ public class Spexportschemaitemmapping extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "SpExportSchemaItemMappingID")
-    private Integer spExportSchemaItemMappingID;
+    private Integer spExportSchemaItemMappingId;
       
     @Size(max = 255)
     @Column(name = "Remarks")
@@ -47,48 +47,87 @@ public class Spexportschemaitemmapping extends BaseEntity {
     
     @JoinColumn(name = "SpExportSchemaMappingID", referencedColumnName = "SpExportSchemaMappingID")
     @ManyToOne
-    private Spexportschemamapping spExportSchemaMappingID;
+    private Spexportschemamapping exportSchemaMapping;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
     @XmlTransient
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
     @XmlTransient
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "SpQueryFieldID", referencedColumnName = "SpQueryFieldID")
     @ManyToOne
     @XmlTransient
-    private Spqueryfield spQueryFieldID;
+    private Spqueryfield queryField;
     
     @JoinColumn(name = "ExportSchemaItemID", referencedColumnName = "SpExportSchemaItemID")
     @ManyToOne(optional = false)
-    private Spexportschemaitem exportSchemaItemID;
+    private Spexportschemaitem exportSchemaItem;
 
     public Spexportschemaitemmapping() {
     }
 
-    public Spexportschemaitemmapping(Integer spExportSchemaItemMappingID) {
-        this.spExportSchemaItemMappingID = spExportSchemaItemMappingID;
+    public Spexportschemaitemmapping(Integer spExportSchemaItemMappingId) {
+        this.spExportSchemaItemMappingId = spExportSchemaItemMappingId;
     }
 
-    public Spexportschemaitemmapping(Integer spExportSchemaItemMappingID, Date timestampCreated) {
+    public Spexportschemaitemmapping(Integer spExportSchemaItemMappingId, Date timestampCreated) {
         super(timestampCreated);
-        this.spExportSchemaItemMappingID = spExportSchemaItemMappingID; 
+        this.spExportSchemaItemMappingId = spExportSchemaItemMappingId; 
     }
 
-    public Integer getSpExportSchemaItemMappingID() {
-        return spExportSchemaItemMappingID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setSpExportSchemaItemMappingID(Integer spExportSchemaItemMappingID) {
-        this.spExportSchemaItemMappingID = spExportSchemaItemMappingID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Spexportschemaitem getExportSchemaItem() {
+        return exportSchemaItem;
+    }
+
+    public void setExportSchemaItem(Spexportschemaitem exportSchemaItem) {
+        this.exportSchemaItem = exportSchemaItem;
+    }
+
+    public Spexportschemamapping getExportSchemaMapping() {
+        return exportSchemaMapping;
+    }
+
+    public void setExportSchemaMapping(Spexportschemamapping exportSchemaMapping) {
+        this.exportSchemaMapping = exportSchemaMapping;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Spqueryfield getQueryField() {
+        return queryField;
+    }
+
+    public void setQueryField(Spqueryfield queryField) {
+        this.queryField = queryField;
+    }
+
+    public Integer getSpExportSchemaItemMappingId() {
+        return spExportSchemaItemMappingId;
+    }
+
+    public void setSpExportSchemaItemMappingId(Integer spExportSchemaItemMappingId) {
+        this.spExportSchemaItemMappingId = spExportSchemaItemMappingId;
     }
  
-
     public String getRemarks() {
         return remarks;
     }
@@ -97,50 +136,12 @@ public class Spexportschemaitemmapping extends BaseEntity {
         this.remarks = remarks;
     }
 
-    public Spexportschemamapping getSpExportSchemaMappingID() {
-        return spExportSchemaMappingID;
-    }
-
-    public void setSpExportSchemaMappingID(Spexportschemamapping spExportSchemaMappingID) {
-        this.spExportSchemaMappingID = spExportSchemaMappingID;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
-    public Spqueryfield getSpQueryFieldID() {
-        return spQueryFieldID;
-    }
-
-    public void setSpQueryFieldID(Spqueryfield spQueryFieldID) {
-        this.spQueryFieldID = spQueryFieldID;
-    }
-
-    public Spexportschemaitem getExportSchemaItemID() {
-        return exportSchemaItemID;
-    }
-
-    public void setExportSchemaItemID(Spexportschemaitem exportSchemaItemID) {
-        this.exportSchemaItemID = exportSchemaItemID;
-    }
+  
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (spExportSchemaItemMappingID != null ? spExportSchemaItemMappingID.hashCode() : 0);
+        hash += (spExportSchemaItemMappingId != null ? spExportSchemaItemMappingId.hashCode() : 0);
         return hash;
     }
 
@@ -151,7 +152,7 @@ public class Spexportschemaitemmapping extends BaseEntity {
             return false;
         }
         Spexportschemaitemmapping other = (Spexportschemaitemmapping) object;
-        if ((this.spExportSchemaItemMappingID == null && other.spExportSchemaItemMappingID != null) || (this.spExportSchemaItemMappingID != null && !this.spExportSchemaItemMappingID.equals(other.spExportSchemaItemMappingID))) {
+        if ((this.spExportSchemaItemMappingId == null && other.spExportSchemaItemMappingId != null) || (this.spExportSchemaItemMappingId != null && !this.spExportSchemaItemMappingId.equals(other.spExportSchemaItemMappingId))) {
             return false;
         }
         return true;
@@ -159,7 +160,7 @@ public class Spexportschemaitemmapping extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Spexportschemaitemmapping[ spExportSchemaItemMappingID=" + spExportSchemaItemMappingID + " ]";
+        return "Spexportschemaitemmapping[ spExportSchemaItemMappingID=" + spExportSchemaItemMappingId + " ]";
     }
     
 }

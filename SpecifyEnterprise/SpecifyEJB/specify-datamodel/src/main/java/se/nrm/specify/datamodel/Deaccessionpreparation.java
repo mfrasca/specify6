@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Deaccessionpreparation.findAll", query = "SELECT d FROM Deaccessionpreparation d"),
-    @NamedQuery(name = "Deaccessionpreparation.findByDeaccessionPreparationID", query = "SELECT d FROM Deaccessionpreparation d WHERE d.deaccessionPreparationID = :deaccessionPreparationID"),
+    @NamedQuery(name = "Deaccessionpreparation.findByDeaccessionPreparationID", query = "SELECT d FROM Deaccessionpreparation d WHERE d.deaccessionPreparationId = :deaccessionPreparationID"),
     @NamedQuery(name = "Deaccessionpreparation.findByTimestampCreated", query = "SELECT d FROM Deaccessionpreparation d WHERE d.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Deaccessionpreparation.findByTimestampModified", query = "SELECT d FROM Deaccessionpreparation d WHERE d.timestampModified = :timestampModified"),
     @NamedQuery(name = "Deaccessionpreparation.findByVersion", query = "SELECT d FROM Deaccessionpreparation d WHERE d.version = :version"),
@@ -43,7 +43,7 @@ public class Deaccessionpreparation extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "DeaccessionPreparationID")
-    private Integer deaccessionPreparationID;
+    private Integer deaccessionPreparationId;
       
     @Column(name = "Quantity")
     private Short quantity;
@@ -53,44 +53,78 @@ public class Deaccessionpreparation extends BaseEntity {
     @Column(name = "Remarks")
     private String remarks;
     
-    @OneToMany(mappedBy = "deaccessionPreparationID")
-    private Collection<Loanreturnpreparation> loanreturnpreparationCollection;
+    @OneToMany(mappedBy = "deaccessionPreparation")
+    private Collection<Loanreturnpreparation> loanreturnpreparations;
     
     @JoinColumn(name = "DeaccessionID", referencedColumnName = "DeaccessionID")
     @ManyToOne(optional = false)
-    private Deaccession deaccessionID;
+    private Deaccession deaccession;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "PreparationID", referencedColumnName = "PreparationID")
     @ManyToOne
-    private Preparation preparationID;
+    private Preparation preparation;
 
     public Deaccessionpreparation() {
     }
 
-    public Deaccessionpreparation(Integer deaccessionPreparationID) {
-        this.deaccessionPreparationID = deaccessionPreparationID;
+    public Deaccessionpreparation(Integer deaccessionPreparationId) {
+        this.deaccessionPreparationId = deaccessionPreparationId;
     }
 
-    public Deaccessionpreparation(Integer deaccessionPreparationID, Date timestampCreated) {
+    public Deaccessionpreparation(Integer deaccessionPreparationId, Date timestampCreated) {
         super(timestampCreated);
-        this.deaccessionPreparationID = deaccessionPreparationID; 
+        this.deaccessionPreparationId = deaccessionPreparationId; 
     }
 
-    public Integer getDeaccessionPreparationID() {
-        return deaccessionPreparationID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setDeaccessionPreparationID(Integer deaccessionPreparationID) {
-        this.deaccessionPreparationID = deaccessionPreparationID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
+
+    public Deaccession getDeaccession() {
+        return deaccession;
+    }
+
+    public void setDeaccession(Deaccession deaccession) {
+        this.deaccession = deaccession;
+    }
+
+    public Integer getDeaccessionPreparationId() {
+        return deaccessionPreparationId;
+    }
+
+    public void setDeaccessionPreparationId(Integer deaccessionPreparationId) {
+        this.deaccessionPreparationId = deaccessionPreparationId;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Preparation getPreparation() {
+        return preparation;
+    }
+
+    public void setPreparation(Preparation preparation) {
+        this.preparation = preparation;
+    }
+
+ 
  
     public Short getQuantity() {
         return quantity;
@@ -108,51 +142,21 @@ public class Deaccessionpreparation extends BaseEntity {
         this.remarks = remarks;
     }
 
-    @XmlTransient
-    public Collection<Loanreturnpreparation> getLoanreturnpreparationCollection() {
-        return loanreturnpreparationCollection;
+    public Collection<Loanreturnpreparation> getLoanreturnpreparations() {
+        return loanreturnpreparations;
     }
 
-    public void setLoanreturnpreparationCollection(Collection<Loanreturnpreparation> loanreturnpreparationCollection) {
-        this.loanreturnpreparationCollection = loanreturnpreparationCollection;
+    public void setLoanreturnpreparations(Collection<Loanreturnpreparation> loanreturnpreparations) {
+        this.loanreturnpreparations = loanreturnpreparations;
     }
 
-    public Deaccession getDeaccessionID() {
-        return deaccessionID;
-    }
-
-    public void setDeaccessionID(Deaccession deaccessionID) {
-        this.deaccessionID = deaccessionID;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
-    public Preparation getPreparationID() {
-        return preparationID;
-    }
-
-    public void setPreparationID(Preparation preparationID) {
-        this.preparationID = preparationID;
-    }
+ 
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (deaccessionPreparationID != null ? deaccessionPreparationID.hashCode() : 0);
+        hash += (deaccessionPreparationId != null ? deaccessionPreparationId.hashCode() : 0);
         return hash;
     }
 
@@ -163,7 +167,7 @@ public class Deaccessionpreparation extends BaseEntity {
             return false;
         }
         Deaccessionpreparation other = (Deaccessionpreparation) object;
-        if ((this.deaccessionPreparationID == null && other.deaccessionPreparationID != null) || (this.deaccessionPreparationID != null && !this.deaccessionPreparationID.equals(other.deaccessionPreparationID))) {
+        if ((this.deaccessionPreparationId == null && other.deaccessionPreparationId != null) || (this.deaccessionPreparationId != null && !this.deaccessionPreparationId.equals(other.deaccessionPreparationId))) {
             return false;
         }
         return true;
@@ -171,7 +175,7 @@ public class Deaccessionpreparation extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Deaccessionpreparation[ deaccessionPreparationID=" + deaccessionPreparationID + " ]";
+        return "Deaccessionpreparation[ deaccessionPreparationID=" + deaccessionPreparationId + " ]";
     }
     
 }

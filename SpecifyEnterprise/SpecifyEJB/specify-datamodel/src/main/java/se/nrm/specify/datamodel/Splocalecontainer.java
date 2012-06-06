@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Splocalecontainer.findAll", query = "SELECT s FROM Splocalecontainer s"),
-    @NamedQuery(name = "Splocalecontainer.findBySpLocaleContainerID", query = "SELECT s FROM Splocalecontainer s WHERE s.spLocaleContainerID = :spLocaleContainerID"),
+    @NamedQuery(name = "Splocalecontainer.findBySpLocaleContainerID", query = "SELECT s FROM Splocalecontainer s WHERE s.spLocaleContainerId = :spLocaleContainerID"),
     @NamedQuery(name = "Splocalecontainer.findByTimestampCreated", query = "SELECT s FROM Splocalecontainer s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Splocalecontainer.findByTimestampModified", query = "SELECT s FROM Splocalecontainer s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Splocalecontainer.findByVersion", query = "SELECT s FROM Splocalecontainer s WHERE s.version = :version"),
@@ -52,7 +52,7 @@ public class Splocalecontainer extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "SpLocaleContainerID")
-    private Integer spLocaleContainerID;
+    private Integer spLocaleContainerId;
      
     @Size(max = 64)
     @Column(name = "Format")
@@ -98,50 +98,43 @@ public class Splocalecontainer extends BaseEntity {
     @Column(name = "SchemaType")
     private short schemaType;
     
-    @OneToMany(mappedBy = "spLocaleContainerNameID")
-    private Collection<Splocaleitemstr> splocaleitemstrCollection;
+    @OneToMany(mappedBy = "containerName")
+    private Collection<Splocaleitemstr> names;
     
-    @OneToMany(mappedBy = "spLocaleContainerDescID")
-    private Collection<Splocaleitemstr> splocaleitemstrCollection1;
+    @OneToMany(mappedBy = "containerDesc")
+    private Collection<Splocaleitemstr> descs;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "spLocaleContainerID")
-    private Collection<Splocalecontaineritem> splocalecontaineritemCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "container")
+    private Collection<Splocalecontaineritem> items;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "DisciplineID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne(optional = false)
-    private Discipline disciplineID;
+    private Discipline discipline;
 
     public Splocalecontainer() {
     }
 
-    public Splocalecontainer(Integer spLocaleContainerID) {
-        this.spLocaleContainerID = spLocaleContainerID;
+    public Splocalecontainer(Integer spLocaleContainerId) {
+        this.spLocaleContainerId = spLocaleContainerId;
     }
 
-    public Splocalecontainer(Integer spLocaleContainerID, Date timestampCreated, boolean isHidden, boolean isSystem, String name, short schemaType) {
+    public Splocalecontainer(Integer spLocaleContainerId, Date timestampCreated, boolean isHidden, boolean isSystem, String name, short schemaType) {
         super(timestampCreated);
-        this.spLocaleContainerID = spLocaleContainerID;  
+        this.spLocaleContainerId = spLocaleContainerId;  
         this.isHidden = isHidden;
         this.isSystem = isSystem;
         this.name = name;
         this.schemaType = schemaType;
     }
-
-    public Integer getSpLocaleContainerID() {
-        return spLocaleContainerID;
-    }
-
-    public void setSpLocaleContainerID(Integer spLocaleContainerID) {
-        this.spLocaleContainerID = spLocaleContainerID;
-    }
+ 
  
     public String getFormat() {
         return format;
@@ -223,61 +216,71 @@ public class Splocalecontainer extends BaseEntity {
         this.schemaType = schemaType;
     }
 
-    @XmlTransient
-    public Collection<Splocaleitemstr> getSplocaleitemstrCollection() {
-        return splocaleitemstrCollection;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setSplocaleitemstrCollection(Collection<Splocaleitemstr> splocaleitemstrCollection) {
-        this.splocaleitemstrCollection = splocaleitemstrCollection;
-    }
-
-    @XmlTransient
-    public Collection<Splocaleitemstr> getSplocaleitemstrCollection1() {
-        return splocaleitemstrCollection1;
-    }
-
-    public void setSplocaleitemstrCollection1(Collection<Splocaleitemstr> splocaleitemstrCollection1) {
-        this.splocaleitemstrCollection1 = splocaleitemstrCollection1;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
     @XmlTransient
-    public Collection<Splocalecontaineritem> getSplocalecontaineritemCollection() {
-        return splocalecontaineritemCollection;
+    public Collection<Splocaleitemstr> getDescs() {
+        return descs;
     }
 
-    public void setSplocalecontaineritemCollection(Collection<Splocalecontaineritem> splocalecontaineritemCollection) {
-        this.splocalecontaineritemCollection = splocalecontaineritemCollection;
+    public void setDescs(Collection<Splocaleitemstr> descs) {
+        this.descs = descs;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Discipline getDiscipline() {
+        return discipline;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setDiscipline(Discipline discipline) {
+        this.discipline = discipline;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    @XmlTransient
+    public Collection<Splocalecontaineritem> getItems() {
+        return items;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setItems(Collection<Splocalecontaineritem> items) {
+        this.items = items;
     }
 
-    public Discipline getDisciplineID() {
-        return disciplineID;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setDisciplineID(Discipline disciplineID) {
-        this.disciplineID = disciplineID;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
+
+    @XmlTransient
+    public Collection<Splocaleitemstr> getNames() {
+        return names;
+    }
+
+    public void setNames(Collection<Splocaleitemstr> names) {
+        this.names = names;
+    }
+
+    public Integer getSpLocaleContainerId() {
+        return spLocaleContainerId;
+    }
+
+    public void setSpLocaleContainerId(Integer spLocaleContainerId) {
+        this.spLocaleContainerId = spLocaleContainerId;
+    }
+
+    
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (spLocaleContainerID != null ? spLocaleContainerID.hashCode() : 0);
+        hash += (spLocaleContainerId != null ? spLocaleContainerId.hashCode() : 0);
         return hash;
     }
 
@@ -288,7 +291,7 @@ public class Splocalecontainer extends BaseEntity {
             return false;
         }
         Splocalecontainer other = (Splocalecontainer) object;
-        if ((this.spLocaleContainerID == null && other.spLocaleContainerID != null) || (this.spLocaleContainerID != null && !this.spLocaleContainerID.equals(other.spLocaleContainerID))) {
+        if ((this.spLocaleContainerId == null && other.spLocaleContainerId != null) || (this.spLocaleContainerId != null && !this.spLocaleContainerId.equals(other.spLocaleContainerId))) {
             return false;
         }
         return true;
@@ -296,7 +299,7 @@ public class Splocalecontainer extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Splocalecontainer[ spLocaleContainerID=" + spLocaleContainerID + " ]";
+        return "Splocalecontainer[ spLocaleContainerID=" + spLocaleContainerId + " ]";
     }
     
 }

@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Picklistitem.findAll", query = "SELECT p FROM Picklistitem p"),
-    @NamedQuery(name = "Picklistitem.findByPickListItemID", query = "SELECT p FROM Picklistitem p WHERE p.pickListItemID = :pickListItemID"),
+    @NamedQuery(name = "Picklistitem.findByPickListItemID", query = "SELECT p FROM Picklistitem p WHERE p.pickListItemId = :pickListItemID"),
     @NamedQuery(name = "Picklistitem.findByTimestampCreated", query = "SELECT p FROM Picklistitem p WHERE p.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Picklistitem.findByTimestampModified", query = "SELECT p FROM Picklistitem p WHERE p.timestampModified = :timestampModified"),
     @NamedQuery(name = "Picklistitem.findByVersion", query = "SELECT p FROM Picklistitem p WHERE p.version = :version"),
@@ -41,7 +41,7 @@ public class Picklistitem extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "PickListItemID")
-    private Integer pickListItemID;
+    private Integer pickListItemId;
      
     @Column(name = "Ordinal") 
     private Integer ordinal;
@@ -58,37 +58,30 @@ public class Picklistitem extends BaseEntity {
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "PickListID", referencedColumnName = "PickListID")
     @ManyToOne(optional = false)
-    private Picklist pickListID;
+    private Picklist pickList;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
 
     public Picklistitem() {
     }
 
-    public Picklistitem(Integer pickListItemID) {
-        this.pickListItemID = pickListItemID;
+    public Picklistitem(Integer pickListItemId) {
+        this.pickListItemId = pickListItemId;
     }
 
-    public Picklistitem(Integer pickListItemID, Date timestampCreated, String title) {
+    public Picklistitem(Integer pickListItemId, Date timestampCreated, String title) {
         super(timestampCreated);
-        this.pickListItemID = pickListItemID; 
+        this.pickListItemId = pickListItemId; 
         this.title = title;
     }
 
-    public Integer getPickListItemID() {
-        return pickListItemID;
-    }
-
-    public void setPickListItemID(Integer pickListItemID) {
-        this.pickListItemID = pickListItemID;
-    } 
-
+     
     public Integer getOrdinal() {
         return ordinal;
     }
@@ -113,34 +106,44 @@ public class Picklistitem extends BaseEntity {
         this.value = value;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Picklist getPickListID() {
-        return pickListID;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setPickListID(Picklist pickListID) {
-        this.pickListID = pickListID;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Picklist getPickList() {
+        return pickList;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setPickList(Picklist pickList) {
+        this.pickList = pickList;
     }
+
+    public Integer getPickListItemId() {
+        return pickListItemId;
+    }
+
+    public void setPickListItemId(Integer pickListItemId) {
+        this.pickListItemId = pickListItemId;
+    }
+
+     
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (pickListItemID != null ? pickListItemID.hashCode() : 0);
+        hash += (pickListItemId != null ? pickListItemId.hashCode() : 0);
         return hash;
     }
 
@@ -151,7 +154,7 @@ public class Picklistitem extends BaseEntity {
             return false;
         }
         Picklistitem other = (Picklistitem) object;
-        if ((this.pickListItemID == null && other.pickListItemID != null) || (this.pickListItemID != null && !this.pickListItemID.equals(other.pickListItemID))) {
+        if ((this.pickListItemId == null && other.pickListItemId != null) || (this.pickListItemId != null && !this.pickListItemId.equals(other.pickListItemId))) {
             return false;
         }
         return true;
@@ -159,7 +162,7 @@ public class Picklistitem extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Picklistitem[ pickListItemID=" + pickListItemID + " ]";
+        return "Picklistitem[ pickListItemID=" + pickListItemId + " ]";
     }
     
 }

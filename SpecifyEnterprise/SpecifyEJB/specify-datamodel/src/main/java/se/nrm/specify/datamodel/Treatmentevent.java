@@ -1,21 +1,7 @@
 package se.nrm.specify.datamodel;
  
 import java.util.Date;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-//import javax.validation.constraints.NotNull;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -28,7 +14,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Treatmentevent.findAll", query = "SELECT t FROM Treatmentevent t"),
-    @NamedQuery(name = "Treatmentevent.findByTreatmentEventID", query = "SELECT t FROM Treatmentevent t WHERE t.treatmentEventID = :treatmentEventID"),
+    @NamedQuery(name = "Treatmentevent.findByTreatmentEventID", query = "SELECT t FROM Treatmentevent t WHERE t.treatmentEventId = :treatmentEventID"),
     @NamedQuery(name = "Treatmentevent.findByTimestampCreated", query = "SELECT t FROM Treatmentevent t WHERE t.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Treatmentevent.findByTimestampModified", query = "SELECT t FROM Treatmentevent t WHERE t.timestampModified = :timestampModified"),
     @NamedQuery(name = "Treatmentevent.findByVersion", query = "SELECT t FROM Treatmentevent t WHERE t.version = :version"),
@@ -40,7 +26,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Treatmentevent.findByDateTreatmentEnded", query = "SELECT t FROM Treatmentevent t WHERE t.dateTreatmentEnded = :dateTreatmentEnded"),
     @NamedQuery(name = "Treatmentevent.findByDateTreatmentStarted", query = "SELECT t FROM Treatmentevent t WHERE t.dateTreatmentStarted = :dateTreatmentStarted"),
     @NamedQuery(name = "Treatmentevent.findByFieldNumber", query = "SELECT t FROM Treatmentevent t WHERE t.fieldNumber = :fieldNumber"),
-    @NamedQuery(name = "Treatmentevent.findByStorage", query = "SELECT t FROM Treatmentevent t WHERE t.storage = :storage"),
+    @NamedQuery(name = "Treatmentevent.findByStorage", query = "SELECT t FROM Treatmentevent t WHERE t.location = :storage"),
     @NamedQuery(name = "Treatmentevent.findByTreatmentNumber", query = "SELECT t FROM Treatmentevent t WHERE t.treatmentNumber = :treatmentNumber"),
     @NamedQuery(name = "Treatmentevent.findByType", query = "SELECT t FROM Treatmentevent t WHERE t.type = :type")})
 public class Treatmentevent extends BaseEntity {  
@@ -52,7 +38,7 @@ public class Treatmentevent extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "TreatmentEventID")
-    private Integer treatmentEventID;
+    private Integer treatmentEventId;
      
     @Column(name = "DateBoxed")
     @Temporal(TemporalType.DATE)
@@ -88,7 +74,7 @@ public class Treatmentevent extends BaseEntity {
     
     @Size(max = 64)
     @Column(name = "Storage")
-    private String storage;
+    private String location;
     
     @Lob
     @Size(max = 65535)
@@ -105,43 +91,37 @@ public class Treatmentevent extends BaseEntity {
     
     @JoinColumn(name = "DivisionID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne
-    private Division divisionID;
+    private Division division;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "CollectionObjectID", referencedColumnName = "CollectionObjectID")
     @ManyToOne
-    private Collectionobject collectionObjectID;
+    private Collectionobject collectionObject;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "AccessionID", referencedColumnName = "AccessionID")
     @ManyToOne
-    private Accession accessionID;
+    private Accession accession;
 
     public Treatmentevent() {
     }
 
-    public Treatmentevent(Integer treatmentEventID) {
-        this.treatmentEventID = treatmentEventID;
+    public Treatmentevent(Integer treatmentEventId) {
+        this.treatmentEventId = treatmentEventId;
     }
 
-    public Treatmentevent(Integer treatmentEventID, Date timestampCreated) {
+    public Treatmentevent(Integer treatmentEventId, Date timestampCreated) {
         super(timestampCreated);
-        this.treatmentEventID = treatmentEventID; 
+        this.treatmentEventId = treatmentEventId; 
     }
 
-    public Integer getTreatmentEventID() {
-        return treatmentEventID;
-    }
-
-    public void setTreatmentEventID(Integer treatmentEventID) {
-        this.treatmentEventID = treatmentEventID;
-    }
+ 
  
     public Date getDateBoxed() {
         return dateBoxed;
@@ -206,15 +186,7 @@ public class Treatmentevent extends BaseEntity {
     public void setFieldNumber(String fieldNumber) {
         this.fieldNumber = fieldNumber;
     }
-
-    public String getStorage() {
-        return storage;
-    }
-
-    public void setStorage(String storage) {
-        this.storage = storage;
-    }
-
+ 
     public String getRemarks() {
         return remarks;
     }
@@ -239,50 +211,67 @@ public class Treatmentevent extends BaseEntity {
         this.type = type;
     }
 
-    public Division getDivisionID() {
-        return divisionID;
+    public Accession getAccession() {
+        return accession;
     }
 
-    public void setDivisionID(Division divisionID) {
-        this.divisionID = divisionID;
+    public void setAccession(Accession accession) {
+        this.accession = accession;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Collectionobject getCollectionObject() {
+        return collectionObject;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setCollectionObject(Collectionobject collectionObject) {
+        this.collectionObject = collectionObject;
     }
 
-    public Collectionobject getCollectionObjectID() {
-        return collectionObjectID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setCollectionObjectID(Collectionobject collectionObjectID) {
-        this.collectionObjectID = collectionObjectID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Division getDivision() {
+        return division;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setDivision(Division division) {
+        this.division = division;
     }
 
-    public Accession getAccessionID() {
-        return accessionID;
+    public String getLocation() {
+        return location;
     }
 
-    public void setAccessionID(Accession accessionID) {
-        this.accessionID = accessionID;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Integer getTreatmentEventId() {
+        return treatmentEventId;
+    }
+
+    public void setTreatmentEventId(Integer treatmentEventId) {
+        this.treatmentEventId = treatmentEventId;
+    }
+
+    
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (treatmentEventID != null ? treatmentEventID.hashCode() : 0);
+        hash += (treatmentEventId != null ? treatmentEventId.hashCode() : 0);
         return hash;
     }
 
@@ -293,7 +282,7 @@ public class Treatmentevent extends BaseEntity {
             return false;
         }
         Treatmentevent other = (Treatmentevent) object;
-        if ((this.treatmentEventID == null && other.treatmentEventID != null) || (this.treatmentEventID != null && !this.treatmentEventID.equals(other.treatmentEventID))) {
+        if ((this.treatmentEventId == null && other.treatmentEventId != null) || (this.treatmentEventId != null && !this.treatmentEventId.equals(other.treatmentEventId))) {
             return false;
         }
         return true;
@@ -301,7 +290,7 @@ public class Treatmentevent extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Treatmentevent[ treatmentEventID=" + treatmentEventID + " ]";
+        return "Treatmentevent[ treatmentEventID=" + treatmentEventId + " ]";
     }
     
 }

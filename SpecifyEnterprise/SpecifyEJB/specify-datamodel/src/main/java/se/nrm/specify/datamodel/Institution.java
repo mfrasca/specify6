@@ -168,36 +168,33 @@ public class Institution extends BaseEntity {
     @Column(name = "MinimumPwdLength")
     private Short minimumPwdLength;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "institutionID")
-    private Collection<Division> divisionCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "institution")
+    private Collection<Division> divisions;
     
-    @OneToMany(mappedBy = "institutionTCID")
-    private Collection<Agent> agentCollection;
+    @OneToMany(mappedBy = "instTechContact")
+    private Collection<Agent> technicalContacts;
     
-    @OneToMany(mappedBy = "institutionCCID")
-    private Collection<Agent> agentCollection1;
+    @OneToMany(mappedBy = "instContentContact")
+    private Collection<Agent> contentContacts;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
-    @ManyToOne
-//    @XmlInverseReference(mappedBy = "institution")
+    @ManyToOne 
     @XmlTransient 
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
-    @ManyToOne
-//    @XmlInverseReference(mappedBy = "institution") 
-    private Agent modifiedByAgentID;
+    @ManyToOne  
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "AddressID", referencedColumnName = "AddressID")
-    @ManyToOne 
-//    @XmlInverseReference(mappedBy = "institutionCollection")  
+    @ManyToOne  
     @XmlTransient 
-    private Address addressID;
+    private Address address;
     
     @JoinColumn(name = "StorageTreeDefID", referencedColumnName = "StorageTreeDefID")
     @ManyToOne
     @XmlTransient 
-    private Storagetreedef storageTreeDefID;
+    private Storagetreedef storageTreeDef;
 
     public Institution() {
     }
@@ -431,64 +428,68 @@ public class Institution extends BaseEntity {
     }
 
     @XmlTransient
-    public Collection<Division> getDivisionCollection() {
-        return divisionCollection;
+    public Collection<Agent> getContentContacts() {
+        return contentContacts;
     }
 
-    public void setDivisionCollection(Collection<Division> divisionCollection) {
-        this.divisionCollection = divisionCollection;
-    }
-
-    @XmlTransient
-    public Collection<Agent> getAgentCollection() {
-        return agentCollection;
-    }
-
-    public void setAgentCollection(Collection<Agent> agentCollection) {
-        this.agentCollection = agentCollection;
+    public void setContentContacts(Collection<Agent> contentContacts) {
+        this.contentContacts = contentContacts;
     }
 
     @XmlTransient
-    public Collection<Agent> getAgentCollection1() {
-        return agentCollection1;
+    public Collection<Division> getDivisions() {
+        return divisions;
     }
 
-    public void setAgentCollection1(Collection<Agent> agentCollection1) {
-        this.agentCollection1 = agentCollection1;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setDivisions(Collection<Division> divisions) {
+        this.divisions = divisions;
     }
 
     @XmlTransient
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Collection<Agent> getTechnicalContacts() {
+        return technicalContacts;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setTechnicalContacts(Collection<Agent> technicalContacts) {
+        this.technicalContacts = technicalContacts;
     }
 
-    public Address getAddressID() {
-        return addressID;
+  
+    public Address getAddress() {
+        return address;
     }
 
-    public void setAddressID(Address addressID) {
-        this.addressID = addressID;
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
-    public Storagetreedef getStorageTreeDefID() {
-        return storageTreeDefID;
+    @XmlTransient
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setStorageTreeDefID(Storagetreedef storageTreeDefID) {
-        this.storageTreeDefID = storageTreeDefID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
+
+    @XmlTransient
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Storagetreedef getStorageTreeDef() {
+        return storageTreeDef;
+    }
+
+    public void setStorageTreeDef(Storagetreedef storageTreeDef) {
+        this.storageTreeDef = storageTreeDef;
+    }
+
+    
 
     @Override
     public int hashCode() {

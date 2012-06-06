@@ -49,15 +49,15 @@ public class Attachmenttag extends BaseEntity {
     
     @JoinColumn(name = "AttachmentID", referencedColumnName = "AttachmentID")
     @ManyToOne(optional = false)
-    private Attachment attachmentID;
+    private Attachment attachment;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
 
     public Attachmenttag() {
     }
@@ -88,30 +88,31 @@ public class Attachmenttag extends BaseEntity {
         this.tag = tag;
     }
 
-    public Attachment getAttachmentID() {
-        return attachmentID;
+    public Attachment getAttachment() {
+        return attachment;
     }
 
-    public void setAttachmentID(Attachment attachmentID) {
-        this.attachmentID = attachmentID;
+    public void setAttachment(Attachment attachment) {
+        this.attachment = attachment;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
 
+ 
     @Override
     public int hashCode() {
         int hash = 0;

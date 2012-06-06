@@ -28,11 +28,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Borrowreturnmaterial.findAll", query = "SELECT b FROM Borrowreturnmaterial b"),
-    @NamedQuery(name = "Borrowreturnmaterial.findByBorrowReturnMaterialID", query = "SELECT b FROM Borrowreturnmaterial b WHERE b.borrowReturnMaterialID = :borrowReturnMaterialID"),
+    @NamedQuery(name = "Borrowreturnmaterial.findByBorrowReturnMaterialID", query = "SELECT b FROM Borrowreturnmaterial b WHERE b.borrowReturnMaterialId = :borrowReturnMaterialID"),
     @NamedQuery(name = "Borrowreturnmaterial.findByTimestampCreated", query = "SELECT b FROM Borrowreturnmaterial b WHERE b.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Borrowreturnmaterial.findByTimestampModified", query = "SELECT b FROM Borrowreturnmaterial b WHERE b.timestampModified = :timestampModified"),
     @NamedQuery(name = "Borrowreturnmaterial.findByVersion", query = "SELECT b FROM Borrowreturnmaterial b WHERE b.version = :version"),
-    @NamedQuery(name = "Borrowreturnmaterial.findByCollectionMemberID", query = "SELECT b FROM Borrowreturnmaterial b WHERE b.collectionMemberID = :collectionMemberID"),
+    @NamedQuery(name = "Borrowreturnmaterial.findByCollectionMemberID", query = "SELECT b FROM Borrowreturnmaterial b WHERE b.collectionMemberId = :collectionMemberID"),
     @NamedQuery(name = "Borrowreturnmaterial.findByQuantity", query = "SELECT b FROM Borrowreturnmaterial b WHERE b.quantity = :quantity"),
     @NamedQuery(name = "Borrowreturnmaterial.findByReturnedDate", query = "SELECT b FROM Borrowreturnmaterial b WHERE b.returnedDate = :returnedDate")})
 public class Borrowreturnmaterial extends BaseEntity { 
@@ -44,12 +44,12 @@ public class Borrowreturnmaterial extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "BorrowReturnMaterialID")
-    private Integer borrowReturnMaterialID;
+    private Integer borrowReturnMaterialId;
      
     @Basic(optional = false)
     @NotNull
     @Column(name = "CollectionMemberID")
-    private int collectionMemberID;
+    private int collectionMemberId;
     
     @Column(name = "Quantity")
     private Short quantity;
@@ -65,48 +65,81 @@ public class Borrowreturnmaterial extends BaseEntity {
     
     @JoinColumn(name = "ReturnedByID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent returnedByID;
+    private Agent agent;
     
     @JoinColumn(name = "BorrowMaterialID", referencedColumnName = "BorrowMaterialID")
     @ManyToOne(optional = false)
-    private Borrowmaterial borrowMaterialID;
+    private Borrowmaterial borrowMaterial;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
 
     public Borrowreturnmaterial() {
     }
 
-    public Borrowreturnmaterial(Integer borrowReturnMaterialID) {
-        this.borrowReturnMaterialID = borrowReturnMaterialID;
+    public Borrowreturnmaterial(Integer borrowReturnMaterialId) {
+        this.borrowReturnMaterialId = borrowReturnMaterialId;
     }
 
-    public Borrowreturnmaterial(Integer borrowReturnMaterialID, Date timestampCreated, int collectionMemberID) {
+    public Borrowreturnmaterial(Integer borrowReturnMaterialId, Date timestampCreated, int collectionMemberId) {
         super(timestampCreated);
-        this.borrowReturnMaterialID = borrowReturnMaterialID; 
-        this.collectionMemberID = collectionMemberID;
+        this.borrowReturnMaterialId = borrowReturnMaterialId; 
+        this.collectionMemberId = collectionMemberId;
     }
 
-    public Integer getBorrowReturnMaterialID() {
-        return borrowReturnMaterialID;
+    public Agent getAgent() {
+        return agent;
     }
 
-    public void setBorrowReturnMaterialID(Integer borrowReturnMaterialID) {
-        this.borrowReturnMaterialID = borrowReturnMaterialID;
-    }
-  
-    public int getCollectionMemberID() {
-        return collectionMemberID;
+    public void setAgent(Agent agent) {
+        this.agent = agent;
     }
 
-    public void setCollectionMemberID(int collectionMemberID) {
-        this.collectionMemberID = collectionMemberID;
+    public Borrowmaterial getBorrowMaterial() {
+        return borrowMaterial;
     }
+
+    public void setBorrowMaterial(Borrowmaterial borrowMaterial) {
+        this.borrowMaterial = borrowMaterial;
+    }
+
+    public Integer getBorrowReturnMaterialId() {
+        return borrowReturnMaterialId;
+    }
+
+    public void setBorrowReturnMaterialId(Integer borrowReturnMaterialId) {
+        this.borrowReturnMaterialId = borrowReturnMaterialId;
+    }
+
+    public int getCollectionMemberId() {
+        return collectionMemberId;
+    }
+
+    public void setCollectionMemberId(int collectionMemberId) {
+        this.collectionMemberId = collectionMemberId;
+    }
+
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
+    }
+
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+ 
 
     public Short getQuantity() {
         return quantity;
@@ -132,42 +165,12 @@ public class Borrowreturnmaterial extends BaseEntity {
         this.returnedDate = returnedDate;
     }
 
-    public Agent getReturnedByID() {
-        return returnedByID;
-    }
-
-    public void setReturnedByID(Agent returnedByID) {
-        this.returnedByID = returnedByID;
-    }
-
-    public Borrowmaterial getBorrowMaterialID() {
-        return borrowMaterialID;
-    }
-
-    public void setBorrowMaterialID(Borrowmaterial borrowMaterialID) {
-        this.borrowMaterialID = borrowMaterialID;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (borrowReturnMaterialID != null ? borrowReturnMaterialID.hashCode() : 0);
+        hash += (borrowReturnMaterialId != null ? borrowReturnMaterialId.hashCode() : 0);
         return hash;
     }
 
@@ -178,7 +181,7 @@ public class Borrowreturnmaterial extends BaseEntity {
             return false;
         }
         Borrowreturnmaterial other = (Borrowreturnmaterial) object;
-        if ((this.borrowReturnMaterialID == null && other.borrowReturnMaterialID != null) || (this.borrowReturnMaterialID != null && !this.borrowReturnMaterialID.equals(other.borrowReturnMaterialID))) {
+        if ((this.borrowReturnMaterialId == null && other.borrowReturnMaterialId != null) || (this.borrowReturnMaterialId != null && !this.borrowReturnMaterialId.equals(other.borrowReturnMaterialId))) {
             return false;
         }
         return true;
@@ -186,7 +189,7 @@ public class Borrowreturnmaterial extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Borrowreturnmaterial[ borrowReturnMaterialID=" + borrowReturnMaterialID + " ]";
+        return "Borrowreturnmaterial[ borrowReturnMaterialId=" + borrowReturnMaterialId + " ]";
     }
     
 }

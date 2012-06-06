@@ -3,22 +3,7 @@ package se.nrm.specify.datamodel;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Date;
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType; 
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -33,7 +18,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Accession.findAll", query = "SELECT a FROM Accession a"),
-    @NamedQuery(name = "Accession.findByAccessionID", query = "SELECT a FROM Accession a WHERE a.accessionID = :accessionID"),
+    @NamedQuery(name = "Accession.findByAccessionID", query = "SELECT a FROM Accession a WHERE a.accessionId = :accessionID"),
     @NamedQuery(name = "Accession.findByTimestampCreated", query = "SELECT a FROM Accession a WHERE a.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Accession.findByTimestampModified", query = "SELECT a FROM Accession a WHERE a.timestampModified = :timestampModified"),
     @NamedQuery(name = "Accession.findByVersion", query = "SELECT a FROM Accession a WHERE a.version = :version"),
@@ -59,7 +44,7 @@ public class Accession extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "AccessionID")
-    private Integer accessionID;
+    private Integer accessionId;
       
     @Size(max = 255)
     @Column(name = "AccessionCondition")
@@ -131,67 +116,69 @@ public class Accession extends BaseEntity {
     @Column(name = "YesNo2")
     private Boolean yesNo2;
     
-    @OneToMany(mappedBy = "accessionID")
-    private Collection<Treatmentevent> treatmenteventCollection;
+    @OneToMany(mappedBy = "accession")
+    private Collection<Treatmentevent> treatmentEvents;
     
-    @OneToMany(mappedBy = "accessionID")
-    private Collection<Appraisal> appraisalCollection;
+    @OneToMany(mappedBy = "accession")
+    private Collection<Appraisal> appraisals;
     
-    @OneToMany(mappedBy = "accessionID", cascade= CascadeType.ALL)
-    private Collection<Accessionagent> accessionagentCollection;
+    @OneToMany(mappedBy = "accession", cascade= CascadeType.ALL)
+    private Collection<Accessionagent> accessionAgents;
     
     @JoinColumn(name = "AddressOfRecordID", referencedColumnName = "AddressOfRecordID")
     @ManyToOne
-    private Addressofrecord addressOfRecordID;
+    private Addressofrecord addressOfRecord;
     
     @JoinColumn(name = "DivisionID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne(optional = false)
-    private Division divisionID;
+    private Division division;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "RepositoryAgreementID", referencedColumnName = "RepositoryAgreementID")
     @ManyToOne
-    private Repositoryagreement repositoryAgreementID;
+    private Repositoryagreement repositoryAgreement;
     
-    @OneToMany(mappedBy = "accessionID")
-    private Collection<Collectionobject> collectionobjectCollection;
+    @OneToMany(mappedBy = "accession")
+    private Collection<Collectionobject> collectionObjects;
     
-    @OneToMany(mappedBy = "accessionID")
-    private Collection<Deaccession> deaccessionCollection;
+    @OneToMany(mappedBy = "accession")
+    private Collection<Deaccession> deaccessions;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "accessionID")
-    private Collection<Accessionattachment> accessionattachmentCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "accession")
+    private Collection<Accessionattachment> accessionAttachments;
     
-    @OneToMany(mappedBy = "accessionID")
-    private Collection<Accessionauthorization> accessionauthorizationCollection;
+    @OneToMany(mappedBy = "accession")
+    private Collection<Accessionauthorization> accessionAuthorizations;
 
     public Accession() {
     }
 
-    public Accession(Integer accessionID) {
-        this.accessionID = accessionID;
+    public Accession(Integer accessionId) {
+        this.accessionId = accessionId;
     }
 
-    public Accession(Integer accessionID, Date timestampCreated, String accessionNumber) {
+    public Accession(Integer accessionId, Date timestampCreated, String accessionNumber) {
         super(timestampCreated);
-        this.accessionID = accessionID; 
+        this.accessionId = accessionId; 
         this.accessionNumber = accessionNumber;
     }
 
-    public Integer getAccessionID() {
-        return accessionID;
+    public Integer getAccessionId() {
+        return accessionId;
     }
 
-    public void setAccessionID(Integer accessionID) {
-        this.accessionID = accessionID;
-    } 
+    public void setAccessionId(Integer accessionId) {
+        this.accessionId = accessionId;
+    }
+
+ 
 
     public String getAccessionCondition() {
         return accessionCondition;
@@ -329,113 +316,116 @@ public class Accession extends BaseEntity {
         this.yesNo2 = yesNo2;
     }
 
-    @XmlTransient
-    public Collection<Treatmentevent> getTreatmenteventCollection() {
-        return treatmenteventCollection;
-    }
-
-    public void setTreatmenteventCollection(Collection<Treatmentevent> treatmenteventCollection) {
-        this.treatmenteventCollection = treatmenteventCollection;
-    }
-
-    @XmlTransient
-    public Collection<Appraisal> getAppraisalCollection() {
-        return appraisalCollection;
-    }
-
-    public void setAppraisalCollection(Collection<Appraisal> appraisalCollection) {
-        this.appraisalCollection = appraisalCollection;
-    }
-
+ 
 //    @XmlTransient
-    public Collection<Accessionagent> getAccessionagentCollection() {
-        return accessionagentCollection;
+    public Collection<Accessionagent> getAccessionAgents() {
+        return accessionAgents;
     }
 
-    public void setAccessionagentCollection(Collection<Accessionagent> accessionagentCollection) {
-        this.accessionagentCollection = accessionagentCollection;
+    public void setAccessionAgents(Collection<Accessionagent> accessionAgents) {
+        this.accessionAgents = accessionAgents;
     }
 
-    public Addressofrecord getAddressOfRecordID() {
-        return addressOfRecordID;
+    public Addressofrecord getAddressOfRecord() {
+        return addressOfRecord;
     }
 
-    public void setAddressOfRecordID(Addressofrecord addressOfRecordID) {
-        this.addressOfRecordID = addressOfRecordID;
-    }
-
-    public Division getDivisionID() {
-        return divisionID;
-    }
-
-    public void setDivisionID(Division divisionID) {
-        this.divisionID = divisionID;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
-    public Repositoryagreement getRepositoryAgreementID() {
-        return repositoryAgreementID;
-    }
-
-    public void setRepositoryAgreementID(Repositoryagreement repositoryAgreementID) {
-        this.repositoryAgreementID = repositoryAgreementID;
+    public void setAddressOfRecord(Addressofrecord addressOfRecord) {
+        this.addressOfRecord = addressOfRecord;
     }
 
     @XmlTransient
-    public Collection<Collectionobject> getCollectionobjectCollection() {
-        return collectionobjectCollection;
+    public Collection<Appraisal> getAppraisals() {
+        return appraisals;
     }
 
-    public void setCollectionobjectCollection(Collection<Collectionobject> collectionobjectCollection) {
-        this.collectionobjectCollection = collectionobjectCollection;
-    }
-
-    @XmlTransient
-    public Collection<Deaccession> getDeaccessionCollection() {
-        return deaccessionCollection;
-    }
-
-    public void setDeaccessionCollection(Collection<Deaccession> deaccessionCollection) {
-        this.deaccessionCollection = deaccessionCollection;
+    public void setAppraisals(Collection<Appraisal> appraisals) {
+        this.appraisals = appraisals;
     }
 
     @XmlTransient
-    public Collection<Accessionattachment> getAccessionattachmentCollection() {
-        return accessionattachmentCollection;
+    public Collection<Collectionobject> getCollectionObjects() {
+        return collectionObjects;
     }
 
-    public void setAccessionattachmentCollection(Collection<Accessionattachment> accessionattachmentCollection) {
-        this.accessionattachmentCollection = accessionattachmentCollection;
+    public void setCollectionObjects(Collection<Collectionobject> collectionObjects) {
+        this.collectionObjects = collectionObjects;
     }
 
     @XmlTransient
-    public Collection<Accessionauthorization> getAccessionauthorizationCollection() {
-        return accessionauthorizationCollection;
+    public Collection<Treatmentevent> getTreatmentEvents() {
+        return treatmentEvents;
     }
 
-    public void setAccessionauthorizationCollection(Collection<Accessionauthorization> accessionauthorizationCollection) {
-        this.accessionauthorizationCollection = accessionauthorizationCollection;
+    public void setTreatmentEvents(Collection<Treatmentevent> treatmentEvents) {
+        this.treatmentEvents = treatmentEvents;
     }
 
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
+    }
+
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Division getDivision() {
+        return division;
+    }
+
+    public void setDivision(Division division) {
+        this.division = division;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Repositoryagreement getRepositoryAgreement() {
+        return repositoryAgreement;
+    }
+
+    public void setRepositoryAgreement(Repositoryagreement repositoryAgreement) {
+        this.repositoryAgreement = repositoryAgreement;
+    }
+
+    @XmlTransient
+    public Collection<Deaccession> getDeaccessions() {
+        return deaccessions;
+    }
+
+    public void setDeaccessions(Collection<Deaccession> deaccessions) {
+        this.deaccessions = deaccessions;
+    } 
+
+    @XmlTransient
+    public Collection<Accessionattachment> getAccessionAttachments() {
+        return accessionAttachments;
+    }
+
+    public void setAccessionAttachments(Collection<Accessionattachment> accessionAttachments) {
+        this.accessionAttachments = accessionAttachments;
+    }
+
+    @XmlTransient
+    public Collection<Accessionauthorization> getAccessionAuthorizations() {
+        return accessionAuthorizations;
+    }
+
+    public void setAccessionAuthorizations(Collection<Accessionauthorization> accessionAuthorizations) {
+        this.accessionAuthorizations = accessionAuthorizations;
+    }
+
+ 
+ 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (accessionID != null ? accessionID.hashCode() : 0);
+        hash += (accessionId != null ? accessionId.hashCode() : 0);
         return hash;
     }
 
@@ -446,7 +436,7 @@ public class Accession extends BaseEntity {
             return false;
         }
         Accession other = (Accession) object;
-        if ((this.accessionID == null && other.accessionID != null) || (this.accessionID != null && !this.accessionID.equals(other.accessionID))) {
+        if ((this.accessionId == null && other.accessionId != null) || (this.accessionId != null && !this.accessionId.equals(other.accessionId))) {
             return false;
         }
         return true;
@@ -454,7 +444,7 @@ public class Accession extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Accession[ accessionID=" + accessionID + " ]";
+        return "Accession[ accessionId=" + accessionId + " ]";
     }
     
 }

@@ -31,7 +31,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Fieldnotebookpage.findAll", query = "SELECT f FROM Fieldnotebookpage f"),
-    @NamedQuery(name = "Fieldnotebookpage.findByFieldNotebookPageID", query = "SELECT f FROM Fieldnotebookpage f WHERE f.fieldNotebookPageID = :fieldNotebookPageID"),
+    @NamedQuery(name = "Fieldnotebookpage.findByFieldNotebookPageID", query = "SELECT f FROM Fieldnotebookpage f WHERE f.fieldNotebookPageId = :fieldNotebookPageID"),
     @NamedQuery(name = "Fieldnotebookpage.findByTimestampCreated", query = "SELECT f FROM Fieldnotebookpage f WHERE f.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Fieldnotebookpage.findByTimestampModified", query = "SELECT f FROM Fieldnotebookpage f WHERE f.timestampModified = :timestampModified"),
     @NamedQuery(name = "Fieldnotebookpage.findByVersion", query = "SELECT f FROM Fieldnotebookpage f WHERE f.version = :version"),
@@ -47,7 +47,7 @@ public class Fieldnotebookpage extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "FieldNotebookPageID")
-    private Integer fieldNotebookPageID;
+    private Integer fieldNotebookPageId;
      
     @Size(max = 128)
     @Column(name = "Description")
@@ -63,48 +63,50 @@ public class Fieldnotebookpage extends BaseEntity {
     @Temporal(TemporalType.DATE)
     private Date scanDate;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fieldNotebookPageID")
-    private Collection<Fieldnotebookpageattachment> fieldnotebookpageattachmentCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fieldNotebookPage")
+    private Collection<Fieldnotebookpageattachment> attachments;
     
-    @OneToMany(mappedBy = "fieldNotebookPageID")
-    private Collection<Collectionobject> collectionobjectCollection;
+    @OneToMany(mappedBy = "fieldNotebookPage")
+    private Collection<Collectionobject> collectionObjects;
     
     @JoinColumn(name = "FieldNotebookPageSetID", referencedColumnName = "FieldNotebookPageSetID")
     @ManyToOne
-    private Fieldnotebookpageset fieldNotebookPageSetID;
+    private Fieldnotebookpageset pageSet;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "DisciplineID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne(optional = false)
-    private Discipline disciplineID;
+    private Discipline discipline;
 
     public Fieldnotebookpage() {
     }
 
-    public Fieldnotebookpage(Integer fieldNotebookPageID) {
-        this.fieldNotebookPageID = fieldNotebookPageID;
+    public Fieldnotebookpage(Integer fieldNotebookPageId) {
+        this.fieldNotebookPageId = fieldNotebookPageId;
     }
 
-    public Fieldnotebookpage(Integer fieldNotebookPageID, Date timestampCreated, Date scanDate) {
+    public Fieldnotebookpage(Integer fieldNotebookPageId, Date timestampCreated, Date scanDate) {
         super(timestampCreated);
-        this.fieldNotebookPageID = fieldNotebookPageID; 
+        this.fieldNotebookPageId = fieldNotebookPageId; 
         this.scanDate = scanDate;
     }
 
-    public Integer getFieldNotebookPageID() {
-        return fieldNotebookPageID;
+    public Integer getFieldNotebookPageId() {
+        return fieldNotebookPageId;
     }
 
-    public void setFieldNotebookPageID(Integer fieldNotebookPageID) {
-        this.fieldNotebookPageID = fieldNotebookPageID;
-    } 
+    public void setFieldNotebookPageId(Integer fieldNotebookPageId) {
+        this.fieldNotebookPageId = fieldNotebookPageId;
+    }
+
+ 
     
     public String getDescription() {
         return description;
@@ -131,59 +133,62 @@ public class Fieldnotebookpage extends BaseEntity {
     }
 
     @XmlTransient
-    public Collection<Fieldnotebookpageattachment> getFieldnotebookpageattachmentCollection() {
-        return fieldnotebookpageattachmentCollection;
+    public Collection<Fieldnotebookpageattachment> getAttachments() {
+        return attachments;
     }
 
-    public void setFieldnotebookpageattachmentCollection(Collection<Fieldnotebookpageattachment> fieldnotebookpageattachmentCollection) {
-        this.fieldnotebookpageattachmentCollection = fieldnotebookpageattachmentCollection;
+    public void setAttachments(Collection<Fieldnotebookpageattachment> attachments) {
+        this.attachments = attachments;
     }
 
     @XmlTransient
-    public Collection<Collectionobject> getCollectionobjectCollection() {
-        return collectionobjectCollection;
+    public Collection<Collectionobject> getCollectionObjects() {
+        return collectionObjects;
     }
 
-    public void setCollectionobjectCollection(Collection<Collectionobject> collectionobjectCollection) {
-        this.collectionobjectCollection = collectionobjectCollection;
+    public void setCollectionObjects(Collection<Collectionobject> collectionObjects) {
+        this.collectionObjects = collectionObjects;
     }
 
-    public Fieldnotebookpageset getFieldNotebookPageSetID() {
-        return fieldNotebookPageSetID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setFieldNotebookPageSetID(Fieldnotebookpageset fieldNotebookPageSetID) {
-        this.fieldNotebookPageSetID = fieldNotebookPageSetID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Discipline getDiscipline() {
+        return discipline;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setDiscipline(Discipline discipline) {
+        this.discipline = discipline;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
 
-    public Discipline getDisciplineID() {
-        return disciplineID;
+    public Fieldnotebookpageset getPageSet() {
+        return pageSet;
     }
 
-    public void setDisciplineID(Discipline disciplineID) {
-        this.disciplineID = disciplineID;
+    public void setPageSet(Fieldnotebookpageset pageSet) {
+        this.pageSet = pageSet;
     }
+
+ 
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (fieldNotebookPageID != null ? fieldNotebookPageID.hashCode() : 0);
+        hash += (fieldNotebookPageId != null ? fieldNotebookPageId.hashCode() : 0);
         return hash;
     }
 
@@ -194,7 +199,7 @@ public class Fieldnotebookpage extends BaseEntity {
             return false;
         }
         Fieldnotebookpage other = (Fieldnotebookpage) object;
-        if ((this.fieldNotebookPageID == null && other.fieldNotebookPageID != null) || (this.fieldNotebookPageID != null && !this.fieldNotebookPageID.equals(other.fieldNotebookPageID))) {
+        if ((this.fieldNotebookPageId == null && other.fieldNotebookPageId != null) || (this.fieldNotebookPageId != null && !this.fieldNotebookPageId.equals(other.fieldNotebookPageId))) {
             return false;
         }
         return true;
@@ -202,7 +207,7 @@ public class Fieldnotebookpage extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Fieldnotebookpage[ fieldNotebookPageID=" + fieldNotebookPageID + " ]";
+        return "Fieldnotebookpage[ fieldNotebookPageID=" + fieldNotebookPageId + " ]";
     }
     
 }

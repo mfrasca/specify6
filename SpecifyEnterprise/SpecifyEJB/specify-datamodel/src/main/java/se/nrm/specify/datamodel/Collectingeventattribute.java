@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Collectingeventattribute.findAll", query = "SELECT c FROM Collectingeventattribute c"),
-    @NamedQuery(name = "Collectingeventattribute.findByCollectingEventAttributeID", query = "SELECT c FROM Collectingeventattribute c WHERE c.collectingEventAttributeID = :collectingEventAttributeID"),
+    @NamedQuery(name = "Collectingeventattribute.findByCollectingEventAttributeID", query = "SELECT c FROM Collectingeventattribute c WHERE c.collectingEventAttributeId = :collectingEventAttributeID"),
     @NamedQuery(name = "Collectingeventattribute.findByTimestampCreated", query = "SELECT c FROM Collectingeventattribute c WHERE c.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Collectingeventattribute.findByTimestampModified", query = "SELECT c FROM Collectingeventattribute c WHERE c.timestampModified = :timestampModified"),
     @NamedQuery(name = "Collectingeventattribute.findByVersion", query = "SELECT c FROM Collectingeventattribute c WHERE c.version = :version"),
@@ -74,7 +74,7 @@ public class Collectingeventattribute extends BaseEntity { // implements Seriali
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "CollectingEventAttributeID")
-    private Integer collectingEventAttributeID;
+    private Integer collectingEventAttributeId;
      
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "Number1")
@@ -209,41 +209,36 @@ public class Collectingeventattribute extends BaseEntity { // implements Seriali
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "DisciplineID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne
-    private Discipline disciplineID;
+    private Discipline discipline;
     
     @JoinColumn(name = "HostTaxonID", referencedColumnName = "TaxonID")
     @ManyToOne
-    private Taxon hostTaxonID;
-    @OneToMany(mappedBy = "collectingEventAttributeID")
-    private Collection<Collectingevent> collectingeventCollection;
+    private Taxon hostTaxon;
+    
+    @OneToMany(mappedBy = "collectingEventAttribute")
+    private Collection<Collectingevent> collectingEvents;
 
     public Collectingeventattribute() {
     }
 
-    public Collectingeventattribute(Integer collectingEventAttributeID) {
-        this.collectingEventAttributeID = collectingEventAttributeID;
+    public Collectingeventattribute(Integer collectingEventAttributeId) {
+        this.collectingEventAttributeId = collectingEventAttributeId;
     }
 
-    public Collectingeventattribute(Integer collectingEventAttributeID, Date timestampCreated) {
+    public Collectingeventattribute(Integer collectingEventAttributeId, Date timestampCreated) {
         super(timestampCreated);
-        this.collectingEventAttributeID = collectingEventAttributeID; 
+        this.collectingEventAttributeId = collectingEventAttributeId; 
     }
 
-    public Integer getCollectingEventAttributeID() {
-        return collectingEventAttributeID;
-    }
-
-    public void setCollectingEventAttributeID(Integer collectingEventAttributeID) {
-        this.collectingEventAttributeID = collectingEventAttributeID;
-    } 
+ 
     
     public Float getNumber1() {
         return number1;
@@ -533,51 +528,63 @@ public class Collectingeventattribute extends BaseEntity { // implements Seriali
         this.yesNo5 = yesNo5;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Integer getCollectingEventAttributeId() {
+        return collectingEventAttributeId;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setCollectingEventAttributeId(Integer collectingEventAttributeId) {
+        this.collectingEventAttributeId = collectingEventAttributeId;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Discipline getDisciplineID() {
-        return disciplineID;
+    public Discipline getDiscipline() {
+        return discipline;
     }
 
-    public void setDisciplineID(Discipline disciplineID) {
-        this.disciplineID = disciplineID;
+    public void setDiscipline(Discipline discipline) {
+        this.discipline = discipline;
     }
 
-    public Taxon getHostTaxonID() {
-        return hostTaxonID;
+    public Taxon getHostTaxon() {
+        return hostTaxon;
     }
 
-    public void setHostTaxonID(Taxon hostTaxonID) {
-        this.hostTaxonID = hostTaxonID;
+    public void setHostTaxon(Taxon hostTaxon) {
+        this.hostTaxon = hostTaxon;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
 
     @XmlTransient
-    public Collection<Collectingevent> getCollectingeventCollection() {
-        return collectingeventCollection;
+    public Collection<Collectingevent> getCollectingEvents() {
+        return collectingEvents;
     }
 
-    public void setCollectingeventCollection(Collection<Collectingevent> collectingeventCollection) {
-        this.collectingeventCollection = collectingeventCollection;
+    public void setCollectingEvents(Collection<Collectingevent> collectingEvents) {
+        this.collectingEvents = collectingEvents;
     }
+
+   
+
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (collectingEventAttributeID != null ? collectingEventAttributeID.hashCode() : 0);
+        hash += (collectingEventAttributeId != null ? collectingEventAttributeId.hashCode() : 0);
         return hash;
     }
 
@@ -588,7 +595,7 @@ public class Collectingeventattribute extends BaseEntity { // implements Seriali
             return false;
         }
         Collectingeventattribute other = (Collectingeventattribute) object;
-        if ((this.collectingEventAttributeID == null && other.collectingEventAttributeID != null) || (this.collectingEventAttributeID != null && !this.collectingEventAttributeID.equals(other.collectingEventAttributeID))) {
+        if ((this.collectingEventAttributeId == null && other.collectingEventAttributeId != null) || (this.collectingEventAttributeId != null && !this.collectingEventAttributeId.equals(other.collectingEventAttributeId))) {
             return false;
         }
         return true;
@@ -596,7 +603,7 @@ public class Collectingeventattribute extends BaseEntity { // implements Seriali
 
     @Override
     public String toString() {
-        return "Collectingeventattribute[ collectingEventAttributeID=" + collectingEventAttributeID + " ]";
+        return "Collectingeventattribute[ collectingEventAttributeId=" + collectingEventAttributeId + " ]";
     }
     
 }

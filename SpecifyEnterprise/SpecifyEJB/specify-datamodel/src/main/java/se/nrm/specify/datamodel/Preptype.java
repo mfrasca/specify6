@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Preptype.findAll", query = "SELECT p FROM Preptype p"),
-    @NamedQuery(name = "Preptype.findByPrepTypeID", query = "SELECT p FROM Preptype p WHERE p.prepTypeID = :prepTypeID"),
+    @NamedQuery(name = "Preptype.findByPrepTypeID", query = "SELECT p FROM Preptype p WHERE p.prepTypeId = :prepTypeID"),
     @NamedQuery(name = "Preptype.findByTimestampCreated", query = "SELECT p FROM Preptype p WHERE p.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Preptype.findByTimestampModified", query = "SELECT p FROM Preptype p WHERE p.timestampModified = :timestampModified"),
     @NamedQuery(name = "Preptype.findByVersion", query = "SELECT p FROM Preptype p WHERE p.version = :version"),
@@ -44,7 +44,7 @@ public class Preptype extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "PrepTypeID")
-    private Integer prepTypeID;
+    private Integer prepTypeId;
        
     @Basic(optional = false)
     @NotNull
@@ -59,43 +59,68 @@ public class Preptype extends BaseEntity {
     
     @JoinColumn(name = "CollectionID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne(optional = false)
-    private se.nrm.specify.datamodel.Collection collectionID;
+    private se.nrm.specify.datamodel.Collection collection;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "prepTypeID")
-    private Collection<Preparation> preparationCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "prepType")
+    private Collection<Preparation> preparations;
     
-    @OneToMany(mappedBy = "prepTypeID")
-    private Collection<Attributedef> attributedefCollection;
+    @OneToMany(mappedBy = "prepType")
+    private Collection<Attributedef> attributeDefs;
 
     public Preptype() {
     }
 
-    public Preptype(Integer prepTypeID) {
-        this.prepTypeID = prepTypeID;
+    public Preptype(Integer prepTypeId) {
+        this.prepTypeId = prepTypeId;
     }
 
-    public Preptype(Integer prepTypeID, Date timestampCreated, boolean isLoanable, String name) {
+    public Preptype(Integer prepTypeId, Date timestampCreated, boolean isLoanable, String name) {
         super(timestampCreated);
-        this.prepTypeID = prepTypeID; 
+        this.prepTypeId = prepTypeId; 
         this.isLoanable = isLoanable;
         this.name = name;
     }
 
-    public Integer getPrepTypeID() {
-        return prepTypeID;
+    public se.nrm.specify.datamodel.Collection getCollection() {
+        return collection;
     }
 
-    public void setPrepTypeID(Integer prepTypeID) {
-        this.prepTypeID = prepTypeID;
+    public void setCollection(se.nrm.specify.datamodel.Collection collection) {
+        this.collection = collection;
     }
+
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
+    }
+
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Integer getPrepTypeId() {
+        return prepTypeId;
+    }
+
+    public void setPrepTypeId(Integer prepTypeId) {
+        this.prepTypeId = prepTypeId;
+    }
+ 
  
     public boolean getIsLoanable() {
         return isLoanable;
@@ -113,52 +138,32 @@ public class Preptype extends BaseEntity {
         this.name = name;
     }
 
-    public se.nrm.specify.datamodel.Collection getCollectionID() {
-        return collectionID;
+    @XmlTransient
+    public Collection<Attributedef> getAttributeDefs() {
+        return attributeDefs;
     }
 
-    public void setCollectionID(se.nrm.specify.datamodel.Collection collectionID) {
-        this.collectionID = collectionID;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setAttributeDefs(Collection<Attributedef> attributeDefs) {
+        this.attributeDefs = attributeDefs;
     }
 
     @XmlTransient
-    public Collection<Preparation> getPreparationCollection() {
-        return preparationCollection;
+    public Collection<Preparation> getPreparations() {
+        return preparations;
     }
 
-    public void setPreparationCollection(Collection<Preparation> preparationCollection) {
-        this.preparationCollection = preparationCollection;
+    public void setPreparations(Collection<Preparation> preparations) {
+        this.preparations = preparations;
     }
 
-    @XmlTransient
-    public Collection<Attributedef> getAttributedefCollection() {
-        return attributedefCollection;
-    }
+    
 
-    public void setAttributedefCollection(Collection<Attributedef> attributedefCollection) {
-        this.attributedefCollection = attributedefCollection;
-    }
+    
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (prepTypeID != null ? prepTypeID.hashCode() : 0);
+        hash += (prepTypeId != null ? prepTypeId.hashCode() : 0);
         return hash;
     }
 
@@ -169,7 +174,7 @@ public class Preptype extends BaseEntity {
             return false;
         }
         Preptype other = (Preptype) object;
-        if ((this.prepTypeID == null && other.prepTypeID != null) || (this.prepTypeID != null && !this.prepTypeID.equals(other.prepTypeID))) {
+        if ((this.prepTypeId == null && other.prepTypeId != null) || (this.prepTypeId != null && !this.prepTypeId.equals(other.prepTypeId))) {
             return false;
         }
         return true;
@@ -177,7 +182,7 @@ public class Preptype extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Preptype[ prepTypeID=" + prepTypeID + " ]";
+        return "Preptype[ prepTypeID=" + prepTypeId + " ]";
     }
     
 }

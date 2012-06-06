@@ -26,11 +26,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Preparationattachment.findAll", query = "SELECT p FROM Preparationattachment p"),
-    @NamedQuery(name = "Preparationattachment.findByPreparationAttachmentID", query = "SELECT p FROM Preparationattachment p WHERE p.preparationAttachmentID = :preparationAttachmentID"),
+    @NamedQuery(name = "Preparationattachment.findByPreparationAttachmentID", query = "SELECT p FROM Preparationattachment p WHERE p.preparationAttachmentId = :preparationAttachmentID"),
     @NamedQuery(name = "Preparationattachment.findByTimestampCreated", query = "SELECT p FROM Preparationattachment p WHERE p.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Preparationattachment.findByTimestampModified", query = "SELECT p FROM Preparationattachment p WHERE p.timestampModified = :timestampModified"),
     @NamedQuery(name = "Preparationattachment.findByVersion", query = "SELECT p FROM Preparationattachment p WHERE p.version = :version"),
-    @NamedQuery(name = "Preparationattachment.findByCollectionMemberID", query = "SELECT p FROM Preparationattachment p WHERE p.collectionMemberID = :collectionMemberID"),
+    @NamedQuery(name = "Preparationattachment.findByCollectionMemberID", query = "SELECT p FROM Preparationattachment p WHERE p.collectionMemberId = :collectionMemberID"),
     @NamedQuery(name = "Preparationattachment.findByOrdinal", query = "SELECT p FROM Preparationattachment p WHERE p.ordinal = :ordinal")})
 public class Preparationattachment extends BaseEntity {  
     
@@ -41,12 +41,12 @@ public class Preparationattachment extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "PreparationAttachmentID")
-    private Integer preparationAttachmentID;
+    private Integer preparationAttachmentId;
      
     @Basic(optional = false)
     @NotNull
     @Column(name = "CollectionMemberID")
-    private int collectionMemberID;
+    private int collectionMemberId;
     
     @Column(name = "Ordinal")
     private Integer ordinal;
@@ -58,49 +58,34 @@ public class Preparationattachment extends BaseEntity {
     
     @JoinColumn(name = "AttachmentID", referencedColumnName = "AttachmentID")
     @ManyToOne(optional = false)
-    private Attachment attachmentID;
+    private Attachment attachment;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "PreparationID", referencedColumnName = "PreparationID")
     @ManyToOne(optional = false)
-    private Preparation preparationID;
+    private Preparation preparation;
 
     public Preparationattachment() {
     }
 
-    public Preparationattachment(Integer preparationAttachmentID) {
-        this.preparationAttachmentID = preparationAttachmentID;
+    public Preparationattachment(Integer preparationAttachmentId) {
+        this.preparationAttachmentId = preparationAttachmentId;
     }
 
-    public Preparationattachment(Integer preparationAttachmentID, Date timestampCreated, int collectionMemberID) {
+    public Preparationattachment(Integer preparationAttachmentID, Date timestampCreated, int collectionMemberId) {
         super(timestampCreated);
-        this.preparationAttachmentID = preparationAttachmentID; 
-        this.collectionMemberID = collectionMemberID;
-    }
-
-    public Integer getPreparationAttachmentID() {
-        return preparationAttachmentID;
-    }
-
-    public void setPreparationAttachmentID(Integer preparationAttachmentID) {
-        this.preparationAttachmentID = preparationAttachmentID;
+        this.preparationAttachmentId = preparationAttachmentId; 
+        this.collectionMemberId = collectionMemberId;
     }
  
-    public int getCollectionMemberID() {
-        return collectionMemberID;
-    }
-
-    public void setCollectionMemberID(int collectionMemberID) {
-        this.collectionMemberID = collectionMemberID;
-    }
-
+ 
     public Integer getOrdinal() {
         return ordinal;
     }
@@ -117,42 +102,59 @@ public class Preparationattachment extends BaseEntity {
         this.remarks = remarks;
     }
 
-    public Attachment getAttachmentID() {
-        return attachmentID;
+    public Attachment getAttachment() {
+        return attachment;
     }
 
-    public void setAttachmentID(Attachment attachmentID) {
-        this.attachmentID = attachmentID;
+    public void setAttachment(Attachment attachment) {
+        this.attachment = attachment;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public int getCollectionMemberId() {
+        return collectionMemberId;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setCollectionMemberId(int collectionMemberId) {
+        this.collectionMemberId = collectionMemberId;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Preparation getPreparationID() {
-        return preparationID;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setPreparationID(Preparation preparationID) {
-        this.preparationID = preparationID;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
 
+    public Preparation getPreparation() {
+        return preparation;
+    }
+
+    public void setPreparation(Preparation preparation) {
+        this.preparation = preparation;
+    }
+
+    public Integer getPreparationAttachmentId() {
+        return preparationAttachmentId;
+    }
+
+    public void setPreparationAttachmentId(Integer preparationAttachmentId) {
+        this.preparationAttachmentId = preparationAttachmentId;
+    }
+
+  
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (preparationAttachmentID != null ? preparationAttachmentID.hashCode() : 0);
+        hash += (preparationAttachmentId != null ? preparationAttachmentId.hashCode() : 0);
         return hash;
     }
 
@@ -163,7 +165,7 @@ public class Preparationattachment extends BaseEntity {
             return false;
         }
         Preparationattachment other = (Preparationattachment) object;
-        if ((this.preparationAttachmentID == null && other.preparationAttachmentID != null) || (this.preparationAttachmentID != null && !this.preparationAttachmentID.equals(other.preparationAttachmentID))) {
+        if ((this.preparationAttachmentId == null && other.preparationAttachmentId != null) || (this.preparationAttachmentId != null && !this.preparationAttachmentId.equals(other.preparationAttachmentId))) {
             return false;
         }
         return true;
@@ -171,7 +173,7 @@ public class Preparationattachment extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Preparationattachment[ preparationAttachmentID=" + preparationAttachmentID + " ]";
+        return "Preparationattachment[ preparationAttachmentID=" + preparationAttachmentId + " ]";
     }
     
 }

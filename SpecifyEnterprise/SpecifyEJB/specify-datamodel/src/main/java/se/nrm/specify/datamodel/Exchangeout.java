@@ -31,7 +31,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Exchangeout.findAll", query = "SELECT e FROM Exchangeout e"),
-    @NamedQuery(name = "Exchangeout.findByExchangeOutID", query = "SELECT e FROM Exchangeout e WHERE e.exchangeOutID = :exchangeOutID"),
+    @NamedQuery(name = "Exchangeout.findByExchangeOutID", query = "SELECT e FROM Exchangeout e WHERE e.exchangeOutId = :exchangeOutID"),
     @NamedQuery(name = "Exchangeout.findByTimestampCreated", query = "SELECT e FROM Exchangeout e WHERE e.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Exchangeout.findByTimestampModified", query = "SELECT e FROM Exchangeout e WHERE e.timestampModified = :timestampModified"),
     @NamedQuery(name = "Exchangeout.findByVersion", query = "SELECT e FROM Exchangeout e WHERE e.version = :version"),
@@ -53,7 +53,7 @@ public class Exchangeout extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "ExchangeOutID")
-    private Integer exchangeOutID; 
+    private Integer exchangeOutId; 
     
     @Size(max = 120)
     @Column(name = "DescriptionOfMaterial")
@@ -102,53 +102,54 @@ public class Exchangeout extends BaseEntity {
     @Column(name = "YesNo2")
     private Boolean yesNo2;
     
-    @OneToMany(mappedBy = "exchangeOutID")
-    private Collection<Shipment> shipmentCollection;
+    @OneToMany(mappedBy = "exchangeOut")
+    private Collection<Shipment> shipments;
     
     @JoinColumn(name = "AddressOfRecordID", referencedColumnName = "AddressOfRecordID")
     @ManyToOne
-    private Addressofrecord addressOfRecordID;
+    private Addressofrecord addressOfRecord;
     
     @JoinColumn(name = "SentToOrganizationID", referencedColumnName = "AgentID")
     @ManyToOne(optional = false)
-    private Agent sentToOrganizationID;
+    private Agent agentSentTo;
     
     @JoinColumn(name = "DivisionID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne(optional = false)
-    private Division divisionID;
+    private Division division;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "CatalogedByID", referencedColumnName = "AgentID")
     @ManyToOne(optional = false)
-    private Agent catalogedByID;
+    private Agent agentCatalogedBy;
 
     public Exchangeout() {
     }
 
-    public Exchangeout(Integer exchangeOutID) {
-        this.exchangeOutID = exchangeOutID;
+    public Exchangeout(Integer exchangeOutId) {
+        this.exchangeOutId = exchangeOutId;
     }
 
     public Exchangeout(Integer exchangeOutID, Date timestampCreated) {
         super(timestampCreated);
-        this.exchangeOutID = exchangeOutID; 
+        this.exchangeOutId = exchangeOutId; 
     }
 
-    public Integer getExchangeOutID() {
-        return exchangeOutID;
+    public Integer getExchangeOutId() {
+        return exchangeOutId;
     }
 
-    public void setExchangeOutID(Integer exchangeOutID) {
-        this.exchangeOutID = exchangeOutID;
-    } 
-    
+    public void setExchangeOutId(Integer exchangeOutId) {
+        this.exchangeOutId = exchangeOutId;
+    }
+
+ 
     public String getDescriptionOfMaterial() {
         return descriptionOfMaterial;
     }
@@ -246,66 +247,69 @@ public class Exchangeout extends BaseEntity {
     }
 
     @XmlTransient
-    public Collection<Shipment> getShipmentCollection() {
-        return shipmentCollection;
+    public Collection<Shipment> getShipments() {
+        return shipments;
     }
 
-    public void setShipmentCollection(Collection<Shipment> shipmentCollection) {
-        this.shipmentCollection = shipmentCollection;
+    public void setShipments(Collection<Shipment> shipments) {
+        this.shipments = shipments;
     }
 
-    public Addressofrecord getAddressOfRecordID() {
-        return addressOfRecordID;
+ 
+    public Addressofrecord getAddressOfRecord() {
+        return addressOfRecord;
     }
 
-    public void setAddressOfRecordID(Addressofrecord addressOfRecordID) {
-        this.addressOfRecordID = addressOfRecordID;
+    public void setAddressOfRecord(Addressofrecord addressOfRecord) {
+        this.addressOfRecord = addressOfRecord;
     }
 
-    public Agent getSentToOrganizationID() {
-        return sentToOrganizationID;
+    public Agent getAgentCatalogedBy() {
+        return agentCatalogedBy;
     }
 
-    public void setSentToOrganizationID(Agent sentToOrganizationID) {
-        this.sentToOrganizationID = sentToOrganizationID;
+    public void setAgentCatalogedBy(Agent agentCatalogedBy) {
+        this.agentCatalogedBy = agentCatalogedBy;
     }
 
-    public Division getDivisionID() {
-        return divisionID;
+    public Agent getAgentSentTo() {
+        return agentSentTo;
     }
 
-    public void setDivisionID(Division divisionID) {
-        this.divisionID = divisionID;
+    public void setAgentSentTo(Agent agentSentTo) {
+        this.agentSentTo = agentSentTo;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Division getDivision() {
+        return division;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setDivision(Division division) {
+        this.division = division;
     }
 
-    public Agent getCatalogedByID() {
-        return catalogedByID;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setCatalogedByID(Agent catalogedByID) {
-        this.catalogedByID = catalogedByID;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
+
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (exchangeOutID != null ? exchangeOutID.hashCode() : 0);
+        hash += (exchangeOutId != null ? exchangeOutId.hashCode() : 0);
         return hash;
     }
 
@@ -316,7 +320,7 @@ public class Exchangeout extends BaseEntity {
             return false;
         }
         Exchangeout other = (Exchangeout) object;
-        if ((this.exchangeOutID == null && other.exchangeOutID != null) || (this.exchangeOutID != null && !this.exchangeOutID.equals(other.exchangeOutID))) {
+        if ((this.exchangeOutId == null && other.exchangeOutId != null) || (this.exchangeOutId != null && !this.exchangeOutId.equals(other.exchangeOutId))) {
             return false;
         }
         return true;
@@ -324,7 +328,7 @@ public class Exchangeout extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Exchangeout[ exchangeOutID=" + exchangeOutID + " ]";
+        return "Exchangeout[ exchangeOutID=" + exchangeOutId + " ]";
     }
     
 }

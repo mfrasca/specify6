@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Gift.findAll", query = "SELECT g FROM Gift g"),
-    @NamedQuery(name = "Gift.findByGiftID", query = "SELECT g FROM Gift g WHERE g.giftID = :giftID"),
+    @NamedQuery(name = "Gift.findByGiftID", query = "SELECT g FROM Gift g WHERE g.giftId = :giftID"),
     @NamedQuery(name = "Gift.findByTimestampCreated", query = "SELECT g FROM Gift g WHERE g.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Gift.findByTimestampModified", query = "SELECT g FROM Gift g WHERE g.timestampModified = :timestampModified"),
     @NamedQuery(name = "Gift.findByVersion", query = "SELECT g FROM Gift g WHERE g.version = :version"),
@@ -57,7 +57,7 @@ public class Gift extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "GiftID")
-    private Integer giftID;
+    private Integer giftId;
      
     @Column(name = "DateReceived")
     @Temporal(TemporalType.DATE)
@@ -125,55 +125,65 @@ public class Gift extends BaseEntity {
     @Column(name = "YesNo2")
     private Boolean yesNo2;
     
-    @OneToMany(mappedBy = "giftID")
-    private Collection<Shipment> shipmentCollection;
+    @OneToMany(mappedBy = "gift")
+    private Collection<Shipment> shipments;
     
     @JoinColumn(name = "AddressOfRecordID", referencedColumnName = "AddressOfRecordID")
     @ManyToOne
-    private Addressofrecord addressOfRecordID;
+    private Addressofrecord addressOfRecord;
     
     @JoinColumn(name = "DivisionID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne
-    private Division divisionID;
+    private Division division;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "DisciplineID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne(optional = false)
-    private Discipline disciplineID;
+    private Discipline discipline;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "giftID")
-    private Collection<Giftagent> giftagentCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "gift")
+    private Collection<Giftagent> giftAgents;
     
-    @OneToMany(mappedBy = "giftID")
-    private Collection<Giftpreparation> giftpreparationCollection;
+    @OneToMany(mappedBy = "gift")
+    private Collection<Giftpreparation> giftPreparations;
 
     public Gift() {
     }
 
-    public Gift(Integer giftID) {
-        this.giftID = giftID;
+    public Gift(Integer giftId) {
+        this.giftId = giftId;
     }
 
-    public Gift(Integer giftID, Date timestampCreated, String giftNumber) {
+    public Gift(Integer giftId, Date timestampCreated, String giftNumber) {
         super(timestampCreated);
-        this.giftID = giftID; 
+        this.giftId = giftId; 
         this.giftNumber = giftNumber;
     }
 
-    public Integer getGiftID() {
-        return giftID;
+    public Addressofrecord getAddressOfRecord() {
+        return addressOfRecord;
     }
 
-    public void setGiftID(Integer giftID) {
-        this.giftID = giftID;
+    public void setAddressOfRecord(Addressofrecord addressOfRecord) {
+        this.addressOfRecord = addressOfRecord;
     }
+
+    public Integer getGiftId() {
+        return giftId;
+    }
+
+    public void setGiftId(Integer giftId) {
+        this.giftId = giftId;
+    }
+
+ 
  
     public Date getDateReceived() {
         return dateReceived;
@@ -302,78 +312,73 @@ public class Gift extends BaseEntity {
     public void setYesNo2(Boolean yesNo2) {
         this.yesNo2 = yesNo2;
     }
-
-    @XmlTransient
-    public Collection<Shipment> getShipmentCollection() {
-        return shipmentCollection;
+ 
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setShipmentCollection(Collection<Shipment> shipmentCollection) {
-        this.shipmentCollection = shipmentCollection;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Addressofrecord getAddressOfRecordID() {
-        return addressOfRecordID;
+    public Discipline getDiscipline() {
+        return discipline;
     }
 
-    public void setAddressOfRecordID(Addressofrecord addressOfRecordID) {
-        this.addressOfRecordID = addressOfRecordID;
+    public void setDiscipline(Discipline discipline) {
+        this.discipline = discipline;
     }
 
-    public Division getDivisionID() {
-        return divisionID;
+    public Division getDivision() {
+        return division;
     }
 
-    public void setDivisionID(Division divisionID) {
-        this.divisionID = divisionID;
+    public void setDivision(Division division) {
+        this.division = division;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
-    public Discipline getDisciplineID() {
-        return disciplineID;
-    }
-
-    public void setDisciplineID(Discipline disciplineID) {
-        this.disciplineID = disciplineID;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
 
     @XmlTransient
-    public Collection<Giftagent> getGiftagentCollection() {
-        return giftagentCollection;
+    public Collection<Giftagent> getGiftAgents() {
+        return giftAgents;
     }
 
-    public void setGiftagentCollection(Collection<Giftagent> giftagentCollection) {
-        this.giftagentCollection = giftagentCollection;
+    public void setGiftAgents(Collection<Giftagent> giftAgents) {
+        this.giftAgents = giftAgents;
     }
 
     @XmlTransient
-    public Collection<Giftpreparation> getGiftpreparationCollection() {
-        return giftpreparationCollection;
+    public Collection<Giftpreparation> getGiftPreparations() {
+        return giftPreparations;
     }
 
-    public void setGiftpreparationCollection(Collection<Giftpreparation> giftpreparationCollection) {
-        this.giftpreparationCollection = giftpreparationCollection;
+    public void setGiftPreparations(Collection<Giftpreparation> giftPreparations) {
+        this.giftPreparations = giftPreparations;
     }
+
+    @XmlTransient
+    public Collection<Shipment> getShipments() {
+        return shipments;
+    }
+
+    public void setShipments(Collection<Shipment> shipments) {
+        this.shipments = shipments;
+    }
+ 
+    
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (giftID != null ? giftID.hashCode() : 0);
+        hash += (giftId != null ? giftId.hashCode() : 0);
         return hash;
     }
 
@@ -384,7 +389,7 @@ public class Gift extends BaseEntity {
             return false;
         }
         Gift other = (Gift) object;
-        if ((this.giftID == null && other.giftID != null) || (this.giftID != null && !this.giftID.equals(other.giftID))) {
+        if ((this.giftId == null && other.giftId != null) || (this.giftId != null && !this.giftId.equals(other.giftId))) {
             return false;
         }
         return true;
@@ -392,7 +397,7 @@ public class Gift extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Gift[ giftID=" + giftID + " ]";
+        return "Gift[ giftID=" + giftId + " ]";
     }
     
 }

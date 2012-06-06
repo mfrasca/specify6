@@ -31,7 +31,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Locality.findAll", query = "SELECT l FROM Locality l"),
-    @NamedQuery(name = "Locality.findByLocalityID", query = "SELECT l FROM Locality l WHERE l.localityID = :localityID"),
+    @NamedQuery(name = "Locality.findByLocalityID", query = "SELECT l FROM Locality l WHERE l.localityId = :localityID"),
     @NamedQuery(name = "Locality.findByTimestampCreated", query = "SELECT l FROM Locality l WHERE l.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Locality.findByTimestampModified", query = "SELECT l FROM Locality l WHERE l.timestampModified = :timestampModified"),
     @NamedQuery(name = "Locality.findByVersion", query = "SELECT l FROM Locality l WHERE l.version = :version"),
@@ -39,16 +39,16 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Locality.findByElevationAccuracy", query = "SELECT l FROM Locality l WHERE l.elevationAccuracy = :elevationAccuracy"),
     @NamedQuery(name = "Locality.findByElevationMethod", query = "SELECT l FROM Locality l WHERE l.elevationMethod = :elevationMethod"),
     @NamedQuery(name = "Locality.findByGuid", query = "SELECT l FROM Locality l WHERE l.guid = :guid"),
-    @NamedQuery(name = "Locality.findByLat1Text", query = "SELECT l FROM Locality l WHERE l.lat1Text = :lat1Text"),
-    @NamedQuery(name = "Locality.findByLat2Text", query = "SELECT l FROM Locality l WHERE l.lat2Text = :lat2Text"),
+    @NamedQuery(name = "Locality.findByLat1Text", query = "SELECT l FROM Locality l WHERE l.lat1text = :lat1Text"),
+    @NamedQuery(name = "Locality.findByLat2Text", query = "SELECT l FROM Locality l WHERE l.lat2text = :lat2Text"),
     @NamedQuery(name = "Locality.findByLatLongAccuracy", query = "SELECT l FROM Locality l WHERE l.latLongAccuracy = :latLongAccuracy"),
     @NamedQuery(name = "Locality.findByLatLongMethod", query = "SELECT l FROM Locality l WHERE l.latLongMethod = :latLongMethod"),
     @NamedQuery(name = "Locality.findByLatLongType", query = "SELECT l FROM Locality l WHERE l.latLongType = :latLongType"),
     @NamedQuery(name = "Locality.findByLatitude1", query = "SELECT l FROM Locality l WHERE l.latitude1 = :latitude1"),
     @NamedQuery(name = "Locality.findByLatitude2", query = "SELECT l FROM Locality l WHERE l.latitude2 = :latitude2"),
     @NamedQuery(name = "Locality.findByLocalityName", query = "SELECT l FROM Locality l WHERE l.localityName = :localityName"),
-    @NamedQuery(name = "Locality.findByLong1Text", query = "SELECT l FROM Locality l WHERE l.long1Text = :long1Text"),
-    @NamedQuery(name = "Locality.findByLong2Text", query = "SELECT l FROM Locality l WHERE l.long2Text = :long2Text"),
+    @NamedQuery(name = "Locality.findByLong1Text", query = "SELECT l FROM Locality l WHERE l.long1text = :long1Text"),
+    @NamedQuery(name = "Locality.findByLong2Text", query = "SELECT l FROM Locality l WHERE l.long2text = :long2Text"),
     @NamedQuery(name = "Locality.findByLongitude1", query = "SELECT l FROM Locality l WHERE l.longitude1 = :longitude1"),
     @NamedQuery(name = "Locality.findByLongitude2", query = "SELECT l FROM Locality l WHERE l.longitude2 = :longitude2"),
     @NamedQuery(name = "Locality.findByMaxElevation", query = "SELECT l FROM Locality l WHERE l.maxElevation = :maxElevation"),
@@ -72,7 +72,7 @@ public class Locality extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "LocalityID")
-    private Integer localityID;
+    private Integer localityId;
  
     @Size(max = 50)
     @Column(name = "Datum")
@@ -97,11 +97,11 @@ public class Locality extends BaseEntity {
     
     @Size(max = 50)
     @Column(name = "Lat1Text")
-    private String lat1Text;
+    private String lat1text;
     
     @Size(max = 50)
     @Column(name = "Lat2Text")
-    private String lat2Text;
+    private String lat2text;
     
     @Column(name = "LatLongAccuracy")
     private Double latLongAccuracy;
@@ -128,11 +128,11 @@ public class Locality extends BaseEntity {
     
     @Size(max = 50)
     @Column(name = "Long1Text")
-    private String long1Text;
+    private String long1text;
     
     @Size(max = 50)
     @Column(name = "Long2Text")
-    private String long2Text;
+    private String long2text;
     
     @Column(name = "Longitude1")
     private BigDecimal longitude1;
@@ -190,65 +190,98 @@ public class Locality extends BaseEntity {
     @Column(name = "Visibility")
     private Short visibility;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "localityID")
-    private Collection<Localitynamealias> localitynamealiasCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "locality")
+    private Collection<Localitynamealias> localityNameAliass;
     
-    @OneToMany(mappedBy = "localityID")
-    private Collection<Localitydetail> localitydetailCollection;
+    @OneToMany(mappedBy = "locality")
+    private Collection<Localitydetail> localityDetails;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "localityID") 
-    private Collection<Localityattachment> localityattachmentCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "locality") 
+    private Collection<Localityattachment> localityAttachments;
     
-    @OneToMany(mappedBy = "localityID")
-    private Collection<Collectingevent> collectingeventCollection;
+    @OneToMany(mappedBy = "locality")
+    private Collection<Collectingevent> collectingevents;
     
-    @OneToMany(mappedBy = "localityID")
-    private Collection<Geocoorddetail> geocoorddetailCollection;
+    @OneToMany(mappedBy = "locality")
+    private Collection<Geocoorddetail> geoCoordDetails;
     
     @JoinColumn(name = "GeographyID", referencedColumnName = "GeographyID")
     @ManyToOne
-    private Geography geographyID;
+    private Geography geography;
     
     @JoinColumn(name = "VisibilitySetByID", referencedColumnName = "SpecifyUserID")
     @ManyToOne
-    private Specifyuser visibilitySetByID;
+    private Specifyuser visibilitySetBy;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "DisciplineID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne(optional = false)
-    private Discipline disciplineID;
+    private Discipline discipline;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "localityID")
-    private Collection<Localitycitation> localitycitationCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "locality")
+    private Collection<Localitycitation> localityCitations;
 
     public Locality() {
     }
 
-    public Locality(Integer localityID) {
-        this.localityID = localityID;
+    public Locality(Integer localityId) {
+        this.localityId = localityId;
     }
 
-    public Locality(Integer localityID, Date timestampCreated, String localityName, short srcLatLongUnit) {
+    public Locality(Integer localityId, Date timestampCreated, String localityName, short srcLatLongUnit) {
         super(timestampCreated);
-        this.localityID = localityID; 
+        this.localityId = localityId; 
         this.localityName = localityName;
         this.srcLatLongUnit = srcLatLongUnit;
     }
 
-    public Integer getLocalityID() {
-        return localityID;
+    public String getLat1text() {
+        return lat1text;
     }
 
-    public void setLocalityID(Integer localityID) {
-        this.localityID = localityID;
+    public void setLat1text(String lat1text) {
+        this.lat1text = lat1text;
     }
+
+    public String getLat2text() {
+        return lat2text;
+    }
+
+    public void setLat2text(String lat2text) {
+        this.lat2text = lat2text;
+    }
+
+    public Integer getLocalityId() {
+        return localityId;
+    }
+
+    public void setLocalityId(Integer localityId) {
+        this.localityId = localityId;
+    }
+
+    public String getLong1text() {
+        return long1text;
+    }
+
+    public void setLong1text(String long1text) {
+        this.long1text = long1text;
+    }
+
+    public String getLong2text() {
+        return long2text;
+    }
+
+    public void setLong2text(String long2text) {
+        this.long2text = long2text;
+    }
+
  
     public String getDatum() {
         return datum;
@@ -290,21 +323,7 @@ public class Locality extends BaseEntity {
         this.guid = guid;
     }
 
-    public String getLat1Text() {
-        return lat1Text;
-    }
-
-    public void setLat1Text(String lat1Text) {
-        this.lat1Text = lat1Text;
-    }
-
-    public String getLat2Text() {
-        return lat2Text;
-    }
-
-    public void setLat2Text(String lat2Text) {
-        this.lat2Text = lat2Text;
-    }
+  
 
     public Double getLatLongAccuracy() {
         return latLongAccuracy;
@@ -353,23 +372,7 @@ public class Locality extends BaseEntity {
     public void setLocalityName(String localityName) {
         this.localityName = localityName;
     }
-
-    public String getLong1Text() {
-        return long1Text;
-    }
-
-    public void setLong1Text(String long1Text) {
-        this.long1Text = long1Text;
-    }
-
-    public String getLong2Text() {
-        return long2Text;
-    }
-
-    public void setLong2Text(String long2Text) {
-        this.long2Text = long2Text;
-    }
-
+ 
     public BigDecimal getLongitude1() {
         return longitude1;
     }
@@ -490,104 +493,109 @@ public class Locality extends BaseEntity {
         this.visibility = visibility;
     }
 
-    @XmlTransient
-    public Collection<Localitynamealias> getLocalitynamealiasCollection() {
-        return localitynamealiasCollection;
+   
+
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setLocalitynamealiasCollection(Collection<Localitynamealias> localitynamealiasCollection) {
-        this.localitynamealiasCollection = localitynamealiasCollection;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    @XmlTransient
-    public Collection<Localitydetail> getLocalitydetailCollection() {
-        return localitydetailCollection;
+    public Discipline getDiscipline() {
+        return discipline;
     }
 
-    public void setLocalitydetailCollection(Collection<Localitydetail> localitydetailCollection) {
-        this.localitydetailCollection = localitydetailCollection;
+    public void setDiscipline(Discipline discipline) {
+        this.discipline = discipline;
     }
 
-    @XmlTransient
-    public Collection<Localityattachment> getLocalityattachmentCollection() {
-        return localityattachmentCollection;
+    public Geography getGeography() {
+        return geography;
     }
 
-    public void setLocalityattachmentCollection(Collection<Localityattachment> localityattachmentCollection) {
-        this.localityattachmentCollection = localityattachmentCollection;
+    public void setGeography(Geography geography) {
+        this.geography = geography;
     }
 
-    @XmlTransient
-    public Collection<Collectingevent> getCollectingeventCollection() {
-        return collectingeventCollection;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setCollectingeventCollection(Collection<Collectingevent> collectingeventCollection) {
-        this.collectingeventCollection = collectingeventCollection;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
 
-    @XmlTransient
-    public Collection<Geocoorddetail> getGeocoorddetailCollection() {
-        return geocoorddetailCollection;
+    public Specifyuser getVisibilitySetBy() {
+        return visibilitySetBy;
     }
 
-    public void setGeocoorddetailCollection(Collection<Geocoorddetail> geocoorddetailCollection) {
-        this.geocoorddetailCollection = geocoorddetailCollection;
-    }
-
-    public Geography getGeographyID() {
-        return geographyID;
-    }
-
-    public void setGeographyID(Geography geographyID) {
-        this.geographyID = geographyID;
-    }
-
-    public Specifyuser getVisibilitySetByID() {
-        return visibilitySetByID;
-    }
-
-    public void setVisibilitySetByID(Specifyuser visibilitySetByID) {
-        this.visibilitySetByID = visibilitySetByID;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
-    public Discipline getDisciplineID() {
-        return disciplineID;
-    }
-
-    public void setDisciplineID(Discipline disciplineID) {
-        this.disciplineID = disciplineID;
+    public void setVisibilitySetBy(Specifyuser visibilitySetBy) {
+        this.visibilitySetBy = visibilitySetBy;
     }
 
     @XmlTransient
-    public Collection<Localitycitation> getLocalitycitationCollection() {
-        return localitycitationCollection;
+    public Collection<Collectingevent> getCollectingevents() {
+        return collectingevents;
     }
 
-    public void setLocalitycitationCollection(Collection<Localitycitation> localitycitationCollection) {
-        this.localitycitationCollection = localitycitationCollection;
+    public void setCollectingevents(Collection<Collectingevent> collectingevents) {
+        this.collectingevents = collectingevents;
     }
+
+    @XmlTransient
+    public Collection<Geocoorddetail> getGeoCoordDetails() {
+        return geoCoordDetails;
+    }
+
+    public void setGeoCoordDetails(Collection<Geocoorddetail> geoCoordDetails) {
+        this.geoCoordDetails = geoCoordDetails;
+    }
+
+    @XmlTransient
+    public Collection<Localityattachment> getLocalityAttachments() {
+        return localityAttachments;
+    }
+
+    public void setLocalityAttachments(Collection<Localityattachment> localityAttachments) {
+        this.localityAttachments = localityAttachments;
+    }
+
+    @XmlTransient
+    public Collection<Localitycitation> getLocalityCitations() {
+        return localityCitations;
+    }
+
+    public void setLocalityCitations(Collection<Localitycitation> localityCitations) {
+        this.localityCitations = localityCitations;
+    }
+
+    @XmlTransient
+    public Collection<Localitydetail> getLocalityDetails() {
+        return localityDetails;
+    }
+
+    public void setLocalityDetails(Collection<Localitydetail> localityDetails) {
+        this.localityDetails = localityDetails;
+    }
+
+    @XmlTransient
+    public Collection<Localitynamealias> getLocalityNameAliass() {
+        return localityNameAliass;
+    }
+
+    public void setLocalityNameAliass(Collection<Localitynamealias> localityNameAliass) {
+        this.localityNameAliass = localityNameAliass;
+    }
+
+    
+   
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (localityID != null ? localityID.hashCode() : 0);
+        hash += (localityId != null ? localityId.hashCode() : 0);
         return hash;
     }
 
@@ -598,7 +606,7 @@ public class Locality extends BaseEntity {
             return false;
         }
         Locality other = (Locality) object;
-        if ((this.localityID == null && other.localityID != null) || (this.localityID != null && !this.localityID.equals(other.localityID))) {
+        if ((this.localityId == null && other.localityId != null) || (this.localityId != null && !this.localityId.equals(other.localityId))) {
             return false;
         }
         return true;
@@ -606,7 +614,7 @@ public class Locality extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Locality[ localityID=" + localityID + " ]";
+        return "Locality[ localityID=" + localityId + " ]";
     }
     
 }

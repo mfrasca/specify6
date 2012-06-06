@@ -27,8 +27,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Collector.findAll", query = "SELECT c FROM Collector c"),
-    @NamedQuery(name = "Collector.findByCollectorID", query = "SELECT c FROM Collector c WHERE c.collectorID = :collectorID"),
-    @NamedQuery(name = "Collector.findByCollectingEventID", query = "SELECT c FROM Collector c WHERE c.collectingEventID in :collectingEventID"),
+    @NamedQuery(name = "Collector.findByCollectorID", query = "SELECT c FROM Collector c WHERE c.collectorId = :collectorID"),
+    @NamedQuery(name = "Collector.findByCollectingEventID", query = "SELECT c FROM Collector c WHERE c.collectingEvent in :collectingEventID"),
     @NamedQuery(name = "Collector.findByTimestampCreated", query = "SELECT c FROM Collector c WHERE c.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Collector.findByTimestampModified", query = "SELECT c FROM Collector c WHERE c.timestampModified = :timestampModified"),
     @NamedQuery(name = "Collector.findByVersion", query = "SELECT c FROM Collector c WHERE c.version = :version"),
@@ -43,7 +43,7 @@ public class Collector extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "CollectorID")
-    private Integer collectorID;
+    private Integer collectorId;
      
     @Basic(optional = false)
     @NotNull
@@ -62,45 +62,47 @@ public class Collector extends BaseEntity {
     
     @JoinColumn(name = "CollectingEventID", referencedColumnName = "CollectingEventID")
     @ManyToOne(optional = false)
-    private Collectingevent collectingEventID;
+    private Collectingevent collectingEvent;
     
     @JoinColumn(name = "DivisionID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne
-    private Division divisionID;
+    private Division division;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "AgentID", referencedColumnName = "AgentID")
     @ManyToOne(optional = false)
-    private Agent agentID;
+    private Agent agent;
 
     public Collector() {
     }
 
-    public Collector(Integer collectorID) {
-        this.collectorID = collectorID;
+    public Collector(Integer collectorId) {
+        this.collectorId = collectorId;
     }
 
-    public Collector(Integer collectorID, Date timestampCreated, boolean isPrimary, int orderNumber) {
+    public Collector(Integer collectorId, Date timestampCreated, boolean isPrimary, int orderNumber) {
         super(timestampCreated);
-        this.collectorID = collectorID; 
+        this.collectorId = collectorId; 
         this.isPrimary = isPrimary;
         this.orderNumber = orderNumber;
     }
 
-    public Integer getCollectorID() {
-        return collectorID;
+    public Integer getCollectorId() {
+        return collectorId;
     }
 
-    public void setCollectorID(Integer collectorID) {
-        this.collectorID = collectorID;
+    public void setCollectorId(Integer collectorId) {
+        this.collectorId = collectorId;
     }
+
+ 
  
     public boolean getIsPrimary() {
         return isPrimary;
@@ -126,51 +128,55 @@ public class Collector extends BaseEntity {
         this.remarks = remarks;
     }
 
+    public Agent getAgent() {
+        return agent;
+    }
+
+    public void setAgent(Agent agent) {
+        this.agent = agent;
+    }
+
     @XmlTransient
-    public Collectingevent getCollectingEventID() {
-        return collectingEventID;
+    public Collectingevent getCollectingEvent() {
+        return collectingEvent;
     }
 
-    public void setCollectingEventID(Collectingevent collectingEventID) {
-        this.collectingEventID = collectingEventID;
+    public void setCollectingEvent(Collectingevent collectingEvent) {
+        this.collectingEvent = collectingEvent;
     }
 
-    public Division getDivisionID() {
-        return divisionID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setDivisionID(Division divisionID) {
-        this.divisionID = divisionID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Division getDivision() {
+        return division;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setDivision(Division division) {
+        this.division = division;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
 
-    public Agent getAgentID() {
-        return agentID;
-    }
+    
 
-    public void setAgentID(Agent agentID) {
-        this.agentID = agentID;
-    }
+    
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (collectorID != null ? collectorID.hashCode() : 0);
+        hash += (collectorId != null ? collectorId.hashCode() : 0);
         return hash;
     }
 
@@ -181,7 +187,7 @@ public class Collector extends BaseEntity {
             return false;
         }
         Collector other = (Collector) object;
-        if ((this.collectorID == null && other.collectorID != null) || (this.collectorID != null && !this.collectorID.equals(other.collectorID))) {
+        if ((this.collectorId == null && other.collectorId != null) || (this.collectorId != null && !this.collectorId.equals(other.collectorId))) {
             return false;
         }
         return true;
@@ -189,7 +195,7 @@ public class Collector extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Collector[ collectorID=" + collectorID + " ]";
+        return "Collector[ collectorID=" + collectorId + " ]";
     }
     
 }

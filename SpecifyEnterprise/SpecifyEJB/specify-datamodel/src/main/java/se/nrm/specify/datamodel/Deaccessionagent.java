@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Deaccessionagent.findAll", query = "SELECT d FROM Deaccessionagent d"),
-    @NamedQuery(name = "Deaccessionagent.findByDeaccessionAgentID", query = "SELECT d FROM Deaccessionagent d WHERE d.deaccessionAgentID = :deaccessionAgentID"),
+    @NamedQuery(name = "Deaccessionagent.findByDeaccessionAgentID", query = "SELECT d FROM Deaccessionagent d WHERE d.deaccessionAgentId = :deaccessionAgentID"),
     @NamedQuery(name = "Deaccessionagent.findByTimestampCreated", query = "SELECT d FROM Deaccessionagent d WHERE d.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Deaccessionagent.findByTimestampModified", query = "SELECT d FROM Deaccessionagent d WHERE d.timestampModified = :timestampModified"),
     @NamedQuery(name = "Deaccessionagent.findByVersion", query = "SELECT d FROM Deaccessionagent d WHERE d.version = :version"),
@@ -40,7 +40,7 @@ public class Deaccessionagent extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "DeaccessionAgentID")
-    private Integer deaccessionAgentID;
+    private Integer deaccessionAgentId;
      
     @Lob
     @Size(max = 65535)
@@ -55,41 +55,77 @@ public class Deaccessionagent extends BaseEntity {
     
     @JoinColumn(name = "DeaccessionID", referencedColumnName = "DeaccessionID")
     @ManyToOne(optional = false)
-    private Deaccession deaccessionID;
+    private Deaccession deaccession;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "AgentID", referencedColumnName = "AgentID")
     @ManyToOne(optional = false)
-    private Agent agentID;
+    private Agent agent;
     
     public Deaccessionagent() {
     }
 
-    public Deaccessionagent(Integer deaccessionAgentID) {
-        this.deaccessionAgentID = deaccessionAgentID;
+    public Deaccessionagent(Integer deaccessionAgentId) {
+        this.deaccessionAgentId = deaccessionAgentId;
     }
 
-    public Deaccessionagent(Integer deaccessionAgentID, Date timestampCreated, String role) {
-        this.deaccessionAgentID = deaccessionAgentID;
+    public Deaccessionagent(Integer deaccessionAgentId, Date timestampCreated, String role) {
+        this.deaccessionAgentId = deaccessionAgentId;
         this.timestampCreated = timestampCreated;  
         this.role = role;
     }
 
-    public Integer getDeaccessionAgentID() {
-        return deaccessionAgentID;
+    public Agent getAgent() {
+        return agent;
     }
 
-    public void setDeaccessionAgentID(Integer deaccessionAgentID) {
-        this.deaccessionAgentID = deaccessionAgentID;
+    public void setAgent(Agent agent) {
+        this.agent = agent;
+    }
+
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
+    }
+
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Deaccession getDeaccession() {
+        return deaccession;
+    }
+
+    public void setDeaccession(Deaccession deaccession) {
+        this.deaccession = deaccession;
+    }
+
+    public Integer getDeaccessionAgentId() {
+        return deaccessionAgentId;
+    }
+
+    public void setDeaccessionAgentId(Integer deaccessionAgentId) {
+        this.deaccessionAgentId = deaccessionAgentId;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
  
+    
+    
+    
+    
     public String getRemarks() {
         return remarks;
     }
@@ -105,43 +141,12 @@ public class Deaccessionagent extends BaseEntity {
     public void setRole(String role) {
         this.role = role;
     }
-
-    public Deaccession getDeaccessionID() {
-        return deaccessionID;
-    }
-
-    public void setDeaccessionID(Deaccession deaccessionID) {
-        this.deaccessionID = deaccessionID;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
-    public Agent getAgentID() {
-        return agentID;
-    }
-
-    public void setAgentID(Agent agentID) {
-        this.agentID = agentID;
-    }
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (deaccessionAgentID != null ? deaccessionAgentID.hashCode() : 0);
+        hash += (deaccessionAgentId != null ? deaccessionAgentId.hashCode() : 0);
         return hash;
     }
 
@@ -152,7 +157,7 @@ public class Deaccessionagent extends BaseEntity {
             return false;
         }
         Deaccessionagent other = (Deaccessionagent) object;
-        if ((this.deaccessionAgentID == null && other.deaccessionAgentID != null) || (this.deaccessionAgentID != null && !this.deaccessionAgentID.equals(other.deaccessionAgentID))) {
+        if ((this.deaccessionAgentId == null && other.deaccessionAgentId != null) || (this.deaccessionAgentId != null && !this.deaccessionAgentId.equals(other.deaccessionAgentId))) {
             return false;
         }
         return true;
@@ -160,7 +165,7 @@ public class Deaccessionagent extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Deaccessionagent[ deaccessionAgentID=" + deaccessionAgentID + " ]";
+        return "Deaccessionagent[ deaccessionAgentId=" + deaccessionAgentId + " ]";
     }
     
 }

@@ -24,14 +24,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Spvisualquery.findAll", query = "SELECT s FROM Spvisualquery s"),
-    @NamedQuery(name = "Spvisualquery.findBySpVisualQueryID", query = "SELECT s FROM Spvisualquery s WHERE s.spVisualQueryID = :spVisualQueryID"),
+    @NamedQuery(name = "Spvisualquery.findBySpVisualQueryID", query = "SELECT s FROM Spvisualquery s WHERE s.spVisualQueryId = :spVisualQueryID"),
     @NamedQuery(name = "Spvisualquery.findByTimestampCreated", query = "SELECT s FROM Spvisualquery s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Spvisualquery.findByTimestampModified", query = "SELECT s FROM Spvisualquery s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Spvisualquery.findByVersion", query = "SELECT s FROM Spvisualquery s WHERE s.version = :version"),
     @NamedQuery(name = "Spvisualquery.findByName", query = "SELECT s FROM Spvisualquery s WHERE s.name = :name"),
-    @NamedQuery(name = "Spvisualquery.findByCreatedByAgentID", query = "SELECT s FROM Spvisualquery s WHERE s.createdByAgentID = :createdByAgentID"),
-    @NamedQuery(name = "Spvisualquery.findBySpecifyUserID", query = "SELECT s FROM Spvisualquery s WHERE s.specifyUserID = :specifyUserID"),
-    @NamedQuery(name = "Spvisualquery.findByModifiedByAgentID", query = "SELECT s FROM Spvisualquery s WHERE s.modifiedByAgentID = :modifiedByAgentID")})
+    @NamedQuery(name = "Spvisualquery.findByCreatedByAgentID", query = "SELECT s FROM Spvisualquery s WHERE s.createdByAgent = :createdByAgentID"),
+    @NamedQuery(name = "Spvisualquery.findBySpecifyUserID", query = "SELECT s FROM Spvisualquery s WHERE s.specifyUser = :specifyUserID"),
+    @NamedQuery(name = "Spvisualquery.findByModifiedByAgentID", query = "SELECT s FROM Spvisualquery s WHERE s.modifiedByAgent = :modifiedByAgentID")})
 public class Spvisualquery extends BaseEntity {  
     
     private static final long serialVersionUID = 1L;
@@ -41,7 +41,7 @@ public class Spvisualquery extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "SpVisualQueryID")
-    private Integer spVisualQueryID;
+    private Integer spVisualQueryId;
      
     @Lob
     @Size(max = 65535)
@@ -55,37 +55,38 @@ public class Spvisualquery extends BaseEntity {
     private String name;
     
     @Column(name = "CreatedByAgentID")
-    private Integer createdByAgentID;
+    private Integer createdByAgent;
     
     @Basic(optional = false)
     @NotNull
     @Column(name = "SpecifyUserID")
-    private int specifyUserID;
+    private int specifyUser;
     
     @Column(name = "ModifiedByAgentID")
-    private Integer modifiedByAgentID;
+    private Integer modifiedByAgent;
 
     public Spvisualquery() {
     }
 
-    public Spvisualquery(Integer spVisualQueryID) {
-        this.spVisualQueryID = spVisualQueryID;
+    public Spvisualquery(Integer spVisualQueryId) {
+        this.spVisualQueryId = spVisualQueryId;
     }
 
-    public Spvisualquery(Integer spVisualQueryID, Date timestampCreated, String name, int specifyUserID) {
+    public Spvisualquery(Integer spVisualQueryId, Date timestampCreated, String name, int specifyUser) {
         super(timestampCreated);
-        this.spVisualQueryID = spVisualQueryID; 
+        this.spVisualQueryId = spVisualQueryId; 
         this.name = name;
-        this.specifyUserID = specifyUserID;
+        this.specifyUser = specifyUser;
     }
 
-    public Integer getSpVisualQueryID() {
-        return spVisualQueryID;
+    public Integer getSpVisualQueryId() {
+        return spVisualQueryId;
     }
 
-    public void setSpVisualQueryID(Integer spVisualQueryID) {
-        this.spVisualQueryID = spVisualQueryID;
-    } 
+    public void setSpVisualQueryId(Integer spVisualQueryId) {
+        this.spVisualQueryId = spVisualQueryId;
+    }
+ 
     
     public String getDescription() {
         return description;
@@ -103,34 +104,36 @@ public class Spvisualquery extends BaseEntity {
         this.name = name;
     }
 
-    public Integer getCreatedByAgentID() {
-        return createdByAgentID;
+    public Integer getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setCreatedByAgentID(Integer createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setCreatedByAgent(Integer createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public int getSpecifyUserID() {
-        return specifyUserID;
+    public Integer getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setSpecifyUserID(int specifyUserID) {
-        this.specifyUserID = specifyUserID;
+    public void setModifiedByAgent(Integer modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
 
-    public Integer getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public int getSpecifyUser() {
+        return specifyUser;
     }
 
-    public void setModifiedByAgentID(Integer modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setSpecifyUser(int specifyUser) {
+        this.specifyUser = specifyUser;
     }
+
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (spVisualQueryID != null ? spVisualQueryID.hashCode() : 0);
+        hash += (spVisualQueryId != null ? spVisualQueryId.hashCode() : 0);
         return hash;
     }
 
@@ -141,7 +144,7 @@ public class Spvisualquery extends BaseEntity {
             return false;
         }
         Spvisualquery other = (Spvisualquery) object;
-        if ((this.spVisualQueryID == null && other.spVisualQueryID != null) || (this.spVisualQueryID != null && !this.spVisualQueryID.equals(other.spVisualQueryID))) {
+        if ((this.spVisualQueryId == null && other.spVisualQueryId != null) || (this.spVisualQueryId != null && !this.spVisualQueryId.equals(other.spVisualQueryId))) {
             return false;
         }
         return true;
@@ -149,7 +152,7 @@ public class Spvisualquery extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Spvisualquery[ spVisualQueryID=" + spVisualQueryID + " ]";
+        return "Spvisualquery[ spVisualQueryID=" + spVisualQueryId + " ]";
     }
     
 }

@@ -30,11 +30,11 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Collectionobjectattribute.findAll", query = "SELECT c FROM Collectionobjectattribute c"),
-    @NamedQuery(name = "Collectionobjectattribute.findByCollectionObjectAttributeID", query = "SELECT c FROM Collectionobjectattribute c WHERE c.collectionObjectAttributeID = :collectionObjectAttributeID"),
+    @NamedQuery(name = "Collectionobjectattribute.findByCollectionObjectAttributeID", query = "SELECT c FROM Collectionobjectattribute c WHERE c.collectionObjectAttributeId = :collectionObjectAttributeID"),
     @NamedQuery(name = "Collectionobjectattribute.findByTimestampCreated", query = "SELECT c FROM Collectionobjectattribute c WHERE c.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Collectionobjectattribute.findByTimestampModified", query = "SELECT c FROM Collectionobjectattribute c WHERE c.timestampModified = :timestampModified"),
     @NamedQuery(name = "Collectionobjectattribute.findByVersion", query = "SELECT c FROM Collectionobjectattribute c WHERE c.version = :version"),
-    @NamedQuery(name = "Collectionobjectattribute.findByCollectionMemberID", query = "SELECT c FROM Collectionobjectattribute c WHERE c.collectionMemberID = :collectionMemberID"),
+    @NamedQuery(name = "Collectionobjectattribute.findByCollectionMemberID", query = "SELECT c FROM Collectionobjectattribute c WHERE c.collectionMemberId = :collectionMemberID"),
     @NamedQuery(name = "Collectionobjectattribute.findByNumber1", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number1 = :number1"),
     @NamedQuery(name = "Collectionobjectattribute.findByNumber10", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number10 = :number10"),
     @NamedQuery(name = "Collectionobjectattribute.findByNumber11", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number11 = :number11"),
@@ -105,12 +105,12 @@ public class Collectionobjectattribute extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "CollectionObjectAttributeID")
-    private Integer collectionObjectAttributeID;
+    private Integer collectionObjectAttributeId;
      
     @Basic(optional = false)
     @NotNull
     @Column(name = "CollectionMemberID")
-    private int collectionMemberID;
+    private int collectionMemberId;
     
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "Number1")
@@ -328,45 +328,47 @@ public class Collectionobjectattribute extends BaseEntity {
     @Column(name = "YesNo7")
     private Boolean yesNo7;
     
-    @OneToMany(mappedBy = "collectionObjectAttributeID", cascade= CascadeType.ALL)
-    private Collection<Collectionobject> collectionobjectCollection;
+    @OneToMany(mappedBy = "collectionObjectAttribute", cascade= CascadeType.ALL)
+    private Collection<Collectionobject> collectionObjects;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
 
     public Collectionobjectattribute() {
     }
 
-    public Collectionobjectattribute(Integer collectionObjectAttributeID) {
-        this.collectionObjectAttributeID = collectionObjectAttributeID;
+    public Collectionobjectattribute(Integer collectionObjectAttributeId) {
+        this.collectionObjectAttributeId = collectionObjectAttributeId;
     }
 
-    public Collectionobjectattribute(Integer collectionObjectAttributeID, Date timestampCreated, int collectionMemberID) {
+    public Collectionobjectattribute(Integer collectionObjectAttributeId, Date timestampCreated, int collectionMemberId) {
         super(timestampCreated);
-        this.collectionObjectAttributeID = collectionObjectAttributeID; 
-        this.collectionMemberID = collectionMemberID;
+        this.collectionObjectAttributeId = collectionObjectAttributeId; 
+        this.collectionMemberId = collectionMemberId;
     }
 
-    public Integer getCollectionObjectAttributeID() {
-        return collectionObjectAttributeID;
+    public int getCollectionMemberId() {
+        return collectionMemberId;
     }
 
-    public void setCollectionObjectAttributeID(Integer collectionObjectAttributeID) {
-        this.collectionObjectAttributeID = collectionObjectAttributeID;
+    public void setCollectionMemberId(int collectionMemberId) {
+        this.collectionMemberId = collectionMemberId;
     }
+
+    public Integer getCollectionObjectAttributeId() {
+        return collectionObjectAttributeId;
+    }
+
+    public void setCollectionObjectAttributeId(Integer collectionObjectAttributeId) {
+        this.collectionObjectAttributeId = collectionObjectAttributeId;
+    }
+
  
-    public int getCollectionMemberID() {
-        return collectionMemberID;
-    }
-
-    public void setCollectionMemberID(int collectionMemberID) {
-        this.collectionMemberID = collectionMemberID;
-    }
 
     public Float getNumber1() {
         return number1;
@@ -889,34 +891,36 @@ public class Collectionobjectattribute extends BaseEntity {
     }
 
     @XmlTransient
-    public Collection<Collectionobject> getCollectionobjectCollection() {
-        return collectionobjectCollection;
+    public Collection<Collectionobject> getCollectionObjects() {
+        return collectionObjects;
     }
 
-    public void setCollectionobjectCollection(Collection<Collectionobject> collectionobjectCollection) {
-        this.collectionobjectCollection = collectionobjectCollection;
+    public void setCollectionObjects(Collection<Collectionobject> collectionObjects) {
+        this.collectionObjects = collectionObjects;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
+
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (collectionObjectAttributeID != null ? collectionObjectAttributeID.hashCode() : 0);
+        hash += (collectionObjectAttributeId != null ? collectionObjectAttributeId.hashCode() : 0);
         return hash;
     }
 
@@ -927,7 +931,7 @@ public class Collectionobjectattribute extends BaseEntity {
             return false;
         }
         Collectionobjectattribute other = (Collectionobjectattribute) object;
-        if ((this.collectionObjectAttributeID == null && other.collectionObjectAttributeID != null) || (this.collectionObjectAttributeID != null && !this.collectionObjectAttributeID.equals(other.collectionObjectAttributeID))) {
+        if ((this.collectionObjectAttributeId == null && other.collectionObjectAttributeId != null) || (this.collectionObjectAttributeId != null && !this.collectionObjectAttributeId.equals(other.collectionObjectAttributeId))) {
             return false;
         }
         return true;
@@ -935,7 +939,7 @@ public class Collectionobjectattribute extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Collectionobjectattribute[ collectionObjectAttributeID=" + collectionObjectAttributeID + " ]";
+        return "Collectionobjectattribute[ collectionObjectAttributeId=" + collectionObjectAttributeId + " ]";
     }
     
 }

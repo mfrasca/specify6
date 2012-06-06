@@ -1,19 +1,7 @@
 package se.nrm.specify.datamodel;
  
 import java.util.Date;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
-//import javax.validation.constraints.NotNull;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -26,7 +14,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Taxonattachment.findAll", query = "SELECT t FROM Taxonattachment t"),
-    @NamedQuery(name = "Taxonattachment.findByTaxonAttachmentID", query = "SELECT t FROM Taxonattachment t WHERE t.taxonAttachmentID = :taxonAttachmentID"),
+    @NamedQuery(name = "Taxonattachment.findByTaxonAttachmentID", query = "SELECT t FROM Taxonattachment t WHERE t.taxonAttachmentId = :taxonAttachmentID"),
     @NamedQuery(name = "Taxonattachment.findByTimestampCreated", query = "SELECT t FROM Taxonattachment t WHERE t.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Taxonattachment.findByTimestampModified", query = "SELECT t FROM Taxonattachment t WHERE t.timestampModified = :timestampModified"),
     @NamedQuery(name = "Taxonattachment.findByVersion", query = "SELECT t FROM Taxonattachment t WHERE t.version = :version"),
@@ -40,7 +28,7 @@ public class Taxonattachment extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "TaxonAttachmentID")
-    private Integer taxonAttachmentID;
+    private Integer taxonAttachmentId;
      
     @Column(name = "Ordinal")
     private Integer ordinal;
@@ -52,38 +40,30 @@ public class Taxonattachment extends BaseEntity {
     
     @JoinColumn(name = "AttachmentID", referencedColumnName = "AttachmentID")
     @ManyToOne(optional = false)
-    private Attachment attachmentID;
+    private Attachment attachment;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "TaxonID", referencedColumnName = "TaxonID")
     @ManyToOne(optional = false)
-    private Taxon taxonID;
+    private Taxon taxon;
 
     public Taxonattachment() {
     }
 
-    public Taxonattachment(Integer taxonAttachmentID) {
-        this.taxonAttachmentID = taxonAttachmentID;
+    public Taxonattachment(Integer taxonAttachmentId) {
+        this.taxonAttachmentId = taxonAttachmentId;
     }
 
-    public Taxonattachment(Integer taxonAttachmentID, Date timestampCreated) {
+    public Taxonattachment(Integer taxonAttachmentId, Date timestampCreated) {
         super(timestampCreated);
-        this.taxonAttachmentID = taxonAttachmentID; 
-    }
-
-    public Integer getTaxonAttachmentID() {
-        return taxonAttachmentID;
-    }
-
-    public void setTaxonAttachmentID(Integer taxonAttachmentID) {
-        this.taxonAttachmentID = taxonAttachmentID;
+        this.taxonAttachmentId = taxonAttachmentId; 
     }
  
     public Integer getOrdinal() {
@@ -102,42 +82,52 @@ public class Taxonattachment extends BaseEntity {
         this.remarks = remarks;
     }
 
-    public Attachment getAttachmentID() {
-        return attachmentID;
+    public Attachment getAttachment() {
+        return attachment;
     }
 
-    public void setAttachmentID(Attachment attachmentID) {
-        this.attachmentID = attachmentID;
+    public void setAttachment(Attachment attachment) {
+        this.attachment = attachment;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
 
-    public Taxon getTaxonID() {
-        return taxonID;
+    public Taxon getTaxon() {
+        return taxon;
     }
 
-    public void setTaxonID(Taxon taxonID) {
-        this.taxonID = taxonID;
+    public void setTaxon(Taxon taxon) {
+        this.taxon = taxon;
     }
+
+    public Integer getTaxonAttachmentId() {
+        return taxonAttachmentId;
+    }
+
+    public void setTaxonAttachmentId(Integer taxonAttachmentId) {
+        this.taxonAttachmentId = taxonAttachmentId;
+    }
+
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (taxonAttachmentID != null ? taxonAttachmentID.hashCode() : 0);
+        hash += (taxonAttachmentId != null ? taxonAttachmentId.hashCode() : 0);
         return hash;
     }
 
@@ -148,7 +138,7 @@ public class Taxonattachment extends BaseEntity {
             return false;
         }
         Taxonattachment other = (Taxonattachment) object;
-        if ((this.taxonAttachmentID == null && other.taxonAttachmentID != null) || (this.taxonAttachmentID != null && !this.taxonAttachmentID.equals(other.taxonAttachmentID))) {
+        if ((this.taxonAttachmentId == null && other.taxonAttachmentId != null) || (this.taxonAttachmentId != null && !this.taxonAttachmentId.equals(other.taxonAttachmentId))) {
             return false;
         }
         return true;
@@ -156,7 +146,7 @@ public class Taxonattachment extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Taxonattachment[ taxonAttachmentID=" + taxonAttachmentID + " ]";
+        return "Taxonattachment[ taxonAttachmentID=" + taxonAttachmentId + " ]";
     }
     
 }

@@ -32,21 +32,21 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Dnasequence.findAll", query = "SELECT d FROM Dnasequence d"),
-    @NamedQuery(name = "Dnasequence.findByDnaSequenceID", query = "SELECT d FROM Dnasequence d WHERE d.dnaSequenceID = :dnaSequenceID"),
+    @NamedQuery(name = "Dnasequence.findByDnaSequenceID", query = "SELECT d FROM Dnasequence d WHERE d.dnaSequenceId = :dnaSequenceID"),
     @NamedQuery(name = "Dnasequence.findByTimestampCreated", query = "SELECT d FROM Dnasequence d WHERE d.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Dnasequence.findByTimestampModified", query = "SELECT d FROM Dnasequence d WHERE d.timestampModified = :timestampModified"),
-    @NamedQuery(name = "Dnasequence.findByVersion", query = "SELECT d FROM Dnasequence d WHERE d.version = :version"), 
-    @NamedQuery(name = "Dnasequence.findByCollectionMemberID", query = "SELECT d FROM Dnasequence d WHERE d.collectionMemberID = :collectionMemberID"),
+//    @NamedQuery(name = "Dnasequence.findByVersion", query = "SELECT d FROM Dnasequence d WHERE d.version = :version"), 
+    @NamedQuery(name = "Dnasequence.findByCollectionMemberID", query = "SELECT d FROM Dnasequence d WHERE d.collectionMemberId = :collectionMemberID"),
     @NamedQuery(name = "Dnasequence.findByAmbiguousResidues", query = "SELECT d FROM Dnasequence d WHERE d.ambiguousResidues = :ambiguousResidues"),
-    @NamedQuery(name = "Dnasequence.findByBOLDBarcodeID", query = "SELECT d FROM Dnasequence d WHERE d.bOLDBarcodeID = :bOLDBarcodeID"),
-    @NamedQuery(name = "Dnasequence.findByBOLDLastUpdateDate", query = "SELECT d FROM Dnasequence d WHERE d.bOLDLastUpdateDate = :bOLDLastUpdateDate"),
-    @NamedQuery(name = "Dnasequence.findByBOLDSampleID", query = "SELECT d FROM Dnasequence d WHERE d.bOLDSampleID = :bOLDSampleID"),
-    @NamedQuery(name = "Dnasequence.findByBOLDTranslationMatrix", query = "SELECT d FROM Dnasequence d WHERE d.bOLDTranslationMatrix = :bOLDTranslationMatrix"),
+    @NamedQuery(name = "Dnasequence.findByBOLDBarcodeID", query = "SELECT d FROM Dnasequence d WHERE d.boldBarcodeId = :bOLDBarcodeID"),
+    @NamedQuery(name = "Dnasequence.findByBOLDLastUpdateDate", query = "SELECT d FROM Dnasequence d WHERE d.boldLastUpdateDate = :bOLDLastUpdateDate"),
+    @NamedQuery(name = "Dnasequence.findByBOLDSampleID", query = "SELECT d FROM Dnasequence d WHERE d.boldSampleId = :bOLDSampleID"),
+    @NamedQuery(name = "Dnasequence.findByBOLDTranslationMatrix", query = "SELECT d FROM Dnasequence d WHERE d.boldTranslationMatrix = :bOLDTranslationMatrix"),
     @NamedQuery(name = "Dnasequence.findByCompA", query = "SELECT d FROM Dnasequence d WHERE d.compA = :compA"),
     @NamedQuery(name = "Dnasequence.findByCompC", query = "SELECT d FROM Dnasequence d WHERE d.compC = :compC"),
     @NamedQuery(name = "Dnasequence.findByCompG", query = "SELECT d FROM Dnasequence d WHERE d.compG = :compG"),
     @NamedQuery(name = "Dnasequence.findByCompT", query = "SELECT d FROM Dnasequence d WHERE d.compT = :compT"),
-    @NamedQuery(name = "Dnasequence.findByGenBankAccessionNumber", query = "SELECT d FROM Dnasequence d WHERE d.genBankAccessionNumber = :genBankAccessionNumber"),
+    @NamedQuery(name = "Dnasequence.findByGenBankAccessionNumber", query = "SELECT d FROM Dnasequence d WHERE d.genbankAccessionNumber = :genBankAccessionNumber"),
     @NamedQuery(name = "Dnasequence.findByMoleculeType", query = "SELECT d FROM Dnasequence d WHERE d.moleculeType = :moleculeType"),
     @NamedQuery(name = "Dnasequence.findByNumber1", query = "SELECT d FROM Dnasequence d WHERE d.number1 = :number1"),
     @NamedQuery(name = "Dnasequence.findByNumber2", query = "SELECT d FROM Dnasequence d WHERE d.number2 = :number2"),
@@ -68,31 +68,31 @@ public class Dnasequence extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "DnaSequenceID")
-    private Integer dnaSequenceID;
+    private Integer dnaSequenceId;
      
     @Basic(optional = false)
     @NotNull
     @Column(name = "CollectionMemberID")
-    private int collectionMemberID;
+    private int collectionMemberId;
     
     @Column(name = "AmbiguousResidues")
     private Integer ambiguousResidues;
     
     @Size(max = 32)
     @Column(name = "BOLDBarcodeID")
-    private String bOLDBarcodeID;
+    private String boldBarcodeId;
     
     @Column(name = "BOLDLastUpdateDate")
     @Temporal(TemporalType.DATE)
-    private Date bOLDLastUpdateDate;
+    private Date boldLastUpdateDate;
     
     @Size(max = 32)
     @Column(name = "BOLDSampleID")
-    private String bOLDSampleID;
+    private String boldSampleId;
     
     @Size(max = 64)
     @Column(name = "BOLDTranslationMatrix")
-    private String bOLDTranslationMatrix;
+    private String boldTranslationMatrix;
     
     @Column(name = "CompA")
     private Integer compA;
@@ -108,7 +108,7 @@ public class Dnasequence extends BaseEntity {
     
     @Size(max = 32)
     @Column(name = "GenBankAccessionNumber")
-    private String genBankAccessionNumber;
+    private String genbankAccessionNumber;
     
     @Lob
     @Size(max = 65535)
@@ -164,51 +164,93 @@ public class Dnasequence extends BaseEntity {
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "CollectionObjectID", referencedColumnName = "CollectionObjectID")
     @ManyToOne
-    private Collectionobject collectionObjectID;
+    private Collectionobject collectionObject;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "AgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent agentID;
+    private Agent sequencer;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "dNASequenceID")
-    private Collection<Dnasequencingrun> dnasequencingrunCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "dnaSequence")
+    private Collection<Dnasequencingrun> dnaSequencingRuns;
 
     public Dnasequence() {
     }
 
-    public Dnasequence(Integer dnaSequenceID) {
-        this.dnaSequenceID = dnaSequenceID; 
+    public Dnasequence(Integer dnaSequenceId) {
+        this.dnaSequenceId = dnaSequenceId; 
     }
 
-    public Dnasequence(Integer dnaSequenceID, Date timestampCreated, int collectionMemberID) {
+    public Dnasequence(Integer dnaSequenceId, Date timestampCreated, int collectionMemberId) {
         super(timestampCreated);
-        this.dnaSequenceID = dnaSequenceID; 
-        this.collectionMemberID = collectionMemberID; 
+        this.dnaSequenceId = dnaSequenceId; 
+        this.collectionMemberId = collectionMemberId; 
     }
 
-    public Integer getDnaSequenceID() {
-        return dnaSequenceID;
+    public String getBoldBarcodeId() {
+        return boldBarcodeId;
     }
 
-    public void setDnaSequenceID(Integer dnaSequenceID) {
-        this.dnaSequenceID = dnaSequenceID;
+    public void setBoldBarcodeId(String boldBarcodeId) {
+        this.boldBarcodeId = boldBarcodeId;
     }
+
+    public Date getBoldLastUpdateDate() {
+        return boldLastUpdateDate;
+    }
+
+    public void setBoldLastUpdateDate(Date boldLastUpdateDate) {
+        this.boldLastUpdateDate = boldLastUpdateDate;
+    }
+
+    public String getBoldSampleId() {
+        return boldSampleId;
+    }
+
+    public void setBoldSampleId(String boldSampleId) {
+        this.boldSampleId = boldSampleId;
+    }
+
+    public String getBoldTranslationMatrix() {
+        return boldTranslationMatrix;
+    }
+
+    public void setBoldTranslationMatrix(String boldTranslationMatrix) {
+        this.boldTranslationMatrix = boldTranslationMatrix;
+    }
+
+    public int getCollectionMemberId() {
+        return collectionMemberId;
+    }
+
+    public void setCollectionMemberId(int collectionMemberId) {
+        this.collectionMemberId = collectionMemberId;
+    }
+
+    public Integer getDnaSequenceId() {
+        return dnaSequenceId;
+    }
+
+    public void setDnaSequenceId(Integer dnaSequenceId) {
+        this.dnaSequenceId = dnaSequenceId;
+    }
+
+    public String getGenbankAccessionNumber() {
+        return genbankAccessionNumber;
+    }
+
+    public void setGenbankAccessionNumber(String genbankAccessionNumber) {
+        this.genbankAccessionNumber = genbankAccessionNumber;
+    }
+
  
-    public int getCollectionMemberID() {
-        return collectionMemberID;
-    }
-
-    public void setCollectionMemberID(int collectionMemberID) {
-        this.collectionMemberID = collectionMemberID;
-    }
 
     public Integer getAmbiguousResidues() {
         return ambiguousResidues;
@@ -217,38 +259,7 @@ public class Dnasequence extends BaseEntity {
     public void setAmbiguousResidues(Integer ambiguousResidues) {
         this.ambiguousResidues = ambiguousResidues;
     }
-
-    public String getBOLDBarcodeID() {
-        return bOLDBarcodeID;
-    }
-
-    public void setBOLDBarcodeID(String bOLDBarcodeID) {
-        this.bOLDBarcodeID = bOLDBarcodeID;
-    }
-
-    public Date getBOLDLastUpdateDate() {
-        return bOLDLastUpdateDate;
-    }
-
-    public void setBOLDLastUpdateDate(Date bOLDLastUpdateDate) {
-        this.bOLDLastUpdateDate = bOLDLastUpdateDate;
-    }
-
-    public String getBOLDSampleID() {
-        return bOLDSampleID;
-    }
-
-    public void setBOLDSampleID(String bOLDSampleID) {
-        this.bOLDSampleID = bOLDSampleID;
-    }
-
-    public String getBOLDTranslationMatrix() {
-        return bOLDTranslationMatrix;
-    }
-
-    public void setBOLDTranslationMatrix(String bOLDTranslationMatrix) {
-        this.bOLDTranslationMatrix = bOLDTranslationMatrix;
-    }
+ 
 
     public Integer getCompA() {
         return compA;
@@ -282,13 +293,7 @@ public class Dnasequence extends BaseEntity {
         this.compT = compT;
     }
 
-    public String getGenBankAccessionNumber() {
-        return genBankAccessionNumber;
-    }
-
-    public void setGenBankAccessionNumber(String genBankAccessionNumber) {
-        this.genBankAccessionNumber = genBankAccessionNumber;
-    }
+ 
 
     public String getGeneSequence() {
         return geneSequence;
@@ -402,51 +407,54 @@ public class Dnasequence extends BaseEntity {
         this.yesNo3 = yesNo3;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Collectionobject getCollectionObject() {
+        return collectionObject;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setCollectionObject(Collectionobject collectionObject) {
+        this.collectionObject = collectionObject;
     }
 
-    public Collectionobject getCollectionObjectID() {
-        return collectionObjectID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setCollectionObjectID(Collectionobject collectionObjectID) {
-        this.collectionObjectID = collectionObjectID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
-    public Agent getAgentID() {
-        return agentID;
-    }
-
-    public void setAgentID(Agent agentID) {
-        this.agentID = agentID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
     @XmlTransient
-    public Collection<Dnasequencingrun> getDnasequencingrunCollection() {
-        return dnasequencingrunCollection;
+    public Collection<Dnasequencingrun> getDnaSequencingRuns() {
+        return dnaSequencingRuns;
     }
 
-    public void setDnasequencingrunCollection(Collection<Dnasequencingrun> dnasequencingrunCollection) {
-        this.dnasequencingrunCollection = dnasequencingrunCollection;
+    public void setDnaSequencingRuns(Collection<Dnasequencingrun> dnaSequencingRuns) {
+        this.dnaSequencingRuns = dnaSequencingRuns;
     }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Agent getSequencer() {
+        return sequencer;
+    }
+
+    public void setSequencer(Agent sequencer) {
+        this.sequencer = sequencer;
+    }
+
+    
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (dnaSequenceID != null ? dnaSequenceID.hashCode() : 0);
+        hash += (dnaSequenceId != null ? dnaSequenceId.hashCode() : 0);
         return hash;
     }
 
@@ -457,7 +465,7 @@ public class Dnasequence extends BaseEntity {
             return false;
         }
         Dnasequence other = (Dnasequence) object;
-        if ((this.dnaSequenceID == null && other.dnaSequenceID != null) || (this.dnaSequenceID != null && !this.dnaSequenceID.equals(other.dnaSequenceID))) {
+        if ((this.dnaSequenceId == null && other.dnaSequenceId != null) || (this.dnaSequenceId != null && !this.dnaSequenceId.equals(other.dnaSequenceId))) {
             return false;
         }
         return true;
@@ -465,7 +473,7 @@ public class Dnasequence extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Dnasequence[ dnaSequenceID=" + dnaSequenceID + " ]";
+        return "Dnasequence[ dnaSequenceId=" + dnaSequenceId + " ]";
     }
     
 }

@@ -25,12 +25,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Collectingeventattr.findAll", query = "SELECT c FROM Collectingeventattr c"),
-    @NamedQuery(name = "Collectingeventattr.findByAttrID", query = "SELECT c FROM Collectingeventattr c WHERE c.attrID = :attrID"),
+    @NamedQuery(name = "Collectingeventattr.findByAttrID", query = "SELECT c FROM Collectingeventattr c WHERE c.attrId = :attrID"),
     @NamedQuery(name = "Collectingeventattr.findByTimestampCreated", query = "SELECT c FROM Collectingeventattr c WHERE c.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Collectingeventattr.findByTimestampModified", query = "SELECT c FROM Collectingeventattr c WHERE c.timestampModified = :timestampModified"),
     @NamedQuery(name = "Collectingeventattr.findByVersion", query = "SELECT c FROM Collectingeventattr c WHERE c.version = :version"),
-    @NamedQuery(name = "Collectingeventattr.findByCollectionMemberID", query = "SELECT c FROM Collectingeventattr c WHERE c.collectionMemberID = :collectionMemberID"),
-    @NamedQuery(name = "Collectingeventattr.findByDoubleValue", query = "SELECT c FROM Collectingeventattr c WHERE c.doubleValue = :doubleValue"),
+    @NamedQuery(name = "Collectingeventattr.findByCollectionMemberID", query = "SELECT c FROM Collectingeventattr c WHERE c.collectionMemberId = :collectionMemberID"),
+    @NamedQuery(name = "Collectingeventattr.findByDoubleValue", query = "SELECT c FROM Collectingeventattr c WHERE c.dblValue = :doubleValue"),
     @NamedQuery(name = "Collectingeventattr.findByStrValue", query = "SELECT c FROM Collectingeventattr c WHERE c.strValue = :strValue")})
 public class Collectingeventattr extends BaseEntity { 
     
@@ -41,16 +41,16 @@ public class Collectingeventattr extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "AttrID")
-    private Integer attrID;
+    private Integer attrId;
      
     @Basic(optional = false)
     @NotNull
     @Column(name = "CollectionMemberID")
-    private int collectionMemberID;
+    private int collectionMemberId;
     
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "DoubleValue")
-    private Double doubleValue;
+    private Double dblValue;
     
     @Size(max = 255)
     @Column(name = "StrValue")
@@ -58,56 +58,58 @@ public class Collectingeventattr extends BaseEntity {
     
     @JoinColumn(name = "AttributeDefID", referencedColumnName = "AttributeDefID")
     @ManyToOne(optional = false)
-    private Attributedef attributeDefID;
+    private Attributedef definition;
     
     @JoinColumn(name = "CollectingEventID", referencedColumnName = "CollectingEventID")
     @ManyToOne(optional = false)
-    private Collectingevent collectingEventID;
+    private Collectingevent collectingEvent;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
 
     public Collectingeventattr() {
     }
 
-    public Collectingeventattr(Integer attrID) {
-        this.attrID = attrID;
+    public Collectingeventattr(Integer attrId) {
+        this.attrId = attrId;
     }
 
-    public Collectingeventattr(Integer attrID, Date timestampCreated, int collectionMemberID) {
+    public Collectingeventattr(Integer attrId, Date timestampCreated, int collectionMemberId) {
         super(timestampCreated);
-        this.attrID = attrID; 
-        this.collectionMemberID = collectionMemberID;
+        this.attrId = attrId; 
+        this.collectionMemberId = collectionMemberId;
     }
 
-    public Integer getAttrID() {
-        return attrID;
+    public Integer getAttrId() {
+        return attrId;
     }
 
-    public void setAttrID(Integer attrID) {
-        this.attrID = attrID;
-    }
- 
-    public int getCollectionMemberID() {
-        return collectionMemberID;
+    public void setAttrId(Integer attrId) {
+        this.attrId = attrId;
     }
 
-    public void setCollectionMemberID(int collectionMemberID) {
-        this.collectionMemberID = collectionMemberID;
+    public int getCollectionMemberId() {
+        return collectionMemberId;
     }
 
-    public Double getDoubleValue() {
-        return doubleValue;
+    public void setCollectionMemberId(int collectionMemberId) {
+        this.collectionMemberId = collectionMemberId;
     }
 
-    public void setDoubleValue(Double doubleValue) {
-        this.doubleValue = doubleValue;
+    public Double getDblValue() {
+        return dblValue;
     }
+
+    public void setDblValue(Double dblValue) {
+        this.dblValue = dblValue;
+    }
+
+   
 
     public String getStrValue() {
         return strValue;
@@ -117,42 +119,44 @@ public class Collectingeventattr extends BaseEntity {
         this.strValue = strValue;
     }
 
-    public Attributedef getAttributeDefID() {
-        return attributeDefID;
+    public Collectingevent getCollectingEvent() {
+        return collectingEvent;
     }
 
-    public void setAttributeDefID(Attributedef attributeDefID) {
-        this.attributeDefID = attributeDefID;
+    public void setCollectingEvent(Collectingevent collectingEvent) {
+        this.collectingEvent = collectingEvent;
     }
 
-    public Collectingevent getCollectingEventID() {
-        return collectingEventID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setCollectingEventID(Collectingevent collectingEventID) {
-        this.collectingEventID = collectingEventID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Attributedef getDefinition() {
+        return definition;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setDefinition(Attributedef definition) {
+        this.definition = definition;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
+
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (attrID != null ? attrID.hashCode() : 0);
+        hash += (attrId != null ? attrId.hashCode() : 0);
         return hash;
     }
 
@@ -163,7 +167,7 @@ public class Collectingeventattr extends BaseEntity {
             return false;
         }
         Collectingeventattr other = (Collectingeventattr) object;
-        if ((this.attrID == null && other.attrID != null) || (this.attrID != null && !this.attrID.equals(other.attrID))) {
+        if ((this.attrId == null && other.attrId != null) || (this.attrId != null && !this.attrId.equals(other.attrId))) {
             return false;
         }
         return true;
@@ -171,7 +175,7 @@ public class Collectingeventattr extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Collectingeventattr[ attrID=" + attrID + " ]";
+        return "Collectingeventattr[ attrID=" + attrId + " ]";
     }
     
 }

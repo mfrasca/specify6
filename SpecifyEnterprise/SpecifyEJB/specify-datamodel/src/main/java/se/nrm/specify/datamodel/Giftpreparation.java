@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Giftpreparation.findAll", query = "SELECT g FROM Giftpreparation g"),
-    @NamedQuery(name = "Giftpreparation.findByGiftPreparationID", query = "SELECT g FROM Giftpreparation g WHERE g.giftPreparationID = :giftPreparationID"),
+    @NamedQuery(name = "Giftpreparation.findByGiftPreparationID", query = "SELECT g FROM Giftpreparation g WHERE g.giftPreparationId = :giftPreparationID"),
     @NamedQuery(name = "Giftpreparation.findByTimestampCreated", query = "SELECT g FROM Giftpreparation g WHERE g.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Giftpreparation.findByTimestampModified", query = "SELECT g FROM Giftpreparation g WHERE g.timestampModified = :timestampModified"),
     @NamedQuery(name = "Giftpreparation.findByVersion", query = "SELECT g FROM Giftpreparation g WHERE g.version = :version"),
@@ -41,7 +41,7 @@ public class Giftpreparation extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "GiftPreparationID")
-    private Integer giftPreparationID; 
+    private Integer giftPreparationId; 
     
     @Size(max = 255)
     @Column(name = "DescriptionOfMaterial")
@@ -67,44 +67,85 @@ public class Giftpreparation extends BaseEntity {
     
     @JoinColumn(name = "GiftID", referencedColumnName = "GiftID")
     @ManyToOne
-    private Gift giftID;
+    private Gift gift;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "DisciplineID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne
-    private Discipline disciplineID;
+    private Discipline discipline;
     
     @JoinColumn(name = "PreparationID", referencedColumnName = "PreparationID")
     @ManyToOne
-    private Preparation preparationID;
+    private Preparation preparation;
 
     public Giftpreparation() {
     }
 
-    public Giftpreparation(Integer giftPreparationID) {
-        this.giftPreparationID = giftPreparationID;
+    public Giftpreparation(Integer giftPreparationId) {
+        this.giftPreparationId = giftPreparationId;
     }
 
-    public Giftpreparation(Integer giftPreparationID, Date timestampCreated) {
+    public Giftpreparation(Integer giftPreparationId, Date timestampCreated) {
         super(timestampCreated);
-        this.giftPreparationID = giftPreparationID; 
+        this.giftPreparationId = giftPreparationId; 
     }
 
-    public Integer getGiftPreparationID() {
-        return giftPreparationID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setGiftPreparationID(Integer giftPreparationID) {
-        this.giftPreparationID = giftPreparationID;
-    } 
-    
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Discipline getDiscipline() {
+        return discipline;
+    }
+
+    public void setDiscipline(Discipline discipline) {
+        this.discipline = discipline;
+    }
+
+    public Gift getGift() {
+        return gift;
+    }
+
+    public void setGift(Gift gift) {
+        this.gift = gift;
+    }
+
+    public Integer getGiftPreparationId() {
+        return giftPreparationId;
+    }
+
+    public void setGiftPreparationId(Integer giftPreparationId) {
+        this.giftPreparationId = giftPreparationId;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Preparation getPreparation() {
+        return preparation;
+    }
+
+    public void setPreparation(Preparation preparation) {
+        this.preparation = preparation;
+    }
+
+ 
     public String getDescriptionOfMaterial() {
         return descriptionOfMaterial;
     }
@@ -145,50 +186,11 @@ public class Giftpreparation extends BaseEntity {
         this.receivedComments = receivedComments;
     }
 
-    public Gift getGiftID() {
-        return giftID;
-    }
-
-    public void setGiftID(Gift giftID) {
-        this.giftID = giftID;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
-    public Discipline getDisciplineID() {
-        return disciplineID;
-    }
-
-    public void setDisciplineID(Discipline disciplineID) {
-        this.disciplineID = disciplineID;
-    }
-
-    public Preparation getPreparationID() {
-        return preparationID;
-    }
-
-    public void setPreparationID(Preparation preparationID) {
-        this.preparationID = preparationID;
-    }
-
+   
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (giftPreparationID != null ? giftPreparationID.hashCode() : 0);
+        hash += (giftPreparationId != null ? giftPreparationId.hashCode() : 0);
         return hash;
     }
 
@@ -199,7 +201,7 @@ public class Giftpreparation extends BaseEntity {
             return false;
         }
         Giftpreparation other = (Giftpreparation) object;
-        if ((this.giftPreparationID == null && other.giftPreparationID != null) || (this.giftPreparationID != null && !this.giftPreparationID.equals(other.giftPreparationID))) {
+        if ((this.giftPreparationId == null && other.giftPreparationId != null) || (this.giftPreparationId != null && !this.giftPreparationId.equals(other.giftPreparationId))) {
             return false;
         }
         return true;
@@ -207,7 +209,7 @@ public class Giftpreparation extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Giftpreparation[ giftPreparationID=" + giftPreparationID + " ]";
+        return "Giftpreparation[ giftPreparationID=" + giftPreparationId + " ]";
     }
     
 }

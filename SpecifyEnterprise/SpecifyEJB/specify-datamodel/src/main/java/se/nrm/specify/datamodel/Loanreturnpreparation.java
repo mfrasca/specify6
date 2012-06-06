@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Loanreturnpreparation.findAll", query = "SELECT l FROM Loanreturnpreparation l"),
-    @NamedQuery(name = "Loanreturnpreparation.findByLoanReturnPreparationID", query = "SELECT l FROM Loanreturnpreparation l WHERE l.loanReturnPreparationID = :loanReturnPreparationID"),
+    @NamedQuery(name = "Loanreturnpreparation.findByLoanReturnPreparationID", query = "SELECT l FROM Loanreturnpreparation l WHERE l.loanReturnPreparationId = :loanReturnPreparationID"),
     @NamedQuery(name = "Loanreturnpreparation.findByTimestampCreated", query = "SELECT l FROM Loanreturnpreparation l WHERE l.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Loanreturnpreparation.findByTimestampModified", query = "SELECT l FROM Loanreturnpreparation l WHERE l.timestampModified = :timestampModified"),
     @NamedQuery(name = "Loanreturnpreparation.findByVersion", query = "SELECT l FROM Loanreturnpreparation l WHERE l.version = :version"),
@@ -44,7 +44,7 @@ public class Loanreturnpreparation extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "LoanReturnPreparationID")
-    private Integer loanReturnPreparationID;
+    private Integer loanReturnPreparationId;
      
     @Column(name = "QuantityResolved")
     private Integer quantityResolved;
@@ -63,46 +63,38 @@ public class Loanreturnpreparation extends BaseEntity {
     
     @JoinColumn(name = "DeaccessionPreparationID", referencedColumnName = "DeaccessionPreparationID")
     @ManyToOne
-    private Deaccessionpreparation deaccessionPreparationID;
+    private Deaccessionpreparation deaccessionPreparation;
     
     @JoinColumn(name = "LoanPreparationID", referencedColumnName = "LoanPreparationID")
     @ManyToOne(optional = false)
-    private Loanpreparation loanPreparationID;
+    private Loanpreparation loanPreparation;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "DisciplineID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne
-    private Discipline disciplineID;
+    private Discipline discipline;
     
     @JoinColumn(name = "ReceivedByID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent receivedByID;
+    private Agent receivedBy;
 
     public Loanreturnpreparation() {
     }
 
-    public Loanreturnpreparation(Integer loanReturnPreparationID) {
-        this.loanReturnPreparationID = loanReturnPreparationID;
+    public Loanreturnpreparation(Integer loanReturnPreparationId) {
+        this.loanReturnPreparationId = loanReturnPreparationId;
     }
 
-    public Loanreturnpreparation(Integer loanReturnPreparationID, Date timestampCreated) {
+    public Loanreturnpreparation(Integer loanReturnPreparationId, Date timestampCreated) {
         super(timestampCreated);
-        this.loanReturnPreparationID = loanReturnPreparationID; 
-    }
-
-    public Integer getLoanReturnPreparationID() {
-        return loanReturnPreparationID;
-    }
-
-    public void setLoanReturnPreparationID(Integer loanReturnPreparationID) {
-        this.loanReturnPreparationID = loanReturnPreparationID;
+        this.loanReturnPreparationId = loanReturnPreparationId; 
     }
  
     public Integer getQuantityResolved() {
@@ -137,58 +129,68 @@ public class Loanreturnpreparation extends BaseEntity {
         this.returnedDate = returnedDate;
     }
 
-    public Deaccessionpreparation getDeaccessionPreparationID() {
-        return deaccessionPreparationID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setDeaccessionPreparationID(Deaccessionpreparation deaccessionPreparationID) {
-        this.deaccessionPreparationID = deaccessionPreparationID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Loanpreparation getLoanPreparationID() {
-        return loanPreparationID;
+    public Deaccessionpreparation getDeaccessionPreparation() {
+        return deaccessionPreparation;
     }
 
-    public void setLoanPreparationID(Loanpreparation loanPreparationID) {
-        this.loanPreparationID = loanPreparationID;
+    public void setDeaccessionPreparation(Deaccessionpreparation deaccessionPreparation) {
+        this.deaccessionPreparation = deaccessionPreparation;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Discipline getDiscipline() {
+        return discipline;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setDiscipline(Discipline discipline) {
+        this.discipline = discipline;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Loanpreparation getLoanPreparation() {
+        return loanPreparation;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setLoanPreparation(Loanpreparation loanPreparation) {
+        this.loanPreparation = loanPreparation;
     }
 
-    public Discipline getDisciplineID() {
-        return disciplineID;
+    public Integer getLoanReturnPreparationId() {
+        return loanReturnPreparationId;
     }
 
-    public void setDisciplineID(Discipline disciplineID) {
-        this.disciplineID = disciplineID;
+    public void setLoanReturnPreparationId(Integer loanReturnPreparationId) {
+        this.loanReturnPreparationId = loanReturnPreparationId;
     }
 
-    public Agent getReceivedByID() {
-        return receivedByID;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setReceivedByID(Agent receivedByID) {
-        this.receivedByID = receivedByID;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
+
+    public Agent getReceivedBy() {
+        return receivedBy;
+    }
+
+    public void setReceivedBy(Agent receivedBy) {
+        this.receivedBy = receivedBy;
+    }
+
+     
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (loanReturnPreparationID != null ? loanReturnPreparationID.hashCode() : 0);
+        hash += (loanReturnPreparationId != null ? loanReturnPreparationId.hashCode() : 0);
         return hash;
     }
 
@@ -199,7 +201,7 @@ public class Loanreturnpreparation extends BaseEntity {
             return false;
         }
         Loanreturnpreparation other = (Loanreturnpreparation) object;
-        if ((this.loanReturnPreparationID == null && other.loanReturnPreparationID != null) || (this.loanReturnPreparationID != null && !this.loanReturnPreparationID.equals(other.loanReturnPreparationID))) {
+        if ((this.loanReturnPreparationId == null && other.loanReturnPreparationId != null) || (this.loanReturnPreparationId != null && !this.loanReturnPreparationId.equals(other.loanReturnPreparationId))) {
             return false;
         }
         return true;
@@ -207,7 +209,7 @@ public class Loanreturnpreparation extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Loanreturnpreparation[ loanReturnPreparationID=" + loanReturnPreparationID + " ]";
+        return "Loanreturnpreparation[ loanReturnPreparationID=" + loanReturnPreparationId + " ]";
     }
     
 }

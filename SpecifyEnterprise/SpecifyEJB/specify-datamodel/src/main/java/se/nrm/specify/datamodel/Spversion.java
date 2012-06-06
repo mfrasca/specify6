@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Spversion.findAll", query = "SELECT s FROM Spversion s"),
-    @NamedQuery(name = "Spversion.findBySpVersionID", query = "SELECT s FROM Spversion s WHERE s.spVersionID = :spVersionID"),
+    @NamedQuery(name = "Spversion.findBySpVersionID", query = "SELECT s FROM Spversion s WHERE s.spVersionId = :spVersionID"),
     @NamedQuery(name = "Spversion.findByTimestampCreated", query = "SELECT s FROM Spversion s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Spversion.findByTimestampModified", query = "SELECT s FROM Spversion s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Spversion.findByVersion", query = "SELECT s FROM Spversion s WHERE s.version = :version"),
@@ -41,7 +41,7 @@ public class Spversion extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "SpVersionID")
-    private Integer spVersionID;
+    private Integer spVersionId;
      
     @Size(max = 32)
     @Column(name = "AppName")
@@ -57,31 +57,49 @@ public class Spversion extends BaseEntity {
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
 
     public Spversion() {
     }
 
-    public Spversion(Integer spVersionID) {
-        this.spVersionID = spVersionID;
+    public Spversion(Integer spVersionId) {
+        this.spVersionId = spVersionId;
     }
 
-    public Spversion(Integer spVersionID, Date timestampCreated) {
+    public Spversion(Integer spVersionId, Date timestampCreated) {
         super(timestampCreated);
-        this.spVersionID = spVersionID; 
+        this.spVersionId = spVersionId; 
     }
 
-    public Integer getSpVersionID() {
-        return spVersionID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setSpVersionID(Integer spVersionID) {
-        this.spVersionID = spVersionID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Integer getSpVersionId() {
+        return spVersionId;
+    }
+
+    public void setSpVersionId(Integer spVersionId) {
+        this.spVersionId = spVersionId;
+    }
+
+    
  
     public String getAppName() {
         return appName;
@@ -107,26 +125,11 @@ public class Spversion extends BaseEntity {
         this.schemaVersion = schemaVersion;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
+   
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (spVersionID != null ? spVersionID.hashCode() : 0);
+        hash += (spVersionId != null ? spVersionId.hashCode() : 0);
         return hash;
     }
 
@@ -137,7 +140,7 @@ public class Spversion extends BaseEntity {
             return false;
         }
         Spversion other = (Spversion) object;
-        if ((this.spVersionID == null && other.spVersionID != null) || (this.spVersionID != null && !this.spVersionID.equals(other.spVersionID))) {
+        if ((this.spVersionId == null && other.spVersionId != null) || (this.spVersionId != null && !this.spVersionId.equals(other.spVersionId))) {
             return false;
         }
         return true;
@@ -145,7 +148,7 @@ public class Spversion extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Spversion[ spVersionID=" + spVersionID + " ]";
+        return "Spversion[ spVersionID=" + spVersionId + " ]";
     }
     
 }

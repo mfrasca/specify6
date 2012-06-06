@@ -36,7 +36,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Division.findByVersion", query = "SELECT d FROM Division d WHERE d.version = :version"),
     @NamedQuery(name = "Division.findByAbbrev", query = "SELECT d FROM Division d WHERE d.abbrev = :abbrev"),
     @NamedQuery(name = "Division.findByAltName", query = "SELECT d FROM Division d WHERE d.altName = :altName"),
-    @NamedQuery(name = "Division.findByDisciplineType", query = "SELECT d FROM Division d WHERE d.disciplineType = :disciplineType"),
+    @NamedQuery(name = "Division.findByDisciplineType", query = "SELECT d FROM Division d WHERE d.discipline = :disciplineType"),
     @NamedQuery(name = "Division.findByDivisionId", query = "SELECT d FROM Division d WHERE d.divisionId = :divisionId"),
     @NamedQuery(name = "Division.findByIconURI", query = "SELECT d FROM Division d WHERE d.iconURI = :iconURI"),
     @NamedQuery(name = "Division.findByName", query = "SELECT d FROM Division d WHERE d.name = :name"),
@@ -67,7 +67,7 @@ public class Division extends BaseEntity {
     
     @Size(max = 64)
     @Column(name = "DisciplineType")
-    private String disciplineType;
+    private String discipline;
     
     @Column(name = "divisionId")
     private Integer divisionId;
@@ -97,65 +97,61 @@ public class Division extends BaseEntity {
         @JoinColumn(name = "DivisionID", referencedColumnName = "UserGroupScopeId")}, inverseJoinColumns = {
         @JoinColumn(name = "AutoNumberingSchemeID", referencedColumnName = "AutoNumberingSchemeID")})
     @ManyToMany
-    private Collection<Autonumberingscheme> autonumberingschemeCollection;
+    private Collection<Autonumberingscheme> numberingSchemes;
     
-    @OneToMany(mappedBy = "divisionID")
-    private Collection<Treatmentevent> treatmenteventCollection;
+    @OneToMany(mappedBy = "division")
+    private Collection<Treatmentevent> treatmentevents;
     
-    @OneToMany(mappedBy = "divisionID")
-    private Collection<Loan> loanCollection;
+    @OneToMany(mappedBy = "division")
+    private Collection<Loan> loans;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "divisionID")
-    private Collection<Exchangein> exchangeinCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "division")
+    private Collection<Exchangein> exchangeins;
     
-    @OneToMany(mappedBy = "divisionID")
-    private Collection<Gift> giftCollection;
+    @OneToMany(mappedBy = "division")
+    private Collection<Gift> gifts;
     
-    @OneToMany(mappedBy = "divisionID")
-    private Collection<Conservdescription> conservdescriptionCollection;
+    @OneToMany(mappedBy = "division")
+    private Collection<Conservdescription> conservdescriptions;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
-    @ManyToOne
-//    @XmlInverseReference(mappedBy = "divisionCollection")  
-    private Agent createdByAgentID;
+    @ManyToOne 
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
-    @ManyToOne
-//    @XmlInverseReference(mappedBy = "divisionCollection1")  
-    private Agent modifiedByAgentID;
+    @ManyToOne 
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "AddressID", referencedColumnName = "AddressID")
-    @ManyToOne
-//    @XmlInverseReference(mappedBy = "divisionCollection") 
+    @ManyToOne 
     @XmlTransient 
-    private Address addressID;
+    private Address address;
     
     @JoinColumn(name = "InstitutionID", referencedColumnName = "UserGroupScopeId")
-    @ManyToOne(optional = false)
-//    @XmlInverseReference(mappedBy = "divisionCollection") 
+    @ManyToOne(optional = false) 
     @XmlTransient 
-    private Institution institutionID;
+    private Institution institution;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "divisionID")
-    private Collection<Exchangeout> exchangeoutCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "division")
+    private Collection<Exchangeout> exchangeouts;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "divisionID")
-    private Collection<Repositoryagreement> repositoryagreementCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "division")
+    private Collection<Repositoryagreement> repositoryagreements;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "divisionID")
-    private Collection<Accession> accessionCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "division")
+    private Collection<Accession> accessions;
     
-    @OneToMany(mappedBy = "divisionID")
-    private Collection<Groupperson> grouppersonCollection;
+    @OneToMany(mappedBy = "division")
+    private Collection<Groupperson> grouppersons;
     
-    @OneToMany(mappedBy = "divisionID")
-    private Collection<Agent> agentCollection;
+    @OneToMany(mappedBy = "division")
+    private Collection<Agent> members;
     
-    @OneToMany(mappedBy = "divisionID")
-    private Collection<Collector> collectorCollection;
+    @OneToMany(mappedBy = "division")
+    private Collection<Collector> collectors;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "divisionID")
-    private Collection<Discipline> disciplineCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "division")
+    private Collection<Discipline> disciplines;
 
     public Division() {
     }
@@ -201,13 +197,7 @@ public class Division extends BaseEntity {
         this.description = description;
     }
 
-    public String getDisciplineType() {
-        return disciplineType;
-    }
-
-    public void setDisciplineType(String disciplineType) {
-        this.disciplineType = disciplineType;
-    }
+ 
 
     public Integer getDivisionId() {
         return divisionId;
@@ -258,155 +248,172 @@ public class Division extends BaseEntity {
     }
 
     @XmlTransient
-    public Collection<Autonumberingscheme> getAutonumberingschemeCollection() {
-        return autonumberingschemeCollection;
+    public Collection<Accession> getAccessions() {
+        return accessions;
     }
-
-    public void setAutonumberingschemeCollection(Collection<Autonumberingscheme> autonumberingschemeCollection) {
-        this.autonumberingschemeCollection = autonumberingschemeCollection;
-    }
-
-    @XmlTransient
-    public Collection<Treatmentevent> getTreatmenteventCollection() {
-        return treatmenteventCollection;
-    }
-
-    public void setTreatmenteventCollection(Collection<Treatmentevent> treatmenteventCollection) {
-        this.treatmenteventCollection = treatmenteventCollection;
+ 
+    public void setAccessions(Collection<Accession> accessions) {
+        this.accessions = accessions;
     }
 
     @XmlTransient
-    public Collection<Loan> getLoanCollection() {
-        return loanCollection;
+    public Collection<Collector> getCollectors() {
+        return collectors;
     }
 
-    public void setLoanCollection(Collection<Loan> loanCollection) {
-        this.loanCollection = loanCollection;
-    }
-
-    @XmlTransient
-    public Collection<Exchangein> getExchangeinCollection() {
-        return exchangeinCollection;
-    }
-
-    public void setExchangeinCollection(Collection<Exchangein> exchangeinCollection) {
-        this.exchangeinCollection = exchangeinCollection;
+    public void setCollectors(Collection<Collector> collectors) {
+        this.collectors = collectors;
     }
 
     @XmlTransient
-    public Collection<Gift> getGiftCollection() {
-        return giftCollection;
+    public Collection<Conservdescription> getConservdescriptions() {
+        return conservdescriptions;
     }
 
-    public void setGiftCollection(Collection<Gift> giftCollection) {
-        this.giftCollection = giftCollection;
-    }
-
-    @XmlTransient
-    public Collection<Conservdescription> getConservdescriptionCollection() {
-        return conservdescriptionCollection;
-    }
-
-    public void setConservdescriptionCollection(Collection<Conservdescription> conservdescriptionCollection) {
-        this.conservdescriptionCollection = conservdescriptionCollection;
-    }
-
-    @XmlTransient 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    @XmlTransient 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
-    public Address getAddressID() {
-        return addressID;
-    }
-
-    public void setAddressID(Address addressID) {
-        this.addressID = addressID;
-    }
-
-    public Institution getInstitutionID() {
-        return institutionID;
-    }
-
-    public void setInstitutionID(Institution institutionID) {
-        this.institutionID = institutionID;
+    public void setConservdescriptions(Collection<Conservdescription> conservdescriptions) {
+        this.conservdescriptions = conservdescriptions;
     }
 
     @XmlTransient
-    public Collection<Exchangeout> getExchangeoutCollection() {
-        return exchangeoutCollection;
+    public Collection<Exchangein> getExchangeins() {
+        return exchangeins;
     }
 
-    public void setExchangeoutCollection(Collection<Exchangeout> exchangeoutCollection) {
-        this.exchangeoutCollection = exchangeoutCollection;
-    }
-
-    @XmlTransient
-    public Collection<Repositoryagreement> getRepositoryagreementCollection() {
-        return repositoryagreementCollection;
-    }
-
-    public void setRepositoryagreementCollection(Collection<Repositoryagreement> repositoryagreementCollection) {
-        this.repositoryagreementCollection = repositoryagreementCollection;
+    public void setExchangeins(Collection<Exchangein> exchangeins) {
+        this.exchangeins = exchangeins;
     }
 
     @XmlTransient
-    public Collection<Accession> getAccessionCollection() {
-        return accessionCollection;
+    public Collection<Exchangeout> getExchangeouts() {
+        return exchangeouts;
     }
 
-    public void setAccessionCollection(Collection<Accession> accessionCollection) {
-        this.accessionCollection = accessionCollection;
-    }
-
-    @XmlTransient
-    public Collection<Groupperson> getGrouppersonCollection() {
-        return grouppersonCollection;
-    }
-
-    public void setGrouppersonCollection(Collection<Groupperson> grouppersonCollection) {
-        this.grouppersonCollection = grouppersonCollection;
+    public void setExchangeouts(Collection<Exchangeout> exchangeouts) {
+        this.exchangeouts = exchangeouts;
     }
 
     @XmlTransient
-    public Collection<Agent> getAgentCollection() {
-        return agentCollection;
+    public Collection<Gift> getGifts() {
+        return gifts;
     }
 
-    public void setAgentCollection(Collection<Agent> agentCollection) {
-        this.agentCollection = agentCollection;
-    }
-
-    @XmlTransient
-    public Collection<Collector> getCollectorCollection() {
-        return collectorCollection;
-    }
-
-    public void setCollectorCollection(Collection<Collector> collectorCollection) {
-        this.collectorCollection = collectorCollection;
+    public void setGifts(Collection<Gift> gifts) {
+        this.gifts = gifts;
     }
 
     @XmlTransient
-    public Collection<Discipline> getDisciplineCollection() {
-        return disciplineCollection;
+    public Collection<Groupperson> getGrouppersons() {
+        return grouppersons;
     }
 
-    public void setDisciplineCollection(Collection<Discipline> disciplineCollection) {
-        this.disciplineCollection = disciplineCollection;
+    public void setGrouppersons(Collection<Groupperson> grouppersons) {
+        this.grouppersons = grouppersons;
     }
+
+    @XmlTransient
+    public Collection<Loan> getLoans() {
+        return loans;
+    }
+
+    public void setLoans(Collection<Loan> loans) {
+        this.loans = loans;
+    }
+
+    @XmlTransient
+    public Collection<Repositoryagreement> getRepositoryagreements() {
+        return repositoryagreements;
+    }
+
+    public void setRepositoryagreements(Collection<Repositoryagreement> repositoryagreements) {
+        this.repositoryagreements = repositoryagreements;
+    }
+
+    @XmlTransient
+    public Collection<Treatmentevent> getTreatmentevents() {
+        return treatmentevents;
+    }
+
+    public void setTreatmentevents(Collection<Treatmentevent> treatmentevents) {
+        this.treatmentevents = treatmentevents;
+    }
+
+ 
+    
+ 
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    @XmlTransient
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
+    }
+
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public String getDiscipline() {
+        return discipline;
+    }
+
+    public void setDiscipline(String discipline) {
+        this.discipline = discipline;
+    }
+
+    @XmlTransient
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+ 
+
+    
+    @XmlTransient
+    public Collection<Discipline> getDisciplines() {
+        return disciplines;
+    }
+
+    public void setDisciplines(Collection<Discipline> disciplines) {
+        this.disciplines = disciplines;
+    }
+
+    public Institution getInstitution() {
+        return institution;
+    }
+
+    public void setInstitution(Institution institution) {
+        this.institution = institution;
+    }
+
+    @XmlTransient
+    public Collection<Agent> getMembers() {
+        return members;
+    }
+
+    public void setMembers(Collection<Agent> members) {
+        this.members = members;
+    }
+
+    @XmlTransient
+    public Collection<Autonumberingscheme> getNumberingSchemes() {
+        return numberingSchemes;
+    }
+
+    public void setNumberingSchemes(Collection<Autonumberingscheme> numberingSchemes) {
+        this.numberingSchemes = numberingSchemes;
+    }
+
+ 
 
     @Override
     public int hashCode() {

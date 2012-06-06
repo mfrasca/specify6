@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Splocaleitemstr.findAll", query = "SELECT s FROM Splocaleitemstr s"),
-    @NamedQuery(name = "Splocaleitemstr.findBySpLocaleItemStrID", query = "SELECT s FROM Splocaleitemstr s WHERE s.spLocaleItemStrID = :spLocaleItemStrID"),
+    @NamedQuery(name = "Splocaleitemstr.findBySpLocaleItemStrID", query = "SELECT s FROM Splocaleitemstr s WHERE s.spLocaleItemStrId = :spLocaleItemStrID"),
     @NamedQuery(name = "Splocaleitemstr.findByTimestampCreated", query = "SELECT s FROM Splocaleitemstr s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Splocaleitemstr.findByTimestampModified", query = "SELECT s FROM Splocaleitemstr s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Splocaleitemstr.findByVersion", query = "SELECT s FROM Splocaleitemstr s WHERE s.version = :version"),
@@ -42,7 +42,7 @@ public class Splocaleitemstr extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "SpLocaleItemStrID")
-    private Integer spLocaleItemStrID;
+    private Integer spLocaleItemStrId;
      
     @Size(max = 2)
     @Column(name = "Country")
@@ -66,49 +66,43 @@ public class Splocaleitemstr extends BaseEntity {
     
     @JoinColumn(name = "SpLocaleContainerItemNameID", referencedColumnName = "SpLocaleContainerItemID")
     @ManyToOne
-    private Splocalecontaineritem spLocaleContainerItemNameID;
+    private Splocalecontaineritem itemName;
     
     @JoinColumn(name = "SpLocaleContainerItemDescID", referencedColumnName = "SpLocaleContainerItemID")
     @ManyToOne
-    private Splocalecontaineritem spLocaleContainerItemDescID;
+    private Splocalecontaineritem itemDesc;
     
     @JoinColumn(name = "SpLocaleContainerNameID", referencedColumnName = "SpLocaleContainerID")
     @ManyToOne
-    private Splocalecontainer spLocaleContainerNameID;
+    private Splocalecontainer containerName;
     
     @JoinColumn(name = "SpLocaleContainerDescID", referencedColumnName = "SpLocaleContainerID")
     @ManyToOne
-    private Splocalecontainer spLocaleContainerDescID;
+    private Splocalecontainer containerDesc;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
 
     public Splocaleitemstr() {
     }
 
-    public Splocaleitemstr(Integer spLocaleItemStrID) {
-        this.spLocaleItemStrID = spLocaleItemStrID;
+    public Splocaleitemstr(Integer spLocaleItemStrId) {
+        this.spLocaleItemStrId = spLocaleItemStrId;
     }
 
-    public Splocaleitemstr(Integer spLocaleItemStrID, Date timestampCreated, String language, String text) {
+    public Splocaleitemstr(Integer spLocaleItemStrId, Date timestampCreated, String language, String text) {
         super(timestampCreated);
-        this.spLocaleItemStrID = spLocaleItemStrID; 
+        this.spLocaleItemStrId = spLocaleItemStrId; 
         this.language = language;
         this.text = text;
     }
 
-    public Integer getSpLocaleItemStrID() {
-        return spLocaleItemStrID;
-    } 
-
-    public String getCountry() {
-        return country;
-    }
+   
 
     public void setCountry(String country) {
         this.country = country;
@@ -138,58 +132,67 @@ public class Splocaleitemstr extends BaseEntity {
         this.variant = variant;
     }
 
-    public Splocalecontaineritem getSpLocaleContainerItemNameID() {
-        return spLocaleContainerItemNameID;
+    public Splocalecontainer getContainerDesc() {
+        return containerDesc;
     }
 
-    public void setSpLocaleContainerItemNameID(Splocalecontaineritem spLocaleContainerItemNameID) {
-        this.spLocaleContainerItemNameID = spLocaleContainerItemNameID;
+    public void setContainerDesc(Splocalecontainer containerDesc) {
+        this.containerDesc = containerDesc;
     }
 
-    public Splocalecontaineritem getSpLocaleContainerItemDescID() {
-        return spLocaleContainerItemDescID;
+    public Splocalecontainer getContainerName() {
+        return containerName;
     }
 
-    public void setSpLocaleContainerItemDescID(Splocalecontaineritem spLocaleContainerItemDescID) {
-        this.spLocaleContainerItemDescID = spLocaleContainerItemDescID;
+    public void setContainerName(Splocalecontainer containerName) {
+        this.containerName = containerName;
     }
 
-    public Splocalecontainer getSpLocaleContainerNameID() {
-        return spLocaleContainerNameID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setSpLocaleContainerNameID(Splocalecontainer spLocaleContainerNameID) {
-        this.spLocaleContainerNameID = spLocaleContainerNameID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Splocalecontainer getSpLocaleContainerDescID() {
-        return spLocaleContainerDescID;
+    public Splocalecontaineritem getItemDesc() {
+        return itemDesc;
     }
 
-    public void setSpLocaleContainerDescID(Splocalecontainer spLocaleContainerDescID) {
-        this.spLocaleContainerDescID = spLocaleContainerDescID;
+    public void setItemDesc(Splocalecontaineritem itemDesc) {
+        this.itemDesc = itemDesc;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Splocalecontaineritem getItemName() {
+        return itemName;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setItemName(Splocalecontaineritem itemName) {
+        this.itemName = itemName;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
 
+    public Integer getSpLocaleItemStrId() {
+        return spLocaleItemStrId;
+    }
+
+    public void setSpLocaleItemStrId(Integer spLocaleItemStrId) {
+        this.spLocaleItemStrId = spLocaleItemStrId;
+    }
+
+   
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (spLocaleItemStrID != null ? spLocaleItemStrID.hashCode() : 0);
+        hash += (spLocaleItemStrId != null ? spLocaleItemStrId.hashCode() : 0);
         return hash;
     }
 
@@ -200,7 +203,7 @@ public class Splocaleitemstr extends BaseEntity {
             return false;
         }
         Splocaleitemstr other = (Splocaleitemstr) object;
-        if ((this.spLocaleItemStrID == null && other.spLocaleItemStrID != null) || (this.spLocaleItemStrID != null && !this.spLocaleItemStrID.equals(other.spLocaleItemStrID))) {
+        if ((this.spLocaleItemStrId == null && other.spLocaleItemStrId != null) || (this.spLocaleItemStrId != null && !this.spLocaleItemStrId.equals(other.spLocaleItemStrId))) {
             return false;
         }
         return true;
@@ -208,7 +211,7 @@ public class Splocaleitemstr extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Splocaleitemstr[ spLocaleItemStrID=" + spLocaleItemStrID + " ]";
+        return "Splocaleitemstr[ spLocaleItemStrID=" + spLocaleItemStrId + " ]";
     }
     
 }

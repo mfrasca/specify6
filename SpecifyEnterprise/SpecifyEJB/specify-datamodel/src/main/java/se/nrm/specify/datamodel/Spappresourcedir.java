@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Spappresourcedir.findAll", query = "SELECT s FROM Spappresourcedir s"),
-    @NamedQuery(name = "Spappresourcedir.findBySpAppResourceDirID", query = "SELECT s FROM Spappresourcedir s WHERE s.spAppResourceDirID = :spAppResourceDirID"),
+    @NamedQuery(name = "Spappresourcedir.findBySpAppResourceDirID", query = "SELECT s FROM Spappresourcedir s WHERE s.spAppResourceDirId = :spAppResourceDirID"),
     @NamedQuery(name = "Spappresourcedir.findByTimestampCreated", query = "SELECT s FROM Spappresourcedir s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Spappresourcedir.findByTimestampModified", query = "SELECT s FROM Spappresourcedir s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Spappresourcedir.findByVersion", query = "SELECT s FROM Spappresourcedir s WHERE s.version = :version"),
@@ -45,7 +45,7 @@ public class Spappresourcedir extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "SpAppResourceDirID")
-    private Integer spAppResourceDirID;
+    private Integer spAppResourceDirId;
      
     @Size(max = 64)
     @Column(name = "DisciplineType")
@@ -60,52 +60,45 @@ public class Spappresourcedir extends BaseEntity {
     @Column(name = "UserType")
     private String userType;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "spAppResourceDirID")
-    private Collection<Spviewsetobj> spviewsetobjCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "spAppResourceDir")
+    private Collection<Spviewsetobj> spPersistedViewSets;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "spAppResourceDirID")
-    private Collection<Spappresource> spappresourceCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "spAppResourceDir")
+    private Collection<Spappresource> spPersistedAppResources;
     
     @JoinColumn(name = "CollectionID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne
-    private se.nrm.specify.datamodel.Collection collectionID;
+    private se.nrm.specify.datamodel.Collection collection;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "DisciplineID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne
-    private Discipline disciplineID;
+    private Discipline discipline;
     
     @JoinColumn(name = "SpecifyUserID", referencedColumnName = "SpecifyUserID")
     @ManyToOne
-    private Specifyuser specifyUserID;
+    private Specifyuser specifyUser;
 
     public Spappresourcedir() {
     }
 
-    public Spappresourcedir(Integer spAppResourceDirID) {
-        this.spAppResourceDirID = spAppResourceDirID;
+    public Spappresourcedir(Integer spAppResourceDirId) {
+        this.spAppResourceDirId = spAppResourceDirId;
     }
 
-    public Spappresourcedir(Integer spAppResourceDirID, Date timestampCreated, boolean isPersonal) {
+    public Spappresourcedir(Integer spAppResourceDirId, Date timestampCreated, boolean isPersonal) {
         super(timestampCreated);
-        this.spAppResourceDirID = spAppResourceDirID; 
+        this.spAppResourceDirId = spAppResourceDirId; 
         this.isPersonal = isPersonal;
     }
-
-    public Integer getSpAppResourceDirID() {
-        return spAppResourceDirID;
-    }
-
-    public void setSpAppResourceDirID(Integer spAppResourceDirID) {
-        this.spAppResourceDirID = spAppResourceDirID;
-    }
+ 
  
     public String getDisciplineType() {
         return disciplineType;
@@ -131,68 +124,79 @@ public class Spappresourcedir extends BaseEntity {
         this.userType = userType;
     }
 
+    public se.nrm.specify.datamodel.Collection getCollection() {
+        return collection;
+    }
+
+    public void setCollection(se.nrm.specify.datamodel.Collection collection) {
+        this.collection = collection;
+    }
+
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
+    }
+
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Discipline getDiscipline() {
+        return discipline;
+    }
+
+    public void setDiscipline(Discipline discipline) {
+        this.discipline = discipline;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Integer getSpAppResourceDirId() {
+        return spAppResourceDirId;
+    }
+
+    public void setSpAppResourceDirId(Integer spAppResourceDirId) {
+        this.spAppResourceDirId = spAppResourceDirId;
+    }
+
     @XmlTransient
-    public Collection<Spviewsetobj> getSpviewsetobjCollection() {
-        return spviewsetobjCollection;
+    public Collection<Spappresource> getSpPersistedAppResources() {
+        return spPersistedAppResources;
     }
 
-    public void setSpviewsetobjCollection(Collection<Spviewsetobj> spviewsetobjCollection) {
-        this.spviewsetobjCollection = spviewsetobjCollection;
+    public void setSpPersistedAppResources(Collection<Spappresource> spPersistedAppResources) {
+        this.spPersistedAppResources = spPersistedAppResources;
     }
 
     @XmlTransient
-    public Collection<Spappresource> getSpappresourceCollection() {
-        return spappresourceCollection;
+    public Collection<Spviewsetobj> getSpPersistedViewSets() {
+        return spPersistedViewSets;
     }
 
-    public void setSpappresourceCollection(Collection<Spappresource> spappresourceCollection) {
-        this.spappresourceCollection = spappresourceCollection;
+    public void setSpPersistedViewSets(Collection<Spviewsetobj> spPersistedViewSets) {
+        this.spPersistedViewSets = spPersistedViewSets;
     }
 
-    public se.nrm.specify.datamodel.Collection getCollectionID() {
-        return collectionID;
+    public Specifyuser getSpecifyUser() {
+        return specifyUser;
     }
 
-    public void setCollectionID(se.nrm.specify.datamodel.Collection collectionID) {
-        this.collectionID = collectionID;
+    public void setSpecifyUser(Specifyuser specifyUser) {
+        this.specifyUser = specifyUser;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
-    public Discipline getDisciplineID() {
-        return disciplineID;
-    }
-
-    public void setDisciplineID(Discipline disciplineID) {
-        this.disciplineID = disciplineID;
-    }
-
-    public Specifyuser getSpecifyUserID() {
-        return specifyUserID;
-    }
-
-    public void setSpecifyUserID(Specifyuser specifyUserID) {
-        this.specifyUserID = specifyUserID;
-    }
+   
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (spAppResourceDirID != null ? spAppResourceDirID.hashCode() : 0);
+        hash += (spAppResourceDirId != null ? spAppResourceDirId.hashCode() : 0);
         return hash;
     }
 
@@ -203,7 +207,7 @@ public class Spappresourcedir extends BaseEntity {
             return false;
         }
         Spappresourcedir other = (Spappresourcedir) object;
-        if ((this.spAppResourceDirID == null && other.spAppResourceDirID != null) || (this.spAppResourceDirID != null && !this.spAppResourceDirID.equals(other.spAppResourceDirID))) {
+        if ((this.spAppResourceDirId == null && other.spAppResourceDirId != null) || (this.spAppResourceDirId != null && !this.spAppResourceDirId.equals(other.spAppResourceDirId))) {
             return false;
         }
         return true;
@@ -211,7 +215,7 @@ public class Spappresourcedir extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Spappresourcedir[ spAppResourceDirID=" + spAppResourceDirID + " ]";
+        return "Spappresourcedir[ spAppResourceDirID=" + spAppResourceDirId + " ]";
     }
     
 }

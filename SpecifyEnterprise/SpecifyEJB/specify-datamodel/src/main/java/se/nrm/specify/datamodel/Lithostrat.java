@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Lithostrat.findAll", query = "SELECT l FROM Lithostrat l"),
-    @NamedQuery(name = "Lithostrat.findByLithoStratID", query = "SELECT l FROM Lithostrat l WHERE l.lithoStratID = :lithoStratID"),
+    @NamedQuery(name = "Lithostrat.findByLithoStratID", query = "SELECT l FROM Lithostrat l WHERE l.lithoStratId = :lithoStratID"),
     @NamedQuery(name = "Lithostrat.findByTimestampCreated", query = "SELECT l FROM Lithostrat l WHERE l.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Lithostrat.findByTimestampModified", query = "SELECT l FROM Lithostrat l WHERE l.timestampModified = :timestampModified"),
     @NamedQuery(name = "Lithostrat.findByVersion", query = "SELECT l FROM Lithostrat l WHERE l.version = :version"),
@@ -41,7 +41,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Lithostrat.findByNodeNumber", query = "SELECT l FROM Lithostrat l WHERE l.nodeNumber = :nodeNumber"),
     @NamedQuery(name = "Lithostrat.findByNumber1", query = "SELECT l FROM Lithostrat l WHERE l.number1 = :number1"),
     @NamedQuery(name = "Lithostrat.findByNumber2", query = "SELECT l FROM Lithostrat l WHERE l.number2 = :number2"),
-    @NamedQuery(name = "Lithostrat.findByRankID", query = "SELECT l FROM Lithostrat l WHERE l.rankID = :rankID"),
+    @NamedQuery(name = "Lithostrat.findByRankID", query = "SELECT l FROM Lithostrat l WHERE l.rankId = :rankID"),
     @NamedQuery(name = "Lithostrat.findByYesNo1", query = "SELECT l FROM Lithostrat l WHERE l.yesNo1 = :yesNo1"),
     @NamedQuery(name = "Lithostrat.findByYesNo2", query = "SELECT l FROM Lithostrat l WHERE l.yesNo2 = :yesNo2")})
 public class Lithostrat extends BaseEntity {  
@@ -53,7 +53,7 @@ public class Lithostrat extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "LithoStratID")
-    private Integer lithoStratID;
+    private Integer lithoStratId;
      
     @Size(max = 255)
     @Column(name = "FullName")
@@ -88,7 +88,7 @@ public class Lithostrat extends BaseEntity {
     @Basic(optional = false)
     @NotNull
     @Column(name = "RankID")
-    private int rankID;
+    private int rankId;
     
     @Lob
     @Size(max = 65535)
@@ -113,59 +113,60 @@ public class Lithostrat extends BaseEntity {
     
     @JoinColumn(name = "LithoStratTreeDefItemID", referencedColumnName = "LithoStratTreeDefItemID")
     @ManyToOne(optional = false)
-    private Lithostrattreedefitem lithoStratTreeDefItemID;
+    private Lithostrattreedefitem definitionItem;
     
-    @OneToMany(mappedBy = "parentID") 
-    private Collection<Lithostrat> lithostratCollection;
+    @OneToMany(mappedBy = "parent") 
+    private Collection<Lithostrat> children;
     
     
     @JoinColumn(name = "ParentID", referencedColumnName = "LithoStratID")
     @ManyToOne
-    private Lithostrat parentID;
+    private Lithostrat parent;
     
-    @OneToMany(mappedBy = "acceptedID")
-    private Collection<Lithostrat> lithostratCollection1;
+    @OneToMany(mappedBy = "acceptedLithoStrat")
+    private Collection<Lithostrat> acceptedChildren;
     
     @JoinColumn(name = "AcceptedID", referencedColumnName = "LithoStratID")
     @ManyToOne
-    private Lithostrat acceptedID;
+    private Lithostrat acceptedLithoStrat;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "LithoStratTreeDefID", referencedColumnName = "LithoStratTreeDefID")
     @ManyToOne(optional = false)
-    private Lithostrattreedef lithoStratTreeDefID;
+    private Lithostrattreedef definition;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
-    @OneToMany(mappedBy = "lithoStratID")
-    private Collection<Paleocontext> paleocontextCollection;
+    @OneToMany(mappedBy = "lithoStrat")
+    private Collection<Paleocontext> paleoContexts;
 
     public Lithostrat() {
     }
 
-    public Lithostrat(Integer lithoStratID) {
-        this.lithoStratID = lithoStratID;
+    public Lithostrat(Integer lithoStratId) {
+        this.lithoStratId = lithoStratId;
     }
 
-    public Lithostrat(Integer lithoStratID, Date timestampCreated, String name, int rankID) {
+    public Lithostrat(Integer lithoStratId, Date timestampCreated, String name, int rankId) {
         super(timestampCreated);
-        this.lithoStratID = lithoStratID; 
+        this.lithoStratId = lithoStratId; 
         this.name = name;
-        this.rankID = rankID;
+        this.rankId = rankId;
     }
 
-    public Integer getLithoStratID() {
-        return lithoStratID;
+    public int getRankId() {
+        return rankId;
     }
 
-    public void setLithoStratID(Integer lithoStratID) {
-        this.lithoStratID = lithoStratID;
+    public void setRankId(int rankId) {
+        this.rankId = rankId;
     }
+
  
     public String getFullName() {
         return fullName;
@@ -229,15 +230,7 @@ public class Lithostrat extends BaseEntity {
 
     public void setNumber2(Double number2) {
         this.number2 = number2;
-    }
-
-    public int getRankID() {
-        return rankID;
-    }
-
-    public void setRankID(int rankID) {
-        this.rankID = rankID;
-    }
+    } 
 
     public String getRemarks() {
         return remarks;
@@ -279,85 +272,96 @@ public class Lithostrat extends BaseEntity {
         this.yesNo2 = yesNo2;
     }
 
-    public Lithostrattreedefitem getLithoStratTreeDefItemID() {
-        return lithoStratTreeDefItemID;
+    @XmlTransient
+    public Collection<Lithostrat> getAcceptedChildren() {
+        return acceptedChildren;
     }
 
-    public void setLithoStratTreeDefItemID(Lithostrattreedefitem lithoStratTreeDefItemID) {
-        this.lithoStratTreeDefItemID = lithoStratTreeDefItemID;
+    public void setAcceptedChildren(Collection<Lithostrat> acceptedChildren) {
+        this.acceptedChildren = acceptedChildren;
+    }
+
+    public Lithostrat getAcceptedLithoStrat() {
+        return acceptedLithoStrat;
+    }
+
+    public void setAcceptedLithoStrat(Lithostrat acceptedLithoStrat) {
+        this.acceptedLithoStrat = acceptedLithoStrat;
     }
 
     @XmlTransient
-    public Collection<Lithostrat> getLithostratCollection() {
-        return lithostratCollection;
+    public Collection<Lithostrat> getChildren() {
+        return children;
     }
 
-    public void setLithostratCollection(Collection<Lithostrat> lithostratCollection) {
-        this.lithostratCollection = lithostratCollection;
+    public void setChildren(Collection<Lithostrat> children) {
+        this.children = children;
     }
 
-    public Lithostrat getParentID() {
-        return parentID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setParentID(Lithostrat parentID) {
-        this.parentID = parentID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Lithostrattreedef getDefinition() {
+        return definition;
+    }
+
+    public void setDefinition(Lithostrattreedef definition) {
+        this.definition = definition;
+    }
+
+    public Lithostrattreedefitem getDefinitionItem() {
+        return definitionItem;
+    }
+
+    public void setDefinitionItem(Lithostrattreedefitem definitionItem) {
+        this.definitionItem = definitionItem;
+    }
+
+    public Integer getLithoStratId() {
+        return lithoStratId;
+    }
+
+    public void setLithoStratId(Integer lithoStratId) {
+        this.lithoStratId = lithoStratId;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Lithostrat getParent() {
+        return parent;
+    }
+
+    public void setParent(Lithostrat parent) {
+        this.parent = parent;
     }
 
     @XmlTransient
-    public Collection<Lithostrat> getLithostratCollection1() {
-        return lithostratCollection1;
+    public Collection<Paleocontext> getPaleoContexts() {
+        return paleoContexts;
     }
 
-    public void setLithostratCollection1(Collection<Lithostrat> lithostratCollection1) {
-        this.lithostratCollection1 = lithostratCollection1;
+    public void setPaleoContexts(Collection<Paleocontext> paleoContexts) {
+        this.paleoContexts = paleoContexts;
     }
 
-    public Lithostrat getAcceptedID() {
-        return acceptedID;
-    }
-
-    public void setAcceptedID(Lithostrat acceptedID) {
-        this.acceptedID = acceptedID;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Lithostrattreedef getLithoStratTreeDefID() {
-        return lithoStratTreeDefID;
-    }
-
-    public void setLithoStratTreeDefID(Lithostrattreedef lithoStratTreeDefID) {
-        this.lithoStratTreeDefID = lithoStratTreeDefID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
-    @XmlTransient
-    public Collection<Paleocontext> getPaleocontextCollection() {
-        return paleocontextCollection;
-    }
-
-    public void setPaleocontextCollection(Collection<Paleocontext> paleocontextCollection) {
-        this.paleocontextCollection = paleocontextCollection;
-    }
+   
+  
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (lithoStratID != null ? lithoStratID.hashCode() : 0);
+        hash += (lithoStratId != null ? lithoStratId.hashCode() : 0);
         return hash;
     }
 
@@ -368,7 +372,7 @@ public class Lithostrat extends BaseEntity {
             return false;
         }
         Lithostrat other = (Lithostrat) object;
-        if ((this.lithoStratID == null && other.lithoStratID != null) || (this.lithoStratID != null && !this.lithoStratID.equals(other.lithoStratID))) {
+        if ((this.lithoStratId == null && other.lithoStratId != null) || (this.lithoStratId != null && !this.lithoStratId.equals(other.lithoStratId))) {
             return false;
         }
         return true;
@@ -376,7 +380,7 @@ public class Lithostrat extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Lithostrat[ lithoStratID=" + lithoStratID + " ]";
+        return "Lithostrat[ lithoStratID=" + lithoStratId + " ]";
     }
     
 }

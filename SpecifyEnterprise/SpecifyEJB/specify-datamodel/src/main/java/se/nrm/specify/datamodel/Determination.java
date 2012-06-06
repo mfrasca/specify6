@@ -35,11 +35,11 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Determination.findAll", query = "SELECT d FROM Determination d"),
-    @NamedQuery(name = "Determination.findByDeterminationID", query = "SELECT d FROM Determination d WHERE d.determinationID = :determinationID"),
+    @NamedQuery(name = "Determination.findByDeterminationID", query = "SELECT d FROM Determination d WHERE d.determinationId = :determinationID"),
     @NamedQuery(name = "Determination.findByTimestampCreated", query = "SELECT d FROM Determination d WHERE d.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Determination.findByTimestampModified", query = "SELECT d FROM Determination d WHERE d.timestampModified = :timestampModified"),
     @NamedQuery(name = "Determination.findByVersion", query = "SELECT d FROM Determination d WHERE d.version = :version"),
-    @NamedQuery(name = "Determination.findByCollectionMemberID", query = "SELECT d FROM Determination d WHERE d.collectionMemberID = :collectionMemberID"),
+    @NamedQuery(name = "Determination.findByCollectionMemberID", query = "SELECT d FROM Determination d WHERE d.collectionMemberId = :collectionMemberID"),
     @NamedQuery(name = "Determination.findByAddendum", query = "SELECT d FROM Determination d WHERE d.addendum = :addendum"),
     @NamedQuery(name = "Determination.findByAlternateName", query = "SELECT d FROM Determination d WHERE d.alternateName = :alternateName"),
     @NamedQuery(name = "Determination.findByConfidence", query = "SELECT d FROM Determination d WHERE d.confidence = :confidence"),
@@ -58,10 +58,10 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Determination.findByTypeStatusName", query = "SELECT d FROM Determination d WHERE d.typeStatusName = :typeStatusName"),
     @NamedQuery(name = "Determination.findByYesNo1", query = "SELECT d FROM Determination d WHERE d.yesNo1 = :yesNo1"),
     @NamedQuery(name = "Determination.findByYesNo2", query = "SELECT d FROM Determination d WHERE d.yesNo2 = :yesNo2"),
-    @NamedQuery(name = "Determination.findByPreferredTaxonID", query = "SELECT d FROM Determination d WHERE d.preferredTaxonID = :preferredTaxonID"),
-    @NamedQuery(name = "Determination.findCurrentByTaxonNameAndEvent", query = "SELECT d FROM Determination d WHERE d.taxonID.fullName = :fullName and d.collectionObjectID.collectingEventID = :collectingEventID and d.collectionObjectID.collectionID.code = :code and d.isCurrent = :isCurrent"),
-    @NamedQuery(name = "Determination.findByTaxonID", query = "SELECT d FROM Determination d WHERE d.taxonID = :taxonId"),
-    @NamedQuery(name = "Determination.findCurrentByCollectionobjectID", query = "SELECT d FROM Determination d WHERE d.collectionObjectID = :collectionObjectID and d.isCurrent = :isCurrent")})
+    @NamedQuery(name = "Determination.findByPreferredTaxonID", query = "SELECT d FROM Determination d WHERE d.preferredTaxon = :preferredTaxonID"),
+    @NamedQuery(name = "Determination.findCurrentByTaxonNameAndEvent", query = "SELECT d FROM Determination d WHERE d.taxon.fullName = :fullName and d.collectionObject.collectingEvent = :collectingEventID and d.collectionObject.collection.code = :code and d.isCurrent = :isCurrent"),
+    @NamedQuery(name = "Determination.findByTaxonID", query = "SELECT d FROM Determination d WHERE d.taxon = :taxonId"),
+    @NamedQuery(name = "Determination.findCurrentByCollectionobjectID", query = "SELECT d FROM Determination d WHERE d.collectionObject = :collectionObjectID and d.isCurrent = :isCurrent")})
 public class Determination extends BaseEntity { 
     
     private static final long serialVersionUID = 1L;
@@ -71,12 +71,12 @@ public class Determination extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "DeterminationID")
-    private Integer determinationID;
+    private Integer determinationId;
   
     @Basic(optional = false)
     @NotNull
     @Column(name = "CollectionMemberID")
-    private int collectionMemberID;
+    private int collectionMemberId;
     
     @Size(max = 16)
     @Column(name = "Addendum")
@@ -162,63 +162,49 @@ public class Determination extends BaseEntity {
     @Column(name = "YesNo2")
     private Boolean yesNo2;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "determinationID")
-    private Collection<Determinationcitation> determinationcitationCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "determination")
+    private Collection<Determinationcitation> determinationCitations;
     
     @JoinColumn(name = "DeterminerID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent determinerID;
+    private Agent determiner;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "CollectionObjectID", referencedColumnName = "CollectionObjectID")
     @ManyToOne(optional = false, cascade= CascadeType.ALL)
-    private Collectionobject collectionObjectID;
+    private Collectionobject collectionObject;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "PreferredTaxonID", referencedColumnName = "TaxonID")
     @ManyToOne
-    private Taxon preferredTaxonID;
+    private Taxon preferredTaxon;
     
     @JoinColumn(name = "TaxonID", referencedColumnName = "TaxonID")
     @ManyToOne
-    private Taxon taxonID;
+    private Taxon taxon;
      
 
     public Determination() {
     }
 
-    public Determination(Integer determinationID) {
-        this.determinationID = determinationID;
+    public Determination(Integer determinationId) {
+        this.determinationId = determinationId;
     }
 
-    public Determination(Integer determinationID, Date timestampCreated, int collectionMemberID, boolean isCurrent) {
+    public Determination(Integer determinationId, Date timestampCreated, int collectionMemberId, boolean isCurrent) {
         super(timestampCreated);
-        this.determinationID = determinationID; 
-        this.collectionMemberID = collectionMemberID;
+        this.determinationId = determinationId; 
+        this.collectionMemberId = collectionMemberId;
         this.isCurrent = isCurrent;
     }
-
-    public Integer getDeterminationID() {
-        return determinationID;
-    }
-
-    public void setDeterminationID(Integer determinationID) {
-        this.determinationID = determinationID;
-    }
  
-    public int getCollectionMemberID() {
-        return collectionMemberID;
-    }
-
-    public void setCollectionMemberID(int collectionMemberID) {
-        this.collectionMemberID = collectionMemberID;
-    }
+   
 
     public String getAddendum() {
         return addendum;
@@ -388,64 +374,82 @@ public class Determination extends BaseEntity {
         this.yesNo2 = yesNo2;
     }
 
-    @XmlTransient
-    public Collection<Determinationcitation> getDeterminationcitationCollection() {
-        return determinationcitationCollection;
+    public int getCollectionMemberId() {
+        return collectionMemberId;
     }
 
-    public void setDeterminationcitationCollection(Collection<Determinationcitation> determinationcitationCollection) {
-        this.determinationcitationCollection = determinationcitationCollection;
-    }
-
-    public Agent getDeterminerID() {
-        return determinerID;
-    }
-
-    public void setDeterminerID(Agent determinerID) {
-        this.determinerID = determinerID;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setCollectionMemberId(int collectionMemberId) {
+        this.collectionMemberId = collectionMemberId;
     }
 
     @XmlTransient
-    public Collectionobject getCollectionObjectID() {
-        return collectionObjectID;
+    public Collectionobject getCollectionObject() {
+        return collectionObject;
     }
 
-    public void setCollectionObjectID(Collectionobject collectionObjectID) {
-        this.collectionObjectID = collectionObjectID;
+    public void setCollectionObject(Collectionobject collectionObject) {
+        this.collectionObject = collectionObject;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
+
+    @XmlTransient
+    public Collection<Determinationcitation> getDeterminationCitations() {
+        return determinationCitations;
+    }
+
+    public void setDeterminationCitations(Collection<Determinationcitation> determinationCitations) {
+        this.determinationCitations = determinationCitations;
+    }
+
+    public Integer getDeterminationId() {
+        return determinationId;
+    }
+
+    public void setDeterminationId(Integer determinationId) {
+        this.determinationId = determinationId;
+    }
+
+    public Agent getDeterminer() {
+        return determiner;
+    }
+
+    public void setDeterminer(Agent determiner) {
+        this.determiner = determiner;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Taxon getPreferredTaxon() {
+        return preferredTaxon;
+    }
+
+    public void setPreferredTaxon(Taxon preferredTaxon) {
+        this.preferredTaxon = preferredTaxon;
+    }
+
+    public Taxon getTaxon() {
+        return taxon;
+    }
+
+    public void setTaxon(Taxon taxon) {
+        this.taxon = taxon;
+    }
+
+ 
   
-    public Taxon getPreferredTaxonID() {
-        return preferredTaxonID;
-    }
-
-    public void setPreferredTaxonID(Taxon preferredTaxonID) {
-        this.preferredTaxonID = preferredTaxonID;
-    }
-  
-    public Taxon getTaxonID() {
-        return taxonID;
-    }
-
-    public void setTaxonID(Taxon taxonID) {
-        this.taxonID = taxonID;
-    } 
-     
     /**
      * Parent pointer
      * 
@@ -454,14 +458,14 @@ public class Determination extends BaseEntity {
      */
     public void afterUnmarshal(Unmarshaller u, Object parent) {  
         if(parent instanceof Collectionobject) {
-            this.collectionObjectID = (Collectionobject)parent;   
+            this.collectionObject = (Collectionobject)parent;   
         }
     }
      
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (determinationID != null ? determinationID.hashCode() : 0);
+        hash += (determinationId != null ? determinationId.hashCode() : 0);
         return hash;
     }
 
@@ -472,7 +476,7 @@ public class Determination extends BaseEntity {
             return false;
         }
         Determination other = (Determination) object;
-        if ((this.determinationID == null && other.determinationID != null) || (this.determinationID != null && !this.determinationID.equals(other.determinationID))) {
+        if ((this.determinationId == null && other.determinationId != null) || (this.determinationId != null && !this.determinationId.equals(other.determinationId))) {
             return false;
         }
         return true;
@@ -480,6 +484,6 @@ public class Determination extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Determination[ determinationID=" + determinationID + " ]";
+        return "Determination[ determinationID=" + determinationId + " ]";
     } 
 }

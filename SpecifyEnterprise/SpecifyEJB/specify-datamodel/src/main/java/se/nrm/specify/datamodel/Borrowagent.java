@@ -26,11 +26,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Borrowagent.findAll", query = "SELECT b FROM Borrowagent b"),
-    @NamedQuery(name = "Borrowagent.findByBorrowAgentID", query = "SELECT b FROM Borrowagent b WHERE b.borrowAgentID = :borrowAgentID"),
+    @NamedQuery(name = "Borrowagent.findByBorrowAgentID", query = "SELECT b FROM Borrowagent b WHERE b.borrowAgentId = :borrowAgentID"),
     @NamedQuery(name = "Borrowagent.findByTimestampCreated", query = "SELECT b FROM Borrowagent b WHERE b.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Borrowagent.findByTimestampModified", query = "SELECT b FROM Borrowagent b WHERE b.timestampModified = :timestampModified"),
     @NamedQuery(name = "Borrowagent.findByVersion", query = "SELECT b FROM Borrowagent b WHERE b.version = :version"),
-    @NamedQuery(name = "Borrowagent.findByCollectionMemberID", query = "SELECT b FROM Borrowagent b WHERE b.collectionMemberID = :collectionMemberID"),
+    @NamedQuery(name = "Borrowagent.findByCollectionMemberID", query = "SELECT b FROM Borrowagent b WHERE b.collectionMemberId = :collectionMemberID"),
     @NamedQuery(name = "Borrowagent.findByRole", query = "SELECT b FROM Borrowagent b WHERE b.role = :role")})
 public class Borrowagent extends BaseEntity { 
     
@@ -41,12 +41,12 @@ public class Borrowagent extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "BorrowAgentID")
-    private Integer borrowAgentID;
+    private Integer borrowAgentId;
      
     @Basic(optional = false)
     @NotNull
     @Column(name = "CollectionMemberID")
-    private int collectionMemberID;
+    private int collectionMemberId;
     
     @Lob
     @Size(max = 65535)
@@ -61,50 +61,83 @@ public class Borrowagent extends BaseEntity {
     
     @JoinColumn(name = "BorrowID", referencedColumnName = "BorrowID")
     @ManyToOne(optional = false)
-    private Borrow borrowID;
+    private Borrow borrow;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "AgentID", referencedColumnName = "AgentID")
     @ManyToOne(optional = false)
-    private Agent agentID;
+    private Agent agent;
 
     public Borrowagent() {
     }
 
-    public Borrowagent(Integer borrowAgentID) {
-        this.borrowAgentID = borrowAgentID;
+    public Borrowagent(Integer borrowAgentId) {
+        this.borrowAgentId = borrowAgentId;
     }
 
-    public Borrowagent(Integer borrowAgentID, Date timestampCreated, int collectionMemberID, String role) {
+    public Borrowagent(Integer borrowAgentId, Date timestampCreated, int collectionMemberId, String role) {
         super(timestampCreated);
-        this.borrowAgentID = borrowAgentID; 
-        this.collectionMemberID = collectionMemberID;
+        this.borrowAgentId = borrowAgentId; 
+        this.collectionMemberId = collectionMemberId;
         this.role = role;
     }
 
-    public Integer getBorrowAgentID() {
-        return borrowAgentID;
+    public Agent getAgent() {
+        return agent;
     }
 
-    public void setBorrowAgentID(Integer borrowAgentID) {
-        this.borrowAgentID = borrowAgentID;
+    public void setAgent(Agent agent) {
+        this.agent = agent;
     }
+
+    public Borrow getBorrow() {
+        return borrow;
+    }
+
+    public void setBorrow(Borrow borrow) {
+        this.borrow = borrow;
+    }
+
+    public Integer getBorrowAgentId() {
+        return borrowAgentId;
+    }
+
+    public void setBorrowAgentId(Integer borrowAgentId) {
+        this.borrowAgentId = borrowAgentId;
+    }
+
+    public int getCollectionMemberId() {
+        return collectionMemberId;
+    }
+
+    public void setCollectionMemberId(int collectionMemberId) {
+        this.collectionMemberId = collectionMemberId;
+    }
+
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
+    }
+
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
  
-    public int getCollectionMemberID() {
-        return collectionMemberID;
-    }
-
-    public void setCollectionMemberID(int collectionMemberID) {
-        this.collectionMemberID = collectionMemberID;
-    }
-
     public String getRemarks() {
         return remarks;
     }
@@ -121,42 +154,12 @@ public class Borrowagent extends BaseEntity {
         this.role = role;
     }
 
-    public Borrow getBorrowID() {
-        return borrowID;
-    }
-
-    public void setBorrowID(Borrow borrowID) {
-        this.borrowID = borrowID;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
-    public Agent getAgentID() {
-        return agentID;
-    }
-
-    public void setAgentID(Agent agentID) {
-        this.agentID = agentID;
-    }
+  
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (borrowAgentID != null ? borrowAgentID.hashCode() : 0);
+        hash += (borrowAgentId != null ? borrowAgentId.hashCode() : 0);
         return hash;
     }
 
@@ -167,7 +170,7 @@ public class Borrowagent extends BaseEntity {
             return false;
         }
         Borrowagent other = (Borrowagent) object;
-        if ((this.borrowAgentID == null && other.borrowAgentID != null) || (this.borrowAgentID != null && !this.borrowAgentID.equals(other.borrowAgentID))) {
+        if ((this.borrowAgentId == null && other.borrowAgentId != null) || (this.borrowAgentId != null && !this.borrowAgentId.equals(other.borrowAgentId))) {
             return false;
         }
         return true;
@@ -175,7 +178,7 @@ public class Borrowagent extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Borrowagent[ borrowAgentID=" + borrowAgentID + " ]";
+        return "Borrowagent[ borrowAgentId=" + borrowAgentId + " ]";
     }
     
 }

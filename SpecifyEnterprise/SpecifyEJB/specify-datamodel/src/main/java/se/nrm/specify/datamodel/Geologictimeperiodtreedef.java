@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Geologictimeperiodtreedef.findAll", query = "SELECT g FROM Geologictimeperiodtreedef g"),
-    @NamedQuery(name = "Geologictimeperiodtreedef.findByGeologicTimePeriodTreeDefID", query = "SELECT g FROM Geologictimeperiodtreedef g WHERE g.geologicTimePeriodTreeDefID = :geologicTimePeriodTreeDefID"),
+    @NamedQuery(name = "Geologictimeperiodtreedef.findByGeologicTimePeriodTreeDefID", query = "SELECT g FROM Geologictimeperiodtreedef g WHERE g.geologicTimePeriodTreeDefId = :geologicTimePeriodTreeDefID"),
     @NamedQuery(name = "Geologictimeperiodtreedef.findByTimestampCreated", query = "SELECT g FROM Geologictimeperiodtreedef g WHERE g.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Geologictimeperiodtreedef.findByTimestampModified", query = "SELECT g FROM Geologictimeperiodtreedef g WHERE g.timestampModified = :timestampModified"),
     @NamedQuery(name = "Geologictimeperiodtreedef.findByVersion", query = "SELECT g FROM Geologictimeperiodtreedef g WHERE g.version = :version"),
@@ -45,7 +45,7 @@ public class Geologictimeperiodtreedef extends BaseEntity {
     @Basic(optional = false)
     @NotNull
     @Column(name = "GeologicTimePeriodTreeDefID")
-    private Integer geologicTimePeriodTreeDefID; 
+    private Integer geologicTimePeriodTreeDefId; 
     
     @Column(name = "FullNameDirection")
     private Integer fullNameDirection;
@@ -61,43 +61,60 @@ public class Geologictimeperiodtreedef extends BaseEntity {
     @Column(name = "Remarks")
     private String remarks;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "geologicTimePeriodTreeDefID")
-    private Collection<Geologictimeperiodtreedefitem> geologictimeperiodtreedefitemCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "treeDef")
+    private Collection<Geologictimeperiodtreedefitem> treeDefItems;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "geologicTimePeriodTreeDefID")
-    private Collection<Geologictimeperiod> geologictimeperiodCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "definition")
+    private Collection<Geologictimeperiod> treeEntries;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "geologicTimePeriodTreeDefID")
-    private Collection<Discipline> disciplineCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "geologicTimePeriodTreeDef")
+    private Collection<Discipline> disciplines;
 
     public Geologictimeperiodtreedef() {
     }
 
-    public Geologictimeperiodtreedef(Integer geologicTimePeriodTreeDefID) {
-        this.geologicTimePeriodTreeDefID = geologicTimePeriodTreeDefID;
+    public Geologictimeperiodtreedef(Integer geologicTimePeriodTreeDefId) {
+        this.geologicTimePeriodTreeDefId = geologicTimePeriodTreeDefId;
     }
 
-    public Geologictimeperiodtreedef(Integer geologicTimePeriodTreeDefID, Date timestampCreated, String name) {
+    public Geologictimeperiodtreedef(Integer geologicTimePeriodTreeDefId, Date timestampCreated, String name) {
         super(timestampCreated);
-        this.geologicTimePeriodTreeDefID = geologicTimePeriodTreeDefID; 
+        this.geologicTimePeriodTreeDefId = geologicTimePeriodTreeDefId; 
         this.name = name;
     }
 
-    public Integer getGeologicTimePeriodTreeDefID() {
-        return geologicTimePeriodTreeDefID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setGeologicTimePeriodTreeDefID(Integer geologicTimePeriodTreeDefID) {
-        this.geologicTimePeriodTreeDefID = geologicTimePeriodTreeDefID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
+
+    public Integer getGeologicTimePeriodTreeDefId() {
+        return geologicTimePeriodTreeDefId;
+    }
+
+    public void setGeologicTimePeriodTreeDefId(Integer geologicTimePeriodTreeDefId) {
+        this.geologicTimePeriodTreeDefId = geologicTimePeriodTreeDefId;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+ 
  
     public Integer getFullNameDirection() {
         return fullNameDirection;
@@ -124,52 +141,38 @@ public class Geologictimeperiodtreedef extends BaseEntity {
     }
 
     @XmlTransient
-    public Collection<Geologictimeperiodtreedefitem> getGeologictimeperiodtreedefitemCollection() {
-        return geologictimeperiodtreedefitemCollection;
+    public Collection<Discipline> getDisciplines() {
+        return disciplines;
     }
 
-    public void setGeologictimeperiodtreedefitemCollection(Collection<Geologictimeperiodtreedefitem> geologictimeperiodtreedefitemCollection) {
-        this.geologictimeperiodtreedefitemCollection = geologictimeperiodtreedefitemCollection;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setDisciplines(Collection<Discipline> disciplines) {
+        this.disciplines = disciplines;
     }
 
     @XmlTransient
-    public Collection<Geologictimeperiod> getGeologictimeperiodCollection() {
-        return geologictimeperiodCollection;
-    }
-
-    public void setGeologictimeperiodCollection(Collection<Geologictimeperiod> geologictimeperiodCollection) {
-        this.geologictimeperiodCollection = geologictimeperiodCollection;
+    public Collection<Geologictimeperiodtreedefitem> getTreeDefItems() {
+        return treeDefItems;
+    } 
+    
+    public void setTreeDefItems(Collection<Geologictimeperiodtreedefitem> treeDefItems) {
+        this.treeDefItems = treeDefItems;
     }
 
     @XmlTransient
-    public Collection<Discipline> getDisciplineCollection() {
-        return disciplineCollection;
+    public Collection<Geologictimeperiod> getTreeEntries() {
+        return treeEntries;
     }
 
-    public void setDisciplineCollection(Collection<Discipline> disciplineCollection) {
-        this.disciplineCollection = disciplineCollection;
+    public void setTreeEntries(Collection<Geologictimeperiod> treeEntries) {
+        this.treeEntries = treeEntries;
     }
+
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (geologicTimePeriodTreeDefID != null ? geologicTimePeriodTreeDefID.hashCode() : 0);
+        hash += (geologicTimePeriodTreeDefId != null ? geologicTimePeriodTreeDefId.hashCode() : 0);
         return hash;
     }
 
@@ -180,7 +183,7 @@ public class Geologictimeperiodtreedef extends BaseEntity {
             return false;
         }
         Geologictimeperiodtreedef other = (Geologictimeperiodtreedef) object;
-        if ((this.geologicTimePeriodTreeDefID == null && other.geologicTimePeriodTreeDefID != null) || (this.geologicTimePeriodTreeDefID != null && !this.geologicTimePeriodTreeDefID.equals(other.geologicTimePeriodTreeDefID))) {
+        if ((this.geologicTimePeriodTreeDefId == null && other.geologicTimePeriodTreeDefId != null) || (this.geologicTimePeriodTreeDefId != null && !this.geologicTimePeriodTreeDefId.equals(other.geologicTimePeriodTreeDefId))) {
             return false;
         }
         return true;
@@ -188,7 +191,7 @@ public class Geologictimeperiodtreedef extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Geologictimeperiodtreedef[ geologicTimePeriodTreeDefID=" + geologicTimePeriodTreeDefID + " ]";
+        return "Geologictimeperiodtreedef[ geologicTimePeriodTreeDefID=" + geologicTimePeriodTreeDefId + " ]";
     }
     
 }

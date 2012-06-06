@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Spqueryfield.findAll", query = "SELECT s FROM Spqueryfield s"),
-    @NamedQuery(name = "Spqueryfield.findBySpQueryFieldID", query = "SELECT s FROM Spqueryfield s WHERE s.spQueryFieldID = :spQueryFieldID"),
+    @NamedQuery(name = "Spqueryfield.findBySpQueryFieldID", query = "SELECT s FROM Spqueryfield s WHERE s.spQueryFieldId = :spQueryFieldID"),
     @NamedQuery(name = "Spqueryfield.findByTimestampCreated", query = "SELECT s FROM Spqueryfield s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Spqueryfield.findByTimestampModified", query = "SELECT s FROM Spqueryfield s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Spqueryfield.findByVersion", query = "SELECT s FROM Spqueryfield s WHERE s.version = :version"),
@@ -59,7 +59,7 @@ public class Spqueryfield extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "SpQueryFieldID")
-    private Integer spQueryFieldID;
+    private Integer spQueryFieldId;
      
     @Column(name = "AlwaysFilter")
     private Boolean alwaysFilter;
@@ -145,31 +145,31 @@ public class Spqueryfield extends BaseEntity {
     @JoinColumn(name = "SpQueryID", referencedColumnName = "SpQueryID")
     @ManyToOne 
     @XmlTransient
-    private Spquery spQueryID;
+    private Spquery query;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
     @XmlTransient
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne 
     @XmlTransient
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
-    @OneToMany(mappedBy = "spQueryFieldID", cascade= CascadeType.ALL)
-    private Collection<Spexportschemaitemmapping> spexportschemaitemmappingCollection;
+    @OneToMany(mappedBy = "queryField", cascade= CascadeType.ALL)
+    private Collection<Spexportschemaitemmapping> mappings;
 
     public Spqueryfield() {
     }
 
-    public Spqueryfield(Integer spQueryFieldID) {
-        this.spQueryFieldID = spQueryFieldID;
+    public Spqueryfield(Integer spQueryFieldId) {
+        this.spQueryFieldId = spQueryFieldId;
     }
 
-    public Spqueryfield(Integer spQueryFieldID, Date timestampCreated, String fieldName, boolean isDisplay, boolean isNot, short operStart, short position, short sortType, String startValue, String stringId, String tableList) {
+    public Spqueryfield(Integer spQueryFieldId, Date timestampCreated, String fieldName, boolean isDisplay, boolean isNot, short operStart, short position, short sortType, String startValue, String stringId, String tableList) {
         super(timestampCreated);
-        this.spQueryFieldID = spQueryFieldID; 
+        this.spQueryFieldId = spQueryFieldId; 
         this.fieldName = fieldName;
         this.isDisplay = isDisplay;
         this.isNot = isNot;
@@ -181,13 +181,6 @@ public class Spqueryfield extends BaseEntity {
         this.tableList = tableList;
     }
 
-    public Integer getSpQueryFieldID() {
-        return spQueryFieldID;
-    }
-
-    public void setSpQueryFieldID(Integer spQueryFieldID) {
-        this.spQueryFieldID = spQueryFieldID;
-    }
  
     public Boolean getAlwaysFilter() {
         return alwaysFilter;
@@ -333,43 +326,53 @@ public class Spqueryfield extends BaseEntity {
         this.allowNulls = allowNulls;
     }
 
-    public Spquery getSpQueryID() {
-        return spQueryID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setSpQueryID(Spquery spQueryID) {
-        this.spQueryID = spQueryID;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
     @XmlTransient
-    public Collection<Spexportschemaitemmapping> getSpexportschemaitemmappingCollection() {
-        return spexportschemaitemmappingCollection;
+    public Collection<Spexportschemaitemmapping> getMappings() {
+        return mappings;
     }
 
-    public void setSpexportschemaitemmappingCollection(Collection<Spexportschemaitemmapping> spexportschemaitemmappingCollection) {
-        this.spexportschemaitemmappingCollection = spexportschemaitemmappingCollection;
+    public void setMappings(Collection<Spexportschemaitemmapping> mappings) {
+        this.mappings = mappings;
     }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Spquery getQuery() {
+        return query;
+    }
+
+    public void setQuery(Spquery query) {
+        this.query = query;
+    }
+
+    public Integer getSpQueryFieldId() {
+        return spQueryFieldId;
+    }
+
+    public void setSpQueryFieldId(Integer spQueryFieldId) {
+        this.spQueryFieldId = spQueryFieldId;
+    }
+
+    
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (spQueryFieldID != null ? spQueryFieldID.hashCode() : 0);
+        hash += (spQueryFieldId != null ? spQueryFieldId.hashCode() : 0);
         return hash;
     }
 
@@ -380,7 +383,7 @@ public class Spqueryfield extends BaseEntity {
             return false;
         }
         Spqueryfield other = (Spqueryfield) object;
-        if ((this.spQueryFieldID == null && other.spQueryFieldID != null) || (this.spQueryFieldID != null && !this.spQueryFieldID.equals(other.spQueryFieldID))) {
+        if ((this.spQueryFieldId == null && other.spQueryFieldId != null) || (this.spQueryFieldId != null && !this.spQueryFieldId.equals(other.spQueryFieldId))) {
             return false;
         }
         return true;
@@ -388,7 +391,7 @@ public class Spqueryfield extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Spqueryfield[ spQueryFieldID=" + spQueryFieldID + " ]";
+        return "Spqueryfield[ spQueryFieldID=" + spQueryFieldId + " ]";
     }
     
 }

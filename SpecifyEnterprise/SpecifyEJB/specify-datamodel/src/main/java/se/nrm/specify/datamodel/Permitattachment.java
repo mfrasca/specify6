@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Permitattachment.findAll", query = "SELECT p FROM Permitattachment p"),
-    @NamedQuery(name = "Permitattachment.findByPermitAttachmentID", query = "SELECT p FROM Permitattachment p WHERE p.permitAttachmentID = :permitAttachmentID"),
+    @NamedQuery(name = "Permitattachment.findByPermitAttachmentID", query = "SELECT p FROM Permitattachment p WHERE p.permitAttachmentId = :permitAttachmentID"),
     @NamedQuery(name = "Permitattachment.findByTimestampCreated", query = "SELECT p FROM Permitattachment p WHERE p.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Permitattachment.findByTimestampModified", query = "SELECT p FROM Permitattachment p WHERE p.timestampModified = :timestampModified"),
     @NamedQuery(name = "Permitattachment.findByVersion", query = "SELECT p FROM Permitattachment p WHERE p.version = :version"),
@@ -40,7 +40,7 @@ public class Permitattachment extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "PermitAttachmentID")
-    private Integer permitAttachmentID;
+    private Integer permitAttachmentId;
       
     @Column(name = "Ordinal")
     private Integer ordinal;
@@ -52,39 +52,33 @@ public class Permitattachment extends BaseEntity {
     
     @JoinColumn(name = "AttachmentID", referencedColumnName = "AttachmentID")
     @ManyToOne(optional = false)
-    private Attachment attachmentID;
+    private Attachment attachment;
     
     @JoinColumn(name = "PermitID", referencedColumnName = "PermitID")
     @ManyToOne(optional = false)
-    private Permit permitID;
+    private Permit permit;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
 
     public Permitattachment() {
     }
 
-    public Permitattachment(Integer permitAttachmentID) {
-        this.permitAttachmentID = permitAttachmentID;
+    public Permitattachment(Integer permitAttachmentId) {
+        this.permitAttachmentId = permitAttachmentId;
     }
 
-    public Permitattachment(Integer permitAttachmentID, Date timestampCreated) {
+    public Permitattachment(Integer permitAttachmentId, Date timestampCreated) {
         super(timestampCreated);
-        this.permitAttachmentID = permitAttachmentID; 
+        this.permitAttachmentId = permitAttachmentId; 
     }
 
-    public Integer getPermitAttachmentID() {
-        return permitAttachmentID;
-    }
-
-    public void setPermitAttachmentID(Integer permitAttachmentID) {
-        this.permitAttachmentID = permitAttachmentID;
-    }
+     
  
     public Integer getOrdinal() {
         return ordinal;
@@ -101,44 +95,52 @@ public class Permitattachment extends BaseEntity {
     public void setRemarks(String remarks) {
         this.remarks = remarks;
     }
-
-    public Attachment getAttachmentID() {
-        return attachmentID;
-    }
-
-    public void setAttachmentID(Attachment attachmentID) {
-        this.attachmentID = attachmentID;
-    }
-
-    public Permit getPermitID() {
-        return permitID;
-    }
-
-    public void setPermitID(Permit permitID) {
-        this.permitID = permitID;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
+ 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (permitAttachmentID != null ? permitAttachmentID.hashCode() : 0);
+        hash += (permitAttachmentId != null ? permitAttachmentId.hashCode() : 0);
         return hash;
+    }
+
+    public Attachment getAttachment() {
+        return attachment;
+    }
+
+    public void setAttachment(Attachment attachment) {
+        this.attachment = attachment;
+    }
+
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
+    }
+
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Permit getPermit() {
+        return permit;
+    }
+
+    public void setPermit(Permit permit) {
+        this.permit = permit;
+    }
+
+    public Integer getPermitAttachmentId() {
+        return permitAttachmentId;
+    }
+
+    public void setPermitAttachmentId(Integer permitAttachmentId) {
+        this.permitAttachmentId = permitAttachmentId;
     }
 
     @Override
@@ -148,7 +150,7 @@ public class Permitattachment extends BaseEntity {
             return false;
         }
         Permitattachment other = (Permitattachment) object;
-        if ((this.permitAttachmentID == null && other.permitAttachmentID != null) || (this.permitAttachmentID != null && !this.permitAttachmentID.equals(other.permitAttachmentID))) {
+        if ((this.permitAttachmentId == null && other.permitAttachmentId != null) || (this.permitAttachmentId != null && !this.permitAttachmentId.equals(other.permitAttachmentId))) {
             return false;
         }
         return true;
@@ -156,7 +158,7 @@ public class Permitattachment extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Permitattachment[ permitAttachmentID=" + permitAttachmentID + " ]";
+        return "Permitattachment[ permitAttachmentID=" + permitAttachmentId + " ]";
     }
     
 }

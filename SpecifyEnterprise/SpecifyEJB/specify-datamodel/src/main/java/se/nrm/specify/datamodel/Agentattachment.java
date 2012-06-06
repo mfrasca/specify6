@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Agentattachment.findAll", query = "SELECT a FROM Agentattachment a"),
-    @NamedQuery(name = "Agentattachment.findByAgentAttachmentID", query = "SELECT a FROM Agentattachment a WHERE a.agentAttachmentID = :agentAttachmentID"),
+    @NamedQuery(name = "Agentattachment.findByAgentAttachmentID", query = "SELECT a FROM Agentattachment a WHERE a.agentAttachmentId = :agentAttachmentID"),
     @NamedQuery(name = "Agentattachment.findByTimestampCreated", query = "SELECT a FROM Agentattachment a WHERE a.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Agentattachment.findByTimestampModified", query = "SELECT a FROM Agentattachment a WHERE a.timestampModified = :timestampModified"),
     @NamedQuery(name = "Agentattachment.findByVersion", query = "SELECT a FROM Agentattachment a WHERE a.version = :version"),
@@ -40,7 +40,7 @@ public class Agentattachment extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "AgentAttachmentID")
-    private Integer agentAttachmentID;
+    private Integer agentAttachmentId;
       
     @Column(name = "Ordinal")
     private Integer ordinal;
@@ -52,40 +52,74 @@ public class Agentattachment extends BaseEntity {
     
     @JoinColumn(name = "AttachmentID", referencedColumnName = "AttachmentID")
     @ManyToOne(optional = false)
-    private Attachment attachmentID;
+    private Attachment attachment;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "AgentID", referencedColumnName = "AgentID")
     @ManyToOne(optional = false)
-    private Agent agentID;
+    private Agent agent;
 
     public Agentattachment() {
     }
 
-    public Agentattachment(Integer agentAttachmentID) {
-        this.agentAttachmentID = agentAttachmentID;
+    public Agentattachment(Integer agentAttachmentId) {
+        this.agentAttachmentId = agentAttachmentId;
     }
 
-    public Agentattachment(Integer agentAttachmentID, Date timestampCreated) {
+    public Agentattachment(Integer agentAttachmentId, Date timestampCreated) {
         super(timestampCreated);
-        this.agentAttachmentID = agentAttachmentID; 
+        this.agentAttachmentId = agentAttachmentId; 
     }
 
-    public Integer getAgentAttachmentID() {
-        return agentAttachmentID;
+    public Agent getAgent() {
+        return agent;
     }
 
-    public void setAgentAttachmentID(Integer agentAttachmentID) {
-        this.agentAttachmentID = agentAttachmentID;
-    } 
+    public void setAgent(Agent agent) {
+        this.agent = agent;
+    }
 
+    public Integer getAgentAttachmentId() {
+        return agentAttachmentId;
+    }
+
+    public void setAgentAttachmentId(Integer agentAttachmentId) {
+        this.agentAttachmentId = agentAttachmentId;
+    }
+
+    public Attachment getAttachment() {
+        return attachment;
+    }
+
+    public void setAttachment(Attachment attachment) {
+        this.attachment = attachment;
+    }
+
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
+    }
+
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+ 
+
+    
     public Integer getOrdinal() {
         return ordinal;
     }
@@ -101,43 +135,12 @@ public class Agentattachment extends BaseEntity {
     public void setRemarks(String remarks) {
         this.remarks = remarks;
     }
-
-    public Attachment getAttachmentID() {
-        return attachmentID;
-    }
-
-    public void setAttachmentID(Attachment attachmentID) {
-        this.attachmentID = attachmentID;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
-    public Agent getAgentID() {
-        return agentID;
-    }
-
-    public void setAgentID(Agent agentID) {
-        this.agentID = agentID;
-    }
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (agentAttachmentID != null ? agentAttachmentID.hashCode() : 0);
+        hash += (agentAttachmentId != null ? agentAttachmentId.hashCode() : 0);
         return hash;
     }
 
@@ -148,7 +151,7 @@ public class Agentattachment extends BaseEntity {
             return false;
         }
         Agentattachment other = (Agentattachment) object;
-        if ((this.agentAttachmentID == null && other.agentAttachmentID != null) || (this.agentAttachmentID != null && !this.agentAttachmentID.equals(other.agentAttachmentID))) {
+        if ((this.agentAttachmentId == null && other.agentAttachmentId != null) || (this.agentAttachmentId != null && !this.agentAttachmentId.equals(other.agentAttachmentId))) {
             return false;
         }
         return true;
@@ -156,7 +159,7 @@ public class Agentattachment extends BaseEntity {
 
     @Override
     public String toString() {
-        return "se.nrm.specify.datamodel.Agentattachment[ agentAttachmentID=" + agentAttachmentID + " ]";
+        return "se.nrm.specify.datamodel.Agentattachment[ agentAttachmentID=" + agentAttachmentId + " ]";
     }
     
 }

@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Groupperson.findAll", query = "SELECT g FROM Groupperson g"),
-    @NamedQuery(name = "Groupperson.findByGroupPersonID", query = "SELECT g FROM Groupperson g WHERE g.groupPersonID = :groupPersonID"),
+    @NamedQuery(name = "Groupperson.findByGroupPersonID", query = "SELECT g FROM Groupperson g WHERE g.groupPersonId = :groupPersonID"),
     @NamedQuery(name = "Groupperson.findByTimestampCreated", query = "SELECT g FROM Groupperson g WHERE g.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Groupperson.findByTimestampModified", query = "SELECT g FROM Groupperson g WHERE g.timestampModified = :timestampModified"),
     @NamedQuery(name = "Groupperson.findByVersion", query = "SELECT g FROM Groupperson g WHERE g.version = :version"),
@@ -40,7 +40,7 @@ public class Groupperson extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "GroupPersonID")
-    private Integer groupPersonID;
+    private Integer groupPersonId;
       
     @Basic(optional = false)
     @NotNull
@@ -54,44 +54,86 @@ public class Groupperson extends BaseEntity {
     
     @JoinColumn(name = "DivisionID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne
-    private Division divisionID;
+    private Division division;
     
     @JoinColumn(name = "GroupID", referencedColumnName = "AgentID")
     @ManyToOne(optional = false)
-    private Agent groupID;
+    private Agent group;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "MemberID", referencedColumnName = "AgentID")
     @ManyToOne(optional = false)
-    private Agent memberID;
+    private Agent member;
 
     public Groupperson() {
     }
 
-    public Groupperson(Integer groupPersonID) {
-        this.groupPersonID = groupPersonID;
+    public Groupperson(Integer groupPersonId) {
+        this.groupPersonId = groupPersonId;
     }
 
-    public Groupperson(Integer groupPersonID, Date timestampCreated, short orderNumber) {
+    public Groupperson(Integer groupPersonId, Date timestampCreated, short orderNumber) {
         super(timestampCreated);
-        this.groupPersonID = groupPersonID; 
+        this.groupPersonId = groupPersonId; 
         this.orderNumber = orderNumber;
     }
 
-    public Integer getGroupPersonID() {
-        return groupPersonID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setGroupPersonID(Integer groupPersonID) {
-        this.groupPersonID = groupPersonID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
+
+    public Division getDivision() {
+        return division;
+    }
+
+    public void setDivision(Division division) {
+        this.division = division;
+    }
+
+    public Agent getGroup() {
+        return group;
+    }
+
+    public void setGroup(Agent group) {
+        this.group = group;
+    }
+
+    public Integer getGroupPersonId() {
+        return groupPersonId;
+    }
+
+    public void setGroupPersonId(Integer groupPersonId) {
+        this.groupPersonId = groupPersonId;
+    }
+
+    public Agent getMember() {
+        return member;
+    }
+
+    public void setMember(Agent member) {
+        this.member = member;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+ 
  
     public short getOrderNumber() {
         return orderNumber;
@@ -108,51 +150,12 @@ public class Groupperson extends BaseEntity {
     public void setRemarks(String remarks) {
         this.remarks = remarks;
     }
-
-    public Division getDivisionID() {
-        return divisionID;
-    }
-
-    public void setDivisionID(Division divisionID) {
-        this.divisionID = divisionID;
-    }
-
-    public Agent getGroupID() {
-        return groupID;
-    }
-
-    public void setGroupID(Agent groupID) {
-        this.groupID = groupID;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
-    public Agent getMemberID() {
-        return memberID;
-    }
-
-    public void setMemberID(Agent memberID) {
-        this.memberID = memberID;
-    }
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (groupPersonID != null ? groupPersonID.hashCode() : 0);
+        hash += (groupPersonId != null ? groupPersonId.hashCode() : 0);
         return hash;
     }
 
@@ -163,7 +166,7 @@ public class Groupperson extends BaseEntity {
             return false;
         }
         Groupperson other = (Groupperson) object;
-        if ((this.groupPersonID == null && other.groupPersonID != null) || (this.groupPersonID != null && !this.groupPersonID.equals(other.groupPersonID))) {
+        if ((this.groupPersonId == null && other.groupPersonId != null) || (this.groupPersonId != null && !this.groupPersonId.equals(other.groupPersonId))) {
             return false;
         }
         return true;
@@ -171,7 +174,7 @@ public class Groupperson extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Groupperson[ groupPersonID=" + groupPersonID + " ]";
+        return "Groupperson[ groupPersonID=" + groupPersonId + " ]";
     }
     
 }

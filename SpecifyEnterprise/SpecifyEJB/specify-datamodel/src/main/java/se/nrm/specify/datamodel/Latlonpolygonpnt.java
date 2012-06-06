@@ -23,12 +23,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Latlonpolygonpnt.findAll", query = "SELECT l FROM Latlonpolygonpnt l"),
-    @NamedQuery(name = "Latlonpolygonpnt.findByLatLonPolygonPntID", query = "SELECT l FROM Latlonpolygonpnt l WHERE l.latLonPolygonPntID = :latLonPolygonPntID"),
+    @NamedQuery(name = "Latlonpolygonpnt.findByLatLonPolygonPntID", query = "SELECT l FROM Latlonpolygonpnt l WHERE l.latLonPolygonPntId = :latLonPolygonPntID"),
     @NamedQuery(name = "Latlonpolygonpnt.findByElevation", query = "SELECT l FROM Latlonpolygonpnt l WHERE l.elevation = :elevation"),
     @NamedQuery(name = "Latlonpolygonpnt.findByLatitude", query = "SELECT l FROM Latlonpolygonpnt l WHERE l.latitude = :latitude"),
     @NamedQuery(name = "Latlonpolygonpnt.findByLongitude", query = "SELECT l FROM Latlonpolygonpnt l WHERE l.longitude = :longitude"),
     @NamedQuery(name = "Latlonpolygonpnt.findByOrdinal", query = "SELECT l FROM Latlonpolygonpnt l WHERE l.ordinal = :ordinal"),
-    @NamedQuery(name = "Latlonpolygonpnt.findByLatLonPolygonID", query = "SELECT l FROM Latlonpolygonpnt l WHERE l.latLonPolygonID = :latLonPolygonID")})
+    @NamedQuery(name = "Latlonpolygonpnt.findByLatLonPolygonID", query = "SELECT l FROM Latlonpolygonpnt l WHERE l.latLonPolygon = :latLonPolygonID")})
 public class Latlonpolygonpnt implements Serializable, SpecifyBean {
     
     private static final long serialVersionUID = 1L;
@@ -38,7 +38,7 @@ public class Latlonpolygonpnt implements Serializable, SpecifyBean {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "LatLonPolygonPntID")
-    private Integer latLonPolygonPntID;
+    private Integer latLonPolygonPntId;
     
     @Column(name = "Elevation")
     private Integer elevation;
@@ -62,30 +62,24 @@ public class Latlonpolygonpnt implements Serializable, SpecifyBean {
     @Basic(optional = false)
     @NotNull
     @Column(name = "LatLonPolygonID")
-    private int latLonPolygonID;
+    private int latLonPolygon;
 
     public Latlonpolygonpnt() {
     }
 
-    public Latlonpolygonpnt(Integer latLonPolygonPntID) {
-        this.latLonPolygonPntID = latLonPolygonPntID;
+    public Latlonpolygonpnt(Integer latLonPolygonPntId) {
+        this.latLonPolygonPntId = latLonPolygonPntId;
     }
 
-    public Latlonpolygonpnt(Integer latLonPolygonPntID, BigDecimal latitude, BigDecimal longitude, int ordinal, int latLonPolygonID) {
-        this.latLonPolygonPntID = latLonPolygonPntID;
+    public Latlonpolygonpnt(Integer latLonPolygonPntId, BigDecimal latitude, BigDecimal longitude, int ordinal, int latLonPolygon) {
+        this.latLonPolygonPntId = latLonPolygonPntId;
         this.latitude = latitude;
         this.longitude = longitude;
         this.ordinal = ordinal;
-        this.latLonPolygonID = latLonPolygonID;
+        this.latLonPolygon = latLonPolygon;
     }
 
-    public Integer getLatLonPolygonPntID() {
-        return latLonPolygonPntID;
-    }
-
-    public void setLatLonPolygonPntID(Integer latLonPolygonPntID) {
-        this.latLonPolygonPntID = latLonPolygonPntID;
-    }
+ 
 
     public Integer getElevation() {
         return elevation;
@@ -119,18 +113,26 @@ public class Latlonpolygonpnt implements Serializable, SpecifyBean {
         this.ordinal = ordinal;
     }
 
-    public int getLatLonPolygonID() {
-        return latLonPolygonID;
+    public int getLatLonPolygon() {
+        return latLonPolygon;
     }
 
-    public void setLatLonPolygonID(int latLonPolygonID) {
-        this.latLonPolygonID = latLonPolygonID;
+    public void setLatLonPolygon(int latLonPolygon) {
+        this.latLonPolygon = latLonPolygon;
     }
 
+    public Integer getLatLonPolygonPntId() {
+        return latLonPolygonPntId;
+    }
+
+    public void setLatLonPolygonPntId(Integer latLonPolygonPntId) {
+        this.latLonPolygonPntId = latLonPolygonPntId;
+    }
+ 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (latLonPolygonPntID != null ? latLonPolygonPntID.hashCode() : 0);
+        hash += (latLonPolygonPntId != null ? latLonPolygonPntId.hashCode() : 0);
         return hash;
     }
 
@@ -141,7 +143,7 @@ public class Latlonpolygonpnt implements Serializable, SpecifyBean {
             return false;
         }
         Latlonpolygonpnt other = (Latlonpolygonpnt) object;
-        if ((this.latLonPolygonPntID == null && other.latLonPolygonPntID != null) || (this.latLonPolygonPntID != null && !this.latLonPolygonPntID.equals(other.latLonPolygonPntID))) {
+        if ((this.latLonPolygonPntId == null && other.latLonPolygonPntId != null) || (this.latLonPolygonPntId != null && !this.latLonPolygonPntId.equals(other.latLonPolygonPntId))) {
             return false;
         }
         return true;
@@ -149,7 +151,7 @@ public class Latlonpolygonpnt implements Serializable, SpecifyBean {
 
     @Override
     public String toString() {
-        return "se.nrm.specify.datamodel.Latlonpolygonpnt[ latLonPolygonPntID=" + latLonPolygonPntID + " ]";
+        return "se.nrm.specify.datamodel.Latlonpolygonpnt[ latLonPolygonPntID=" + latLonPolygonPntId + " ]";
     }
     
 }

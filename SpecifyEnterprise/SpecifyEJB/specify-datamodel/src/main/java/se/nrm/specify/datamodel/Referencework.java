@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Referencework.findAll", query = "SELECT r FROM Referencework r"),
-    @NamedQuery(name = "Referencework.findByReferenceWorkID", query = "SELECT r FROM Referencework r WHERE r.referenceWorkID = :referenceWorkID"),
+    @NamedQuery(name = "Referencework.findByReferenceWorkID", query = "SELECT r FROM Referencework r WHERE r.referenceWorkId = :referenceWorkID"),
     @NamedQuery(name = "Referencework.findByTimestampCreated", query = "SELECT r FROM Referencework r WHERE r.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Referencework.findByTimestampModified", query = "SELECT r FROM Referencework r WHERE r.timestampModified = :timestampModified"),
     @NamedQuery(name = "Referencework.findByVersion", query = "SELECT r FROM Referencework r WHERE r.version = :version"),
@@ -58,7 +58,7 @@ public class Referencework extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "ReferenceWorkID")
-    private Integer referenceWorkID;
+    private Integer referenceWorkId;
      
     @Size(max = 128)
     @Column(name = "GUID")
@@ -137,69 +137,62 @@ public class Referencework extends BaseEntity {
     @Column(name = "YesNo2")
     private Boolean yesNo2;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "referenceWorkID")
-    private Collection<Determinationcitation> determinationcitationCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "referenceWork")
+    private Collection<Determinationcitation> determinationCitations;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "JournalID", referencedColumnName = "JournalID")
     @ManyToOne
-    private Journal journalID;
+    private Journal journal;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
-    @OneToMany(mappedBy = "containedRFParentID")
-    private Collection<Referencework> referenceworkCollection;
+    @OneToMany(mappedBy = "containedRFParent")
+    private Collection<Referencework> containedReferenceWorks;
     
     @JoinColumn(name = "ContainedRFParentID", referencedColumnName = "ReferenceWorkID")
     @ManyToOne
-    private Referencework containedRFParentID;
+    private Referencework containedRFParent;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "referenceWorkID")
-    private Collection<Commonnametxcitation> commonnametxcitationCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "referenceWork")
+    private Collection<Commonnametxcitation> commonnametxcitations;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "referenceWorkID")
-    private Collection<Taxoncitation> taxoncitationCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "referenceWork")
+    private Collection<Taxoncitation> taxonCitations;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "referenceWorkID")
-    private Collection<Dnasequencingruncitation> dnasequencingruncitationCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "referenceWork")
+    private Collection<Dnasequencingruncitation> dnasequencingruncitations;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "referenceWorkID")
-    private Collection<Exsiccata> exsiccataCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "referenceWork")
+    private Collection<Exsiccata> exsiccatae;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "referenceWorkID")
-    private Collection<Collectionobjectcitation> collectionobjectcitationCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "referenceWork")
+    private Collection<Collectionobjectcitation> collectionObjectCitations;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "referenceWorkID")
-    private Collection<Author> authorCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "referenceWork")
+    private Collection<Author> authors;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "referenceWorkID")
-    private Collection<Localitycitation> localitycitationCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "referenceWork")
+    private Collection<Localitycitation> localityCitations;
 
     public Referencework() {
     }
 
-    public Referencework(Integer referenceWorkID) {
-        this.referenceWorkID = referenceWorkID;
+    public Referencework(Integer referenceWorkId) {
+        this.referenceWorkId = referenceWorkId;
     }
 
-    public Referencework(Integer referenceWorkID, Date timestampCreated, short referenceWorkType) {
+    public Referencework(Integer referenceWorkId, Date timestampCreated, short referenceWorkType) {
         super(timestampCreated);
-        this.referenceWorkID = referenceWorkID; 
+        this.referenceWorkId = referenceWorkId; 
         this.referenceWorkType = referenceWorkType;
     }
 
-    public Integer getReferenceWorkID() {
-        return referenceWorkID;
-    }
-
-    public void setReferenceWorkID(Integer referenceWorkID) {
-        this.referenceWorkID = referenceWorkID;
-    }
  
     public String getGuid() {
         return guid;
@@ -354,122 +347,133 @@ public class Referencework extends BaseEntity {
     }
 
     @XmlTransient
-    public Collection<Determinationcitation> getDeterminationcitationCollection() {
-        return determinationcitationCollection;
+    public Collection<Author> getAuthors() {
+        return authors;
     }
 
-    public void setDeterminationcitationCollection(Collection<Determinationcitation> determinationcitationCollection) {
-        this.determinationcitationCollection = determinationcitationCollection;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Journal getJournalID() {
-        return journalID;
-    }
-
-    public void setJournalID(Journal journalID) {
-        this.journalID = journalID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setAuthors(Collection<Author> authors) {
+        this.authors = authors;
     }
 
     @XmlTransient
-    public Collection<Referencework> getReferenceworkCollection() {
-        return referenceworkCollection;
+    public Collection<Collectionobjectcitation> getCollectionObjectCitations() {
+        return collectionObjectCitations;
     }
 
-    public void setReferenceworkCollection(Collection<Referencework> referenceworkCollection) {
-        this.referenceworkCollection = referenceworkCollection;
-    }
-
-    public Referencework getContainedRFParentID() {
-        return containedRFParentID;
-    }
-
-    public void setContainedRFParentID(Referencework containedRFParentID) {
-        this.containedRFParentID = containedRFParentID;
+    public void setCollectionObjectCitations(Collection<Collectionobjectcitation> collectionObjectCitations) {
+        this.collectionObjectCitations = collectionObjectCitations;
     }
 
     @XmlTransient
-    public Collection<Commonnametxcitation> getCommonnametxcitationCollection() {
-        return commonnametxcitationCollection;
+    public Collection<Commonnametxcitation> getCommonnametxcitations() {
+        return commonnametxcitations;
     }
 
-    public void setCommonnametxcitationCollection(Collection<Commonnametxcitation> commonnametxcitationCollection) {
-        this.commonnametxcitationCollection = commonnametxcitationCollection;
+    public void setCommonnametxcitations(Collection<Commonnametxcitation> commonnametxcitations) {
+        this.commonnametxcitations = commonnametxcitations;
     }
 
-    @XmlTransient
-    public Collection<Taxoncitation> getTaxoncitationCollection() {
-        return taxoncitationCollection;
+    public Referencework getContainedRFParent() {
+        return containedRFParent;
     }
 
-    public void setTaxoncitationCollection(Collection<Taxoncitation> taxoncitationCollection) {
-        this.taxoncitationCollection = taxoncitationCollection;
-    }
-
-    @XmlTransient
-    public Collection<Dnasequencingruncitation> getDnasequencingruncitationCollection() {
-        return dnasequencingruncitationCollection;
-    }
-
-    public void setDnasequencingruncitationCollection(Collection<Dnasequencingruncitation> dnasequencingruncitationCollection) {
-        this.dnasequencingruncitationCollection = dnasequencingruncitationCollection;
+    public void setContainedRFParent(Referencework containedRFParent) {
+        this.containedRFParent = containedRFParent;
     }
 
     @XmlTransient
-    public Collection<Exsiccata> getExsiccataCollection() {
-        return exsiccataCollection;
+    public Collection<Referencework> getContainedReferenceWorks() {
+        return containedReferenceWorks;
     }
 
-    public void setExsiccataCollection(Collection<Exsiccata> exsiccataCollection) {
-        this.exsiccataCollection = exsiccataCollection;
+    public void setContainedReferenceWorks(Collection<Referencework> containedReferenceWorks) {
+        this.containedReferenceWorks = containedReferenceWorks;
     }
 
-    @XmlTransient
-    public Collection<Collectionobjectcitation> getCollectionobjectcitationCollection() {
-        return collectionobjectcitationCollection;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setCollectionobjectcitationCollection(Collection<Collectionobjectcitation> collectionobjectcitationCollection) {
-        this.collectionobjectcitationCollection = collectionobjectcitationCollection;
-    }
-
-    @XmlTransient
-    public Collection<Author> getAuthorCollection() {
-        return authorCollection;
-    }
-
-    public void setAuthorCollection(Collection<Author> authorCollection) {
-        this.authorCollection = authorCollection;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
     @XmlTransient
-    public Collection<Localitycitation> getLocalitycitationCollection() {
-        return localitycitationCollection;
+    public Collection<Determinationcitation> getDeterminationCitations() {
+        return determinationCitations;
     }
 
-    public void setLocalitycitationCollection(Collection<Localitycitation> localitycitationCollection) {
-        this.localitycitationCollection = localitycitationCollection;
+    public void setDeterminationCitations(Collection<Determinationcitation> determinationCitations) {
+        this.determinationCitations = determinationCitations;
     }
+
+    @XmlTransient
+    public Collection<Dnasequencingruncitation> getDnasequencingruncitations() {
+        return dnasequencingruncitations;
+    }
+
+    public void setDnasequencingruncitations(Collection<Dnasequencingruncitation> dnasequencingruncitations) {
+        this.dnasequencingruncitations = dnasequencingruncitations;
+    }
+
+    @XmlTransient
+    public Collection<Exsiccata> getExsiccatae() {
+        return exsiccatae;
+    }
+
+    public void setExsiccatae(Collection<Exsiccata> exsiccatae) {
+        this.exsiccatae = exsiccatae;
+    }
+
+    public Journal getJournal() {
+        return journal;
+    }
+
+    public void setJournal(Journal journal) {
+        this.journal = journal;
+    }
+
+    @XmlTransient
+    public Collection<Localitycitation> getLocalityCitations() {
+        return localityCitations;
+    }
+
+    public void setLocalityCitations(Collection<Localitycitation> localityCitations) {
+        this.localityCitations = localityCitations;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Integer getReferenceWorkId() {
+        return referenceWorkId;
+    }
+
+    public void setReferenceWorkId(Integer referenceWorkId) {
+        this.referenceWorkId = referenceWorkId;
+    }
+
+    @XmlTransient
+    public Collection<Taxoncitation> getTaxonCitations() {
+        return taxonCitations;
+    }
+
+    public void setTaxonCitations(Collection<Taxoncitation> taxonCitations) {
+        this.taxonCitations = taxonCitations;
+    }
+ 
+
+   
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (referenceWorkID != null ? referenceWorkID.hashCode() : 0);
+        hash += (referenceWorkId != null ? referenceWorkId.hashCode() : 0);
         return hash;
     }
 
@@ -480,7 +484,7 @@ public class Referencework extends BaseEntity {
             return false;
         }
         Referencework other = (Referencework) object;
-        if ((this.referenceWorkID == null && other.referenceWorkID != null) || (this.referenceWorkID != null && !this.referenceWorkID.equals(other.referenceWorkID))) {
+        if ((this.referenceWorkId == null && other.referenceWorkId != null) || (this.referenceWorkId != null && !this.referenceWorkId.equals(other.referenceWorkId))) {
             return false;
         }
         return true;
@@ -488,7 +492,7 @@ public class Referencework extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Referencework[ referenceWorkID=" + referenceWorkID + " ]";
+        return "Referencework[ referenceWorkID=" + referenceWorkId + " ]";
     }
     
 }
