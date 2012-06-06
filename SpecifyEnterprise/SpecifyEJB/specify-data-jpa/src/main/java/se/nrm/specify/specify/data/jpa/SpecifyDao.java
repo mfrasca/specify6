@@ -3,10 +3,8 @@ package se.nrm.specify.specify.data.jpa;
 import java.util.List;
 import java.util.Map;
 import se.nrm.specify.datamodel.Collectingevent;
-import se.nrm.specify.datamodel.Collectionobject;
-import se.nrm.specify.datamodel.DataWrapper;
-import se.nrm.specify.datamodel.Determination;
-import se.nrm.specify.datamodel.Locality;
+import se.nrm.specify.datamodel.Collectionobject; 
+import se.nrm.specify.datamodel.Determination; 
 import se.nrm.specify.datamodel.SpecifyBean;
 import se.nrm.specify.datamodel.Specifyuser;
 import se.nrm.specify.datamodel.Taxon;
@@ -103,24 +101,15 @@ public interface SpecifyDao {
 
     public Collectionobject getLastCollectionobjectByGroup(String collectionCode);
 
-    public List<Collectionobject> getCollectionobjectByCollectingEventAndYesno2(Collectingevent event);
-
-    public DataWrapper getDeterminationsByCollectingEvent(Collectingevent event, String collectionCode);
-
-    public List<String> getDeterminationByLocalityID(Locality locality, String collectionCode);
-
-    public DataWrapper getDeterminationsByTaxon(Taxon taxonId, String collectionCode);
-
-    public Taxon getTaxonByCollectionobject(Collectionobject collectionobject);
+    public List<Collectionobject> getCollectionobjectByCollectingEventAndYesno2(Collectingevent event); 
     
+    public Taxon getTaxonByCollectionobject(Collectionobject collectionobject); 
     
+    public Taxon getTaxonAndParents(String taxonName);
+    
+    public boolean isCatalogNumberExist(String catalognumber);
     
     public Specifyuser loginSpecifyUser(Specifyuser user);
     
-    public void logoutSpecifyUser(Specifyuser user);
-    //    public <T extends SpecifyBean> T getPatialObjects(Class<T> clazz, List<String> fields);
-//    
-//    public <T extends SpecifyBean> T getPartialObject(Class<T> clazz, String field);
-//    public <T extends SpecifyBean> T fatchByGroup(String classname, List<String> fields, Map<String, Object> conditions);
-//    public <T extends SpecifyBean> T getByJPQLByFetchGroup(String classname, String jpql, List<String> fields);
+    public void logoutSpecifyUser(Specifyuser user); 
 }

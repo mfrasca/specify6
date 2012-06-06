@@ -1,6 +1,6 @@
 package se.nrm.specify.specify.data.jpa.util;
 
-import java.lang.reflect.Field;
+import java.lang.reflect.Field; 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -56,7 +56,7 @@ public class JPAUtil {
         return map;
     }
 
-    public static <T extends SpecifyBean> T createNewInstance(String classname) { 
+    public static <T extends SpecifyBean> T createNewInstance(String classname) {
 
         T bean = null;
         try {
@@ -78,11 +78,11 @@ public class JPAUtil {
         FetchGroup group = new FetchGroup();
 
         SpecifyBean bean = createNewInstance(classname);
-   
+
         if (bean != null) {
             List<String> reqFields = ReflectionUtil.addAllRequiredFields(bean);
-            fields.addAll(reqFields); 
-        }
+            fields.addAll(reqFields);
+        } 
 
         Map<String, SpecifyBean> beanmap = new HashMap<String, SpecifyBean>();
         beanmap.put(classname, bean);
@@ -95,21 +95,22 @@ public class JPAUtil {
                     String[] strs = StringUtils.split(string, STRING_SEPARATOR);
                     SpecifyBean parent = bean;
                     for (int i = 0; i < strs.length - 1; i++) {
-                        String entityname = strs[i]; 
+                        String entityname = strs[i];
                         String key = StringUtils.substringBefore(string, entityname) + entityname;
+ 
                         try {
                             if (!map.containsKey(key)) {
                                 if (i > 0) {
                                     parent = beanmap.get(strs[i - 1]);
-                                } 
-                                Field field = ReflectionUtil.getField(parent.getClass(), entityname); 
-                                String name = field.getName(); 
+                                }
+                                Field field = ReflectionUtil.getField(parent.getClass(), entityname);
+                                String name;
 
                                 if (field.getType().getName().equals("java.util.Collection")) {
-                                    name = ReflectionUtil.getEntityNameByMethod(parent, name);
+                                    name = ReflectionUtil.getEntityNameByType(field);  
                                 } else {
                                     name = field.getType().getSimpleName();
-                                } 
+                                }
                                 SpecifyBean sb = createNewInstance(name);
                                 map.put(key, sb);
                                 beanmap.put(entityname, sb);
@@ -122,11 +123,9 @@ public class JPAUtil {
                         }
                     }
                 }
-            }
- 
-            for (String key : map.keySet()) {
-
-                SpecifyBean entity = (SpecifyBean) map.get(key);
+            } 
+            for (String key : map.keySet()) { 
+                SpecifyBean entity = (SpecifyBean) map.get(key); 
 
                 if (entity != null) {
                     List<String> rfs = ReflectionUtil.addAllRequiredFields(entity);
@@ -136,12 +135,13 @@ public class JPAUtil {
                             fields.add(field);
                         }
                     }
-                } 
+                }
             }
 
-            fields = new ArrayList(new HashSet(fields)); 
+            fields = new ArrayList(new HashSet(fields));
+  
             for (String field : fields) {
-                if (!removelist.contains(field)) {  
+                if (!removelist.contains(field)) { 
                     group.addAttribute(field);
                 }
             }
