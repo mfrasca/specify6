@@ -1,11 +1,11 @@
 package se.nrm.specify.data.service;
 
-import com.google.gson.Gson;
-import com.sun.jersey.spi.resource.PerRequest;
+import com.google.gson.Gson; 
+import com.sun.jersey.spi.resource.PerRequest; 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.Set; 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -24,15 +24,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.nrm.specify.business.logic.smtp.SMTPLogic;
 import se.nrm.specify.business.logic.specify.SpecifyLogic;
-import se.nrm.specify.datamodel.Collectingevent;
+import se.nrm.specify.datamodel.Address;
 import se.nrm.specify.datamodel.DataWrapper;
-import se.nrm.specify.datamodel.Determination;
 import se.nrm.specify.datamodel.Locality;
 import se.nrm.specify.datamodel.SpecifyBean;
 import se.nrm.specify.datamodel.SpecifyBeanWrapper;
 import se.nrm.specify.datamodel.Specifyuser;
 import se.nrm.specify.datamodel.Taxon; 
-import se.nrm.specify.ui.form.data.service.UIDataConstractor; 
+import se.nrm.specify.ui.form.data.service.UIDataConstractor;
 import se.nrm.specify.ui.form.data.xml.model.ViewData;
 
 /**
@@ -80,6 +79,8 @@ public class SpecyResource {
         return new SpecifyBeanWrapper(bean);
     }
 
+ 
+
     /**
      * Generic method to get an entity by entity id from database.  
      * This method passes in a PathParam entity class name and entity id
@@ -108,10 +109,10 @@ public class SpecyResource {
     @POST
     @Path("add/{entity}/{json}")
     public void createJsonEntity(@PathParam("entity") String entity, @PathParam("json") String json) {
-
         logger.info("createEntity - entity: {}, json: {}", entity, json);
 
         specify.getDao().createEntity(jsonToEntity(entity, json));
+
     }
 
     /**
@@ -122,7 +123,6 @@ public class SpecyResource {
     @POST
     @Path("add/entity")
     public void createEntity(SpecifyBeanWrapper wrapper) {
-
         logger.info("createEntity - entity: {}", wrapper.getBean());
 
         specify.getDao().createEntity(wrapper.getBean());
@@ -306,12 +306,12 @@ public class SpecyResource {
         logger.info("fetchUIData - discipline: {} - view: {}", discipline, view);
 
         MultivaluedMap map = uri.getQueryParameters();
-        
+
         ViewData viewdata = uidata.initData(discipline, view);
         String jpql = uidata.getJpql(discipline, view, map, viewdata);
-        String entity = uidata.getEntityName(viewdata); 
+        String entity = uidata.getEntityName(viewdata);
         List<String> fields = uidata.constructSearchFields(viewdata);
-        
+
         List<SpecifyBean> list = (List<SpecifyBean>) specify.getDao().getListByJPQLByFetchGroup(entity, jpql, fields);
         return new SpecifyBeanWrapper(list);
     }
@@ -328,6 +328,8 @@ public class SpecyResource {
         List<String> fields = (List<String>) map.get(entity);
 
         List<SpecifyBean> list = (List<SpecifyBean>) specify.getDao().getListByJPQLByFetchGroup(entity, jpql, fields);
+        
+        logger.info("list: {}", list);
         return new SpecifyBeanWrapper(list);
     }
 
@@ -349,7 +351,10 @@ public class SpecyResource {
         }
 
         SpecifyBean bean = specify.getDao().getFetchgroupByNameedQuery(namedqry, conditions, fields);
-        return new SpecifyBeanWrapper(bean);
+        if(bean != null) {
+            return new SpecifyBeanWrapper(bean);
+        }
+        return new SpecifyBeanWrapper();
     }
 
     @GET
@@ -397,23 +402,19 @@ public class SpecyResource {
     }
 
     @GET
-    @Path("search/data/{jpql}")
-    public DataWrapper getData(@PathParam("jpql") String jpql) {
+    @Path("search/localities/{code}")
+    public SpecifyBeanWrapper getData(@PathParam("code") String collectionCode) {
 
-        List<Object[]> list = specify.getDao().getDataListByJPQL(jpql);
-        for (int i = 0; i < 10; i++) {
-            Object[] objs = list.get(i);
-            StringBuilder sb = new StringBuilder();
-            for (Object obj : objs) {
-                sb.append(String.valueOf(obj));
-                sb.append(" - ");
-            }
-            logger.info(sb.toString());
-        }
- 
-        DataWrapper data = new DataWrapper();
-        data.setDataList(list);
-        return new DataWrapper();
+        List<Locality> list = smtp.getLocalityByCollectionCode(collectionCode);
+
+        return new SpecifyBeanWrapper(list);
+    }
+
+    @GET
+    @Path("search/taxon/tree/{taxonname}")
+    public String getTaxonWithTree(@PathParam("taxonname") String taxonname) {
+        logger.info("getTaxonWithTree: {}", taxonname);
+        return smtp.getTaxonAndParents(taxonname);
     }
 
     @POST
@@ -421,58 +422,56 @@ public class SpecyResource {
     public void uploadData(@PathParam("userid") String userid, DataWrapper wrapper) {
 
         logger.info("upload data - event: {}, user: {}", wrapper.getEvent());
- 
+
         smtp.saveSMTPBatchData(wrapper, userid);
     }
 
-    /**
-     * Get list of determination by taxon name, stationfieldnumber and collection code
-     * @param taxonname
-     * @param eventId
-     * @param collection code
-     * @return 
-     */
+//    /**
+//     * Get list of determination by taxon name, stationfieldnumber and collection code
+//     * @param taxonname
+//     * @param eventId
+//     * @param collection code
+//     * @return 
+//     */
+//    @GET
+//    @Path("search/determinations/{taxonname}/{eventid}/{collection}")
+//    public List<Determination> getDeterminationsbyTaxonnameAndCollecdtingevent(@PathParam("taxonname") String taxonname, @PathParam("eventid") String eventId, @PathParam("collection") String collection) {
+//
+//        logger.info("getDeterminations");
+//
+//        return specify.getDao().getDeterminationsByTaxonNameAndCollectingevent(taxonname, new Collectingevent(Integer.parseInt(eventId)), collection);
+//    }
+//    @GET
+//    @Path("search/determinationsbyevent/{eventid}/{code}")
+//    public DataWrapper getDeterminationsByCollectingevent(@PathParam("eventid") String eventid, @PathParam("code") String collectionCode) {
+//
+//        logger.info("getDeterminationsByCollectingevent: {}, {}", eventid, collectionCode);
+//        return specify.getDao().getDeterminationsByCollectingEvent(new Collectingevent(Integer.parseInt(eventid)), collectionCode);
+//    }
+//    /**
+//     * get determination taxon names by localityId
+//     * 
+//     * @param locality
+//     * @param collection
+//     * @return 
+//     * 
+//     */
+//    @GET
+//    @Path("search/determinationsbylocalityid/{locality}/{collection}")
+//    public DataWrapper getDeterminationsByLocalityId(@PathParam("locality") String locality, @PathParam("collection") String collectionCode) {
+//
+//        logger.info("getDeterminationsByLocalityId: {}, {}", locality, collectionCode);
+//
+//        return new DataWrapper(specify.getDao().getDeterminationByLocalityID(new Locality(Integer.parseInt(locality)), collectionCode));
+//    }
     @GET
-    @Path("search/determinations/{taxonname}/{eventid}/{collection}")
-    public List<Determination> getDeterminationsbyTaxonnameAndCollecdtingevent(@PathParam("taxonname") String taxonname, @PathParam("eventid") String eventId, @PathParam("collection") String collection) {
-
-        logger.info("getDeterminations");
-
-        return specify.getDao().getDeterminationsByTaxonNameAndCollectingevent(taxonname, new Collectingevent(Integer.parseInt(eventId)), collection);
-    }
-
-    @GET
-    @Path("search/determinationsbyevent/{eventid}/{code}")
-    public DataWrapper getDeterminationsByCollectingevent(@PathParam("eventid") String eventid, @PathParam("code") String collectionCode) {
-
-        logger.info("getDeterminationsByCollectingevent: {}, {}", eventid, collectionCode);
-        return specify.getDao().getDeterminationsByCollectingEvent(new Collectingevent(Integer.parseInt(eventid)), collectionCode);
-    }
-
-    /**
-     * get determination taxon names by localityId
-     * 
-     * @param locality
-     * @param collection
-     * @return 
-     * 
-     */
-    @GET
-    @Path("search/determinationsbylocalityid/{locality}/{collection}")
-    public DataWrapper getDeterminationsByLocalityId(@PathParam("locality") String locality, @PathParam("collection") String collectionCode) {
-
-        logger.info("getDeterminationsByLocalityId: {}, {}", locality, collectionCode);
-
-        return new DataWrapper(specify.getDao().getDeterminationByLocalityID(new Locality(Integer.parseInt(locality)), collectionCode));
-    }
-
-    @GET
-    @Path("search/determinations/taxon/{taxonid}/{collection}")
-    public DataWrapper getDeterminationsByTaxonId(@PathParam("taxonid") String taxonid, @PathParam("collection") String collectionCode) {
+    @Path("search/determinations/{node}/{childnode}/{collection}")
+    public DataWrapper getDeterminationsByTaxonId(@PathParam("node") String node, @PathParam("childnode") String childNode, @PathParam("collection") String collectionCode) {
 
         logger.info("getDeterminationsByTaxonId");
 
-        return specify.getDao().getDeterminationsByTaxon(new Taxon(Integer.parseInt(taxonid)), collectionCode);
+        DataWrapper datawrapper = smtp.getDeterminationsData(node, childNode, collectionCode);
+        return datawrapper;
     }
 
     /**
@@ -504,5 +503,5 @@ public class SpecyResource {
             logger.error(ex.getMessage());
         }
         return null;
-    } 
+    }
 }

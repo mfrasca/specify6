@@ -11,14 +11,11 @@ import com.sun.jersey.core.util.MultivaluedMapImpl;
 import java.net.URI;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriBuilder;
 import se.nrm.specify.datamodel.*;
-import se.nrm.specify.datamodel.SpecifyBean;
 
 /**
  *
@@ -69,7 +66,14 @@ public class SpecifyClient {
 
 //        testGetEntityById();
         testUIView();
+//        testAddAnnotation();
 
+    }
+    
+    private static void testAddAnnotation() {
+        String xml = service.path("search").path("entity").path("test").accept(MediaType.APPLICATION_XML).get(String.class);
+        System.out.println("xml: " + xml);
+   
     }
 
     private static void testUIView() {
@@ -79,7 +83,7 @@ public class SpecifyClient {
         
         
         MultivaluedMapImpl queryParams = new MultivaluedMapImpl();
-        queryParams.add("catalogNumber", "NHRS-GULI000000970");
+        queryParams.add("catalogNumber", "NHRS-COLE000008661");
         
         String xml = service.path("search").path("uidata").path(discipline).path(view).queryParams(queryParams).accept(MediaType.APPLICATION_XML).get(String.class);
         System.out.println("xml: " + xml);
@@ -88,12 +92,12 @@ public class SpecifyClient {
     private static void testGetEntityById() {
 
         String entity = Agent.class.getName();
-        String id = "1";
+        String id = "237";
 
         // JSON
-        Agent agent = service.path("search").path("entity").path(entity).path(id).accept(MediaType.APPLICATION_JSON).get(Agent.class);
-        List<Address> addresses = (List<Address>) agent.getAddressCollection();
-        System.out.println("size: " + addresses.size());
+        SpecifyBeanWrapper bean = service.path("search").path("entity").path(entity).path(id).accept(MediaType.APPLICATION_JSON).get(SpecifyBeanWrapper.class);
+        Agent agent = (Agent)bean.getBean();
+        System.out.println("json: " + agent.getAddresses());
     }
 
     private static void testQry1() {
@@ -110,7 +114,7 @@ public class SpecifyClient {
         SpecifyBeanWrapper wrapper = service.path("search").path("all").path("bygroup").path(classname).queryParams(queryParams).accept(MediaType.APPLICATION_JSON).get(SpecifyBeanWrapper.class);
         for (SpecifyBean bean : wrapper.getBeans()) {
             Dnasequence dna = (Dnasequence) bean;
-            System.out.println("dna: " + dna.getCollectionObjectID().getCollectionObjectID());
+            System.out.println("dna: " + dna.getCollectionObject().getCollectionObjectId());
         }
     }
 
@@ -257,18 +261,18 @@ public class SpecifyClient {
             Collectionobject c = (Collectionobject) bean;
             System.out.println("co: " + c.getCatalogNumber());
             System.out.println("remark: " + c.getRemarks());
-            System.out.println("event: " + c.getCollectingEventID().getStationFieldNumber());
-            System.out.println("locality: " + c.getCollectingEventID().getLocalityID().getLocalityName());
+            System.out.println("event: " + c.getCollectingEvent().getStationFieldNumber());
+            System.out.println("locality: " + c.getCollectingEvent().getLocality().getLocalityName());
 
-            String name = (c.getCollectingEventID().getCollectorID() != null)
-                    ? c.getCollectingEventID().getCollectorID().getAgentID().getFirstName() + " "
-                    + c.getCollectingEventID().getCollectorID().getAgentID().getLastName() : "";
+            String name = (c.getCollectingEvent().getCollector() != null)
+                    ? c.getCollectingEvent().getCollector().getAgent().getFirstName() + " "
+                    + c.getCollectingEvent().getCollector().getAgent().getLastName() : "";
             System.out.println("Name: " + name);
-            System.out.println("collectorid: " + c.getCollectingEventID().getCollectorID());
+            System.out.println("collectorid: " + c.getCollectingEvent().getCollector());
 
-            System.out.println("country: " + c.getCollectingEventID().getLocalityID().getGeographyID().getFullName());
-            System.out.println("country: " + c.getCollectingEventID().getLocalityID().getGeographyID().getCountry().getName());
-            System.out.println("country: " + c.getCollectingEventID().getLocalityID().getGeographyID().getName());
+            System.out.println("country: " + c.getCollectingEvent().getLocality().getGeography().getFullName());
+            System.out.println("country: " + c.getCollectingEvent().getLocality().getGeography().getCountry().getName());
+            System.out.println("country: " + c.getCollectingEvent().getLocality().getGeography().getName());
         }
 
 
@@ -501,10 +505,10 @@ public class SpecifyClient {
         Collectionobject bean = service.path("search").path("entity").path(coClass).path(coId).accept(MediaType.APPLICATION_JSON).get(Collectionobject.class);
         System.out.println("bean:  " + bean);
 
-        java.util.Collection<Determination> determinations = bean.getDeterminationCollection();
+        java.util.Collection<Determination> determinations = bean.getDeterminations();
         System.out.println("Determination: " + determinations);
 
-        java.util.Collection<Preparation> preparations = bean.getPreparationCollection();
+        java.util.Collection<Preparation> preparations = bean.getPreparations();
         System.out.println("preparation: " + preparations);
 // 
 //        
@@ -521,15 +525,15 @@ public class SpecifyClient {
 //
         Determination determination = new Determination();
         determination.setTimestampCreated(timestamp);
-        determination.setCollectionMemberID(262144);
+        determination.setCollectionMemberId(262144);
         determination.setIsCurrent(true);
-        determination.setCollectionObjectID(bean);
-        determination.setCreatedByAgentID(agent);
-        determination.setTaxonID(taxon);
-        determination.setPreferredTaxonID(taxon);
+        determination.setCollectionObject(bean);
+        determination.setCreatedByAgent(agent);
+        determination.setTaxon(taxon);
+        determination.setPreferredTaxon(taxon);
 
         determinations.add(determination);
-        bean.setDeterminationCollection(determinations);
+        bean.setDeterminations(determinations);
 
 
         // Create preparation
@@ -540,16 +544,16 @@ public class SpecifyClient {
         System.out.println("preptype: " + preptype);
         Preparation preparation = new Preparation();
         preparation.setTimestampCreated(timestamp);
-        preparation.setCollectionMemberID(bean.getCollectionMemberID());
+        preparation.setCollectionMemberId(bean.getCollectionMemberId());
         preparation.setDescription("test");
         preparation.setPreparedDate(timestamp);
         preparation.setPreparedDatePrecision(Short.valueOf("1"));
-        preparation.setPrepTypeID(preptype);
-        preparation.setCreatedByAgentID(agent);
-        preparation.setCollectionObjectID(bean);
+        preparation.setPrepType(preptype);
+        preparation.setCreatedByAgent(agent);
+        preparation.setCollectionObject(bean);
 
         preparations.add(preparation);
-        bean.setPreparationCollection(preparations);
+        bean.setPreparations(preparations);
 
 
         SpecifyBeanWrapper data = new SpecifyBeanWrapper(bean);
@@ -696,9 +700,9 @@ public class SpecifyClient {
             Thread.sleep(10000);
         } catch (InterruptedException ex) {
         }
-        Collectingevent event = co.getCollectingEventID();
+        Collectingevent event = co.getCollectingEvent();
         event.setRemarks("my test");
-        co.setCollectingEventID(event);
+        co.setCollectingEvent(event);
         co.setRemarks("tttt");
 
         SpecifyBeanWrapper wrapper = new SpecifyBeanWrapper(co);
