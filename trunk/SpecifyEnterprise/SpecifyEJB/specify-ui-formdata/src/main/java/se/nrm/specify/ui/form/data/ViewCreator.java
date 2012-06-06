@@ -93,9 +93,7 @@ public class ViewCreator {
         return map;
     }
     
-    public ViewData getViewdata(String viewName) {
-        
-//        logger.info("getViewdata: {}", viewName);
+    public ViewData getViewdata(String viewName) { 
         
         boolean isViewFound = findView(viewName);        
         if (isViewFound) {

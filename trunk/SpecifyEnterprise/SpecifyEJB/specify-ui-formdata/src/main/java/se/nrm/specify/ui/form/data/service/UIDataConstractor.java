@@ -24,8 +24,7 @@ public class UIDataConstractor {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     
     @Inject
-    private ViewCreator creator;
-    private String entityname; 
+    private ViewCreator creator; 
 
     public UIDataConstractor() {
     }
@@ -42,6 +41,8 @@ public class UIDataConstractor {
     }
 
     public List<String> constructSearchFields(ViewData viewdata) {
+        
+        logger.info("constructSearchFields");
         List<String> fieldlist = new ArrayList<String>();
         try {
             fieldlist.addAll(viewdata.getViewdef().getFieldList());
@@ -49,7 +50,7 @@ public class UIDataConstractor {
             
             Map<String, String> subviews = viewdata.getViewdef().getSubviewList(FormDataType.SUBVIEW); 
             Map<String, String> queryboxes = viewdata.getViewdef().getSubviewList(FormDataType.QUERYCBX);
-
+              
             int levelCount = 0;
             List<String> subfields = getSubviews("", queryboxes, FormDataType.QUERYCBX, levelCount);
             List<String> subviewfields = getSubviews("", subviews, FormDataType.SUBVIEW, levelCount);
@@ -57,6 +58,7 @@ public class UIDataConstractor {
             fieldlist.addAll(plugins);
             fieldlist.addAll(subviewfields);
             fieldlist.addAll(subfields);
+             
               
         } catch (ClassNotFoundException ex) {
             logger.error("ClassNotFoundException: {}", ex.getMessage());
@@ -149,37 +151,28 @@ public class UIDataConstractor {
         MultivaluedMap queryParams = new MultivaluedMapImpl();
         queryParams.add("jpql", jpqlSB.toString());
         queryParams.put(entityName, fieldlist);
- 
-        this.entityname = entityName;
-
+   
         return queryParams;
     }
 
     private List<String> getSubviews(String parent, Map<String, String> map, FormDataType type, int levelCount) {
         
-//        logger.info("subview: {} {}", map, parent);
-          
+         
+        
+        logger.info("subview: {} {}", map, parent);
+        
         List<String> fieldList = new ArrayList<String>();
+           
         for (Map.Entry<String, String> m : map.entrySet()) {
             try {
                 String s = m.getValue();
                 ViewData viewData = creator.getViewdata(m.getKey());
-
-                String classname = viewData.getViewdef().getViewDefClass();
-                if (type == FormDataType.QUERYCBX) {
-                    classname = s;
-                }
-                classname = UIXmlUtil.entityFieldNameConvert(classname);
+                
+                String classname = s + "."; 
 
                 List<String> fields = new ArrayList<String>();
                 fields.addAll(viewData.getViewdef().getFieldList());
                 fields.addAll(viewData.getViewdef().getPluginList());
-                
-                if (s.endsWith("s")) {
-                    classname = classname.toLowerCase() + "Collection.";
-                } else {
-                    classname += "ID.";
-                }
  
                 if (levelCount <= 1) {   
                  

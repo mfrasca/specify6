@@ -39,6 +39,8 @@ public class CommonString {
     public final String GLOBAL_VIEW_XML = "global";
     public final String DISCIPLINE = "discipline";
     
+    public final String ENTITY_PACKAGE = "se.nrm.specify.datamodel.";
+    
     private static CommonString instance = null;
 
     public static synchronized CommonString getInstance() {

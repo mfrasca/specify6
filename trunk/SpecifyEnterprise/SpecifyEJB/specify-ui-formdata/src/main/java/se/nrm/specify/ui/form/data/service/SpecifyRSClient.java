@@ -6,8 +6,7 @@ import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.ArrayList; 
 import java.util.List;
 import java.util.Map;
 import javax.ejb.Stateless;
@@ -16,7 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriBuilder;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory; 
+import org.slf4j.LoggerFactory;  
 import se.nrm.specify.datamodel.SpecifyBean;
 import se.nrm.specify.datamodel.SpecifyBeanWrapper;
 import se.nrm.specify.ui.form.data.ViewCreator;
@@ -51,21 +50,19 @@ public class SpecifyRSClient {
         this.creator = creator;
     }
 
-    public List<SpecifyBean> getEntityResult(String dicsipline, String view, Map<String, Object> searchConditions) {
-        MultivaluedMap queryParams = createSearchData(dicsipline, view, searchConditions);
-        SpecifyBeanWrapper wrapper = service.path("search").path("list").path("bygroup").path(entityname).queryParams(queryParams).accept(MediaType.APPLICATION_JSON).get(SpecifyBeanWrapper.class);
+    public List<SpecifyBean> getEntityResult(String discipline, String view, MultivaluedMapImpl searchConditions) { 
+        SpecifyBeanWrapper wrapper = service.path("search").path("uidata").path(discipline).path(view).queryParams(searchConditions).accept(MediaType.APPLICATION_XML).get(SpecifyBeanWrapper.class); 
 
         return (List<SpecifyBean>) wrapper.getBeans();
     }
 
-    public String getJSONResult(String dicsipline, String view, Map<String, Object> searchConditions) {
-        MultivaluedMap queryParams = createSearchData(dicsipline, view, searchConditions);
-        return service.path("search").path("list").path("bygroup").path(entityname).queryParams(queryParams).accept(MediaType.APPLICATION_JSON).get(String.class);
+    public String getJSONResult(String discipline, String view, MultivaluedMapImpl searchConditions) { 
+        return service.path("search").path("uidata").path(discipline).path(view).queryParams(searchConditions).accept(MediaType.APPLICATION_JSON).get(String.class); 
     }
 
-    public String getXMLResult(String dicsipline, String view, Map<String, Object> searchConditions) {
-        MultivaluedMap queryParams = createSearchData(dicsipline, view, searchConditions);
-        return service.path("search").path("list").path("bygroup").path(entityname).queryParams(queryParams).accept(MediaType.APPLICATION_XML).get(String.class);
+    public String getXMLResult(String discipline, String view, MultivaluedMapImpl searchConditions) { 
+        
+        return service.path("search").path("uidata").path(discipline).path(view).queryParams(searchConditions).accept(MediaType.APPLICATION_XML).get(String.class); 
     }
 
     private ViewData initData(String discipline, String view) {
@@ -218,19 +215,18 @@ public class SpecifyRSClient {
         ViewCreator creator = new ViewCreator(discipline);
         SpecifyRSClient client = new SpecifyRSClient(creator);
 
-        Map<String, Object> map = new HashMap<String, Object>();
-
-        map.put("catalogNumber", "NHRS-GULI000000970");
+        MultivaluedMapImpl queryParams = new MultivaluedMapImpl();
+        queryParams.add("catalogNumber", "NHRS-GULI000000970");
+         
           
-//        String json = client.getJSONResult(discipline, view, map);
-        String xml = client.getXMLResult(discipline, view, map);
-//        List<SpecifyBean> beans = client.getEntityResult("fish", "CollectionObject", map);
+        String json = client.getJSONResult(discipline, view, queryParams);
+        String xml = client.getXMLResult(discipline, view, queryParams);
+        List<SpecifyBean> beans = client.getEntityResult(discipline, view, queryParams);
 
-//        logger.info("Result in JSON: {}", json);
+        logger.info("Result in JSON: {}", json);
         logger.info("Result in XML: {}", xml);
-//        logger.info("Result in Entity: {}", beans); 
-        
-        
+        logger.info("Result in Entity: {}", beans); 
+    
 //        "http://localhost:8080/specify-data-service/search/list/bygroup/Collectionobject?jpql=SELECT%20o%20FROM%20Collectionobject%20o%20where%20o.catalogNumber=%27NHRS-COLE000008661%27"
    
     
