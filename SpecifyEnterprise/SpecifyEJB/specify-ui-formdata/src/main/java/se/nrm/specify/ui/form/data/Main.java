@@ -56,20 +56,31 @@ public class Main {
 
             List<String> fieldlist = new ArrayList<String>();
             fieldlist.addAll(viewdata.getViewdef().getFieldList());
+            
+            
+            
             Map<String, String> subviews = viewdata.getViewdef().getSubviewList(FormDataType.SUBVIEW);
+            
+            
+            System.out.println("subviews : " + subviews);
             List<String> plugins = viewdata.getViewdef().getPluginList();
             Map<String, String> queryboxes = viewdata.getViewdef().getSubviewList(FormDataType.QUERYCBX);
-
+            
+            System.out.println("query: " + queryboxes);
+//
             List<String> subfields = getSubviews(queryboxes, FormDataType.QUERYCBX);
             List<String> subviewfields = getSubviews(subviews, FormDataType.SUBVIEW);
+            
+            System.out.println("subfields: " + subfields);
 
             fieldlist.addAll(plugins);
             fieldlist.addAll(subviewfields);
             fieldlist.addAll(subfields);
 
             Map<String, String> searchquery = new HashMap<String, String>();
-            searchquery.put("catalogNumber", "NHRS-GULI000000970");
-
+//            searchquery.put("catalogNumber", "NHRS-GULI000000970");
+            searchquery.put("catalogNumber", "NHRS-COLE000008661");
+            
             for (String string : fieldlist) {
                 System.out.println("field: " + string);
             }
@@ -87,21 +98,30 @@ public class Main {
 
         for (String key : map.keySet()) {
             try {
-                System.out.println("subview: " + key);
-                String s = map.get(key);
+                System.out.println("subview key: " + key);
+                
+                String classname = map.get(key) + ".";
                 ViewData viewData = creator.getViewdata(key);
-
-                String classname = viewData.getViewdef().getViewDefClass();
-                if (type == FormDataType.QUERYCBX) {
-                    classname = s;
-                }
-
-                classname = UIXmlUtil.entityFieldNameConvert(classname);
-                if (s.endsWith("s")) {
-                    classname += "Collection.";
-                } else {
-                    classname += "ID.";
-                }
+//                
+//                String s = map.get(key);
+//                ViewData viewData = creator.getViewdata(key);
+//
+//                String classname = viewData.getViewdef().getViewDefClass();
+//                System.out.println("cn: " + classname);
+//                
+//                
+//                
+//                if (type == FormDataType.QUERYCBX) {
+//                    classname = s;
+//                }
+//
+//                classname = UIXmlUtil.entityFieldNameConvert(classname);
+//                System.out.println("classname: " + classname + "s: " + s);
+//                if (s.endsWith("s")) {
+//                    classname += "s.";
+//                } else {
+//                    classname += "Id.";
+//                }
 
                 List<String> fields = new ArrayList<String>();
                 fields.addAll(viewData.getViewdef().getFieldList());
@@ -131,22 +151,24 @@ public class Main {
             try {
                 String s = map.get(key);
                 ViewData viewData = creator.getViewdata(key);
+                
+                String classname = map.get(key) + ".";
 
-                String classname = viewData.getViewdef().getViewDefClass();
-                if (type == FormDataType.QUERYCBX) {
-                    classname = s;
-                }
-                classname = UIXmlUtil.entityFieldNameConvert(classname);
-
+//                String classname = viewData.getViewdef().getViewDefClass();
+//                if (type == FormDataType.QUERYCBX) {
+//                    classname = s;
+//                }
+//                classname = UIXmlUtil.entityFieldNameConvert(classname);
+//
                 List<String> fields = new ArrayList<String>();
                 fields.addAll(viewData.getViewdef().getFieldList());
                 fields.addAll(viewData.getViewdef().getPluginList());
-
-                if (s.endsWith("s")) {
-                    classname += "Collection.";
-                } else {
-                    classname += "ID.";
-                }
+//
+//                if (s.endsWith("s")) {
+//                    classname += "Collection.";
+//                } else {
+//                    classname += "ID.";
+//                }
                 for (String field : fields) {
                     fieldList.add(parent + classname + field);
                 }

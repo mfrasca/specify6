@@ -1,6 +1,7 @@
 package se.nrm.specify.ui.form.data.xml.model;
 
-import java.io.Serializable; 
+import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +21,6 @@ import se.nrm.specify.ui.form.data.util.UIXmlUtil;
 public class Viewdef implements Serializable {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    
     private String viewDefName;
     private String viewDefClass;
     private String type;
@@ -50,35 +50,22 @@ public class Viewdef implements Serializable {
     }
 
     public List<String> getFieldList() throws ClassNotFoundException {
-         
+
         List<String> fieldlist = new ArrayList<String>();
-        Class c = ReflectionUtil.getClassByName(viewDefClass); 
-        
+        Class c = ReflectionUtil.getClassByName(viewDefClass);
         for (Formdata cell : formdatalist) {
-            if (cell.isFieldType() && (cell.isTextField() || cell.isLabel()
-                    || cell.isCombobox() || cell.isCheckbox())) {
-                String cellname = cell.getName();
+            String cellname = cell.getName();
+            if (cell.isFieldType()) {
 
-                if (!isFieldNameValide(cellname, c)) {
-                    cellname = cellname + "ID";
 
-                    if (isFieldNameValide(cellname, c)) {
-                        if (cell.isIsUiFormatted()) {
-                            String uiformattername = cell.getUifieldformatter();
-                            DataFormatter dataFormatter = DataObjFormatter.getDataFormatter(uiformattername.toLowerCase());
-                            List<String> list = dataFormatter.getFields();
+                if ((cell.isTextField() || cell.isCombobox() || cell.isCheckbox())
+                        && isFieldNameValide(cellname, c)) {
+                    Field field = ReflectionUtil.getField(c, cellname);
 
-                            for (String string : list) {
-                                StringBuilder sb = new StringBuilder();
-                                sb.append(cellname);
-                                sb.append(".");
-                                sb.append(string);
-
-                                fieldlist.add(sb.toString());
-                            }
-                        } else {
+                    if (field != null) {
+                        if (StringUtils.startsWith(field.getType().getName(), CommonString.getInstance().ENTITY_PACKAGE)) {
                             DataFormatter dataFormatter = DataObjFormatter.getDataFormatter(UIXmlUtil.entityNameConvert(viewDefClass).toLowerCase());
-                             
+
                             List<String> list = dataFormatter.getFields();
                             for (String string : list) {
                                 if (StringUtils.contains(string, cell.getName())) {
@@ -87,35 +74,33 @@ public class Viewdef implements Serializable {
                                         fieldlist.add(cellname + "." + strs[1]);
                                     } else {
                                         String entityName = UIXmlUtil.entityNameConvert(string); 
-                                        dataFormatter = DataObjFormatter.getDataFormatter(entityName.toLowerCase()); 
-                                        List<String> flist = dataFormatter.getFields();
-                                         
-                                        for (String s : flist) {
-                                            StringBuilder sb = new StringBuilder();
-                                            sb.append(cellname);
-                                            sb.append(".");
-                                            sb.append(s);
-
-                                            fieldlist.add(sb.toString());
-                                        }
+                                        dataFormatter = DataObjFormatter.getDataFormatter(entityName.toLowerCase());
+                                        addFieldsIntoFieldList(dataFormatter, cellname, fieldlist);
                                     }
                                 }
                             }
+                        } else {
+                            fieldlist.add(cellname);
                         }
                     }
-                } else {
-                    fieldlist.add(cellname);
-                }
-            }
-
-        }
+                } else if (cell.isLabel() && isFieldNameValide(cellname, c)) {
+                    if (cell.isIsUiFormatted()) {
+                        String uiformattername = cell.getUifieldformatter();
+                        DataFormatter dataFormatter = DataObjFormatter.getDataFormatter(uiformattername.toLowerCase());
+                        addFieldsIntoFieldList(dataFormatter, cellname, fieldlist); 
+                    } else {
+                        fieldlist.add(cellname);
+                    } 
+                } 
+            } 
+        } 
         return fieldlist;
     }
 
     private boolean isFieldNameValide(String fieldname, Class clazz) {
         return ReflectionUtil.getField(clazz, fieldname) == null ? false : true;
-    } 
-    
+    }
+
     public Map<String, String> getSubviewList(FormDataType type) {
         Map<String, String> map = new HashMap<String, String>();
 
@@ -129,8 +114,8 @@ public class Viewdef implements Serializable {
             }
         }
         return map;
-    } 
-    
+    }
+
     public List<String> getPluginList() {
         List<String> pluginlist = new ArrayList<String>();
 
@@ -147,8 +132,21 @@ public class Viewdef implements Serializable {
         return pluginlist;
     }
 
+    private void addFieldsIntoFieldList(DataFormatter dataFormatter, String name, List<String> fieldlist) {
+        List<String> flist = dataFormatter.getFields();
+
+        for (String s : flist) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(name);
+            sb.append(".");
+            sb.append(s);
+
+            fieldlist.add(sb.toString());
+        }
+    }
+
     @Override
     public String toString() {
         return "Viewdef - [viewNam:" + viewDefName + " ] - [viewdefclass: " + viewDefClass + " ] - [ type: " + type + " ] ";
-    } 
+    }
 }
