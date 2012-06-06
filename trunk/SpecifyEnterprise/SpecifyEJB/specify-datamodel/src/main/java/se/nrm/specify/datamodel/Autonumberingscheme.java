@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Autonumberingscheme.findAll", query = "SELECT a FROM Autonumberingscheme a"),
-    @NamedQuery(name = "Autonumberingscheme.findByAutoNumberingSchemeID", query = "SELECT a FROM Autonumberingscheme a WHERE a.autoNumberingSchemeID = :autoNumberingSchemeID"),
+    @NamedQuery(name = "Autonumberingscheme.findByAutoNumberingSchemeID", query = "SELECT a FROM Autonumberingscheme a WHERE a.autoNumberingSchemeId = :autoNumberingSchemeID"),
     @NamedQuery(name = "Autonumberingscheme.findByTimestampCreated", query = "SELECT a FROM Autonumberingscheme a WHERE a.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Autonumberingscheme.findByTimestampModified", query = "SELECT a FROM Autonumberingscheme a WHERE a.timestampModified = :timestampModified"),
     @NamedQuery(name = "Autonumberingscheme.findByVersion", query = "SELECT a FROM Autonumberingscheme a WHERE a.version = :version"),
@@ -45,7 +45,7 @@ public class Autonumberingscheme extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "AutoNumberingSchemeID")
-    private Integer autoNumberingSchemeID;
+    private Integer autoNumberingSchemeId;
      
     @Size(max = 64)
     @Column(name = "FormatName")
@@ -69,44 +69,62 @@ public class Autonumberingscheme extends BaseEntity {
     @Column(name = "TableNumber")
     private int tableNumber;
     
-    @ManyToMany(mappedBy = "autonumberingschemeCollection")
-    private Collection<se.nrm.specify.datamodel.Collection> collectionCollection;
+    @ManyToMany(mappedBy = "numberingSchemes")
+    private Collection<se.nrm.specify.datamodel.Collection> collections;
     
-    @ManyToMany(mappedBy = "autonumberingschemeCollection") 
-    private Collection<Discipline> disciplineCollection;
+    @ManyToMany(mappedBy = "numberingSchemes") 
+    private Collection<Discipline> disciplines;
     
-    @ManyToMany(mappedBy = "autonumberingschemeCollection")
-    private Collection<Division> divisionCollection;
+    @ManyToMany(mappedBy = "numberingSchemes")
+    private Collection<Division> divisions;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
 
     public Autonumberingscheme() {
     }
 
-    public Autonumberingscheme(Integer autoNumberingSchemeID) {
-        this.autoNumberingSchemeID = autoNumberingSchemeID;
+    public Autonumberingscheme(Integer autoNumberingSchemeId) {
+        this.autoNumberingSchemeId = autoNumberingSchemeId;
     }
 
-    public Autonumberingscheme(Integer autoNumberingSchemeID, Date timestampCreated, boolean isNumericOnly, int tableNumber) {
+    public Autonumberingscheme(Integer autoNumberingSchemeId, Date timestampCreated, boolean isNumericOnly, int tableNumber) {
         super(timestampCreated);
-        this.autoNumberingSchemeID = autoNumberingSchemeID; 
+        this.autoNumberingSchemeId = autoNumberingSchemeId; 
         this.isNumericOnly = isNumericOnly;
         this.tableNumber = tableNumber;
     }
 
-    public Integer getAutoNumberingSchemeID() {
-        return autoNumberingSchemeID;
+    public Integer getAutoNumberingSchemeId() {
+        return autoNumberingSchemeId;
     }
 
-    public void setAutoNumberingSchemeID(Integer autoNumberingSchemeID) {
-        this.autoNumberingSchemeID = autoNumberingSchemeID;
+    public void setAutoNumberingSchemeId(Integer autoNumberingSchemeId) {
+        this.autoNumberingSchemeId = autoNumberingSchemeId;
     }
+
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
+    }
+
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+ 
  
     public String getFormatName() {
         return formatName;
@@ -149,52 +167,40 @@ public class Autonumberingscheme extends BaseEntity {
     }
 
     @XmlTransient
-    public Collection<se.nrm.specify.datamodel.Collection> getCollectionCollection() {
-        return collectionCollection;
+    public Collection<se.nrm.specify.datamodel.Collection> getCollections() {
+        return collections;
     }
 
-    public void setCollectionCollection(Collection<se.nrm.specify.datamodel.Collection> collectionCollection) {
-        this.collectionCollection = collectionCollection;
-    }
-
-    @XmlTransient
-    public Collection<Discipline> getDisciplineCollection() {
-        return disciplineCollection;
-    }
-
-    public void setDisciplineCollection(Collection<Discipline> disciplineCollection) {
-        this.disciplineCollection = disciplineCollection;
+    public void setCollections(Collection<se.nrm.specify.datamodel.Collection> collections) {
+        this.collections = collections;
     }
 
     @XmlTransient
-    public Collection<Division> getDivisionCollection() {
-        return divisionCollection;
+    public Collection<Discipline> getDisciplines() {
+        return disciplines;
     }
 
-    public void setDivisionCollection(Collection<Division> divisionCollection) {
-        this.divisionCollection = divisionCollection;
+    public void setDisciplines(Collection<Discipline> disciplines) {
+        this.disciplines = disciplines;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    @XmlTransient
+    public Collection<Division> getDivisions() {
+        return divisions;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setDivisions(Collection<Division> divisions) {
+        this.divisions = divisions;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
+ 
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (autoNumberingSchemeID != null ? autoNumberingSchemeID.hashCode() : 0);
+        hash += (autoNumberingSchemeId != null ? autoNumberingSchemeId.hashCode() : 0);
         return hash;
     }
 
@@ -205,7 +211,7 @@ public class Autonumberingscheme extends BaseEntity {
             return false;
         }
         Autonumberingscheme other = (Autonumberingscheme) object;
-        if ((this.autoNumberingSchemeID == null && other.autoNumberingSchemeID != null) || (this.autoNumberingSchemeID != null && !this.autoNumberingSchemeID.equals(other.autoNumberingSchemeID))) {
+        if ((this.autoNumberingSchemeId == null && other.autoNumberingSchemeId != null) || (this.autoNumberingSchemeId != null && !this.autoNumberingSchemeId.equals(other.autoNumberingSchemeId))) {
             return false;
         }
         return true;
@@ -213,7 +219,7 @@ public class Autonumberingscheme extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Autonumberingscheme[ autoNumberingSchemeID=" + autoNumberingSchemeID + " ]";
+        return "Autonumberingscheme[ autoNumberingSchemeId=" + autoNumberingSchemeId + " ]";
     }
     
 }

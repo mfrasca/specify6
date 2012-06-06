@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Sppermission.findAll", query = "SELECT s FROM Sppermission s"),
-    @NamedQuery(name = "Sppermission.findBySpPermissionID", query = "SELECT s FROM Sppermission s WHERE s.spPermissionID = :spPermissionID"),
+    @NamedQuery(name = "Sppermission.findBySpPermissionID", query = "SELECT s FROM Sppermission s WHERE s.permissionId = :spPermissionID"),
     @NamedQuery(name = "Sppermission.findByName", query = "SELECT s FROM Sppermission s WHERE s.name = :name"),
     @NamedQuery(name = "Sppermission.findByTargetId", query = "SELECT s FROM Sppermission s WHERE s.targetId = :targetId")})
 public class Sppermission implements Serializable, SpecifyBean {
@@ -41,7 +41,7 @@ public class Sppermission implements Serializable, SpecifyBean {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "SpPermissionID")
-    private Integer spPermissionID;
+    private Integer permissionId;
     
     @Lob
     @Size(max = 65535)
@@ -66,28 +66,20 @@ public class Sppermission implements Serializable, SpecifyBean {
         @JoinColumn(name = "SpPermissionID", referencedColumnName = "SpPermissionID")}, inverseJoinColumns = {
         @JoinColumn(name = "SpPrincipalID", referencedColumnName = "SpPrincipalID")})
     @ManyToMany
-    private Collection<Spprincipal> spprincipalCollection;
+    private Collection<Spprincipal> principals;
 
     public Sppermission() {
     }
 
-    public Sppermission(Integer spPermissionID) {
-        this.spPermissionID = spPermissionID;
+    public Sppermission(Integer permissionId) {
+        this.permissionId = permissionId;
     }
 
-    public Sppermission(Integer spPermissionID, String permissionClass) {
-        this.spPermissionID = spPermissionID;
+    public Sppermission(Integer permissionId, String permissionClass) {
+        this.permissionId = permissionId;
         this.permissionClass = permissionClass;
     }
-
-    public Integer getSpPermissionID() {
-        return spPermissionID;
-    }
-
-    public void setSpPermissionID(Integer spPermissionID) {
-        this.spPermissionID = spPermissionID;
-    }
-
+ 
     public String getActions() {
         return actions;
     }
@@ -120,19 +112,29 @@ public class Sppermission implements Serializable, SpecifyBean {
         this.targetId = targetId;
     }
 
-    @XmlTransient
-    public Collection<Spprincipal> getSpprincipalCollection() {
-        return spprincipalCollection;
+    public Integer getPermissionId() {
+        return permissionId;
     }
 
-    public void setSpprincipalCollection(Collection<Spprincipal> spprincipalCollection) {
-        this.spprincipalCollection = spprincipalCollection;
+    public void setPermissionId(Integer permissionId) {
+        this.permissionId = permissionId;
     }
+
+    @XmlTransient
+    public Collection<Spprincipal> getPrincipals() {
+        return principals;
+    }
+
+    public void setPrincipals(Collection<Spprincipal> principals) {
+        this.principals = principals;
+    }
+
+     
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (spPermissionID != null ? spPermissionID.hashCode() : 0);
+        hash += (permissionId != null ? permissionId.hashCode() : 0);
         return hash;
     }
 
@@ -143,7 +145,7 @@ public class Sppermission implements Serializable, SpecifyBean {
             return false;
         }
         Sppermission other = (Sppermission) object;
-        if ((this.spPermissionID == null && other.spPermissionID != null) || (this.spPermissionID != null && !this.spPermissionID.equals(other.spPermissionID))) {
+        if ((this.permissionId == null && other.permissionId != null) || (this.permissionId != null && !this.permissionId.equals(other.permissionId))) {
             return false;
         }
         return true;
@@ -151,7 +153,7 @@ public class Sppermission implements Serializable, SpecifyBean {
 
     @Override
     public String toString() {
-        return "se.nrm.specify.datamodel.Sppermission[ spPermissionID=" + spPermissionID + " ]";
+        return "se.nrm.specify.datamodel.Sppermission[ spPermissionID=" + permissionId + " ]";
     }
     
 }

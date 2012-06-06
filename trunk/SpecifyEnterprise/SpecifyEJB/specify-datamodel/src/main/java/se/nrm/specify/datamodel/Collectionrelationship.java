@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Collectionrelationship.findAll", query = "SELECT c FROM Collectionrelationship c"),
-    @NamedQuery(name = "Collectionrelationship.findByCollectionRelationshipID", query = "SELECT c FROM Collectionrelationship c WHERE c.collectionRelationshipID = :collectionRelationshipID"),
+    @NamedQuery(name = "Collectionrelationship.findByCollectionRelationshipID", query = "SELECT c FROM Collectionrelationship c WHERE c.collectionRelationshipId = :collectionRelationshipID"),
     @NamedQuery(name = "Collectionrelationship.findByTimestampCreated", query = "SELECT c FROM Collectionrelationship c WHERE c.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Collectionrelationship.findByTimestampModified", query = "SELECT c FROM Collectionrelationship c WHERE c.timestampModified = :timestampModified"),
     @NamedQuery(name = "Collectionrelationship.findByVersion", query = "SELECT c FROM Collectionrelationship c WHERE c.version = :version"),
@@ -40,7 +40,7 @@ public class Collectionrelationship extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "CollectionRelationshipID")
-    private Integer collectionRelationshipID;
+    private Integer collectionRelationshipId;
      
     @Size(max = 32)
     @Column(name = "Text1")
@@ -52,43 +52,37 @@ public class Collectionrelationship extends BaseEntity {
     
     @JoinColumn(name = "RightSideCollectionID", referencedColumnName = "CollectionObjectID")
     @ManyToOne(optional = false)
-    private Collectionobject rightSideCollectionID;
+    private Collectionobject rightSide;
     
     @JoinColumn(name = "LeftSideCollectionID", referencedColumnName = "CollectionObjectID")
     @ManyToOne(optional = false)
-    private Collectionobject leftSideCollectionID;
+    private Collectionobject leftSide;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "CollectionRelTypeID", referencedColumnName = "CollectionRelTypeID")
     @ManyToOne
-    private Collectionreltype collectionRelTypeID;
+    private Collectionreltype collectionRelType;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
 
     public Collectionrelationship() {
     }
 
-    public Collectionrelationship(Integer collectionRelationshipID) {
-        this.collectionRelationshipID = collectionRelationshipID;
+    public Collectionrelationship(Integer collectionRelationshipId) {
+        this.collectionRelationshipId = collectionRelationshipId;
     }
 
-    public Collectionrelationship(Integer collectionRelationshipID, Date timestampCreated) {
+    public Collectionrelationship(Integer collectionRelationshipId, Date timestampCreated) {
         super(timestampCreated);
-        this.collectionRelationshipID = collectionRelationshipID; 
+        this.collectionRelationshipId = collectionRelationshipId; 
     }
 
-    public Integer getCollectionRelationshipID() {
-        return collectionRelationshipID;
-    }
-
-    public void setCollectionRelationshipID(Integer collectionRelationshipID) {
-        this.collectionRelationshipID = collectionRelationshipID;
-    }
+ 
  
     public String getText1() {
         return text1;
@@ -106,50 +100,60 @@ public class Collectionrelationship extends BaseEntity {
         this.text2 = text2;
     }
 
-    public Collectionobject getRightSideCollectionID() {
-        return rightSideCollectionID;
+    public Collectionreltype getCollectionRelType() {
+        return collectionRelType;
     }
 
-    public void setRightSideCollectionID(Collectionobject rightSideCollectionID) {
-        this.rightSideCollectionID = rightSideCollectionID;
+    public void setCollectionRelType(Collectionreltype collectionRelType) {
+        this.collectionRelType = collectionRelType;
     }
 
-    public Collectionobject getLeftSideCollectionID() {
-        return leftSideCollectionID;
+    public Integer getCollectionRelationshipId() {
+        return collectionRelationshipId;
     }
 
-    public void setLeftSideCollectionID(Collectionobject leftSideCollectionID) {
-        this.leftSideCollectionID = leftSideCollectionID;
+    public void setCollectionRelationshipId(Integer collectionRelationshipId) {
+        this.collectionRelationshipId = collectionRelationshipId;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Collectionreltype getCollectionRelTypeID() {
-        return collectionRelTypeID;
+    public Collectionobject getLeftSide() {
+        return leftSide;
     }
 
-    public void setCollectionRelTypeID(Collectionreltype collectionRelTypeID) {
-        this.collectionRelTypeID = collectionRelTypeID;
+    public void setLeftSide(Collectionobject leftSide) {
+        this.leftSide = leftSide;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
+
+    public Collectionobject getRightSide() {
+        return rightSide;
+    }
+
+    public void setRightSide(Collectionobject rightSide) {
+        this.rightSide = rightSide;
+    }
+
+   
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (collectionRelationshipID != null ? collectionRelationshipID.hashCode() : 0);
+        hash += (collectionRelationshipId != null ? collectionRelationshipId.hashCode() : 0);
         return hash;
     }
 
@@ -160,7 +164,7 @@ public class Collectionrelationship extends BaseEntity {
             return false;
         }
         Collectionrelationship other = (Collectionrelationship) object;
-        if ((this.collectionRelationshipID == null && other.collectionRelationshipID != null) || (this.collectionRelationshipID != null && !this.collectionRelationshipID.equals(other.collectionRelationshipID))) {
+        if ((this.collectionRelationshipId == null && other.collectionRelationshipId != null) || (this.collectionRelationshipId != null && !this.collectionRelationshipId.equals(other.collectionRelationshipId))) {
             return false;
         }
         return true;
@@ -168,7 +172,7 @@ public class Collectionrelationship extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Collectionrelationship[ collectionRelationshipID=" + collectionRelationshipID + " ]";
+        return "Collectionrelationship[ collectionRelationshipId=" + collectionRelationshipId + " ]";
     }
     
 }

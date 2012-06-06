@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Spappresource.findAll", query = "SELECT s FROM Spappresource s"),
-    @NamedQuery(name = "Spappresource.findBySpAppResourceID", query = "SELECT s FROM Spappresource s WHERE s.spAppResourceID = :spAppResourceID"),
+    @NamedQuery(name = "Spappresource.findBySpAppResourceID", query = "SELECT s FROM Spappresource s WHERE s.spAppResourceId = :spAppResourceID"),
     @NamedQuery(name = "Spappresource.findByTimestampCreated", query = "SELECT s FROM Spappresource s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Spappresource.findByTimestampModified", query = "SELECT s FROM Spappresource s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Spappresource.findByVersion", query = "SELECT s FROM Spappresource s WHERE s.version = :version"),
@@ -50,7 +50,7 @@ public class Spappresource extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "SpAppResourceID")
-    private Integer spAppResourceID;
+    private Integer spAppResourceId;
      
     @Column(name = "AllPermissionLevel")
     private Integer allPermissionLevel;
@@ -84,53 +84,113 @@ public class Spappresource extends BaseEntity {
     @Column(name = "OwnerPermissionLevel")
     private Integer ownerPermissionLevel;
     
-    @OneToMany(mappedBy = "spAppResourceID")
-    private Collection<Spappresourcedata> spappresourcedataCollection;
+    @OneToMany(mappedBy = "spAppResource")
+    private Collection<Spappresourcedata> spAppResourceDatas;
     
     @JoinColumn(name = "SpPrincipalID", referencedColumnName = "SpPrincipalID")
     @ManyToOne
-    private Spprincipal spPrincipalID;
+    private Spprincipal group;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne 
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "SpecifyUserID", referencedColumnName = "SpecifyUserID")
     @ManyToOne(optional = false)
-    private Specifyuser specifyUserID;
+    private Specifyuser specifyUser;
     
     @JoinColumn(name = "SpAppResourceDirID", referencedColumnName = "SpAppResourceDirID")
     @ManyToOne(optional = false)
-    private Spappresourcedir spAppResourceDirID;
+    private Spappresourcedir spAppResourceDir;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "appResourceID")
-    private Collection<Spreport> spreportCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "appResource")
+    private Collection<Spreport> spReports;
 
     public Spappresource() {
     }
 
-    public Spappresource(Integer spAppResourceID) {
-        this.spAppResourceID = spAppResourceID;
+    public Spappresource(Integer spAppResourceId) {
+        this.spAppResourceId = spAppResourceId;
     }
 
-    public Spappresource(Integer spAppResourceID, Date timestampCreated, short level, String name) {
+    public Spappresource(Integer spAppResourceId, Date timestampCreated, short level, String name) {
         super(timestampCreated);
-        this.spAppResourceID = spAppResourceID; 
+        this.spAppResourceId = spAppResourceId; 
         this.level = level;
         this.name = name;
     }
 
-    public Integer getSpAppResourceID() {
-        return spAppResourceID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setSpAppResourceID(Integer spAppResourceID) {
-        this.spAppResourceID = spAppResourceID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
+
+    public Spprincipal getGroup() {
+        return group;
+    }
+
+    public void setGroup(Spprincipal group) {
+        this.group = group;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    @XmlTransient
+    public Collection<Spappresourcedata> getSpAppResourceDatas() {
+        return spAppResourceDatas;
+    }
+
+    public void setSpAppResourceDatas(Collection<Spappresourcedata> spAppResourceDatas) {
+        this.spAppResourceDatas = spAppResourceDatas;
+    }
+
+    public Spappresourcedir getSpAppResourceDir() {
+        return spAppResourceDir;
+    }
+
+    public void setSpAppResourceDir(Spappresourcedir spAppResourceDir) {
+        this.spAppResourceDir = spAppResourceDir;
+    }
+
+    public Integer getSpAppResourceId() {
+        return spAppResourceId;
+    }
+
+    public void setSpAppResourceId(Integer spAppResourceId) {
+        this.spAppResourceId = spAppResourceId;
+    }
+
+    @XmlTransient
+    public Collection<Spreport> getSpReports() {
+        return spReports;
+    }
+
+    public void setSpReports(Collection<Spreport> spReports) {
+        this.spReports = spReports;
+    }
+
+    public Specifyuser getSpecifyUser() {
+        return specifyUser;
+    }
+
+    public void setSpecifyUser(Specifyuser specifyUser) {
+        this.specifyUser = specifyUser;
+    }
+
+ 
  
     public Integer getAllPermissionLevel() {
         return allPermissionLevel;
@@ -196,68 +256,13 @@ public class Spappresource extends BaseEntity {
         this.ownerPermissionLevel = ownerPermissionLevel;
     }
 
-    @XmlTransient
-    public Collection<Spappresourcedata> getSpappresourcedataCollection() {
-        return spappresourcedataCollection;
-    }
-
-    public void setSpappresourcedataCollection(Collection<Spappresourcedata> spappresourcedataCollection) {
-        this.spappresourcedataCollection = spappresourcedataCollection;
-    }
-
-    public Spprincipal getSpPrincipalID() {
-        return spPrincipalID;
-    }
-
-    public void setSpPrincipalID(Spprincipal spPrincipalID) {
-        this.spPrincipalID = spPrincipalID;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
-    public Specifyuser getSpecifyUserID() {
-        return specifyUserID;
-    }
-
-    public void setSpecifyUserID(Specifyuser specifyUserID) {
-        this.specifyUserID = specifyUserID;
-    }
-
-    public Spappresourcedir getSpAppResourceDirID() {
-        return spAppResourceDirID;
-    }
-
-    public void setSpAppResourceDirID(Spappresourcedir spAppResourceDirID) {
-        this.spAppResourceDirID = spAppResourceDirID;
-    }
-
-    @XmlTransient
-    public Collection<Spreport> getSpreportCollection() {
-        return spreportCollection;
-    }
-
-    public void setSpreportCollection(Collection<Spreport> spreportCollection) {
-        this.spreportCollection = spreportCollection;
-    }
+    
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (spAppResourceID != null ? spAppResourceID.hashCode() : 0);
+        hash += (spAppResourceId != null ? spAppResourceId.hashCode() : 0);
         return hash;
     }
 
@@ -268,7 +273,7 @@ public class Spappresource extends BaseEntity {
             return false;
         }
         Spappresource other = (Spappresource) object;
-        if ((this.spAppResourceID == null && other.spAppResourceID != null) || (this.spAppResourceID != null && !this.spAppResourceID.equals(other.spAppResourceID))) {
+        if ((this.spAppResourceId == null && other.spAppResourceId != null) || (this.spAppResourceId != null && !this.spAppResourceId.equals(other.spAppResourceId))) {
             return false;
         }
         return true;
@@ -276,7 +281,7 @@ public class Spappresource extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Spappresource[ spAppResourceID=" + spAppResourceID + " ]";
+        return "Spappresource[ spAppResourceID=" + spAppResourceId + " ]";
     }
     
 }

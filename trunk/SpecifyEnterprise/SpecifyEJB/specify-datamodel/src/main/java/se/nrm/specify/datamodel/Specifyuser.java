@@ -34,12 +34,12 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Specifyuser.findAll", query = "SELECT s FROM Specifyuser s"),
-    @NamedQuery(name = "Specifyuser.findBySpecifyUserID", query = "SELECT s FROM Specifyuser s WHERE s.specifyUserID = :specifyUserID"),
+    @NamedQuery(name = "Specifyuser.findBySpecifyUserID", query = "SELECT s FROM Specifyuser s WHERE s.specifyUserId = :specifyUserID"),
     @NamedQuery(name = "Specifyuser.findByTimestampCreated", query = "SELECT s FROM Specifyuser s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Specifyuser.findByTimestampModified", query = "SELECT s FROM Specifyuser s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Specifyuser.findByVersion", query = "SELECT s FROM Specifyuser s WHERE s.version = :version"),
     @NamedQuery(name = "Specifyuser.findByAccumMinLoggedIn", query = "SELECT s FROM Specifyuser s WHERE s.accumMinLoggedIn = :accumMinLoggedIn"),
-    @NamedQuery(name = "Specifyuser.findByEMail", query = "SELECT s FROM Specifyuser s WHERE s.eMail = :eMail"),
+    @NamedQuery(name = "Specifyuser.findByEMail", query = "SELECT s FROM Specifyuser s WHERE s.email = :eMail"),
     @NamedQuery(name = "Specifyuser.findByIsLoggedIn", query = "SELECT s FROM Specifyuser s WHERE s.isLoggedIn = :isLoggedIn"),
     @NamedQuery(name = "Specifyuser.findByIsLoggedInReport", query = "SELECT s FROM Specifyuser s WHERE s.isLoggedInReport = :isLoggedInReport"),
     @NamedQuery(name = "Specifyuser.findByLoginCollectionName", query = "SELECT s FROM Specifyuser s WHERE s.loginCollectionName = :loginCollectionName"),
@@ -57,7 +57,7 @@ public class Specifyuser extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "SpecifyUserID")
-    private Integer specifyUserID;
+    private Integer specifyUserId;
      
     @Column(name = "AccumMinLoggedIn")
     private BigInteger accumMinLoggedIn;
@@ -65,7 +65,7 @@ public class Specifyuser extends BaseEntity {
     // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
     @Size(max = 64)
     @Column(name = "EMail")
-    private String eMail;
+    private String email;
     
     @Basic(optional = false)
     @NotNull
@@ -107,78 +107,73 @@ public class Specifyuser extends BaseEntity {
         @JoinColumn(name = "SpecifyUserID", referencedColumnName = "SpecifyUserID")}, inverseJoinColumns = {
         @JoinColumn(name = "SpPrincipalID", referencedColumnName = "SpPrincipalID")})
     @ManyToMany
-    private Collection<Spprincipal> spprincipalCollection;
+    private Collection<Spprincipal> spPrincipals;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "specifyUserID")
-    private Collection<Workbench> workbenchCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "specifyUser")
+    private Collection<Workbench> workbenches;
     
-    @OneToMany(mappedBy = "visibilitySetByID")
-    private Collection<Taxon> taxonCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "specifyUserID")
-    private Collection<Workbenchtemplate> workbenchtemplateCollection;
+    @OneToMany(mappedBy = "visibilitySetBy")
+    private Collection<Taxon> taxons;
     
-    @OneToMany(mappedBy = "ownerID")
-    private Collection<Sptasksemaphore> sptasksemaphoreCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "specifyUser")
+    private Collection<Workbenchtemplate> workbenchTemplates;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "specifyUserID")
-    private Collection<Recordset> recordsetCollection;
+    @OneToMany(mappedBy = "owner")
+    private Collection<Sptasksemaphore> taskSemaphores;
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "specifyUser")
+    private Collection<Recordset> recordsets;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "specifyUserID")
-    private Collection<Spappresource> spappresourceCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "specifyUser")
+    private Collection<Spappresource> spAppResources;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "specifyUserID")
-    private Collection<Spreport> spreportCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "specifyUser")
+    private Collection<Spreport> spreports;
     
-    @OneToMany(mappedBy = "visibilitySetByID")
-    private Collection<Collectingevent> collectingeventCollection;
+    @OneToMany(mappedBy = "visibilitySetBy")
+    private Collection<Collectingevent> collectingevents;
     
-    @OneToMany(mappedBy = "specifyUserID")
-    private Collection<Agent> agentCollection;
+    @OneToMany(mappedBy = "specifyUser")
+    private Collection<Agent> agents;
     
-    @OneToMany(mappedBy = "visibilitySetByID")
-    private Collection<Collectionobject> collectionobjectCollection;
+    @OneToMany(mappedBy = "visibilitySetBy")
+    private Collection<Collectionobject> collectionobjects;
     
-    @OneToMany(mappedBy = "visibilitySetByID")
-    private Collection<Attachment> attachmentCollection;
-    @OneToMany(mappedBy = "specifyUserID")
-    private Collection<Spappresourcedir> spappresourcedirCollection;
+    @OneToMany(mappedBy = "visibilitySetBy")
+    private Collection<Attachment> attachments;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "specifyUserID")
-    private Collection<Spquery> spqueryCollection;
+    @OneToMany(mappedBy = "specifyUser")
+    private Collection<Spappresourcedir> spAppResourceDirs;
     
-    @OneToMany(mappedBy = "visibilitySetByID")
-    private Collection<Locality> localityCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "specifyUser")
+    private Collection<Spquery> spQuerys;
+    
+    @OneToMany(mappedBy = "visibilitySetBy")
+    private Collection<Locality> localities;
 
     public Specifyuser() {
     }
 
-    public Specifyuser(Integer specifyUserID) {
-        this.specifyUserID = specifyUserID;
+    public Specifyuser(Integer specifyUserId) {
+        this.specifyUserId = specifyUserId;
     }
 
-    public Specifyuser(Integer specifyUserID, Date timestampCreated, boolean isLoggedIn, boolean isLoggedInReport, String name) {
+    public Specifyuser(Integer specifyUserId, Date timestampCreated, boolean isLoggedIn, boolean isLoggedInReport, String name) {
         super(timestampCreated);
-        this.specifyUserID = specifyUserID; 
+        this.specifyUserId = specifyUserId; 
         this.isLoggedIn = isLoggedIn;
         this.isLoggedInReport = isLoggedInReport;
         this.name = name;
     }
 
-    public Integer getSpecifyUserID() {
-        return specifyUserID;
-    }
-
-    public void setSpecifyUserID(Integer specifyUserID) {
-        this.specifyUserID = specifyUserID;
-    }
  
     public BigInteger getAccumMinLoggedIn() {
         return accumMinLoggedIn;
@@ -188,14 +183,7 @@ public class Specifyuser extends BaseEntity {
         this.accumMinLoggedIn = accumMinLoggedIn;
     }
 
-    public String getEMail() {
-        return eMail;
-    }
-
-    public void setEMail(String eMail) {
-        this.eMail = eMail;
-    }
-
+ 
     public boolean getIsLoggedIn() {
         return isLoggedIn;
     }
@@ -261,160 +249,177 @@ public class Specifyuser extends BaseEntity {
     }
 
     @XmlTransient
-    public Collection<Spprincipal> getSpprincipalCollection() {
-        return spprincipalCollection;
+    public Collection<Agent> getAgents() {
+        return agents;
     }
 
-    public void setSpprincipalCollection(Collection<Spprincipal> spprincipalCollection) {
-        this.spprincipalCollection = spprincipalCollection;
-    }
-
-    @XmlTransient
-    public Collection<Workbench> getWorkbenchCollection() {
-        return workbenchCollection;
-    }
-
-    public void setWorkbenchCollection(Collection<Workbench> workbenchCollection) {
-        this.workbenchCollection = workbenchCollection;
+    public void setAgents(Collection<Agent> agents) {
+        this.agents = agents;
     }
 
     @XmlTransient
-    public Collection<Taxon> getTaxonCollection() {
-        return taxonCollection;
+    public Collection<Attachment> getAttachments() {
+        return attachments;
     }
 
-    public void setTaxonCollection(Collection<Taxon> taxonCollection) {
-        this.taxonCollection = taxonCollection;
-    }
-
-    @XmlTransient
-    public Collection<Workbenchtemplate> getWorkbenchtemplateCollection() {
-        return workbenchtemplateCollection;
-    }
-
-    public void setWorkbenchtemplateCollection(Collection<Workbenchtemplate> workbenchtemplateCollection) {
-        this.workbenchtemplateCollection = workbenchtemplateCollection;
+    public void setAttachments(Collection<Attachment> attachments) {
+        this.attachments = attachments;
     }
 
     @XmlTransient
-    public Collection<Sptasksemaphore> getSptasksemaphoreCollection() {
-        return sptasksemaphoreCollection;
+    public Collection<Collectingevent> getCollectingevents() {
+        return collectingevents;
     }
 
-    public void setSptasksemaphoreCollection(Collection<Sptasksemaphore> sptasksemaphoreCollection) {
-        this.sptasksemaphoreCollection = sptasksemaphoreCollection;
+    public void setCollectingevents(Collection<Collectingevent> collectingevents) {
+        this.collectingevents = collectingevents;
     }
 
-    @XmlTransient
-    public Collection<Recordset> getRecordsetCollection() {
-        return recordsetCollection;
+    public Collection<Collectionobject> getCollectionobjects() {
+        return collectionobjects;
     }
 
-    public void setRecordsetCollection(Collection<Recordset> recordsetCollection) {
-        this.recordsetCollection = recordsetCollection;
+    public void setCollectionobjects(Collection<Collectionobject> collectionobjects) {
+        this.collectionobjects = collectionobjects;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public String getEmail() {
+        return email;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
-    @XmlTransient
-    public Collection<Spappresource> getSpappresourceCollection() {
-        return spappresourceCollection;
-    }
-
-    public void setSpappresourceCollection(Collection<Spappresource> spappresourceCollection) {
-        this.spappresourceCollection = spappresourceCollection;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     @XmlTransient
-    public Collection<Spreport> getSpreportCollection() {
-        return spreportCollection;
+    public Collection<Locality> getLocalities() {
+        return localities;
     }
 
-    public void setSpreportCollection(Collection<Spreport> spreportCollection) {
-        this.spreportCollection = spreportCollection;
+    public void setLocalities(Collection<Locality> localities) {
+        this.localities = localities;
     }
 
-    @XmlTransient
-    public Collection<Collectingevent> getCollectingeventCollection() {
-        return collectingeventCollection;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setCollectingeventCollection(Collection<Collectingevent> collectingeventCollection) {
-        this.collectingeventCollection = collectingeventCollection;
-    }
-
-    @XmlTransient
-    public Collection<Agent> getAgentCollection() {
-        return agentCollection;
-    }
-
-    public void setAgentCollection(Collection<Agent> agentCollection) {
-        this.agentCollection = agentCollection;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
 
     @XmlTransient
-    public Collection<Collectionobject> getCollectionobjectCollection() {
-        return collectionobjectCollection;
+    public Collection<Recordset> getRecordsets() {
+        return recordsets;
     }
 
-    public void setCollectionobjectCollection(Collection<Collectionobject> collectionobjectCollection) {
-        this.collectionobjectCollection = collectionobjectCollection;
-    }
-
-    @XmlTransient
-    public Collection<Attachment> getAttachmentCollection() {
-        return attachmentCollection;
-    }
-
-    public void setAttachmentCollection(Collection<Attachment> attachmentCollection) {
-        this.attachmentCollection = attachmentCollection;
+    public void setRecordsets(Collection<Recordset> recordsets) {
+        this.recordsets = recordsets;
     }
 
     @XmlTransient
-    public Collection<Spappresourcedir> getSpappresourcedirCollection() {
-        return spappresourcedirCollection;
+    public Collection<Spappresourcedir> getSpAppResourceDirs() {
+        return spAppResourceDirs;
     }
 
-    public void setSpappresourcedirCollection(Collection<Spappresourcedir> spappresourcedirCollection) {
-        this.spappresourcedirCollection = spappresourcedirCollection;
-    }
-
-    @XmlTransient
-    public Collection<Spquery> getSpqueryCollection() {
-        return spqueryCollection;
-    }
-
-    public void setSpqueryCollection(Collection<Spquery> spqueryCollection) {
-        this.spqueryCollection = spqueryCollection;
+    public void setSpAppResourceDirs(Collection<Spappresourcedir> spAppResourceDirs) {
+        this.spAppResourceDirs = spAppResourceDirs;
     }
 
     @XmlTransient
-    public Collection<Locality> getLocalityCollection() {
-        return localityCollection;
+    public Collection<Spappresource> getSpAppResources() {
+        return spAppResources;
     }
 
-    public void setLocalityCollection(Collection<Locality> localityCollection) {
-        this.localityCollection = localityCollection;
+    public void setSpAppResources(Collection<Spappresource> spAppResources) {
+        this.spAppResources = spAppResources;
     }
+
+    @XmlTransient
+    public Collection<Spprincipal> getSpPrincipals() {
+        return spPrincipals;
+    }
+
+    public void setSpPrincipals(Collection<Spprincipal> spPrincipals) {
+        this.spPrincipals = spPrincipals;
+    }
+
+    @XmlTransient
+    public Collection<Spquery> getSpQuerys() {
+        return spQuerys;
+    }
+
+    public void setSpQuerys(Collection<Spquery> spQuerys) {
+        this.spQuerys = spQuerys;
+    }
+
+    public Integer getSpecifyUserId() {
+        return specifyUserId;
+    }
+
+    public void setSpecifyUserId(Integer specifyUserId) {
+        this.specifyUserId = specifyUserId;
+    }
+
+    @XmlTransient
+    public Collection<Spreport> getSpreports() {
+        return spreports;
+    }
+
+    public void setSpreports(Collection<Spreport> spreports) {
+        this.spreports = spreports;
+    }
+
+    @XmlTransient
+    public Collection<Sptasksemaphore> getTaskSemaphores() {
+        return taskSemaphores;
+    }
+
+    public void setTaskSemaphores(Collection<Sptasksemaphore> taskSemaphores) {
+        this.taskSemaphores = taskSemaphores;
+    }
+
+    @XmlTransient
+    public Collection<Taxon> getTaxons() {
+        return taxons;
+    }
+
+    public void setTaxons(Collection<Taxon> taxons) {
+        this.taxons = taxons;
+    }
+
+    @XmlTransient
+    public Collection<Workbenchtemplate> getWorkbenchTemplates() {
+        return workbenchTemplates;
+    }
+
+    public void setWorkbenchTemplates(Collection<Workbenchtemplate> workbenchTemplates) {
+        this.workbenchTemplates = workbenchTemplates;
+    }
+
+    @XmlTransient
+    public Collection<Workbench> getWorkbenches() {
+        return workbenches;
+    }
+
+    public void setWorkbenches(Collection<Workbench> workbenches) {
+        this.workbenches = workbenches;
+    }
+
+   
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (specifyUserID != null ? specifyUserID.hashCode() : 0);
+        hash += (specifyUserId != null ? specifyUserId.hashCode() : 0);
         return hash;
     }
 
@@ -425,7 +430,7 @@ public class Specifyuser extends BaseEntity {
             return false;
         }
         Specifyuser other = (Specifyuser) object;
-        if ((this.specifyUserID == null && other.specifyUserID != null) || (this.specifyUserID != null && !this.specifyUserID.equals(other.specifyUserID))) {
+        if ((this.specifyUserId == null && other.specifyUserId != null) || (this.specifyUserId != null && !this.specifyUserId.equals(other.specifyUserId))) {
             return false;
         }
         return true;
@@ -433,7 +438,7 @@ public class Specifyuser extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Specifyuser[ specifyUserID=" + specifyUserID + " ]";
+        return "Specifyuser[ specifyUserID=" + specifyUserId + " ]";
     }
     
 }

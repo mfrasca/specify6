@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Spviewsetobj.findAll", query = "SELECT s FROM Spviewsetobj s"),
-    @NamedQuery(name = "Spviewsetobj.findBySpViewSetObjID", query = "SELECT s FROM Spviewsetobj s WHERE s.spViewSetObjID = :spViewSetObjID"),
+    @NamedQuery(name = "Spviewsetobj.findBySpViewSetObjID", query = "SELECT s FROM Spviewsetobj s WHERE s.spViewSetObjId = :spViewSetObjID"),
     @NamedQuery(name = "Spviewsetobj.findByTimestampCreated", query = "SELECT s FROM Spviewsetobj s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Spviewsetobj.findByTimestampModified", query = "SELECT s FROM Spviewsetobj s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Spviewsetobj.findByVersion", query = "SELECT s FROM Spviewsetobj s WHERE s.version = :version"),
@@ -46,7 +46,7 @@ public class Spviewsetobj extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "SpViewSetObjID")
-    private Integer spViewSetObjID;
+    private Integer spViewSetObjId;
      
     @Size(max = 255)
     @Column(name = "Description")
@@ -71,42 +71,77 @@ public class Spviewsetobj extends BaseEntity {
     @Column(name = "Name")
     private String name;
     
-    @OneToMany(mappedBy = "spViewSetObjID")
-    private Collection<Spappresourcedata> spappresourcedataCollection;
+    @OneToMany(mappedBy = "spViewSetObj")
+    private Collection<Spappresourcedata> spAppResourceDatas;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "SpAppResourceDirID", referencedColumnName = "SpAppResourceDirID")
     @ManyToOne(optional = false)
-    private Spappresourcedir spAppResourceDirID;
+    private Spappresourcedir spAppResourceDir;
 
     public Spviewsetobj() {
     }
 
-    public Spviewsetobj(Integer spViewSetObjID) {
-        this.spViewSetObjID = spViewSetObjID;
+    public Spviewsetobj(Integer spViewSetObjId) {
+        this.spViewSetObjId = spViewSetObjId;
     }
 
-    public Spviewsetobj(Integer spViewSetObjID, Date timestampCreated, short level, String name) {
+    public Spviewsetobj(Integer spViewSetObjId, Date timestampCreated, short level, String name) {
         super(timestampCreated);
-        this.spViewSetObjID = spViewSetObjID; 
+        this.spViewSetObjId = spViewSetObjId; 
         this.level = level;
         this.name = name;
     }
 
-    public Integer getSpViewSetObjID() {
-        return spViewSetObjID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setSpViewSetObjID(Integer spViewSetObjID) {
-        this.spViewSetObjID = spViewSetObjID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    @XmlTransient
+    public Collection<Spappresourcedata> getSpAppResourceDatas() {
+        return spAppResourceDatas;
+    }
+
+    public void setSpAppResourceDatas(Collection<Spappresourcedata> spAppResourceDatas) {
+        this.spAppResourceDatas = spAppResourceDatas;
+    }
+
+    public Spappresourcedir getSpAppResourceDir() {
+        return spAppResourceDir;
+    }
+
+    public void setSpAppResourceDir(Spappresourcedir spAppResourceDir) {
+        this.spAppResourceDir = spAppResourceDir;
+    }
+
+    public Integer getSpViewSetObjId() {
+        return spViewSetObjId;
+    }
+
+    public void setSpViewSetObjId(Integer spViewSetObjId) {
+        this.spViewSetObjId = spViewSetObjId;
+    }
+
+ 
  
     public String getDescription() {
         return description;
@@ -148,43 +183,11 @@ public class Spviewsetobj extends BaseEntity {
         this.name = name;
     }
 
-    @XmlTransient
-    public Collection<Spappresourcedata> getSpappresourcedataCollection() {
-        return spappresourcedataCollection;
-    }
-
-    public void setSpappresourcedataCollection(Collection<Spappresourcedata> spappresourcedataCollection) {
-        this.spappresourcedataCollection = spappresourcedataCollection;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
-    public Spappresourcedir getSpAppResourceDirID() {
-        return spAppResourceDirID;
-    }
-
-    public void setSpAppResourceDirID(Spappresourcedir spAppResourceDirID) {
-        this.spAppResourceDirID = spAppResourceDirID;
-    }
-
+    
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (spViewSetObjID != null ? spViewSetObjID.hashCode() : 0);
+        hash += (spViewSetObjId != null ? spViewSetObjId.hashCode() : 0);
         return hash;
     }
 
@@ -195,7 +198,7 @@ public class Spviewsetobj extends BaseEntity {
             return false;
         }
         Spviewsetobj other = (Spviewsetobj) object;
-        if ((this.spViewSetObjID == null && other.spViewSetObjID != null) || (this.spViewSetObjID != null && !this.spViewSetObjID.equals(other.spViewSetObjID))) {
+        if ((this.spViewSetObjId == null && other.spViewSetObjId != null) || (this.spViewSetObjId != null && !this.spViewSetObjId.equals(other.spViewSetObjId))) {
             return false;
         }
         return true;
@@ -203,7 +206,7 @@ public class Spviewsetobj extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Spviewsetobj[ spViewSetObjID=" + spViewSetObjID + " ]";
+        return "Spviewsetobj[ spViewSetObjID=" + spViewSetObjId + " ]";
     }
     
 }

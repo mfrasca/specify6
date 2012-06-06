@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Lithostrattreedefitem.findAll", query = "SELECT l FROM Lithostrattreedefitem l"),
-    @NamedQuery(name = "Lithostrattreedefitem.findByLithoStratTreeDefItemID", query = "SELECT l FROM Lithostrattreedefitem l WHERE l.lithoStratTreeDefItemID = :lithoStratTreeDefItemID"),
+    @NamedQuery(name = "Lithostrattreedefitem.findByLithoStratTreeDefItemID", query = "SELECT l FROM Lithostrattreedefitem l WHERE l.lithoStratTreeDefItemId = :lithoStratTreeDefItemID"),
     @NamedQuery(name = "Lithostrattreedefitem.findByTimestampCreated", query = "SELECT l FROM Lithostrattreedefitem l WHERE l.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Lithostrattreedefitem.findByTimestampModified", query = "SELECT l FROM Lithostrattreedefitem l WHERE l.timestampModified = :timestampModified"),
     @NamedQuery(name = "Lithostrattreedefitem.findByVersion", query = "SELECT l FROM Lithostrattreedefitem l WHERE l.version = :version"),
@@ -38,7 +38,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Lithostrattreedefitem.findByIsEnforced", query = "SELECT l FROM Lithostrattreedefitem l WHERE l.isEnforced = :isEnforced"),
     @NamedQuery(name = "Lithostrattreedefitem.findByIsInFullName", query = "SELECT l FROM Lithostrattreedefitem l WHERE l.isInFullName = :isInFullName"),
     @NamedQuery(name = "Lithostrattreedefitem.findByName", query = "SELECT l FROM Lithostrattreedefitem l WHERE l.name = :name"),
-    @NamedQuery(name = "Lithostrattreedefitem.findByRankID", query = "SELECT l FROM Lithostrattreedefitem l WHERE l.rankID = :rankID"),
+    @NamedQuery(name = "Lithostrattreedefitem.findByRankID", query = "SELECT l FROM Lithostrattreedefitem l WHERE l.rankId = :rankID"),
     @NamedQuery(name = "Lithostrattreedefitem.findByTextAfter", query = "SELECT l FROM Lithostrattreedefitem l WHERE l.textAfter = :textAfter"),
     @NamedQuery(name = "Lithostrattreedefitem.findByTextBefore", query = "SELECT l FROM Lithostrattreedefitem l WHERE l.textBefore = :textBefore"),
     @NamedQuery(name = "Lithostrattreedefitem.findByTitle", query = "SELECT l FROM Lithostrattreedefitem l WHERE l.title = :title")})
@@ -51,7 +51,7 @@ public class Lithostrattreedefitem extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "LithoStratTreeDefItemID")
-    private Integer lithoStratTreeDefItemID;
+    private Integer lithoStratTreeDefItemId;
      
     @Size(max = 32)
     @Column(name = "FullNameSeparator")
@@ -72,7 +72,7 @@ public class Lithostrattreedefitem extends BaseEntity {
     @Basic(optional = false)
     @NotNull
     @Column(name = "RankID")
-    private int rankID;
+    private int rankId;
     
     @Lob
     @Size(max = 65535)
@@ -91,50 +91,58 @@ public class Lithostrattreedefitem extends BaseEntity {
     @Column(name = "Title")
     private String title;
     
-    @OneToMany(mappedBy = "parentItemID")
-    private Collection<Lithostrattreedefitem> lithostrattreedefitemCollection;
+    @OneToMany(mappedBy = "parent")
+    private Collection<Lithostrattreedefitem> children;
     
     @JoinColumn(name = "ParentItemID", referencedColumnName = "LithoStratTreeDefItemID")
     @ManyToOne
-    private Lithostrattreedefitem parentItemID;
+    private Lithostrattreedefitem parent;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "LithoStratTreeDefID", referencedColumnName = "LithoStratTreeDefID")
     @ManyToOne(optional = false)
-    private Lithostrattreedef lithoStratTreeDefID;
+    private Lithostrattreedef treeDef;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "lithoStratTreeDefItemID")
-    private Collection<Lithostrat> lithostratCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "definitionItem")
+    private Collection<Lithostrat> treeEntries;
 
     public Lithostrattreedefitem() {
     }
 
-    public Lithostrattreedefitem(Integer lithoStratTreeDefItemID) {
-        this.lithoStratTreeDefItemID = lithoStratTreeDefItemID;
+    public Lithostrattreedefitem(Integer lithoStratTreeDefItemId) {
+        this.lithoStratTreeDefItemId = lithoStratTreeDefItemId;
     }
 
-    public Lithostrattreedefitem(Integer lithoStratTreeDefItemID, Date timestampCreated, String name, int rankID) {
+    public Lithostrattreedefitem(Integer lithoStratTreeDefItemId, Date timestampCreated, String name, int rankId) {
         super(timestampCreated);
-        this.lithoStratTreeDefItemID = lithoStratTreeDefItemID; 
+        this.lithoStratTreeDefItemId = lithoStratTreeDefItemId; 
         this.name = name;
-        this.rankID = rankID;
+        this.rankId = rankId;
     }
 
-    public Integer getLithoStratTreeDefItemID() {
-        return lithoStratTreeDefItemID;
+    public Integer getLithoStratTreeDefItemId() {
+        return lithoStratTreeDefItemId;
     }
 
-    public void setLithoStratTreeDefItemID(Integer lithoStratTreeDefItemID) {
-        this.lithoStratTreeDefItemID = lithoStratTreeDefItemID;
-    } 
+    public void setLithoStratTreeDefItemId(Integer lithoStratTreeDefItemId) {
+        this.lithoStratTreeDefItemId = lithoStratTreeDefItemId;
+    }
 
+    public int getRankId() {
+        return rankId;
+    }
+
+    public void setRankId(int rankId) {
+        this.rankId = rankId;
+    }
+ 
     public String getFullNameSeparator() {
         return fullNameSeparator;
     }
@@ -166,15 +174,7 @@ public class Lithostrattreedefitem extends BaseEntity {
     public void setName(String name) {
         this.name = name;
     }
-
-    public int getRankID() {
-        return rankID;
-    }
-
-    public void setRankID(int rankID) {
-        this.rankID = rankID;
-    }
-
+ 
     public String getRemarks() {
         return remarks;
     }
@@ -208,59 +208,63 @@ public class Lithostrattreedefitem extends BaseEntity {
     }
 
     @XmlTransient
-    public Collection<Lithostrattreedefitem> getLithostrattreedefitemCollection() {
-        return lithostrattreedefitemCollection;
+    public Collection<Lithostrattreedefitem> getChildren() {
+        return children;
     }
 
-    public void setLithostrattreedefitemCollection(Collection<Lithostrattreedefitem> lithostrattreedefitemCollection) {
-        this.lithostrattreedefitemCollection = lithostrattreedefitemCollection;
+    public void setChildren(Collection<Lithostrattreedefitem> children) {
+        this.children = children;
     }
 
-    public Lithostrattreedefitem getParentItemID() {
-        return parentItemID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setParentItemID(Lithostrattreedefitem parentItemID) {
-        this.parentItemID = parentItemID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
 
-    public Lithostrattreedef getLithoStratTreeDefID() {
-        return lithoStratTreeDefID;
+    public Lithostrattreedefitem getParent() {
+        return parent;
     }
 
-    public void setLithoStratTreeDefID(Lithostrattreedef lithoStratTreeDefID) {
-        this.lithoStratTreeDefID = lithoStratTreeDefID;
+    public void setParent(Lithostrattreedefitem parent) {
+        this.parent = parent;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Lithostrattreedef getTreeDef() {
+        return treeDef;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setTreeDef(Lithostrattreedef treeDef) {
+        this.treeDef = treeDef;
     }
 
     @XmlTransient
-    public Collection<Lithostrat> getLithostratCollection() {
-        return lithostratCollection;
+    public Collection<Lithostrat> getTreeEntries() {
+        return treeEntries;
     }
 
-    public void setLithostratCollection(Collection<Lithostrat> lithostratCollection) {
-        this.lithostratCollection = lithostratCollection;
+    public void setTreeEntries(Collection<Lithostrat> treeEntries) {
+        this.treeEntries = treeEntries;
     }
+
+    
+
+    
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (lithoStratTreeDefItemID != null ? lithoStratTreeDefItemID.hashCode() : 0);
+        hash += (lithoStratTreeDefItemId != null ? lithoStratTreeDefItemId.hashCode() : 0);
         return hash;
     }
 
@@ -271,7 +275,7 @@ public class Lithostrattreedefitem extends BaseEntity {
             return false;
         }
         Lithostrattreedefitem other = (Lithostrattreedefitem) object;
-        if ((this.lithoStratTreeDefItemID == null && other.lithoStratTreeDefItemID != null) || (this.lithoStratTreeDefItemID != null && !this.lithoStratTreeDefItemID.equals(other.lithoStratTreeDefItemID))) {
+        if ((this.lithoStratTreeDefItemId == null && other.lithoStratTreeDefItemId != null) || (this.lithoStratTreeDefItemId != null && !this.lithoStratTreeDefItemId.equals(other.lithoStratTreeDefItemId))) {
             return false;
         }
         return true;
@@ -279,7 +283,7 @@ public class Lithostrattreedefitem extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Lithostrattreedefitem[ lithoStratTreeDefItemID=" + lithoStratTreeDefItemID + " ]";
+        return "Lithostrattreedefitem[ lithoStratTreeDefItemID=" + lithoStratTreeDefItemId + " ]";
     }
     
 }

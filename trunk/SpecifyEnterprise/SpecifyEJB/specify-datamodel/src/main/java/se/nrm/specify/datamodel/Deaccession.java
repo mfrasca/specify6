@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Deaccession.findAll", query = "SELECT d FROM Deaccession d"),
-    @NamedQuery(name = "Deaccession.findByDeaccessionID", query = "SELECT d FROM Deaccession d WHERE d.deaccessionID = :deaccessionID"),
+    @NamedQuery(name = "Deaccession.findByDeaccessionID", query = "SELECT d FROM Deaccession d WHERE d.deaccessionId = :deaccessionID"),
     @NamedQuery(name = "Deaccession.findByTimestampCreated", query = "SELECT d FROM Deaccession d WHERE d.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Deaccession.findByTimestampModified", query = "SELECT d FROM Deaccession d WHERE d.timestampModified = :timestampModified"),
     @NamedQuery(name = "Deaccession.findByVersion", query = "SELECT d FROM Deaccession d WHERE d.version = :version"),
@@ -52,7 +52,7 @@ public class Deaccession extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "DeaccessionID")
-    private Integer deaccessionID;
+    private Integer deaccessionId;
      
     @Column(name = "DeaccessionDate")
     @Temporal(TemporalType.DATE)
@@ -94,42 +94,37 @@ public class Deaccession extends BaseEntity {
     @Column(name = "YesNo2")
     private Boolean yesNo2;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "deaccessionID")
-    private Collection<Deaccessionagent> deaccessionagentCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "deaccession")
+    private Collection<Deaccessionagent> deaccessionAgents;
+    
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "AccessionID", referencedColumnName = "AccessionID")
     @ManyToOne
-    private Accession accessionID;
+    private Accession accession;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "deaccessionID")
-    private Collection<Deaccessionpreparation> deaccessionpreparationCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "deaccession")
+    private Collection<Deaccessionpreparation> deaccessionPreparations;
 
     public Deaccession() {
     }
 
-    public Deaccession(Integer deaccessionID) {
-        this.deaccessionID = deaccessionID;
+    public Deaccession(Integer deaccessionId) {
+        this.deaccessionId = deaccessionId;
     }
 
-    public Deaccession(Integer deaccessionID, Date timestampCreated) {
+    public Deaccession(Integer deaccessionId, Date timestampCreated) {
         super(timestampCreated);
-        this.deaccessionID = deaccessionID; 
+        this.deaccessionId = deaccessionId; 
     }
 
-    public Integer getDeaccessionID() {
-        return deaccessionID;
-    }
-
-    public void setDeaccessionID(Integer deaccessionID) {
-        this.deaccessionID = deaccessionID;
-    }
+ 
  
     public Date getDeaccessionDate() {
         return deaccessionDate;
@@ -211,52 +206,62 @@ public class Deaccession extends BaseEntity {
         this.yesNo2 = yesNo2;
     }
 
-    @XmlTransient
-    public Collection<Deaccessionagent> getDeaccessionagentCollection() {
-        return deaccessionagentCollection;
+ 
+
+    public Accession getAccession() {
+        return accession;
     }
 
-    public void setDeaccessionagentCollection(Collection<Deaccessionagent> deaccessionagentCollection) {
-        this.deaccessionagentCollection = deaccessionagentCollection;
+    public void setAccession(Accession accession) {
+        this.accession = accession;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Integer getDeaccessionId() {
+        return deaccessionId;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setDeaccessionId(Integer deaccessionId) {
+        this.deaccessionId = deaccessionId;
     }
 
-    public Accession getAccessionID() {
-        return accessionID;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setAccessionID(Accession accessionID) {
-        this.accessionID = accessionID;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
 
-    @XmlTransient
-    public Collection<Deaccessionpreparation> getDeaccessionpreparationCollection() {
-        return deaccessionpreparationCollection;
+    public Collection<Deaccessionagent> getDeaccessionAgents() {
+        return deaccessionAgents;
     }
 
-    public void setDeaccessionpreparationCollection(Collection<Deaccessionpreparation> deaccessionpreparationCollection) {
-        this.deaccessionpreparationCollection = deaccessionpreparationCollection;
+    public void setDeaccessionAgents(Collection<Deaccessionagent> deaccessionAgents) {
+        this.deaccessionAgents = deaccessionAgents;
     }
 
+    public Collection<Deaccessionpreparation> getDeaccessionPreparations() {
+        return deaccessionPreparations;
+    }
+
+    public void setDeaccessionPreparations(Collection<Deaccessionpreparation> deaccessionPreparations) {
+        this.deaccessionPreparations = deaccessionPreparations;
+    }
+ 
+
+ 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (deaccessionID != null ? deaccessionID.hashCode() : 0);
+        hash += (deaccessionId != null ? deaccessionId.hashCode() : 0);
         return hash;
     }
 
@@ -267,7 +272,7 @@ public class Deaccession extends BaseEntity {
             return false;
         }
         Deaccession other = (Deaccession) object;
-        if ((this.deaccessionID == null && other.deaccessionID != null) || (this.deaccessionID != null && !this.deaccessionID.equals(other.deaccessionID))) {
+        if ((this.deaccessionId == null && other.deaccessionId != null) || (this.deaccessionId != null && !this.deaccessionId.equals(other.deaccessionId))) {
             return false;
         }
         return true;
@@ -275,7 +280,7 @@ public class Deaccession extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Deaccession[ deaccessionID=" + deaccessionID + " ]";
+        return "Deaccession[ deaccessionID=" + deaccessionId + " ]";
     }
     
 }

@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Storagetreedef.findAll", query = "SELECT s FROM Storagetreedef s"),
-    @NamedQuery(name = "Storagetreedef.findByStorageTreeDefID", query = "SELECT s FROM Storagetreedef s WHERE s.storageTreeDefID = :storageTreeDefID"),
+    @NamedQuery(name = "Storagetreedef.findByStorageTreeDefID", query = "SELECT s FROM Storagetreedef s WHERE s.storageTreeDefId = :storageTreeDefID"),
     @NamedQuery(name = "Storagetreedef.findByTimestampCreated", query = "SELECT s FROM Storagetreedef s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Storagetreedef.findByTimestampModified", query = "SELECT s FROM Storagetreedef s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Storagetreedef.findByVersion", query = "SELECT s FROM Storagetreedef s WHERE s.version = :version"),
@@ -45,7 +45,7 @@ public class Storagetreedef extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "StorageTreeDefID")
-    private Integer storageTreeDefID;
+    private Integer storageTreeDefId;
      
     @Column(name = "FullNameDirection")
     private Integer fullNameDirection;
@@ -55,43 +55,93 @@ public class Storagetreedef extends BaseEntity {
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
+    
     @Lob
     @Size(max = 65535)
     @Column(name = "Remarks")
     private String remarks;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "storageTreeDefID")
-    private Collection<Storagetreedefitem> storagetreedefitemCollection;
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "treeDef")
+    private Collection<Storagetreedefitem> treeDefItems;
+    
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
+    
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
-    @OneToMany(mappedBy = "storageTreeDefID")
-    private Collection<Institution> institutionCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "storageTreeDefID")
-    private Collection<Storage> storageCollection;
+    private Agent modifiedByAgent;
+    
+    @OneToMany(mappedBy = "storageTreeDef")
+    private Collection<Institution> institutions;
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "definition")
+    private Collection<Storage> treeEntries;
 
     public Storagetreedef() {
     }
 
-    public Storagetreedef(Integer storageTreeDefID) {
-        this.storageTreeDefID = storageTreeDefID;
+    public Storagetreedef(Integer storageTreeDefId) {
+        this.storageTreeDefId = storageTreeDefId;
     }
 
-    public Storagetreedef(Integer storageTreeDefID, Date timestampCreated, String name) {
+    public Storagetreedef(Integer storageTreeDefId, Date timestampCreated, String name) {
         super(timestampCreated);
-        this.storageTreeDefID = storageTreeDefID; 
+        this.storageTreeDefId = storageTreeDefId; 
         this.name = name;
     }
 
-    public Integer getStorageTreeDefID() {
-        return storageTreeDefID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setStorageTreeDefID(Integer storageTreeDefID) {
-        this.storageTreeDefID = storageTreeDefID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
+
+    @XmlTransient
+    public Collection<Institution> getInstitutions() {
+        return institutions;
+    }
+
+    public void setInstitutions(Collection<Institution> institutions) {
+        this.institutions = institutions;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Integer getStorageTreeDefId() {
+        return storageTreeDefId;
+    }
+
+    public void setStorageTreeDefId(Integer storageTreeDefId) {
+        this.storageTreeDefId = storageTreeDefId;
+    }
+
+    @XmlTransient
+    public Collection<Storagetreedefitem> getTreeDefItems() {
+        return treeDefItems;
+    }
+
+    public void setTreeDefItems(Collection<Storagetreedefitem> treeDefItems) {
+        this.treeDefItems = treeDefItems;
+    }
+
+    @XmlTransient
+    public Collection<Storage> getTreeEntries() {
+        return treeEntries;
+    }
+
+    public void setTreeEntries(Collection<Storage> treeEntries) {
+        this.treeEntries = treeEntries;
+    }
+
  
     public Integer getFullNameDirection() {
         return fullNameDirection;
@@ -117,53 +167,16 @@ public class Storagetreedef extends BaseEntity {
         this.remarks = remarks;
     }
 
-    @XmlTransient
-    public Collection<Storagetreedefitem> getStoragetreedefitemCollection() {
-        return storagetreedefitemCollection;
-    }
+   
 
-    public void setStoragetreedefitemCollection(Collection<Storagetreedefitem> storagetreedefitemCollection) {
-        this.storagetreedefitemCollection = storagetreedefitemCollection;
-    }
+ 
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
-    @XmlTransient
-    public Collection<Institution> getInstitutionCollection() {
-        return institutionCollection;
-    }
-
-    public void setInstitutionCollection(Collection<Institution> institutionCollection) {
-        this.institutionCollection = institutionCollection;
-    }
-
-    @XmlTransient
-    public Collection<Storage> getStorageCollection() {
-        return storageCollection;
-    }
-
-    public void setStorageCollection(Collection<Storage> storageCollection) {
-        this.storageCollection = storageCollection;
-    }
+     
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (storageTreeDefID != null ? storageTreeDefID.hashCode() : 0);
+        hash += (storageTreeDefId != null ? storageTreeDefId.hashCode() : 0);
         return hash;
     }
 
@@ -174,7 +187,7 @@ public class Storagetreedef extends BaseEntity {
             return false;
         }
         Storagetreedef other = (Storagetreedef) object;
-        if ((this.storageTreeDefID == null && other.storageTreeDefID != null) || (this.storageTreeDefID != null && !this.storageTreeDefID.equals(other.storageTreeDefID))) {
+        if ((this.storageTreeDefId == null && other.storageTreeDefId != null) || (this.storageTreeDefId != null && !this.storageTreeDefId.equals(other.storageTreeDefId))) {
             return false;
         }
         return true;
@@ -182,7 +195,7 @@ public class Storagetreedef extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Storagetreedef[ storageTreeDefID=" + storageTreeDefID + " ]";
+        return "Storagetreedef[ storageTreeDefID=" + storageTreeDefId + " ]";
     }
     
 }

@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Exsiccataitem.findAll", query = "SELECT e FROM Exsiccataitem e"),
-    @NamedQuery(name = "Exsiccataitem.findByExsiccataItemID", query = "SELECT e FROM Exsiccataitem e WHERE e.exsiccataItemID = :exsiccataItemID"),
+    @NamedQuery(name = "Exsiccataitem.findByExsiccataItemID", query = "SELECT e FROM Exsiccataitem e WHERE e.exsiccataItemId = :exsiccataItemID"),
     @NamedQuery(name = "Exsiccataitem.findByTimestampCreated", query = "SELECT e FROM Exsiccataitem e WHERE e.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Exsiccataitem.findByTimestampModified", query = "SELECT e FROM Exsiccataitem e WHERE e.timestampModified = :timestampModified"),
     @NamedQuery(name = "Exsiccataitem.findByVersion", query = "SELECT e FROM Exsiccataitem e WHERE e.version = :version"),
@@ -40,7 +40,7 @@ public class Exsiccataitem extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "ExsiccataItemID")
-    private Integer exsiccataItemID;
+    private Integer exsiccataItemId;
       
     @Size(max = 16)
     @Column(name = "Fascicle")
@@ -52,39 +52,33 @@ public class Exsiccataitem extends BaseEntity {
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "CollectionObjectID", referencedColumnName = "CollectionObjectID")
     @ManyToOne(optional = false)
-    private Collectionobject collectionObjectID;
+    private Collectionobject collectionObject;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "ExsiccataID", referencedColumnName = "ExsiccataID")
     @ManyToOne(optional = false)
-    private Exsiccata exsiccataID;
+    private Exsiccata exsiccata;
 
     public Exsiccataitem() {
     }
 
-    public Exsiccataitem(Integer exsiccataItemID) {
-        this.exsiccataItemID = exsiccataItemID;
+    public Exsiccataitem(Integer exsiccataItemId) {
+        this.exsiccataItemId = exsiccataItemId;
     }
 
-    public Exsiccataitem(Integer exsiccataItemID, Date timestampCreated) {
+    public Exsiccataitem(Integer exsiccataItemId, Date timestampCreated) {
         super(timestampCreated);
-        this.exsiccataItemID = exsiccataItemID; 
+        this.exsiccataItemId = exsiccataItemId; 
     }
 
-    public Integer getExsiccataItemID() {
-        return exsiccataItemID;
-    }
-
-    public void setExsiccataItemID(Integer exsiccataItemID) {
-        this.exsiccataItemID = exsiccataItemID;
-    }
+ 
  
     public String getFascicle() {
         return fascicle;
@@ -102,42 +96,51 @@ public class Exsiccataitem extends BaseEntity {
         this.number = number;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Collectionobject getCollectionObject() {
+        return collectionObject;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setCollectionObject(Collectionobject collectionObject) {
+        this.collectionObject = collectionObject;
     }
 
-    public Collectionobject getCollectionObjectID() {
-        return collectionObjectID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setCollectionObjectID(Collectionobject collectionObjectID) {
-        this.collectionObjectID = collectionObjectID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Exsiccata getExsiccata() {
+        return exsiccata;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setExsiccata(Exsiccata exsiccata) {
+        this.exsiccata = exsiccata;
     }
 
-    public Exsiccata getExsiccataID() {
-        return exsiccataID;
+    public Integer getExsiccataItemId() {
+        return exsiccataItemId;
     }
 
-    public void setExsiccataID(Exsiccata exsiccataID) {
-        this.exsiccataID = exsiccataID;
+    public void setExsiccataItemId(Integer exsiccataItemId) {
+        this.exsiccataItemId = exsiccataItemId;
     }
 
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (exsiccataItemID != null ? exsiccataItemID.hashCode() : 0);
+        hash += (exsiccataItemId != null ? exsiccataItemId.hashCode() : 0);
         return hash;
     }
 
@@ -148,7 +151,7 @@ public class Exsiccataitem extends BaseEntity {
             return false;
         }
         Exsiccataitem other = (Exsiccataitem) object;
-        if ((this.exsiccataItemID == null && other.exsiccataItemID != null) || (this.exsiccataItemID != null && !this.exsiccataItemID.equals(other.exsiccataItemID))) {
+        if ((this.exsiccataItemId == null && other.exsiccataItemId != null) || (this.exsiccataItemId != null && !this.exsiccataItemId.equals(other.exsiccataItemId))) {
             return false;
         }
         return true;
@@ -156,7 +159,7 @@ public class Exsiccataitem extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Exsiccataitem[ exsiccataItemID=" + exsiccataItemID + " ]";
+        return "Exsiccataitem[ exsiccataItemID=" + exsiccataItemId + " ]";
     }
     
 }

@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Repositoryagreement.findAll", query = "SELECT r FROM Repositoryagreement r"),
-    @NamedQuery(name = "Repositoryagreement.findByRepositoryAgreementID", query = "SELECT r FROM Repositoryagreement r WHERE r.repositoryAgreementID = :repositoryAgreementID"),
+    @NamedQuery(name = "Repositoryagreement.findByRepositoryAgreementID", query = "SELECT r FROM Repositoryagreement r WHERE r.repositoryAgreementId = :repositoryAgreementID"),
     @NamedQuery(name = "Repositoryagreement.findByTimestampCreated", query = "SELECT r FROM Repositoryagreement r WHERE r.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Repositoryagreement.findByTimestampModified", query = "SELECT r FROM Repositoryagreement r WHERE r.timestampModified = :timestampModified"),
     @NamedQuery(name = "Repositoryagreement.findByVersion", query = "SELECT r FROM Repositoryagreement r WHERE r.version = :version"),
@@ -57,7 +57,7 @@ public class Repositoryagreement extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "RepositoryAgreementID")
-    private Integer repositoryAgreementID;
+    private Integer repositoryAgreementId;
      
     @Column(name = "DateReceived")
     @Temporal(TemporalType.DATE)
@@ -111,59 +111,136 @@ public class Repositoryagreement extends BaseEntity {
     @Column(name = "YesNo2")
     private Boolean yesNo2;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "repositoryAgreementID")
-    private Collection<Repositoryagreementattachment> repositoryagreementattachmentCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "repositoryAgreement")
+    private Collection<Repositoryagreementattachment> repositoryAgreementAttachments;
     
-    @OneToMany(mappedBy = "repositoryAgreementID")
-    private Collection<Accessionagent> accessionagentCollection;
+    @OneToMany(mappedBy = "repositoryAgreement")
+    private Collection<Accessionagent> repositoryAgreementAgents;
     
     @JoinColumn(name = "AddressOfRecordID", referencedColumnName = "AddressOfRecordID")
     @ManyToOne
-    private Addressofrecord addressOfRecordID;
+    private Addressofrecord addressOfRecord;
     
     @JoinColumn(name = "DivisionID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne(optional = false)
-    private Division divisionID;
+    private Division division;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
      
     @JoinColumn(name = "AgentID", referencedColumnName = "AgentID")
     @ManyToOne(optional = false)
-    private Agent agentID;
+    private Agent originator;
     
-    @OneToMany(mappedBy = "repositoryAgreementID")
-    private Collection<Accession> accessionCollection;
+    @OneToMany(mappedBy = "repositoryAgreement")
+    private Collection<Accession> accessions;
     
-    @OneToMany(mappedBy = "repositoryAgreementID")
-    private Collection<Accessionauthorization> accessionauthorizationCollection;
+    @OneToMany(mappedBy = "repositoryAgreement")
+    private Collection<Accessionauthorization> repositoryAgreementAuthorizations;
 
     public Repositoryagreement() {
     }
 
-    public Repositoryagreement(Integer repositoryAgreementID) {
-        this.repositoryAgreementID = repositoryAgreementID;
+    public Repositoryagreement(Integer repositoryAgreementId) {
+        this.repositoryAgreementId = repositoryAgreementId;
     }
 
-    public Repositoryagreement(Integer repositoryAgreementID, Date timestampCreated, String repositoryAgreementNumber) {
+    public Repositoryagreement(Integer repositoryAgreementId, Date timestampCreated, String repositoryAgreementNumber) {
         super(timestampCreated);
-        this.repositoryAgreementID = repositoryAgreementID; 
+        this.repositoryAgreementId = repositoryAgreementId; 
         this.repositoryAgreementNumber = repositoryAgreementNumber;
     }
 
-    public Integer getRepositoryAgreementID() {
-        return repositoryAgreementID;
+    @XmlTransient
+    public Collection<Accession> getAccessions() {
+        return accessions;
     }
 
-    public void setRepositoryAgreementID(Integer repositoryAgreementID) {
-        this.repositoryAgreementID = repositoryAgreementID;
-    } 
-    
+    public void setAccessions(Collection<Accession> accessions) {
+        this.accessions = accessions;
+    }
+
+    public Addressofrecord getAddressOfRecord() {
+        return addressOfRecord;
+    }
+
+    public void setAddressOfRecord(Addressofrecord addressOfRecord) {
+        this.addressOfRecord = addressOfRecord;
+    }
+
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
+    }
+
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Division getDivision() {
+        return division;
+    }
+
+    public void setDivision(Division division) {
+        this.division = division;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Agent getOriginator() {
+        return originator;
+    }
+
+    public void setOriginator(Agent originator) {
+        this.originator = originator;
+    }
+
+    @XmlTransient
+    public Collection<Accessionagent> getRepositoryAgreementAgents() {
+        return repositoryAgreementAgents;
+    }
+
+    public void setRepositoryAgreementAgents(Collection<Accessionagent> repositoryAgreementAgents) {
+        this.repositoryAgreementAgents = repositoryAgreementAgents;
+    }
+
+    @XmlTransient
+    public Collection<Repositoryagreementattachment> getRepositoryAgreementAttachments() {
+        return repositoryAgreementAttachments;
+    }
+
+    public void setRepositoryAgreementAttachments(Collection<Repositoryagreementattachment> repositoryAgreementAttachments) {
+        this.repositoryAgreementAttachments = repositoryAgreementAttachments;
+    }
+
+    @XmlTransient
+    public Collection<Accessionauthorization> getRepositoryAgreementAuthorizations() {
+        return repositoryAgreementAuthorizations;
+    }
+
+    public void setRepositoryAgreementAuthorizations(Collection<Accessionauthorization> repositoryAgreementAuthorizations) {
+        this.repositoryAgreementAuthorizations = repositoryAgreementAuthorizations;
+    }
+
+    public Integer getRepositoryAgreementId() {
+        return repositoryAgreementId;
+    }
+
+    public void setRepositoryAgreementId(Integer repositoryAgreementId) {
+        this.repositoryAgreementId = repositoryAgreementId;
+    }
+
+   
     public Date getDateReceived() {
         return dateReceived;
     }
@@ -268,86 +345,13 @@ public class Repositoryagreement extends BaseEntity {
         this.yesNo2 = yesNo2;
     }
 
-    @XmlTransient
-    public Collection<Repositoryagreementattachment> getRepositoryagreementattachmentCollection() {
-        return repositoryagreementattachmentCollection;
-    }
-
-    public void setRepositoryagreementattachmentCollection(Collection<Repositoryagreementattachment> repositoryagreementattachmentCollection) {
-        this.repositoryagreementattachmentCollection = repositoryagreementattachmentCollection;
-    }
-
-    @XmlTransient
-    public Collection<Accessionagent> getAccessionagentCollection() {
-        return accessionagentCollection;
-    }
-
-    public void setAccessionagentCollection(Collection<Accessionagent> accessionagentCollection) {
-        this.accessionagentCollection = accessionagentCollection;
-    }
-
-    public Addressofrecord getAddressOfRecordID() {
-        return addressOfRecordID;
-    }
-
-    public void setAddressOfRecordID(Addressofrecord addressOfRecordID) {
-        this.addressOfRecordID = addressOfRecordID;
-    }
-
-    public Division getDivisionID() {
-        return divisionID;
-    }
-
-    public void setDivisionID(Division divisionID) {
-        this.divisionID = divisionID;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
-    public Agent getAgentID() {
-        return agentID;
-    }
-
-    public void setAgentID(Agent agentID) {
-        this.agentID = agentID;
-    }
-
-    @XmlTransient
-    public Collection<Accession> getAccessionCollection() {
-        return accessionCollection;
-    }
-
-    public void setAccessionCollection(Collection<Accession> accessionCollection) {
-        this.accessionCollection = accessionCollection;
-    }
-
-    @XmlTransient
-    public Collection<Accessionauthorization> getAccessionauthorizationCollection() {
-        return accessionauthorizationCollection;
-    }
-
-    public void setAccessionauthorizationCollection(Collection<Accessionauthorization> accessionauthorizationCollection) {
-        this.accessionauthorizationCollection = accessionauthorizationCollection;
-    }
+     
+     
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (repositoryAgreementID != null ? repositoryAgreementID.hashCode() : 0);
+        hash += (repositoryAgreementId != null ? repositoryAgreementId.hashCode() : 0);
         return hash;
     }
 
@@ -358,7 +362,7 @@ public class Repositoryagreement extends BaseEntity {
             return false;
         }
         Repositoryagreement other = (Repositoryagreement) object;
-        if ((this.repositoryAgreementID == null && other.repositoryAgreementID != null) || (this.repositoryAgreementID != null && !this.repositoryAgreementID.equals(other.repositoryAgreementID))) {
+        if ((this.repositoryAgreementId == null && other.repositoryAgreementId != null) || (this.repositoryAgreementId != null && !this.repositoryAgreementId.equals(other.repositoryAgreementId))) {
             return false;
         }
         return true;
@@ -366,7 +370,7 @@ public class Repositoryagreement extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Repositoryagreement[ repositoryAgreementID=" + repositoryAgreementID + " ]";
+        return "Repositoryagreement[ repositoryAgreementID=" + repositoryAgreementId + " ]";
     }
     
 }

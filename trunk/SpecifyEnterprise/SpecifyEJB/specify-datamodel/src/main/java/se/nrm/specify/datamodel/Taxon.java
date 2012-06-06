@@ -1,21 +1,8 @@
 package se.nrm.specify.datamodel;
  
 import java.util.Collection;
-import java.util.Date; 
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import java.util.Date;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -33,13 +20,13 @@ import org.eclipse.persistence.annotations.Index;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Taxon.findAll", query = "SELECT t FROM Taxon t"),
-    @NamedQuery(name = "Taxon.findByTaxonID", query = "SELECT t FROM Taxon t WHERE t.taxonID = :taxonID"),
+    @NamedQuery(name = "Taxon.findByTaxonID", query = "SELECT t FROM Taxon t WHERE t.taxonId = :taxonID"),
     @NamedQuery(name = "Taxon.findByTimestampCreated", query = "SELECT t FROM Taxon t WHERE t.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Taxon.findByTimestampModified", query = "SELECT t FROM Taxon t WHERE t.timestampModified = :timestampModified"),
     @NamedQuery(name = "Taxon.findByVersion", query = "SELECT t FROM Taxon t WHERE t.version = :version"),
     @NamedQuery(name = "Taxon.findByAuthor", query = "SELECT t FROM Taxon t WHERE t.author = :author"),
     @NamedQuery(name = "Taxon.findByCitesStatus", query = "SELECT t FROM Taxon t WHERE t.citesStatus = :citesStatus"),
-    @NamedQuery(name = "Taxon.findByCOLStatus", query = "SELECT t FROM Taxon t WHERE t.cOLStatus = :cOLStatus"),
+    @NamedQuery(name = "Taxon.findByCOLStatus", query = "SELECT t FROM Taxon t WHERE t.colStatus = :cOLStatus"),
     @NamedQuery(name = "Taxon.findByCommonName", query = "SELECT t FROM Taxon t WHERE t.commonName = :commonName"),
     @NamedQuery(name = "Taxon.findByCommonNameWithWildCard", query = "SELECT t FROM Taxon t WHERE t.commonName like :commonName"),
     @NamedQuery(name = "Taxon.findByCultivarName", query = "SELECT t FROM Taxon t WHERE t.cultivarName = :cultivarName"),
@@ -59,7 +46,7 @@ import org.eclipse.persistence.annotations.Index;
     @NamedQuery(name = "Taxon.findByNodeNumber", query = "SELECT t FROM Taxon t WHERE t.nodeNumber = :nodeNumber"),
     @NamedQuery(name = "Taxon.findByNumber1", query = "SELECT t FROM Taxon t WHERE t.number1 = :number1"),
     @NamedQuery(name = "Taxon.findByNumber2", query = "SELECT t FROM Taxon t WHERE t.number2 = :number2"),
-    @NamedQuery(name = "Taxon.findByRankID", query = "SELECT t FROM Taxon t WHERE t.rankID = :rankID"),
+    @NamedQuery(name = "Taxon.findByRankID", query = "SELECT t FROM Taxon t WHERE t.rankId = :rankID"),
     @NamedQuery(name = "Taxon.findBySource", query = "SELECT t FROM Taxon t WHERE t.source = :source"),
     @NamedQuery(name = "Taxon.findByTaxonomicSerialNumber", query = "SELECT t FROM Taxon t WHERE t.taxonomicSerialNumber = :taxonomicSerialNumber"),
     @NamedQuery(name = "Taxon.findByText1", query = "SELECT t FROM Taxon t WHERE t.text1 = :text1"),
@@ -82,7 +69,7 @@ public class Taxon extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "TaxonID")
-    private Integer taxonID;
+    private Integer taxonId;
     @Size(max = 128)
     @Column(name = "Author")
     private String author;
@@ -91,7 +78,7 @@ public class Taxon extends BaseEntity {
     private String citesStatus;
     @Size(max = 32)
     @Column(name = "COLStatus")
-    private String cOLStatus;
+    private String colStatus;
     @Size(max = 128)
     @Column(name = "CommonName")
     private String commonName;
@@ -111,158 +98,386 @@ public class Taxon extends BaseEntity {
     @Size(max = 20)
     @Column(name = "GroupNumber")
     private String groupNumber;
+    
     @Size(max = 128)
     @Column(name = "GUID")
     private String guid;
+    
     @Column(name = "HighestChildNodeNumber")
     private Integer highestChildNodeNumber;
+    
     @Column(name = "IsAccepted")
     private Boolean isAccepted;
+    
     @Column(name = "IsHybrid")
     private Boolean isHybrid;
+    
     @Size(max = 16)
     @Column(name = "IsisNumber")
     private String isisNumber;
+    
     @Size(max = 64)
     @Column(name = "LabelFormat")
     private String labelFormat;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
+    
     @Size(max = 8)
     @Column(name = "NcbiTaxonNumber")
     private String ncbiTaxonNumber;
+    
     @Column(name = "NodeNumber")
     private Integer nodeNumber;
+    
     @Column(name = "Number1")
     private Integer number1;
+    
     @Column(name = "Number2")
     private Integer number2;
+    
     @Basic(optional = false)
     @NotNull
     @Column(name = "RankID")
-    private int rankID;
+    private int rankId;
+    
     @Lob
     @Size(max = 65535)
     @Column(name = "Remarks")
     private String remarks;
+    
     @Size(max = 64)
     @Column(name = "Source")
     private String source;
+    
     @Size(max = 50)
     @Column(name = "TaxonomicSerialNumber")
     private String taxonomicSerialNumber;
+    
     @Size(max = 32)
     @Column(name = "Text1")
     private String text1;
+    
     @Size(max = 32)
     @Column(name = "Text2")
     private String text2;
+    
     @Size(max = 50)
     @Column(name = "UnitInd1")
     private String unitInd1;
+    
     @Size(max = 50)
     @Column(name = "UnitInd2")
     private String unitInd2;
+    
     @Size(max = 50)
     @Column(name = "UnitInd3")
     private String unitInd3;
+    
     @Size(max = 50)
     @Column(name = "UnitInd4")
     private String unitInd4;
+    
     @Size(max = 50)
     @Column(name = "UnitName1")
     private String unitName1;
+    
     @Size(max = 50)
     @Column(name = "UnitName2")
     private String unitName2;
+    
     @Size(max = 50)
     @Column(name = "UnitName3")
     private String unitName3;
+    
     @Size(max = 50)
     @Column(name = "UnitName4")
     private String unitName4;
+    
     @Size(max = 16)
     @Column(name = "UsfwsCode")
     private String usfwsCode;
+    
     @Column(name = "Visibility")
     private Short visibility;
+    
     @JoinColumn(name = "TaxonTreeDefID", referencedColumnName = "TaxonTreeDefID")
     @ManyToOne(optional = false)
-    private Taxontreedef taxonTreeDefID;
-    @OneToMany(mappedBy = "parentID")
-    private Collection<Taxon> taxonCollection;
+    private Taxontreedef definition;
+    
+    @OneToMany(mappedBy = "parent")
+    private Collection<Taxon> children;
+    
     @JoinColumn(name = "ParentID", referencedColumnName = "TaxonID")
     @ManyToOne
-    private Taxon parentID;
+    private Taxon parent;
+    
     @JoinColumn(name = "TaxonTreeDefItemID", referencedColumnName = "TaxonTreeDefItemID")
     @ManyToOne(optional = false)
-    private Taxontreedefitem taxonTreeDefItemID;
+    private Taxontreedefitem definitionItem;
+    
     @JoinColumn(name = "VisibilitySetByID", referencedColumnName = "SpecifyUserID")
     @ManyToOne
-    private Specifyuser visibilitySetByID;
+    private Specifyuser visibilitySetBy;
+    
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
-    @OneToMany(mappedBy = "hybridParent2ID")
-    private Collection<Taxon> taxonCollection1;
+    private Agent createdByAgent;
+    
+    @OneToMany(mappedBy = "hybridParent2")
+    private Collection<Taxon> hybridChildren2;
+    
     @JoinColumn(name = "HybridParent2ID", referencedColumnName = "TaxonID")
     @ManyToOne
-    private Taxon hybridParent2ID;
-    @OneToMany(mappedBy = "hybridParent1ID")
-    private Collection<Taxon> taxonCollection2;
+    private Taxon hybridParent2;
+    
+    @OneToMany(mappedBy = "hybridParent1")
+    private Collection<Taxon> hybridChildren1;
+    
     @JoinColumn(name = "HybridParent1ID", referencedColumnName = "TaxonID")
     @ManyToOne
-    private Taxon hybridParent1ID;
+    private Taxon hybridParent1;
+    
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
-    @OneToMany(mappedBy = "acceptedID")
-    private Collection<Taxon> taxonCollection3;
+    private Agent modifiedByAgent;
+    
+    @OneToMany(mappedBy = "acceptedTaxon")
+    private Collection<Taxon> acceptedChildren;
+    
     @JoinColumn(name = "AcceptedID", referencedColumnName = "TaxonID")
     @ManyToOne
-    private Taxon acceptedID;
-    @OneToMany(mappedBy = "hostTaxonID")
-    private Collection<Collectingeventattribute> collectingeventattributeCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "taxonID")
-    private Collection<Commonnametx> commonnametxCollection;
-    @OneToMany(mappedBy = "preferredTaxonID")
-    private Collection<Determination> determinationCollection;
-    @OneToMany(mappedBy = "taxonID")
-    private Collection<Determination> determinationCollection1;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "taxonID")
-    private Collection<Taxoncitation> taxoncitationCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "taxonID")
-    private Collection<Taxonattachment> taxonattachmentCollection;
+    private Taxon acceptedTaxon;
+    
+    @OneToMany(mappedBy = "hostTaxon")
+    private Collection<Collectingeventattribute> collectingEventAttributes;
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "taxon")
+    private Collection<Commonnametx> commonNames;
+    
+    @OneToMany(mappedBy = "preferredTaxon")
+    private Collection<Determination> determinations1;
+    
+    @OneToMany(mappedBy = "taxon")
+    private Collection<Determination> determinations;
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "taxon")
+    private Collection<Taxoncitation> taxonCitations;
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "taxon")
+    private Collection<Taxonattachment> taxonAttachments;
 
     public Taxon() {
     }
 
-    public Taxon(Integer taxonID) {
-        this.taxonID = taxonID;
+    public Taxon(Integer taxonId) {
+        this.taxonId = taxonId;
     }
 
-    public Taxon(Integer taxonID, Date timestampCreated, String name, int rankID) {
+    public Taxon(Integer taxonId, Date timestampCreated, String name, int rankId) {
         super(timestampCreated);
-        this.taxonID = taxonID;
+        this.taxonId = taxonId;
         this.name = name;
-        this.rankID = rankID;
+        this.rankId = rankId;
     }
 
-    public Taxon(Integer taxonID, String fullName) {
-        this.taxonID = taxonID;
+    public Taxon(Integer taxonId, String fullName) {
+        this.taxonId = taxonId;
         this.fullName = fullName;
     }
 
-    public Integer getTaxonID() {
-        return taxonID;
+    @XmlTransient
+    public Collection<Taxon> getAcceptedChildren() {
+        return acceptedChildren;
     }
 
-    public void setTaxonID(Integer taxonID) {
-        this.taxonID = taxonID;
+    public void setAcceptedChildren(Collection<Taxon> acceptedChildren) {
+        this.acceptedChildren = acceptedChildren;
     }
+
+    public Taxon getAcceptedTaxon() {
+        return acceptedTaxon;
+    }
+
+    public void setAcceptedTaxon(Taxon acceptedTaxon) {
+        this.acceptedTaxon = acceptedTaxon;
+    }
+
+    @XmlTransient
+    public Collection<Taxon> getChildren() {
+        return children;
+    }
+
+    public void setChildren(Collection<Taxon> children) {
+        this.children = children;
+    }
+
+    public String getColStatus() {
+        return colStatus;
+    }
+
+    public void setColStatus(String colStatus) {
+        this.colStatus = colStatus;
+    }
+
+    @XmlTransient
+    public Collection<Collectingeventattribute> getCollectingEventAttributes() {
+        return collectingEventAttributes;
+    }
+
+    public void setCollectingEventAttributes(Collection<Collectingeventattribute> collectingEventAttributes) {
+        this.collectingEventAttributes = collectingEventAttributes;
+    }
+
+    @XmlTransient
+    public Collection<Commonnametx> getCommonNames() {
+        return commonNames;
+    }
+
+    public void setCommonNames(Collection<Commonnametx> commonNames) {
+        this.commonNames = commonNames;
+    }
+
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
+    }
+
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Taxontreedef getDefinition() {
+        return definition;
+    }
+
+    public void setDefinition(Taxontreedef definition) {
+        this.definition = definition;
+    }
+
+    public Taxontreedefitem getDefinitionItem() {
+        return definitionItem;
+    }
+
+    public void setDefinitionItem(Taxontreedefitem definitionItem) {
+        this.definitionItem = definitionItem;
+    }
+
+    @XmlTransient
+    public Collection<Determination> getDeterminations1() {
+        return determinations1;
+    }
+
+    public void setDeterminations1(Collection<Determination> determinations1) {
+        this.determinations1 = determinations1;
+    }
+
+ 
+
+    @XmlTransient
+    public Collection<Determination> getDeterminations() {
+        return determinations;
+    }
+
+    public void setDeterminations(Collection<Determination> determinations) {
+        this.determinations = determinations;
+    }
+
+    @XmlTransient
+    public Collection<Taxon> getHybridChildren1() {
+        return hybridChildren1;
+    }
+
+    public void setHybridChildren1(Collection<Taxon> hybridChildren1) {
+        this.hybridChildren1 = hybridChildren1;
+    }
+
+    @XmlTransient
+    public Collection<Taxon> getHybridChildren2() {
+        return hybridChildren2;
+    }
+
+    public void setHybridChildren2(Collection<Taxon> hybridChildren2) {
+        this.hybridChildren2 = hybridChildren2;
+    }
+
+    public Taxon getHybridParent1() {
+        return hybridParent1;
+    }
+
+    public void setHybridParent1(Taxon hybridParent1) {
+        this.hybridParent1 = hybridParent1;
+    }
+
+    public Taxon getHybridParent2() {
+        return hybridParent2;
+    }
+
+    public void setHybridParent2(Taxon hybridParent2) {
+        this.hybridParent2 = hybridParent2;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Taxon getParent() {
+        return parent;
+    }
+
+    public void setParent(Taxon parent) {
+        this.parent = parent;
+    }
+
+    public int getRankId() {
+        return rankId;
+    }
+
+    public void setRankId(int rankId) {
+        this.rankId = rankId;
+    }
+
+    @XmlTransient
+    public Collection<Taxonattachment> getTaxonAttachments() {
+        return taxonAttachments;
+    }
+
+    public void setTaxonAttachments(Collection<Taxonattachment> taxonAttachments) {
+        this.taxonAttachments = taxonAttachments;
+    }
+
+    @XmlTransient
+    public Collection<Taxoncitation> getTaxonCitations() {
+        return taxonCitations;
+    }
+
+    public void setTaxonCitations(Collection<Taxoncitation> taxonCitations) {
+        this.taxonCitations = taxonCitations;
+    }
+
+    public Integer getTaxonId() {
+        return taxonId;
+    }
+
+    public void setTaxonId(Integer taxonId) {
+        this.taxonId = taxonId;
+    }
+
+    public Specifyuser getVisibilitySetBy() {
+        return visibilitySetBy;
+    }
+
+    public void setVisibilitySetBy(Specifyuser visibilitySetBy) {
+        this.visibilitySetBy = visibilitySetBy;
+    }
+
+ 
 
     public String getAuthor() {
         return author;
@@ -280,14 +495,7 @@ public class Taxon extends BaseEntity {
         this.citesStatus = citesStatus;
     }
 
-    public String getCOLStatus() {
-        return cOLStatus;
-    }
-
-    public void setCOLStatus(String cOLStatus) {
-        this.cOLStatus = cOLStatus;
-    }
-
+ 
     public String getCommonName() {
         return commonName;
     }
@@ -424,14 +632,7 @@ public class Taxon extends BaseEntity {
         this.number2 = number2;
     }
 
-    public int getRankID() {
-        return rankID;
-    }
-
-    public void setRankID(int rankID) {
-        this.rankID = rankID;
-    }
-
+ 
     public String getRemarks() {
         return remarks;
     }
@@ -552,182 +753,25 @@ public class Taxon extends BaseEntity {
         this.visibility = visibility;
     }
 
-    public Taxontreedef getTaxonTreeDefID() {
-        return taxonTreeDefID;
-    }
-
-    public void setTaxonTreeDefID(Taxontreedef taxonTreeDefID) {
-        this.taxonTreeDefID = taxonTreeDefID;
-    }
-
-    @XmlTransient
-    public Collection<Taxon> getTaxonCollection() {
-        return taxonCollection;
-    }
-
-    public void setTaxonCollection(Collection<Taxon> taxonCollection) {
-        this.taxonCollection = taxonCollection;
-    }
-
-    public Taxon getParentID() {
-        return parentID;
-    }
-
-    public void setParentID(Taxon parentID) {
-        this.parentID = parentID;
-    }
-
-    public Taxontreedefitem getTaxonTreeDefItemID() {
-        return taxonTreeDefItemID;
-    }
-
-    public void setTaxonTreeDefItemID(Taxontreedefitem taxonTreeDefItemID) {
-        this.taxonTreeDefItemID = taxonTreeDefItemID;
-    }
-
-    public Specifyuser getVisibilitySetByID() {
-        return visibilitySetByID;
-    }
-
-    public void setVisibilitySetByID(Specifyuser visibilitySetByID) {
-        this.visibilitySetByID = visibilitySetByID;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    @XmlTransient
-    public Collection<Taxon> getTaxonCollection1() {
-        return taxonCollection1;
-    }
-
-    public void setTaxonCollection1(Collection<Taxon> taxonCollection1) {
-        this.taxonCollection1 = taxonCollection1;
-    }
-
-    public Taxon getHybridParent2ID() {
-        return hybridParent2ID;
-    }
-
-    public void setHybridParent2ID(Taxon hybridParent2ID) {
-        this.hybridParent2ID = hybridParent2ID;
-    }
-
-    @XmlTransient
-    public Collection<Taxon> getTaxonCollection2() {
-        return taxonCollection2;
-    }
-
-    public void setTaxonCollection2(Collection<Taxon> taxonCollection2) {
-        this.taxonCollection2 = taxonCollection2;
-    }
-
-    public Taxon getHybridParent1ID() {
-        return hybridParent1ID;
-    }
-
-    public void setHybridParent1ID(Taxon hybridParent1ID) {
-        this.hybridParent1ID = hybridParent1ID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
-    @XmlTransient
-    public Collection<Taxon> getTaxonCollection3() {
-        return taxonCollection3;
-    }
-
-    public void setTaxonCollection3(Collection<Taxon> taxonCollection3) {
-        this.taxonCollection3 = taxonCollection3;
-    }
-
-    public Taxon getAcceptedID() {
-        return acceptedID;
-    }
-
-    public void setAcceptedID(Taxon acceptedID) {
-        this.acceptedID = acceptedID;
-    }
-
-    @XmlTransient
-    public Collection<Collectingeventattribute> getCollectingeventattributeCollection() {
-        return collectingeventattributeCollection;
-    }
-
-    public void setCollectingeventattributeCollection(Collection<Collectingeventattribute> collectingeventattributeCollection) {
-        this.collectingeventattributeCollection = collectingeventattributeCollection;
-    }
-
-    @XmlTransient
-    public Collection<Commonnametx> getCommonnametxCollection() {
-        return commonnametxCollection;
-    }
-
-    public void setCommonnametxCollection(Collection<Commonnametx> commonnametxCollection) {
-        this.commonnametxCollection = commonnametxCollection;
-    }
-
-    @XmlTransient
-    public Collection<Determination> getDeterminationCollection() {
-        return determinationCollection;
-    }
-
-    public void setDeterminationCollection(Collection<Determination> determinationCollection) {
-        this.determinationCollection = determinationCollection;
-    }
-
-    @XmlTransient
-    public Collection<Determination> getDeterminationCollection1() {
-        return determinationCollection1;
-    }
-
-    public void setDeterminationCollection1(Collection<Determination> determinationCollection1) {
-        this.determinationCollection1 = determinationCollection1;
-    }
-
-    @XmlTransient
-    public Collection<Taxoncitation> getTaxoncitationCollection() {
-        return taxoncitationCollection;
-    }
-
-    public void setTaxoncitationCollection(Collection<Taxoncitation> taxoncitationCollection) {
-        this.taxoncitationCollection = taxoncitationCollection;
-    }
-
-    @XmlTransient
-    public Collection<Taxonattachment> getTaxonattachmentCollection() {
-        return taxonattachmentCollection;
-    }
-
-    public void setTaxonattachmentCollection(Collection<Taxonattachment> taxonattachmentCollection) {
-        this.taxonattachmentCollection = taxonattachmentCollection;
-    }
+   
+ 
+   
+  
 
     @XmlTransient
     public int getNumDetermination() {
-        return determinationCollection1.size();
+        return determinations.size();
     }
 
     public Taxon getTaxonFamily() {
 
-        if(rankID > 140) {
-            if (taxonTreeDefItemID.getName().equals("Family")) {
+        if(rankId > 140) {
+            if (definitionItem.getName().equals("Family")) {
                 return this;
             } else {
-                Taxon parent = parentID;
-                while (!parent.getTaxonTreeDefItemID().getName().equals("Family")) {
-                    parent = parent.getParentID();
+                Taxon newParent = parent;
+                while (!newParent.getDefinitionItem().getName().equals("Family")) {
+                    newParent = newParent.getParent();
                 }
                 return parent;
             } 
@@ -738,7 +782,7 @@ public class Taxon extends BaseEntity {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (taxonID != null ? taxonID.hashCode() : 0);
+        hash += (taxonId != null ? taxonId.hashCode() : 0);
         return hash;
     }
 
@@ -749,7 +793,7 @@ public class Taxon extends BaseEntity {
             return false;
         }
         Taxon other = (Taxon) object;
-        if ((this.taxonID == null && other.taxonID != null) || (this.taxonID != null && !this.taxonID.equals(other.taxonID))) {
+        if ((this.taxonId == null && other.taxonId != null) || (this.taxonId != null && !this.taxonId.equals(other.taxonId))) {
             return false;
         }
         return true;
@@ -757,6 +801,6 @@ public class Taxon extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Taxon[ taxonID=" + taxonID + " ]";
+        return "Taxon[ taxonId=" + taxonId + " ]";
     }
 }

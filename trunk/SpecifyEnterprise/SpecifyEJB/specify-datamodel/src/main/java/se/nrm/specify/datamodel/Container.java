@@ -28,11 +28,11 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Container.findAll", query = "SELECT c FROM Container c"),
-    @NamedQuery(name = "Container.findByContainerID", query = "SELECT c FROM Container c WHERE c.containerID = :containerID"),
+    @NamedQuery(name = "Container.findByContainerID", query = "SELECT c FROM Container c WHERE c.containerId = :containerID"),
     @NamedQuery(name = "Container.findByTimestampCreated", query = "SELECT c FROM Container c WHERE c.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Container.findByTimestampModified", query = "SELECT c FROM Container c WHERE c.timestampModified = :timestampModified"),
     @NamedQuery(name = "Container.findByVersion", query = "SELECT c FROM Container c WHERE c.version = :version"),
-    @NamedQuery(name = "Container.findByCollectionMemberID", query = "SELECT c FROM Container c WHERE c.collectionMemberID = :collectionMemberID"),
+    @NamedQuery(name = "Container.findByCollectionMemberID", query = "SELECT c FROM Container c WHERE c.collectionMemberId = :collectionMemberID"),
     @NamedQuery(name = "Container.findByDescription", query = "SELECT c FROM Container c WHERE c.description = :description"),
     @NamedQuery(name = "Container.findByName", query = "SELECT c FROM Container c WHERE c.name = :name"),
     @NamedQuery(name = "Container.findByNumber", query = "SELECT c FROM Container c WHERE c.number = :number"),
@@ -46,12 +46,12 @@ public class Container extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "ContainerID")
-    private Integer containerID;
+    private Integer containerId;
      
     @Basic(optional = false)
     @NotNull
     @Column(name = "CollectionMemberID")
-    private int collectionMemberID;
+    private int collectionMemberId;
     
     @Size(max = 255)
     @Column(name = "Description")
@@ -69,57 +69,43 @@ public class Container extends BaseEntity {
     
     @JoinColumn(name = "StorageID", referencedColumnName = "StorageID")
     @ManyToOne
-    private Storage storageID;
+    private Storage storage;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
-    @OneToMany(mappedBy = "parentID")
-    private Collection<Container> containerCollection;
+    @OneToMany(mappedBy = "parent")
+    private Collection<Container> children;
     
     @JoinColumn(name = "ParentID", referencedColumnName = "ContainerID")
     @ManyToOne
-    private Container parentID;
+    private Container parent;
     
-    @OneToMany(mappedBy = "containerOwnerID")
-    private Collection<Collectionobject> collectionobjectCollection;
+    @OneToMany(mappedBy = "containerOwner")
+    private Collection<Collectionobject> collectionObjectKids;
     
-    @OneToMany(mappedBy = "containerID")
-    private Collection<Collectionobject> collectionobjectCollection1;
+    @OneToMany(mappedBy = "container")
+    private Collection<Collectionobject> collectionObjects;
 
     public Container() {
     }
 
-    public Container(Integer containerID) {
-        this.containerID = containerID;
+    public Container(Integer containerId) {
+        this.containerId = containerId;
     }
 
-    public Container(Integer containerID, Date timestampCreated, int collectionMemberID) {
+    public Container(Integer containerId, Date timestampCreated, int collectionMemberId) {
         super(timestampCreated);
-        this.containerID = containerID; 
-        this.collectionMemberID = collectionMemberID;
+        this.containerId = containerId; 
+        this.collectionMemberId = collectionMemberId;
     }
 
-    public Integer getContainerID() {
-        return containerID;
-    }
-
-    public void setContainerID(Integer containerID) {
-        this.containerID = containerID;
-    } 
-
-    public int getCollectionMemberID() {
-        return collectionMemberID;
-    }
-
-    public void setCollectionMemberID(int collectionMemberID) {
-        this.collectionMemberID = collectionMemberID;
-    }
+ 
 
     public String getDescription() {
         return description;
@@ -153,69 +139,84 @@ public class Container extends BaseEntity {
         this.type = type;
     }
 
-    public Storage getStorageID() {
-        return storageID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setStorageID(Storage storageID) {
-        this.storageID = storageID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Container getParent() {
+        return parent;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setParent(Container parent) {
+        this.parent = parent;
     }
 
-    @XmlTransient
-    public Collection<Container> getContainerCollection() {
-        return containerCollection;
+    public Storage getStorage() {
+        return storage;
     }
 
-    public void setContainerCollection(Collection<Container> containerCollection) {
-        this.containerCollection = containerCollection;
+    public void setStorage(Storage storage) {
+        this.storage = storage;
     }
 
-    public Container getParentID() {
-        return parentID;
+ 
+    public Collection<Container> getChildren() {
+        return children;
     }
 
-    public void setParentID(Container parentID) {
-        this.parentID = parentID;
+    public void setChildren(Collection<Container> children) {
+        this.children = children;
     }
 
-    @XmlTransient
-    public Collection<Collectionobject> getCollectionobjectCollection() {
-        return collectionobjectCollection;
+    public int getCollectionMemberId() {
+        return collectionMemberId;
     }
 
-    public void setCollectionobjectCollection(Collection<Collectionobject> collectionobjectCollection) {
-        this.collectionobjectCollection = collectionobjectCollection;
+    public void setCollectionMemberId(int collectionMemberId) {
+        this.collectionMemberId = collectionMemberId;
     }
 
-    @XmlTransient
-    public Collection<Collectionobject> getCollectionobjectCollection1() {
-        return collectionobjectCollection1;
+    public Collection<Collectionobject> getCollectionObjectKids() {
+        return collectionObjectKids;
     }
 
-    public void setCollectionobjectCollection1(Collection<Collectionobject> collectionobjectCollection1) {
-        this.collectionobjectCollection1 = collectionobjectCollection1;
+    public void setCollectionObjectKids(Collection<Collectionobject> collectionObjectKids) {
+        this.collectionObjectKids = collectionObjectKids;
     }
 
+    public Collection<Collectionobject> getCollectionObjects() {
+        return collectionObjects;
+    }
+
+    public void setCollectionObjects(Collection<Collectionobject> collectionObjects) {
+        this.collectionObjects = collectionObjects;
+    }
+
+    public Integer getContainerId() {
+        return containerId;
+    }
+
+    public void setContainerId(Integer containerId) {
+        this.containerId = containerId;
+    }
+
+ 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (containerID != null ? containerID.hashCode() : 0);
+        hash += (containerId != null ? containerId.hashCode() : 0);
         return hash;
     }
 
@@ -226,7 +227,7 @@ public class Container extends BaseEntity {
             return false;
         }
         Container other = (Container) object;
-        if ((this.containerID == null && other.containerID != null) || (this.containerID != null && !this.containerID.equals(other.containerID))) {
+        if ((this.containerId == null && other.containerId != null) || (this.containerId != null && !this.containerId.equals(other.containerId))) {
             return false;
         }
         return true;
@@ -234,7 +235,7 @@ public class Container extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Container[ containerID=" + containerID + " ]";
+        return "Container[ containerID=" + containerId + " ]";
     }
     
 }

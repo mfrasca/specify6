@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Morphbankview.findAll", query = "SELECT m FROM Morphbankview m"),
-    @NamedQuery(name = "Morphbankview.findByMorphBankViewID", query = "SELECT m FROM Morphbankview m WHERE m.morphBankViewID = :morphBankViewID"),
+    @NamedQuery(name = "Morphbankview.findByMorphBankViewID", query = "SELECT m FROM Morphbankview m WHERE m.morphBankViewId = :morphBankViewID"),
     @NamedQuery(name = "Morphbankview.findByTimestampCreated", query = "SELECT m FROM Morphbankview m WHERE m.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Morphbankview.findByTimestampModified", query = "SELECT m FROM Morphbankview m WHERE m.timestampModified = :timestampModified"),
     @NamedQuery(name = "Morphbankview.findByVersion", query = "SELECT m FROM Morphbankview m WHERE m.version = :version"),
@@ -31,13 +31,13 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Morphbankview.findByForm", query = "SELECT m FROM Morphbankview m WHERE m.form = :form"),
     @NamedQuery(name = "Morphbankview.findByImagingPreparationTechnique", query = "SELECT m FROM Morphbankview m WHERE m.imagingPreparationTechnique = :imagingPreparationTechnique"),
     @NamedQuery(name = "Morphbankview.findByImagingTechnique", query = "SELECT m FROM Morphbankview m WHERE m.imagingTechnique = :imagingTechnique"),
-    @NamedQuery(name = "Morphbankview.findByMorphBankExternalViewID", query = "SELECT m FROM Morphbankview m WHERE m.morphBankExternalViewID = :morphBankExternalViewID"),
+    @NamedQuery(name = "Morphbankview.findByMorphBankExternalViewID", query = "SELECT m FROM Morphbankview m WHERE m.morphBankExternalViewId = :morphBankExternalViewID"),
     @NamedQuery(name = "Morphbankview.findBySex", query = "SELECT m FROM Morphbankview m WHERE m.sex = :sex"),
     @NamedQuery(name = "Morphbankview.findBySpecimenPart", query = "SELECT m FROM Morphbankview m WHERE m.specimenPart = :specimenPart"),
     @NamedQuery(name = "Morphbankview.findByViewAngle", query = "SELECT m FROM Morphbankview m WHERE m.viewAngle = :viewAngle"),
     @NamedQuery(name = "Morphbankview.findByViewName", query = "SELECT m FROM Morphbankview m WHERE m.viewName = :viewName"),
-    @NamedQuery(name = "Morphbankview.findByCreatedByAgentID", query = "SELECT m FROM Morphbankview m WHERE m.createdByAgentID = :createdByAgentID"),
-    @NamedQuery(name = "Morphbankview.findByModifiedByAgentID", query = "SELECT m FROM Morphbankview m WHERE m.modifiedByAgentID = :modifiedByAgentID")})
+    @NamedQuery(name = "Morphbankview.findByCreatedByAgentID", query = "SELECT m FROM Morphbankview m WHERE m.createdByAgent = :createdByAgentID"),
+    @NamedQuery(name = "Morphbankview.findByModifiedByAgentID", query = "SELECT m FROM Morphbankview m WHERE m.modifiedByAgent = :modifiedByAgentID")})
 public class Morphbankview extends BaseEntity { 
     
     private static final long serialVersionUID = 1L;
@@ -47,7 +47,7 @@ public class Morphbankview extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "MorphBankViewID")
-    private Integer morphBankViewID;
+    private Integer morphBankViewId;
      
     @Size(max = 128)
     @Column(name = "DevelopmentState")
@@ -66,7 +66,7 @@ public class Morphbankview extends BaseEntity {
     private String imagingTechnique;
     
     @Column(name = "MorphBankExternalViewID")
-    private Integer morphBankExternalViewID;
+    private Integer morphBankExternalViewId;
     
     @Size(max = 32)
     @Column(name = "Sex")
@@ -85,30 +85,55 @@ public class Morphbankview extends BaseEntity {
     private String viewName;
     
     @Column(name = "CreatedByAgentID")
-    private Integer createdByAgentID;
+    private Integer createdByAgent;
     
     @Column(name = "ModifiedByAgentID")
-    private Integer modifiedByAgentID;
+    private Integer modifiedByAgent;
 
     public Morphbankview() {
     }
 
-    public Morphbankview(Integer morphBankViewID) {
-        this.morphBankViewID = morphBankViewID;
+    public Morphbankview(Integer morphBankViewId) {
+        this.morphBankViewId = morphBankViewId;
     }
 
-    public Morphbankview(Integer morphBankViewID, Date timestampCreated) {
+    public Morphbankview(Integer morphBankViewId, Date timestampCreated) {
         super(timestampCreated);
-        this.morphBankViewID = morphBankViewID; 
+        this.morphBankViewId = morphBankViewId; 
     }
 
-    public Integer getMorphBankViewID() {
-        return morphBankViewID;
+    public Integer getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setMorphBankViewID(Integer morphBankViewID) {
-        this.morphBankViewID = morphBankViewID;
-    } 
+    public void setCreatedByAgent(Integer createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Integer getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Integer modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Integer getMorphBankExternalViewId() {
+        return morphBankExternalViewId;
+    }
+
+    public void setMorphBankExternalViewId(Integer morphBankExternalViewId) {
+        this.morphBankExternalViewId = morphBankExternalViewId;
+    }
+
+    public Integer getMorphBankViewId() {
+        return morphBankViewId;
+    }
+
+    public void setMorphBankViewId(Integer morphBankViewId) {
+        this.morphBankViewId = morphBankViewId;
+    }
+ 
 
     public String getDevelopmentState() {
         return developmentState;
@@ -141,14 +166,7 @@ public class Morphbankview extends BaseEntity {
     public void setImagingTechnique(String imagingTechnique) {
         this.imagingTechnique = imagingTechnique;
     }
-
-    public Integer getMorphBankExternalViewID() {
-        return morphBankExternalViewID;
-    }
-
-    public void setMorphBankExternalViewID(Integer morphBankExternalViewID) {
-        this.morphBankExternalViewID = morphBankExternalViewID;
-    }
+ 
 
     public String getSex() {
         return sex;
@@ -182,26 +200,12 @@ public class Morphbankview extends BaseEntity {
         this.viewName = viewName;
     }
 
-    public Integer getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Integer createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Integer getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Integer modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
+     
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (morphBankViewID != null ? morphBankViewID.hashCode() : 0);
+        hash += (morphBankViewId != null ? morphBankViewId.hashCode() : 0);
         return hash;
     }
 
@@ -212,7 +216,7 @@ public class Morphbankview extends BaseEntity {
             return false;
         }
         Morphbankview other = (Morphbankview) object;
-        if ((this.morphBankViewID == null && other.morphBankViewID != null) || (this.morphBankViewID != null && !this.morphBankViewID.equals(other.morphBankViewID))) {
+        if ((this.morphBankViewId == null && other.morphBankViewId != null) || (this.morphBankViewId != null && !this.morphBankViewId.equals(other.morphBankViewId))) {
             return false;
         }
         return true;
@@ -220,7 +224,7 @@ public class Morphbankview extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Morphbankview[ morphBankViewID=" + morphBankViewID + " ]";
+        return "Morphbankview[ morphBankViewID=" + morphBankViewId + " ]";
     }
     
 }

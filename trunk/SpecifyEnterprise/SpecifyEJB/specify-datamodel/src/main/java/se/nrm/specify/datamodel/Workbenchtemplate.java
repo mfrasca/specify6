@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Workbenchtemplate.findAll", query = "SELECT w FROM Workbenchtemplate w"),
-    @NamedQuery(name = "Workbenchtemplate.findByWorkbenchTemplateID", query = "SELECT w FROM Workbenchtemplate w WHERE w.workbenchTemplateID = :workbenchTemplateID"),
+    @NamedQuery(name = "Workbenchtemplate.findByWorkbenchTemplateID", query = "SELECT w FROM Workbenchtemplate w WHERE w.workbenchTemplateId = :workbenchTemplateID"),
     @NamedQuery(name = "Workbenchtemplate.findByTimestampCreated", query = "SELECT w FROM Workbenchtemplate w WHERE w.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Workbenchtemplate.findByTimestampModified", query = "SELECT w FROM Workbenchtemplate w WHERE w.timestampModified = :timestampModified"),
     @NamedQuery(name = "Workbenchtemplate.findByVersion", query = "SELECT w FROM Workbenchtemplate w WHERE w.version = :version"),
@@ -45,7 +45,7 @@ public class Workbenchtemplate extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "WorkbenchTemplateID")
-    private Integer workbenchTemplateID;
+    private Integer workbenchTemplateId;
      
     @Size(max = 64)
     @Column(name = "Name")
@@ -60,47 +60,103 @@ public class Workbenchtemplate extends BaseEntity {
     @Column(name = "SrcFilePath")
     private String srcFilePath;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "workbenchTemplateID")
-    private Collection<Workbench> workbenchCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "workbenchTemplate")
+    private Collection<Workbench> workbenches;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "SpecifyUserID", referencedColumnName = "SpecifyUserID")
     @ManyToOne(optional = false)
-    private Specifyuser specifyUserID;
+    private Specifyuser specifyUser;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "workbenchTemplateID")
-    private Collection<Workbenchtemplatemappingitem> workbenchtemplatemappingitemCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "workbenchTemplate")
+    private Collection<Workbenchtemplatemappingitem> workbenchTemplateMappingItems;
     
-    @OneToMany(mappedBy = "workbenchTemplateID")
-    private Collection<Spreport> spreportCollection;
+    @OneToMany(mappedBy = "workbenchTemplate")
+    private Collection<Spreport> spreports;
 
     public Workbenchtemplate() {
     }
 
-    public Workbenchtemplate(Integer workbenchTemplateID) {
-        this.workbenchTemplateID = workbenchTemplateID;
+    public Workbenchtemplate(Integer workbenchTemplateId) {
+        this.workbenchTemplateId = workbenchTemplateId;
     }
 
-    public Workbenchtemplate(Integer workbenchTemplateID, Date timestampCreated) {
+    public Workbenchtemplate(Integer workbenchTemplateId, Date timestampCreated) {
         super(timestampCreated);
-        this.workbenchTemplateID = workbenchTemplateID; 
+        this.workbenchTemplateId = workbenchTemplateId; 
     }
 
-    public Integer getWorkbenchTemplateID() {
-        return workbenchTemplateID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setWorkbenchTemplateID(Integer workbenchTemplateID) {
-        this.workbenchTemplateID = workbenchTemplateID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Specifyuser getSpecifyUser() {
+        return specifyUser;
+    }
+
+    public void setSpecifyUser(Specifyuser specifyUser) {
+        this.specifyUser = specifyUser;
+    }
+
+    @XmlTransient
+    public Collection<Spreport> getSpreports() {
+        return spreports;
+    }
+
+    public void setSpreports(Collection<Spreport> spreports) {
+        this.spreports = spreports;
+    }
+
+  
+
+    public Integer getWorkbenchTemplateId() {
+        return workbenchTemplateId;
+    }
+
+    public void setWorkbenchTemplateId(Integer workbenchTemplateId) {
+        this.workbenchTemplateId = workbenchTemplateId;
+    }
+
+    @XmlTransient
+    public Collection<Workbenchtemplatemappingitem> getWorkbenchTemplateMappingItems() {
+        return workbenchTemplateMappingItems;
+    }
+
+    public void setWorkbenchTemplateMappingItems(Collection<Workbenchtemplatemappingitem> workbenchTemplateMappingItems) {
+        this.workbenchTemplateMappingItems = workbenchTemplateMappingItems;
+    }
+
+    @XmlTransient
+    public Collection<Workbench> getWorkbenches() {
+        return workbenches;
+    }
+
+    public void setWorkbenches(Collection<Workbench> workbenches) {
+        this.workbenches = workbenches;
     }
  
+ 
+    
+    
     public String getName() {
         return name;
     }
@@ -125,61 +181,15 @@ public class Workbenchtemplate extends BaseEntity {
         this.srcFilePath = srcFilePath;
     }
 
-    @XmlTransient
-    public Collection<Workbench> getWorkbenchCollection() {
-        return workbenchCollection;
-    }
+   
 
-    public void setWorkbenchCollection(Collection<Workbench> workbenchCollection) {
-        this.workbenchCollection = workbenchCollection;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
-    public Specifyuser getSpecifyUserID() {
-        return specifyUserID;
-    }
-
-    public void setSpecifyUserID(Specifyuser specifyUserID) {
-        this.specifyUserID = specifyUserID;
-    }
-
-    @XmlTransient
-    public Collection<Workbenchtemplatemappingitem> getWorkbenchtemplatemappingitemCollection() {
-        return workbenchtemplatemappingitemCollection;
-    }
-
-    public void setWorkbenchtemplatemappingitemCollection(Collection<Workbenchtemplatemappingitem> workbenchtemplatemappingitemCollection) {
-        this.workbenchtemplatemappingitemCollection = workbenchtemplatemappingitemCollection;
-    }
-
-    @XmlTransient
-    public Collection<Spreport> getSpreportCollection() {
-        return spreportCollection;
-    }
-
-    public void setSpreportCollection(Collection<Spreport> spreportCollection) {
-        this.spreportCollection = spreportCollection;
-    }
+    
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (workbenchTemplateID != null ? workbenchTemplateID.hashCode() : 0);
+        hash += (workbenchTemplateId != null ? workbenchTemplateId.hashCode() : 0);
         return hash;
     }
 
@@ -190,7 +200,7 @@ public class Workbenchtemplate extends BaseEntity {
             return false;
         }
         Workbenchtemplate other = (Workbenchtemplate) object;
-        if ((this.workbenchTemplateID == null && other.workbenchTemplateID != null) || (this.workbenchTemplateID != null && !this.workbenchTemplateID.equals(other.workbenchTemplateID))) {
+        if ((this.workbenchTemplateId == null && other.workbenchTemplateId != null) || (this.workbenchTemplateId != null && !this.workbenchTemplateId.equals(other.workbenchTemplateId))) {
             return false;
         }
         return true;
@@ -198,7 +208,7 @@ public class Workbenchtemplate extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Workbenchtemplate[ workbenchTemplateID=" + workbenchTemplateID + " ]";
+        return "Workbenchtemplate[ workbenchTemplateID=" + workbenchTemplateId + " ]";
     }
     
 }

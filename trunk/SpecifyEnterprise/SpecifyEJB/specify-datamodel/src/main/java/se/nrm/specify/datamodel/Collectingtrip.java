@@ -31,7 +31,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Collectingtrip.findAll", query = "SELECT c FROM Collectingtrip c"),
-    @NamedQuery(name = "Collectingtrip.findByCollectingTripID", query = "SELECT c FROM Collectingtrip c WHERE c.collectingTripID = :collectingTripID"),
+    @NamedQuery(name = "Collectingtrip.findByCollectingTripID", query = "SELECT c FROM Collectingtrip c WHERE c.collectingTripId = :collectingTripID"),
     @NamedQuery(name = "Collectingtrip.findByTimestampCreated", query = "SELECT c FROM Collectingtrip c WHERE c.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Collectingtrip.findByTimestampModified", query = "SELECT c FROM Collectingtrip c WHERE c.timestampModified = :timestampModified"),
     @NamedQuery(name = "Collectingtrip.findByVersion", query = "SELECT c FROM Collectingtrip c WHERE c.version = :version"),
@@ -52,7 +52,7 @@ public class Collectingtrip extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "CollectingTripID")
-    private Integer collectingTripID;
+    private Integer collectingTripId;
      
     @Size(max = 64)
     @Column(name = "CollectingTripName")
@@ -91,38 +91,32 @@ public class Collectingtrip extends BaseEntity {
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "DisciplineID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne(optional = false)
-    private Discipline disciplineID;
+    private Discipline discipline;
     
-    @OneToMany(mappedBy = "collectingTripID")
-    private Collection<Collectingevent> collectingeventCollection;
+    @OneToMany(mappedBy = "collectingTrip")
+    private Collection<Collectingevent> collectingEvents;
 
     public Collectingtrip() {
     }
 
-    public Collectingtrip(Integer collectingTripID) {
-        this.collectingTripID = collectingTripID;
+    public Collectingtrip(Integer collectingTripId) {
+        this.collectingTripId = collectingTripId;
     }
 
-    public Collectingtrip(Integer collectingTripID, Date timestampCreated) {
+    public Collectingtrip(Integer collectingTripId, Date timestampCreated) {
         super(timestampCreated);
-        this.collectingTripID = collectingTripID; 
+        this.collectingTripId = collectingTripId; 
     }
 
-    public Integer getCollectingTripID() {
-        return collectingTripID;
-    }
-
-    public void setCollectingTripID(Integer collectingTripID) {
-        this.collectingTripID = collectingTripID;
-    } 
+ 
 
     public String getCollectingTripName() {
         return collectingTripName;
@@ -196,43 +190,53 @@ public class Collectingtrip extends BaseEntity {
         this.startTime = startTime;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
-    public Discipline getDisciplineID() {
-        return disciplineID;
-    }
-
-    public void setDisciplineID(Discipline disciplineID) {
-        this.disciplineID = disciplineID;
-    }
-
     @XmlTransient
-    public Collection<Collectingevent> getCollectingeventCollection() {
-        return collectingeventCollection;
+    public Collection<Collectingevent> getCollectingEvents() {
+        return collectingEvents;
     }
 
-    public void setCollectingeventCollection(Collection<Collectingevent> collectingeventCollection) {
-        this.collectingeventCollection = collectingeventCollection;
+    public void setCollectingEvents(Collection<Collectingevent> collectingEvents) {
+        this.collectingEvents = collectingEvents;
     }
+
+    public Integer getCollectingTripId() {
+        return collectingTripId;
+    }
+
+    public void setCollectingTripId(Integer collectingTripId) {
+        this.collectingTripId = collectingTripId;
+    }
+
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
+    }
+
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Discipline getDiscipline() {
+        return discipline;
+    }
+
+    public void setDiscipline(Discipline discipline) {
+        this.discipline = discipline;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+     
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (collectingTripID != null ? collectingTripID.hashCode() : 0);
+        hash += (collectingTripId != null ? collectingTripId.hashCode() : 0);
         return hash;
     }
 
@@ -243,7 +247,7 @@ public class Collectingtrip extends BaseEntity {
             return false;
         }
         Collectingtrip other = (Collectingtrip) object;
-        if ((this.collectingTripID == null && other.collectingTripID != null) || (this.collectingTripID != null && !this.collectingTripID.equals(other.collectingTripID))) {
+        if ((this.collectingTripId == null && other.collectingTripId != null) || (this.collectingTripId != null && !this.collectingTripId.equals(other.collectingTripId))) {
             return false;
         }
         return true;
@@ -251,7 +255,7 @@ public class Collectingtrip extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Collectingtrip[ collectingTripID=" + collectingTripID + " ]";
+        return "Collectingtrip[ collectingTripID=" + collectingTripId + " ]";
     }
     
 }

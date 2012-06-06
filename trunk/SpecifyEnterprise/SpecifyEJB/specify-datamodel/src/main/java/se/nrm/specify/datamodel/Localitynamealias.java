@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Localitynamealias.findAll", query = "SELECT l FROM Localitynamealias l"),
-    @NamedQuery(name = "Localitynamealias.findByLocalityNameAliasID", query = "SELECT l FROM Localitynamealias l WHERE l.localityNameAliasID = :localityNameAliasID"),
+    @NamedQuery(name = "Localitynamealias.findByLocalityNameAliasID", query = "SELECT l FROM Localitynamealias l WHERE l.localityNameAliasId = :localityNameAliasID"),
     @NamedQuery(name = "Localitynamealias.findByTimestampCreated", query = "SELECT l FROM Localitynamealias l WHERE l.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Localitynamealias.findByTimestampModified", query = "SELECT l FROM Localitynamealias l WHERE l.timestampModified = :timestampModified"),
     @NamedQuery(name = "Localitynamealias.findByVersion", query = "SELECT l FROM Localitynamealias l WHERE l.version = :version"),
@@ -40,7 +40,7 @@ public class Localitynamealias extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "LocalityNameAliasID")
-    private Integer localityNameAliasID;
+    private Integer localityNameAliasId;
      
     @Basic(optional = false)
     @NotNull
@@ -56,41 +56,34 @@ public class Localitynamealias extends BaseEntity {
     
     @JoinColumn(name = "LocalityID", referencedColumnName = "LocalityID")
     @ManyToOne(optional = false)
-    private Locality localityID;
+    private Locality locality;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "DisciplineID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne(optional = false)
-    private Discipline disciplineID;
+    private Discipline discipline;
 
     public Localitynamealias() {
     }
 
-    public Localitynamealias(Integer localityNameAliasID) {
-        this.localityNameAliasID = localityNameAliasID;
+    public Localitynamealias(Integer localityNameAliasId) {
+        this.localityNameAliasId = localityNameAliasId;
     }
 
-    public Localitynamealias(Integer localityNameAliasID, Date timestampCreated, String name, String source) {
+    public Localitynamealias(Integer localityNameAliasId, Date timestampCreated, String name, String source) {
         super(timestampCreated);
-        this.localityNameAliasID = localityNameAliasID; 
+        this.localityNameAliasId = localityNameAliasId; 
         this.name = name;
         this.source = source;
     }
-
-    public Integer getLocalityNameAliasID() {
-        return localityNameAliasID;
-    }
-
-    public void setLocalityNameAliasID(Integer localityNameAliasID) {
-        this.localityNameAliasID = localityNameAliasID;
-    }
+ 
  
     public String getName() {
         return name;
@@ -108,42 +101,51 @@ public class Localitynamealias extends BaseEntity {
         this.source = source;
     }
 
-    public Locality getLocalityID() {
-        return localityID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setLocalityID(Locality localityID) {
-        this.localityID = localityID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Discipline getDiscipline() {
+        return discipline;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setDiscipline(Discipline discipline) {
+        this.discipline = discipline;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Locality getLocality() {
+        return locality;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setLocality(Locality locality) {
+        this.locality = locality;
     }
 
-    public Discipline getDisciplineID() {
-        return disciplineID;
+    public Integer getLocalityNameAliasId() {
+        return localityNameAliasId;
     }
 
-    public void setDisciplineID(Discipline disciplineID) {
-        this.disciplineID = disciplineID;
+    public void setLocalityNameAliasId(Integer localityNameAliasId) {
+        this.localityNameAliasId = localityNameAliasId;
     }
 
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+  
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (localityNameAliasID != null ? localityNameAliasID.hashCode() : 0);
+        hash += (localityNameAliasId != null ? localityNameAliasId.hashCode() : 0);
         return hash;
     }
 
@@ -154,7 +156,7 @@ public class Localitynamealias extends BaseEntity {
             return false;
         }
         Localitynamealias other = (Localitynamealias) object;
-        if ((this.localityNameAliasID == null && other.localityNameAliasID != null) || (this.localityNameAliasID != null && !this.localityNameAliasID.equals(other.localityNameAliasID))) {
+        if ((this.localityNameAliasId == null && other.localityNameAliasId != null) || (this.localityNameAliasId != null && !this.localityNameAliasId.equals(other.localityNameAliasId))) {
             return false;
         }
         return true;
@@ -162,7 +164,7 @@ public class Localitynamealias extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Localitynamealias[ localityNameAliasID=" + localityNameAliasID + " ]";
+        return "Localitynamealias[ localityNameAliasID=" + localityNameAliasId + " ]";
     }
     
 }

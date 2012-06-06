@@ -24,18 +24,18 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Exchangeinprep.findAll", query = "SELECT e FROM Exchangeinprep e"),
-    @NamedQuery(name = "Exchangeinprep.findByExchangeInPrepID", query = "SELECT e FROM Exchangeinprep e WHERE e.exchangeInPrepID = :exchangeInPrepID"),
+    @NamedQuery(name = "Exchangeinprep.findByExchangeInPrepID", query = "SELECT e FROM Exchangeinprep e WHERE e.exchangeInPrepId = :exchangeInPrepID"),
     @NamedQuery(name = "Exchangeinprep.findByTimestampCreated", query = "SELECT e FROM Exchangeinprep e WHERE e.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Exchangeinprep.findByTimestampModified", query = "SELECT e FROM Exchangeinprep e WHERE e.timestampModified = :timestampModified"),
     @NamedQuery(name = "Exchangeinprep.findByVersion", query = "SELECT e FROM Exchangeinprep e WHERE e.version = :version"),
     @NamedQuery(name = "Exchangeinprep.findByDescriptionOfMaterial", query = "SELECT e FROM Exchangeinprep e WHERE e.descriptionOfMaterial = :descriptionOfMaterial"),
     @NamedQuery(name = "Exchangeinprep.findByNumber1", query = "SELECT e FROM Exchangeinprep e WHERE e.number1 = :number1"),
     @NamedQuery(name = "Exchangeinprep.findByQuantity", query = "SELECT e FROM Exchangeinprep e WHERE e.quantity = :quantity"),
-    @NamedQuery(name = "Exchangeinprep.findByPreparationID", query = "SELECT e FROM Exchangeinprep e WHERE e.preparationID = :preparationID"),
-    @NamedQuery(name = "Exchangeinprep.findByModifiedByAgentID", query = "SELECT e FROM Exchangeinprep e WHERE e.modifiedByAgentID = :modifiedByAgentID"),
-    @NamedQuery(name = "Exchangeinprep.findByDisciplineID", query = "SELECT e FROM Exchangeinprep e WHERE e.disciplineID = :disciplineID"),
-    @NamedQuery(name = "Exchangeinprep.findByExchangeInID", query = "SELECT e FROM Exchangeinprep e WHERE e.exchangeInID = :exchangeInID"),
-    @NamedQuery(name = "Exchangeinprep.findByCreatedByAgentID", query = "SELECT e FROM Exchangeinprep e WHERE e.createdByAgentID = :createdByAgentID")})
+    @NamedQuery(name = "Exchangeinprep.findByPreparationID", query = "SELECT e FROM Exchangeinprep e WHERE e.preparation = :preparationID"),
+    @NamedQuery(name = "Exchangeinprep.findByModifiedByAgentID", query = "SELECT e FROM Exchangeinprep e WHERE e.modifiedByAgent = :modifiedByAgentID"),
+    @NamedQuery(name = "Exchangeinprep.findByDisciplineID", query = "SELECT e FROM Exchangeinprep e WHERE e.discipline = :disciplineID"),
+    @NamedQuery(name = "Exchangeinprep.findByExchangeInID", query = "SELECT e FROM Exchangeinprep e WHERE e.exchangeIn = :exchangeInID"),
+    @NamedQuery(name = "Exchangeinprep.findByCreatedByAgentID", query = "SELECT e FROM Exchangeinprep e WHERE e.createdByAgent = :createdByAgentID")})
 public class Exchangeinprep extends BaseEntity {  
     
     private static final long serialVersionUID = 1L;
@@ -45,7 +45,7 @@ public class Exchangeinprep extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "ExchangeInPrepID")
-    private Integer exchangeInPrepID;
+    private Integer exchangeInPrepId;
      
     @Lob
     @Size(max = 65535)
@@ -73,43 +73,44 @@ public class Exchangeinprep extends BaseEntity {
     private String text2;
     
     @Column(name = "PreparationID")
-    private Integer preparationID;
+    private Integer preparation;
     
     @Column(name = "ModifiedByAgentID")
-    private Integer modifiedByAgentID;
+    private Integer modifiedByAgent;
     
     @Basic(optional = false)
     @NotNull
     @Column(name = "DisciplineID")
-    private int disciplineID;
+    private int discipline;
     
     @Column(name = "ExchangeInID")
-    private Integer exchangeInID;
+    private Integer exchangeIn;
     
     @Column(name = "CreatedByAgentID")
-    private Integer createdByAgentID;
+    private Integer createdByAgent;
 
     public Exchangeinprep() {
     }
 
-    public Exchangeinprep(Integer exchangeInPrepID) {
-        this.exchangeInPrepID = exchangeInPrepID;
+    public Exchangeinprep(Integer exchangeInPrepId) {
+        this.exchangeInPrepId = exchangeInPrepId;
     }
 
-    public Exchangeinprep(Integer exchangeInPrepID, Date timestampCreated, int disciplineID) {
+    public Exchangeinprep(Integer exchangeInPrepId, Date timestampCreated, int discipline) {
         super(timestampCreated);
-        this.exchangeInPrepID = exchangeInPrepID; 
-        this.disciplineID = disciplineID;
+        this.exchangeInPrepId = exchangeInPrepId; 
+        this.discipline = discipline;
     }
 
-    public Integer getExchangeInPrepID() {
-        return exchangeInPrepID;
+    public Integer getExchangeInPrepId() {
+        return exchangeInPrepId;
     }
 
-    public void setExchangeInPrepID(Integer exchangeInPrepID) {
-        this.exchangeInPrepID = exchangeInPrepID;
+    public void setExchangeInPrepId(Integer exchangeInPrepId) {
+        this.exchangeInPrepId = exchangeInPrepId;
     }
- 
+  
+    
     public String getComments() {
         return comments;
     }
@@ -158,50 +159,50 @@ public class Exchangeinprep extends BaseEntity {
         this.text2 = text2;
     }
 
-    public Integer getPreparationID() {
-        return preparationID;
+    public Integer getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setPreparationID(Integer preparationID) {
-        this.preparationID = preparationID;
+    public void setCreatedByAgent(Integer createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Integer getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public int getDiscipline() {
+        return discipline;
     }
 
-    public void setModifiedByAgentID(Integer modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setDiscipline(int discipline) {
+        this.discipline = discipline;
     }
 
-    public int getDisciplineID() {
-        return disciplineID;
+    public Integer getExchangeIn() {
+        return exchangeIn;
     }
 
-    public void setDisciplineID(int disciplineID) {
-        this.disciplineID = disciplineID;
+    public void setExchangeIn(Integer exchangeIn) {
+        this.exchangeIn = exchangeIn;
     }
 
-    public Integer getExchangeInID() {
-        return exchangeInID;
+    public Integer getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setExchangeInID(Integer exchangeInID) {
-        this.exchangeInID = exchangeInID;
+    public void setModifiedByAgent(Integer modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
 
-    public Integer getCreatedByAgentID() {
-        return createdByAgentID;
+    public Integer getPreparation() {
+        return preparation;
     }
 
-    public void setCreatedByAgentID(Integer createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setPreparation(Integer preparation) {
+        this.preparation = preparation;
     }
-
+ 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (exchangeInPrepID != null ? exchangeInPrepID.hashCode() : 0);
+        hash += (exchangeInPrepId != null ? exchangeInPrepId.hashCode() : 0);
         return hash;
     }
 
@@ -212,7 +213,7 @@ public class Exchangeinprep extends BaseEntity {
             return false;
         }
         Exchangeinprep other = (Exchangeinprep) object;
-        if ((this.exchangeInPrepID == null && other.exchangeInPrepID != null) || (this.exchangeInPrepID != null && !this.exchangeInPrepID.equals(other.exchangeInPrepID))) {
+        if ((this.exchangeInPrepId == null && other.exchangeInPrepId != null) || (this.exchangeInPrepId != null && !this.exchangeInPrepId.equals(other.exchangeInPrepId))) {
             return false;
         }
         return true;
@@ -220,7 +221,7 @@ public class Exchangeinprep extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Exchangeinprep[ exchangeInPrepID=" + exchangeInPrepID + " ]";
+        return "Exchangeinprep[ exchangeInPrepID=" + exchangeInPrepId + " ]";
     }
     
 }

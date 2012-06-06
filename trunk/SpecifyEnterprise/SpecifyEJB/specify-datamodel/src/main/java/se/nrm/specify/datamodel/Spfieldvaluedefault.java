@@ -25,11 +25,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Spfieldvaluedefault.findAll", query = "SELECT s FROM Spfieldvaluedefault s"),
-    @NamedQuery(name = "Spfieldvaluedefault.findBySpFieldValueDefaultID", query = "SELECT s FROM Spfieldvaluedefault s WHERE s.spFieldValueDefaultID = :spFieldValueDefaultID"),
+    @NamedQuery(name = "Spfieldvaluedefault.findBySpFieldValueDefaultID", query = "SELECT s FROM Spfieldvaluedefault s WHERE s.spFieldValueDefaultId = :spFieldValueDefaultID"),
     @NamedQuery(name = "Spfieldvaluedefault.findByTimestampCreated", query = "SELECT s FROM Spfieldvaluedefault s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Spfieldvaluedefault.findByTimestampModified", query = "SELECT s FROM Spfieldvaluedefault s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Spfieldvaluedefault.findByVersion", query = "SELECT s FROM Spfieldvaluedefault s WHERE s.version = :version"),
-    @NamedQuery(name = "Spfieldvaluedefault.findByCollectionMemberID", query = "SELECT s FROM Spfieldvaluedefault s WHERE s.collectionMemberID = :collectionMemberID"),
+    @NamedQuery(name = "Spfieldvaluedefault.findByCollectionMemberID", query = "SELECT s FROM Spfieldvaluedefault s WHERE s.collectionMemberId = :collectionMemberID"),
     @NamedQuery(name = "Spfieldvaluedefault.findByFieldName", query = "SELECT s FROM Spfieldvaluedefault s WHERE s.fieldName = :fieldName"),
     @NamedQuery(name = "Spfieldvaluedefault.findByIdValue", query = "SELECT s FROM Spfieldvaluedefault s WHERE s.idValue = :idValue"),
     @NamedQuery(name = "Spfieldvaluedefault.findByStrValue", query = "SELECT s FROM Spfieldvaluedefault s WHERE s.strValue = :strValue"),
@@ -43,12 +43,12 @@ public class Spfieldvaluedefault extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "SpFieldValueDefaultID")
-    private Integer spFieldValueDefaultID;
+    private Integer spFieldValueDefaultId;
      
     @Basic(optional = false)
     @NotNull
     @Column(name = "CollectionMemberID")
-    private int collectionMemberID;
+    private int collectionMemberId;
     
     @Size(max = 32)
     @Column(name = "FieldName")
@@ -67,41 +67,59 @@ public class Spfieldvaluedefault extends BaseEntity {
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
 
     public Spfieldvaluedefault() {
     }
 
-    public Spfieldvaluedefault(Integer spFieldValueDefaultID) {
-        this.spFieldValueDefaultID = spFieldValueDefaultID;
+    public Spfieldvaluedefault(Integer spFieldValueDefaultId) {
+        this.spFieldValueDefaultId = spFieldValueDefaultId;
     }
 
-    public Spfieldvaluedefault(Integer spFieldValueDefaultID, Date timestampCreated, int collectionMemberID) {
+    public Spfieldvaluedefault(Integer spFieldValueDefaultId, Date timestampCreated, int collectionMemberId) {
         super(timestampCreated);
-        this.spFieldValueDefaultID = spFieldValueDefaultID; 
-        this.collectionMemberID = collectionMemberID;
+        this.spFieldValueDefaultId = spFieldValueDefaultId; 
+        this.collectionMemberId = collectionMemberId;
     }
 
-    public Integer getSpFieldValueDefaultID() {
-        return spFieldValueDefaultID;
+    public int getCollectionMemberId() {
+        return collectionMemberId;
     }
 
-    public void setSpFieldValueDefaultID(Integer spFieldValueDefaultID) {
-        this.spFieldValueDefaultID = spFieldValueDefaultID;
-    } 
-
-    public int getCollectionMemberID() {
-        return collectionMemberID;
+    public void setCollectionMemberId(int collectionMemberId) {
+        this.collectionMemberId = collectionMemberId;
     }
 
-    public void setCollectionMemberID(int collectionMemberID) {
-        this.collectionMemberID = collectionMemberID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Integer getSpFieldValueDefaultId() {
+        return spFieldValueDefaultId;
+    }
+
+    public void setSpFieldValueDefaultId(Integer spFieldValueDefaultId) {
+        this.spFieldValueDefaultId = spFieldValueDefaultId;
+    }
+    
+    
+  
     public String getFieldName() {
         return fieldName;
     }
@@ -134,26 +152,11 @@ public class Spfieldvaluedefault extends BaseEntity {
         this.tableName = tableName;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
+    
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (spFieldValueDefaultID != null ? spFieldValueDefaultID.hashCode() : 0);
+        hash += (spFieldValueDefaultId != null ? spFieldValueDefaultId.hashCode() : 0);
         return hash;
     }
 
@@ -164,7 +167,7 @@ public class Spfieldvaluedefault extends BaseEntity {
             return false;
         }
         Spfieldvaluedefault other = (Spfieldvaluedefault) object;
-        if ((this.spFieldValueDefaultID == null && other.spFieldValueDefaultID != null) || (this.spFieldValueDefaultID != null && !this.spFieldValueDefaultID.equals(other.spFieldValueDefaultID))) {
+        if ((this.spFieldValueDefaultId == null && other.spFieldValueDefaultId != null) || (this.spFieldValueDefaultId != null && !this.spFieldValueDefaultId.equals(other.spFieldValueDefaultId))) {
             return false;
         }
         return true;
@@ -172,7 +175,7 @@ public class Spfieldvaluedefault extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Spfieldvaluedefault[ spFieldValueDefaultID=" + spFieldValueDefaultID + " ]";
+        return "Spfieldvaluedefault[ spFieldValueDefaultID=" + spFieldValueDefaultId + " ]";
     }
     
 }

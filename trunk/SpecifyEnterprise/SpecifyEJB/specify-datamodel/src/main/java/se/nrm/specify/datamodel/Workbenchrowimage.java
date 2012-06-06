@@ -1,19 +1,7 @@
 package se.nrm.specify.datamodel;
 
 import java.io.Serializable;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-//import javax.validation.constraints.NotNull;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -26,7 +14,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Workbenchrowimage.findAll", query = "SELECT w FROM Workbenchrowimage w"),
-    @NamedQuery(name = "Workbenchrowimage.findByWorkbenchRowImageID", query = "SELECT w FROM Workbenchrowimage w WHERE w.workbenchRowImageID = :workbenchRowImageID"),
+    @NamedQuery(name = "Workbenchrowimage.findByWorkbenchRowImageID", query = "SELECT w FROM Workbenchrowimage w WHERE w.workbenchRowImageId = :workbenchRowImageID"),
     @NamedQuery(name = "Workbenchrowimage.findByAttachToTableName", query = "SELECT w FROM Workbenchrowimage w WHERE w.attachToTableName = :attachToTableName"),
     @NamedQuery(name = "Workbenchrowimage.findByCardImageFullPath", query = "SELECT w FROM Workbenchrowimage w WHERE w.cardImageFullPath = :cardImageFullPath"),
     @NamedQuery(name = "Workbenchrowimage.findByImageOrder", query = "SELECT w FROM Workbenchrowimage w WHERE w.imageOrder = :imageOrder")})
@@ -39,7 +27,7 @@ public class Workbenchrowimage implements Serializable, SpecifyBean {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "WorkbenchRowImageID")
-    private Integer workbenchRowImageID;
+    private Integer workbenchRowImageId;
     
     @Size(max = 64)
     @Column(name = "AttachToTableName")
@@ -58,22 +46,31 @@ public class Workbenchrowimage implements Serializable, SpecifyBean {
     
     @JoinColumn(name = "WorkbenchRowID", referencedColumnName = "WorkbenchRowID")
     @ManyToOne(optional = false)
-    private Workbenchrow workbenchRowID;
+    private Workbenchrow workbenchRow;
 
     public Workbenchrowimage() {
     }
 
-    public Workbenchrowimage(Integer workbenchRowImageID) {
-        this.workbenchRowImageID = workbenchRowImageID;
+    public Workbenchrowimage(Integer workbenchRowImageId) {
+        this.workbenchRowImageId = workbenchRowImageId;
     }
 
-    public Integer getWorkbenchRowImageID() {
-        return workbenchRowImageID;
+    public Workbenchrow getWorkbenchRow() {
+        return workbenchRow;
     }
 
-    public void setWorkbenchRowImageID(Integer workbenchRowImageID) {
-        this.workbenchRowImageID = workbenchRowImageID;
+    public void setWorkbenchRow(Workbenchrow workbenchRow) {
+        this.workbenchRow = workbenchRow;
     }
+
+    public Integer getWorkbenchRowImageId() {
+        return workbenchRowImageId;
+    }
+
+    public void setWorkbenchRowImageId(Integer workbenchRowImageId) {
+        this.workbenchRowImageId = workbenchRowImageId;
+    }
+ 
 
     public String getAttachToTableName() {
         return attachToTableName;
@@ -107,18 +104,11 @@ public class Workbenchrowimage implements Serializable, SpecifyBean {
         this.imageOrder = imageOrder;
     }
 
-    public Workbenchrow getWorkbenchRowID() {
-        return workbenchRowID;
-    }
-
-    public void setWorkbenchRowID(Workbenchrow workbenchRowID) {
-        this.workbenchRowID = workbenchRowID;
-    }
-
+ 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (workbenchRowImageID != null ? workbenchRowImageID.hashCode() : 0);
+        hash += (workbenchRowImageId != null ? workbenchRowImageId.hashCode() : 0);
         return hash;
     }
 
@@ -129,7 +119,7 @@ public class Workbenchrowimage implements Serializable, SpecifyBean {
             return false;
         }
         Workbenchrowimage other = (Workbenchrowimage) object;
-        if ((this.workbenchRowImageID == null && other.workbenchRowImageID != null) || (this.workbenchRowImageID != null && !this.workbenchRowImageID.equals(other.workbenchRowImageID))) {
+        if ((this.workbenchRowImageId == null && other.workbenchRowImageId != null) || (this.workbenchRowImageId != null && !this.workbenchRowImageId.equals(other.workbenchRowImageId))) {
             return false;
         }
         return true;
@@ -137,7 +127,7 @@ public class Workbenchrowimage implements Serializable, SpecifyBean {
 
     @Override
     public String toString() {
-        return "se.nrm.specify.datamodel.Workbenchrowimage[ workbenchRowImageID=" + workbenchRowImageID + " ]";
+        return "se.nrm.specify.datamodel.Workbenchrowimage[ workbenchRowImageID=" + workbenchRowImageId + " ]";
     }
     
 }

@@ -1,19 +1,7 @@
 package se.nrm.specify.datamodel;
  
 import java.util.Date;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
-//import javax.validation.constraints.NotNull;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -26,7 +14,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Accessionauthorization.findAll", query = "SELECT a FROM Accessionauthorization a"),
-    @NamedQuery(name = "Accessionauthorization.findByAccessionAuthorizationID", query = "SELECT a FROM Accessionauthorization a WHERE a.accessionAuthorizationID = :accessionAuthorizationID"),
+    @NamedQuery(name = "Accessionauthorization.findByAccessionAuthorizationID", query = "SELECT a FROM Accessionauthorization a WHERE a.accessionAuthorizationId = :accessionAuthorizationID"),
     @NamedQuery(name = "Accessionauthorization.findByTimestampCreated", query = "SELECT a FROM Accessionauthorization a WHERE a.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Accessionauthorization.findByTimestampModified", query = "SELECT a FROM Accessionauthorization a WHERE a.timestampModified = :timestampModified"),
     @NamedQuery(name = "Accessionauthorization.findByVersion", query = "SELECT a FROM Accessionauthorization a WHERE a.version = :version")})
@@ -39,7 +27,7 @@ public class Accessionauthorization extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "AccessionAuthorizationID")
-    private Integer accessionAuthorizationID;
+    private Integer accessionAuthorizationId;
       
     @Lob
     @Size(max = 65535)
@@ -48,43 +36,45 @@ public class Accessionauthorization extends BaseEntity {
     
     @JoinColumn(name = "PermitID", referencedColumnName = "PermitID")
     @ManyToOne(optional = false)
-    private Permit permitID;
+    private Permit permit;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "RepositoryAgreementID", referencedColumnName = "RepositoryAgreementID")
     @ManyToOne
-    private Repositoryagreement repositoryAgreementID;
+    private Repositoryagreement repositoryAgreement;
     
     @JoinColumn(name = "AccessionID", referencedColumnName = "AccessionID")
     @ManyToOne
-    private Accession accessionID;
+    private Accession accession;
 
     public Accessionauthorization() {
     }
 
-    public Accessionauthorization(Integer accessionAuthorizationID) {
-        this.accessionAuthorizationID = accessionAuthorizationID;
+    public Accessionauthorization(Integer accessionAuthorizationId) {
+        this.accessionAuthorizationId = accessionAuthorizationId;
     }
 
-    public Accessionauthorization(Integer accessionAuthorizationID, Date timestampCreated) {
+    public Accessionauthorization(Integer accessionAuthorizationId, Date timestampCreated) {
         super(timestampCreated);
-        this.accessionAuthorizationID = accessionAuthorizationID; 
+        this.accessionAuthorizationId = accessionAuthorizationId; 
     }
 
-    public Integer getAccessionAuthorizationID() {
-        return accessionAuthorizationID;
+    public Integer getAccessionAuthorizationId() {
+        return accessionAuthorizationId;
     }
 
-    public void setAccessionAuthorizationID(Integer accessionAuthorizationID) {
-        this.accessionAuthorizationID = accessionAuthorizationID;
-    } 
+    public void setAccessionAuthorizationId(Integer accessionAuthorizationId) {
+        this.accessionAuthorizationId = accessionAuthorizationId;
+    }
+
+  
     
     public String getRemarks() {
         return remarks;
@@ -94,50 +84,53 @@ public class Accessionauthorization extends BaseEntity {
         this.remarks = remarks;
     }
 
-    public Permit getPermitID() {
-        return permitID;
+    public Accession getAccession() {
+        return accession;
     }
 
-    public void setPermitID(Permit permitID) {
-        this.permitID = permitID;
+    public void setAccession(Accession accession) {
+        this.accession = accession;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
 
-    public Repositoryagreement getRepositoryAgreementID() {
-        return repositoryAgreementID;
+    public Permit getPermit() {
+        return permit;
     }
 
-    public void setRepositoryAgreementID(Repositoryagreement repositoryAgreementID) {
-        this.repositoryAgreementID = repositoryAgreementID;
+    public void setPermit(Permit permit) {
+        this.permit = permit;
     }
 
-    public Accession getAccessionID() {
-        return accessionID;
+    public Repositoryagreement getRepositoryAgreement() {
+        return repositoryAgreement;
     }
 
-    public void setAccessionID(Accession accessionID) {
-        this.accessionID = accessionID;
+    public void setRepositoryAgreement(Repositoryagreement repositoryAgreement) {
+        this.repositoryAgreement = repositoryAgreement;
     }
+
+    
+     
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (accessionAuthorizationID != null ? accessionAuthorizationID.hashCode() : 0);
+        hash += (accessionAuthorizationId != null ? accessionAuthorizationId.hashCode() : 0);
         return hash;
     }
 
@@ -148,7 +141,7 @@ public class Accessionauthorization extends BaseEntity {
             return false;
         }
         Accessionauthorization other = (Accessionauthorization) object;
-        if ((this.accessionAuthorizationID == null && other.accessionAuthorizationID != null) || (this.accessionAuthorizationID != null && !this.accessionAuthorizationID.equals(other.accessionAuthorizationID))) {
+        if ((this.accessionAuthorizationId == null && other.accessionAuthorizationId != null) || (this.accessionAuthorizationId != null && !this.accessionAuthorizationId.equals(other.accessionAuthorizationId))) {
             return false;
         }
         return true;
@@ -156,7 +149,7 @@ public class Accessionauthorization extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Accessionauthorization[ accessionAuthorizationID=" + accessionAuthorizationID + " ]";
+        return "Accessionauthorization[ accessionAuthorizationID=" + accessionAuthorizationId + " ]";
     }
     
 }

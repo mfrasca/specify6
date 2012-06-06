@@ -2,24 +2,9 @@ package se.nrm.specify.datamodel;
  
 import java.util.Collection;
 import java.util.Date;
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table; 
-//import javax.validation.constraints.NotNull;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -30,7 +15,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Addressofrecord.findAll", query = "SELECT a FROM Addressofrecord a"),
-    @NamedQuery(name = "Addressofrecord.findByAddressOfRecordID", query = "SELECT a FROM Addressofrecord a WHERE a.addressOfRecordID = :addressOfRecordID"),
+    @NamedQuery(name = "Addressofrecord.findByAddressOfRecordID", query = "SELECT a FROM Addressofrecord a WHERE a.addressOfRecordId = :addressOfRecordID"),
     @NamedQuery(name = "Addressofrecord.findByTimestampCreated", query = "SELECT a FROM Addressofrecord a WHERE a.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Addressofrecord.findByTimestampModified", query = "SELECT a FROM Addressofrecord a WHERE a.timestampModified = :timestampModified"),
     @NamedQuery(name = "Addressofrecord.findByVersion", query = "SELECT a FROM Addressofrecord a WHERE a.version = :version"),
@@ -49,7 +34,7 @@ public class Addressofrecord extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "AddressOfRecordID")
-    private Integer addressOfRecordID;
+    private Integer addressOfRecordId;
  
     @Size(max = 255)
     @Column(name = "Address")
@@ -80,58 +65,60 @@ public class Addressofrecord extends BaseEntity {
     @Column(name = "State")
     private String state;
     
-    @OneToMany(mappedBy = "addressOfRecordID", cascade= CascadeType.ALL)
-    private Collection<Loan> loanCollection;
+    @OneToMany(mappedBy = "addressOfRecord", cascade= CascadeType.ALL)
+    private Collection<Loan> loans;
     
-    @OneToMany(mappedBy = "addressOfRecordID", cascade= CascadeType.ALL)
-    private Collection<Exchangein> exchangeinCollection;
+    @OneToMany(mappedBy = "addressOfRecord", cascade= CascadeType.ALL)
+    private Collection<Exchangein> exchangeIns;
     
-    @OneToMany(mappedBy = "addressOfRecordID", cascade= CascadeType.ALL)
-    private Collection<Gift> giftCollection;
+    @OneToMany(mappedBy = "addressOfRecord", cascade= CascadeType.ALL)
+    private Collection<Gift> gifts;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "AgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent agentID;
+    private Agent agent;
     
-    @OneToMany(mappedBy = "addressOfRecordID")
-    private Collection<Exchangeout> exchangeoutCollection;
+    @OneToMany(mappedBy = "addressOfRecord")
+    private Collection<Exchangeout> exchangeOuts;
     
-    @OneToMany(mappedBy = "addressOfRecordID")
-    private Collection<Repositoryagreement> repositoryagreementCollection;
+    @OneToMany(mappedBy = "addressOfRecord")
+    private Collection<Repositoryagreement> repositoryAgreements;
     
-    @OneToMany(mappedBy = "addressOfRecordID")
-    private Collection<Accession> accessionCollection;
+    @OneToMany(mappedBy = "addressOfRecord")
+    private Collection<Accession> accessions;
     
-    @OneToMany(mappedBy = "addressOfRecordID")
-    private Collection<Borrow> borrowCollection;
+    @OneToMany(mappedBy = "addressOfRecord")
+    private Collection<Borrow> borrows;
 
     public Addressofrecord() {
     }
 
-    public Addressofrecord(Integer addressOfRecordID) {
-        this.addressOfRecordID = addressOfRecordID;
+    public Addressofrecord(Integer addressOfRecordId) {
+        this.addressOfRecordId = addressOfRecordId;
     }
 
-    public Addressofrecord(Integer addressOfRecordID, Date timestampCreated) {
+    public Addressofrecord(Integer addressOfRecordId, Date timestampCreated) {
         super(timestampCreated);
-        this.addressOfRecordID = addressOfRecordID; 
+        this.addressOfRecordId = addressOfRecordId; 
     }
 
-    public Integer getAddressOfRecordID() {
-        return addressOfRecordID;
+    public Integer getAddressOfRecordId() {
+        return addressOfRecordId;
     }
 
-    public void setAddressOfRecordID(Integer addressOfRecordID) {
-        this.addressOfRecordID = addressOfRecordID;
-    } 
+    public void setAddressOfRecordId(Integer addressOfRecordId) {
+        this.addressOfRecordId = addressOfRecordId;
+    }
+
+ 
     
     public String getAddress() {
         return address;
@@ -189,97 +176,94 @@ public class Addressofrecord extends BaseEntity {
         this.state = state;
     }
 
-    @XmlTransient
-    public Collection<Loan> getLoanCollection() {
-        return loanCollection;
+ 
+
+    public Collection<Accession> getAccessions() {
+        return accessions;
     }
 
-    public void setLoanCollection(Collection<Loan> loanCollection) {
-        this.loanCollection = loanCollection;
+    public void setAccessions(Collection<Accession> accessions) {
+        this.accessions = accessions;
     }
 
-    @XmlTransient
-    public Collection<Exchangein> getExchangeinCollection() {
-        return exchangeinCollection;
+    public Agent getAgent() {
+        return agent;
     }
 
-    public void setExchangeinCollection(Collection<Exchangein> exchangeinCollection) {
-        this.exchangeinCollection = exchangeinCollection;
+    public void setAgent(Agent agent) {
+        this.agent = agent;
     }
 
-    @XmlTransient
-    public Collection<Gift> getGiftCollection() {
-        return giftCollection;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setGiftCollection(Collection<Gift> giftCollection) {
-        this.giftCollection = giftCollection;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Collection<Borrow> getBorrows() {
+        return borrows;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setBorrows(Collection<Borrow> borrows) {
+        this.borrows = borrows;
     }
 
-    public Agent getAgentID() {
-        return agentID;
+    public Collection<Exchangein> getExchangeIns() {
+        return exchangeIns;
     }
 
-    public void setAgentID(Agent agentID) {
-        this.agentID = agentID;
+    public void setExchangeIns(Collection<Exchangein> exchangeIns) {
+        this.exchangeIns = exchangeIns;
     }
 
-    @XmlTransient
-    public Collection<Exchangeout> getExchangeoutCollection() {
-        return exchangeoutCollection;
+    public Collection<Exchangeout> getExchangeOuts() {
+        return exchangeOuts;
     }
 
-    public void setExchangeoutCollection(Collection<Exchangeout> exchangeoutCollection) {
-        this.exchangeoutCollection = exchangeoutCollection;
+    public void setExchangeOuts(Collection<Exchangeout> exchangeOuts) {
+        this.exchangeOuts = exchangeOuts;
     }
 
-    @XmlTransient
-    public Collection<Repositoryagreement> getRepositoryagreementCollection() {
-        return repositoryagreementCollection;
+    public Collection<Gift> getGifts() {
+        return gifts;
     }
 
-    public void setRepositoryagreementCollection(Collection<Repositoryagreement> repositoryagreementCollection) {
-        this.repositoryagreementCollection = repositoryagreementCollection;
+    public void setGifts(Collection<Gift> gifts) {
+        this.gifts = gifts;
     }
 
-    @XmlTransient
-    public Collection<Accession> getAccessionCollection() {
-        return accessionCollection;
+    public Collection<Loan> getLoans() {
+        return loans;
     }
 
-    public void setAccessionCollection(Collection<Accession> accessionCollection) {
-        this.accessionCollection = accessionCollection;
+    public void setLoans(Collection<Loan> loans) {
+        this.loans = loans;
     }
 
-    @XmlTransient
-    public Collection<Borrow> getBorrowCollection() {
-        return borrowCollection;
+    public Collection<Repositoryagreement> getRepositoryAgreements() {
+        return repositoryAgreements;
     }
 
-    public void setBorrowCollection(Collection<Borrow> borrowCollection) {
-        this.borrowCollection = borrowCollection;
+    public void setRepositoryAgreements(Collection<Repositoryagreement> repositoryAgreements) {
+        this.repositoryAgreements = repositoryAgreements;
     }
 
+    
+ 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (addressOfRecordID != null ? addressOfRecordID.hashCode() : 0);
+        hash += (addressOfRecordId != null ? addressOfRecordId.hashCode() : 0);
         return hash;
     }
 
@@ -290,7 +274,7 @@ public class Addressofrecord extends BaseEntity {
             return false;
         }
         Addressofrecord other = (Addressofrecord) object;
-        if ((this.addressOfRecordID == null && other.addressOfRecordID != null) || (this.addressOfRecordID != null && !this.addressOfRecordID.equals(other.addressOfRecordID))) {
+        if ((this.addressOfRecordId == null && other.addressOfRecordId != null) || (this.addressOfRecordId != null && !this.addressOfRecordId.equals(other.addressOfRecordId))) {
             return false;
         }
         return true;
@@ -298,7 +282,7 @@ public class Addressofrecord extends BaseEntity {
 
     @Override
     public String toString() {
-        return "se.nrm.specify.datamodel.Addressofrecord[ addressOfRecordID=" + addressOfRecordID + " ]";
+        return "se.nrm.specify.datamodel.Addressofrecord[ addressOfRecordId=" + addressOfRecordId + " ]";
     }
     
 }

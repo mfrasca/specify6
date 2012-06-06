@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Localitydetail.findAll", query = "SELECT l FROM Localitydetail l"),
-    @NamedQuery(name = "Localitydetail.findByLocalityDetailID", query = "SELECT l FROM Localitydetail l WHERE l.localityDetailID = :localityDetailID"),
+    @NamedQuery(name = "Localitydetail.findByLocalityDetailID", query = "SELECT l FROM Localitydetail l WHERE l.localityDetailId = :localityDetailID"),
     @NamedQuery(name = "Localitydetail.findByTimestampCreated", query = "SELECT l FROM Localitydetail l WHERE l.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Localitydetail.findByTimestampModified", query = "SELECT l FROM Localitydetail l WHERE l.timestampModified = :timestampModified"),
     @NamedQuery(name = "Localitydetail.findByVersion", query = "SELECT l FROM Localitydetail l WHERE l.version = :version"),
@@ -73,7 +73,7 @@ public class Localitydetail extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "LocalityDetailID")
-    private Integer localityDetailID;
+    private Integer localityDetailId;
      
     @Size(max = 50)
     @Column(name = "BaseMeridian")
@@ -209,35 +209,29 @@ public class Localitydetail extends BaseEntity {
     
     @JoinColumn(name = "LocalityID", referencedColumnName = "LocalityID")
     @ManyToOne
-    private Locality localityID;
+    private Locality locality;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
 
     public Localitydetail() {
     }
 
-    public Localitydetail(Integer localityDetailID) {
-        this.localityDetailID = localityDetailID;
+    public Localitydetail(Integer localityDetailId) {
+        this.localityDetailId = localityDetailId;
     }
 
-    public Localitydetail(Integer localityDetailID, Date timestampCreated) {
+    public Localitydetail(Integer localityDetailId, Date timestampCreated) {
         super(timestampCreated);
-        this.localityDetailID = localityDetailID; 
+        this.localityDetailId = localityDetailId; 
     }
 
-    public Integer getLocalityDetailID() {
-        return localityDetailID;
-    }
-
-    public void setLocalityDetailID(Integer localityDetailID) {
-        this.localityDetailID = localityDetailID;
-    }
+    
  
     public String getBaseMeridian() {
         return baseMeridian;
@@ -527,34 +521,44 @@ public class Localitydetail extends BaseEntity {
         this.mgrsZone = mgrsZone;
     }
 
-    public Locality getLocalityID() {
-        return localityID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setLocalityID(Locality localityID) {
-        this.localityID = localityID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Locality getLocality() {
+        return locality;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setLocality(Locality locality) {
+        this.locality = locality;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Integer getLocalityDetailId() {
+        return localityDetailId;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setLocalityDetailId(Integer localityDetailId) {
+        this.localityDetailId = localityDetailId;
     }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+   
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (localityDetailID != null ? localityDetailID.hashCode() : 0);
+        hash += (localityDetailId != null ? localityDetailId.hashCode() : 0);
         return hash;
     }
 
@@ -565,7 +569,7 @@ public class Localitydetail extends BaseEntity {
             return false;
         }
         Localitydetail other = (Localitydetail) object;
-        if ((this.localityDetailID == null && other.localityDetailID != null) || (this.localityDetailID != null && !this.localityDetailID.equals(other.localityDetailID))) {
+        if ((this.localityDetailId == null && other.localityDetailId != null) || (this.localityDetailId != null && !this.localityDetailId.equals(other.localityDetailId))) {
             return false;
         }
         return true;
@@ -573,7 +577,7 @@ public class Localitydetail extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Localitydetail[ localityDetailID=" + localityDetailID + " ]";
+        return "Localitydetail[ localityDetailID=" + localityDetailId + " ]";
     }
     
 }

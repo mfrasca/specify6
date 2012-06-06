@@ -64,27 +64,27 @@ public class Spreport extends BaseEntity {
     
     @JoinColumn(name = "SpQueryID", referencedColumnName = "SpQueryID")
     @ManyToOne
-    private Spquery spQueryID;
+    private Spquery query;
     
     @JoinColumn(name = "WorkbenchTemplateID", referencedColumnName = "WorkbenchTemplateID")
     @ManyToOne
-    private Workbenchtemplate workbenchTemplateID;
+    private Workbenchtemplate workbenchTemplate;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "SpecifyUserID", referencedColumnName = "SpecifyUserID")
     @ManyToOne(optional = false)
-    private Specifyuser specifyUserID;
+    private Specifyuser specifyUser;
     
     @JoinColumn(name = "AppResourceID", referencedColumnName = "SpAppResourceID")
     @ManyToOne(optional = false)
-    private Spappresource appResourceID;
+    private Spappresource appResource;
 
     public Spreport() {
     }
@@ -139,53 +139,55 @@ public class Spreport extends BaseEntity {
         this.repeatField = repeatField;
     }
 
-    public Spquery getSpQueryID() {
-        return spQueryID;
+    public Spappresource getAppResource() {
+        return appResource;
     }
 
-    public void setSpQueryID(Spquery spQueryID) {
-        this.spQueryID = spQueryID;
+    public void setAppResource(Spappresource appResource) {
+        this.appResource = appResource;
     }
 
-    public Workbenchtemplate getWorkbenchTemplateID() {
-        return workbenchTemplateID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setWorkbenchTemplateID(Workbenchtemplate workbenchTemplateID) {
-        this.workbenchTemplateID = workbenchTemplateID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Spquery getQuery() {
+        return query;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setQuery(Spquery query) {
+        this.query = query;
     }
 
-    public Specifyuser getSpecifyUserID() {
-        return specifyUserID;
+    public Specifyuser getSpecifyUser() {
+        return specifyUser;
     }
 
-    public void setSpecifyUserID(Specifyuser specifyUserID) {
-        this.specifyUserID = specifyUserID;
+    public void setSpecifyUser(Specifyuser specifyUser) {
+        this.specifyUser = specifyUser;
     }
 
-    public Spappresource getAppResourceID() {
-        return appResourceID;
+    public Workbenchtemplate getWorkbenchTemplate() {
+        return workbenchTemplate;
     }
 
-    public void setAppResourceID(Spappresource appResourceID) {
-        this.appResourceID = appResourceID;
+    public void setWorkbenchTemplate(Workbenchtemplate workbenchTemplate) {
+        this.workbenchTemplate = workbenchTemplate;
     }
+
+    
 
     @Override
     public int hashCode() {

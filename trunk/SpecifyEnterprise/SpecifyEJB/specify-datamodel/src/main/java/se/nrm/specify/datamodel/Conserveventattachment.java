@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Conserveventattachment.findAll", query = "SELECT c FROM Conserveventattachment c"),
-    @NamedQuery(name = "Conserveventattachment.findByConservEventAttachmentID", query = "SELECT c FROM Conserveventattachment c WHERE c.conservEventAttachmentID = :conservEventAttachmentID"),
+    @NamedQuery(name = "Conserveventattachment.findByConservEventAttachmentID", query = "SELECT c FROM Conserveventattachment c WHERE c.conservEventAttachmentId = :conservEventAttachmentID"),
     @NamedQuery(name = "Conserveventattachment.findByTimestampCreated", query = "SELECT c FROM Conserveventattachment c WHERE c.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Conserveventattachment.findByTimestampModified", query = "SELECT c FROM Conserveventattachment c WHERE c.timestampModified = :timestampModified"),
     @NamedQuery(name = "Conserveventattachment.findByVersion", query = "SELECT c FROM Conserveventattachment c WHERE c.version = :version"),
@@ -40,7 +40,7 @@ public class Conserveventattachment extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "ConservEventAttachmentID")
-    private Integer conservEventAttachmentID;
+    private Integer conservEventAttachmentId;
       
     @Column(name = "Ordinal")
     private Integer ordinal;
@@ -52,39 +52,73 @@ public class Conserveventattachment extends BaseEntity {
     
     @JoinColumn(name = "ConservEventID", referencedColumnName = "ConservEventID")
     @ManyToOne(optional = false)
-    private Conservevent conservEventID;
+    private Conservevent conservEvent;
     
     @JoinColumn(name = "AttachmentID", referencedColumnName = "AttachmentID")
     @ManyToOne(optional = false)
-    private Attachment attachmentID;
+    private Attachment attachment;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
 
     public Conserveventattachment() {
     }
 
-    public Conserveventattachment(Integer conservEventAttachmentID) {
-        this.conservEventAttachmentID = conservEventAttachmentID;
+    public Conserveventattachment(Integer conservEventAttachmentId) {
+        this.conservEventAttachmentId = conservEventAttachmentId;
     }
 
-    public Conserveventattachment(Integer conservEventAttachmentID, Date timestampCreated) {
+    public Conserveventattachment(Integer conservEventAttachmentId, Date timestampCreated) {
         super(timestampCreated);
-        this.conservEventAttachmentID = conservEventAttachmentID; 
+        this.conservEventAttachmentId = conservEventAttachmentId; 
     }
 
-    public Integer getConservEventAttachmentID() {
-        return conservEventAttachmentID;
+    public Attachment getAttachment() {
+        return attachment;
     }
 
-    public void setConservEventAttachmentID(Integer conservEventAttachmentID) {
-        this.conservEventAttachmentID = conservEventAttachmentID;
+    public void setAttachment(Attachment attachment) {
+        this.attachment = attachment;
     }
+
+    public Conservevent getConservEvent() {
+        return conservEvent;
+    }
+
+    public void setConservEvent(Conservevent conservEvent) {
+        this.conservEvent = conservEvent;
+    }
+
+    public Integer getConservEventAttachmentId() {
+        return conservEventAttachmentId;
+    }
+
+    public void setConservEventAttachmentId(Integer conservEventAttachmentId) {
+        this.conservEventAttachmentId = conservEventAttachmentId;
+    }
+
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
+    }
+
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    
   
     public Integer getOrdinal() {
         return ordinal;
@@ -101,43 +135,12 @@ public class Conserveventattachment extends BaseEntity {
     public void setRemarks(String remarks) {
         this.remarks = remarks;
     }
-
-    public Conservevent getConservEventID() {
-        return conservEventID;
-    }
-
-    public void setConservEventID(Conservevent conservEventID) {
-        this.conservEventID = conservEventID;
-    }
-
-    public Attachment getAttachmentID() {
-        return attachmentID;
-    }
-
-    public void setAttachmentID(Attachment attachmentID) {
-        this.attachmentID = attachmentID;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (conservEventAttachmentID != null ? conservEventAttachmentID.hashCode() : 0);
+        hash += (conservEventAttachmentId != null ? conservEventAttachmentId.hashCode() : 0);
         return hash;
     }
 
@@ -148,7 +151,7 @@ public class Conserveventattachment extends BaseEntity {
             return false;
         }
         Conserveventattachment other = (Conserveventattachment) object;
-        if ((this.conservEventAttachmentID == null && other.conservEventAttachmentID != null) || (this.conservEventAttachmentID != null && !this.conservEventAttachmentID.equals(other.conservEventAttachmentID))) {
+        if ((this.conservEventAttachmentId == null && other.conservEventAttachmentId != null) || (this.conservEventAttachmentId != null && !this.conservEventAttachmentId.equals(other.conservEventAttachmentId))) {
             return false;
         }
         return true;
@@ -156,7 +159,7 @@ public class Conserveventattachment extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Conserveventattachment[ conservEventAttachmentID=" + conservEventAttachmentID + " ]";
+        return "Conserveventattachment[ conservEventAttachmentId=" + conservEventAttachmentId + " ]";
     }
     
 }

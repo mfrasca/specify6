@@ -26,11 +26,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Collectionobjectcitation.findAll", query = "SELECT c FROM Collectionobjectcitation c"),
-    @NamedQuery(name = "Collectionobjectcitation.findByCollectionObjectCitationID", query = "SELECT c FROM Collectionobjectcitation c WHERE c.collectionObjectCitationID = :collectionObjectCitationID"),
+    @NamedQuery(name = "Collectionobjectcitation.findByCollectionObjectCitationID", query = "SELECT c FROM Collectionobjectcitation c WHERE c.collectionObjectCitationId = :collectionObjectCitationID"),
     @NamedQuery(name = "Collectionobjectcitation.findByTimestampCreated", query = "SELECT c FROM Collectionobjectcitation c WHERE c.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Collectionobjectcitation.findByTimestampModified", query = "SELECT c FROM Collectionobjectcitation c WHERE c.timestampModified = :timestampModified"),
     @NamedQuery(name = "Collectionobjectcitation.findByVersion", query = "SELECT c FROM Collectionobjectcitation c WHERE c.version = :version"),
-    @NamedQuery(name = "Collectionobjectcitation.findByCollectionMemberID", query = "SELECT c FROM Collectionobjectcitation c WHERE c.collectionMemberID = :collectionMemberID"),
+    @NamedQuery(name = "Collectionobjectcitation.findByCollectionMemberID", query = "SELECT c FROM Collectionobjectcitation c WHERE c.collectionMemberId = :collectionMemberID"),
     @NamedQuery(name = "Collectionobjectcitation.findByIsFigured", query = "SELECT c FROM Collectionobjectcitation c WHERE c.isFigured = :isFigured")})
 public class Collectionobjectcitation extends BaseEntity { 
     
@@ -41,12 +41,12 @@ public class Collectionobjectcitation extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "CollectionObjectCitationID")
-    private Integer collectionObjectCitationID;
+    private Integer collectionObjectCitationId;
       
     @Basic(optional = false)
     @NotNull
     @Column(name = "CollectionMemberID")
-    private int collectionMemberID;
+    private int collectionMemberId;
     
     @Column(name = "IsFigured")
     private Boolean isFigured;
@@ -58,49 +58,50 @@ public class Collectionobjectcitation extends BaseEntity {
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "CollectionObjectID", referencedColumnName = "CollectionObjectID")
     @ManyToOne(optional = false)
-    private Collectionobject collectionObjectID;
+    private Collectionobject collectionObject;
     
     @JoinColumn(name = "ReferenceWorkID", referencedColumnName = "ReferenceWorkID")
     @ManyToOne(optional = false)
-    private Referencework referenceWorkID;
+    private Referencework referenceWork;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
 
     public Collectionobjectcitation() {
     }
 
-    public Collectionobjectcitation(Integer collectionObjectCitationID) {
-        this.collectionObjectCitationID = collectionObjectCitationID;
+    public Collectionobjectcitation(Integer collectionObjectCitationId) {
+        this.collectionObjectCitationId = collectionObjectCitationId;
     }
 
-    public Collectionobjectcitation(Integer collectionObjectCitationID, Date timestampCreated, int collectionMemberID) {
+    public Collectionobjectcitation(Integer collectionObjectCitationId, Date timestampCreated, int collectionMemberId) {
         super(timestampCreated);
-        this.collectionObjectCitationID = collectionObjectCitationID; 
-        this.collectionMemberID = collectionMemberID;
+        this.collectionObjectCitationId = collectionObjectCitationId; 
+        this.collectionMemberId = collectionMemberId;
     }
 
-    public Integer getCollectionObjectCitationID() {
-        return collectionObjectCitationID;
+    public int getCollectionMemberId() {
+        return collectionMemberId;
     }
 
-    public void setCollectionObjectCitationID(Integer collectionObjectCitationID) {
-        this.collectionObjectCitationID = collectionObjectCitationID;
+    public void setCollectionMemberId(int collectionMemberId) {
+        this.collectionMemberId = collectionMemberId;
     }
+
+    public Integer getCollectionObjectCitationId() {
+        return collectionObjectCitationId;
+    }
+
+    public void setCollectionObjectCitationId(Integer collectionObjectCitationId) {
+        this.collectionObjectCitationId = collectionObjectCitationId;
+    }
+
  
-    public int getCollectionMemberID() {
-        return collectionMemberID;
-    }
-
-    public void setCollectionMemberID(int collectionMemberID) {
-        this.collectionMemberID = collectionMemberID;
-    }
-
     public Boolean getIsFigured() {
         return isFigured;
     }
@@ -117,42 +118,46 @@ public class Collectionobjectcitation extends BaseEntity {
         this.remarks = remarks;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Collectionobject getCollectionObject() {
+        return collectionObject;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setCollectionObject(Collectionobject collectionObject) {
+        this.collectionObject = collectionObject;
     }
 
-    public Collectionobject getCollectionObjectID() {
-        return collectionObjectID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setCollectionObjectID(Collectionobject collectionObjectID) {
-        this.collectionObjectID = collectionObjectID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Referencework getReferenceWorkID() {
-        return referenceWorkID;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setReferenceWorkID(Referencework referenceWorkID) {
-        this.referenceWorkID = referenceWorkID;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Referencework getReferenceWork() {
+        return referenceWork;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setReferenceWork(Referencework referenceWork) {
+        this.referenceWork = referenceWork;
     }
+
+ 
+
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (collectionObjectCitationID != null ? collectionObjectCitationID.hashCode() : 0);
+        hash += (collectionObjectCitationId != null ? collectionObjectCitationId.hashCode() : 0);
         return hash;
     }
 
@@ -163,7 +168,7 @@ public class Collectionobjectcitation extends BaseEntity {
             return false;
         }
         Collectionobjectcitation other = (Collectionobjectcitation) object;
-        if ((this.collectionObjectCitationID == null && other.collectionObjectCitationID != null) || (this.collectionObjectCitationID != null && !this.collectionObjectCitationID.equals(other.collectionObjectCitationID))) {
+        if ((this.collectionObjectCitationId == null && other.collectionObjectCitationId != null) || (this.collectionObjectCitationId != null && !this.collectionObjectCitationId.equals(other.collectionObjectCitationId))) {
             return false;
         }
         return true;
@@ -171,7 +176,7 @@ public class Collectionobjectcitation extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Collectionobjectcitation[ collectionObjectCitationID=" + collectionObjectCitationID + " ]";
+        return "Collectionobjectcitation[ collectionObjectCitationID=" + collectionObjectCitationId + " ]";
     }
     
 }

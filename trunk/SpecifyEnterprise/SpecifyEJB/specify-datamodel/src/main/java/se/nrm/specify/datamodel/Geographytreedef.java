@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Geographytreedef.findAll", query = "SELECT g FROM Geographytreedef g"),
-    @NamedQuery(name = "Geographytreedef.findByGeographyTreeDefID", query = "SELECT g FROM Geographytreedef g WHERE g.geographyTreeDefID = :geographyTreeDefID"),
+    @NamedQuery(name = "Geographytreedef.findByGeographyTreeDefID", query = "SELECT g FROM Geographytreedef g WHERE g.geographyTreeDefId = :geographyTreeDefID"),
     @NamedQuery(name = "Geographytreedef.findByTimestampCreated", query = "SELECT g FROM Geographytreedef g WHERE g.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Geographytreedef.findByTimestampModified", query = "SELECT g FROM Geographytreedef g WHERE g.timestampModified = :timestampModified"),
     @NamedQuery(name = "Geographytreedef.findByVersion", query = "SELECT g FROM Geographytreedef g WHERE g.version = :version"),
@@ -45,7 +45,7 @@ public class Geographytreedef extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "GeographyTreeDefID")
-    private Integer geographyTreeDefID;
+    private Integer geographyTreeDefId;
      
     @Column(name = "FullNameDirection")
     private Integer fullNameDirection;
@@ -63,41 +63,59 @@ public class Geographytreedef extends BaseEntity {
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "geographyTreeDefID")
-    private Collection<Geographytreedefitem> geographytreedefitemCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "treeDef")
+    private Collection<Geographytreedefitem> treeDefItems;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "geographyTreeDefID")
-    private Collection<Geography> geographyCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "definition")
+    private Collection<Geography> treeEntries;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "geographyTreeDefID")
-    private Collection<Discipline> disciplineCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "geographyTreeDef")
+    private Collection<Discipline> disciplines;
 
     public Geographytreedef() {
     }
 
-    public Geographytreedef(Integer geographyTreeDefID) {
-        this.geographyTreeDefID = geographyTreeDefID;
+    public Geographytreedef(Integer geographyTreeDefId) {
+        this.geographyTreeDefId = geographyTreeDefId;
     }
 
-    public Geographytreedef(Integer geographyTreeDefID, Date timestampCreated, String name) {
+    public Geographytreedef(Integer geographyTreeDefId, Date timestampCreated, String name) {
         super(timestampCreated);
-        this.geographyTreeDefID = geographyTreeDefID; 
+        this.geographyTreeDefId = geographyTreeDefId; 
         this.name = name;
     }
 
-    public Integer getGeographyTreeDefID() {
-        return geographyTreeDefID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setGeographyTreeDefID(Integer geographyTreeDefID) {
-        this.geographyTreeDefID = geographyTreeDefID;
-    } 
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Integer getGeographyTreeDefId() {
+        return geographyTreeDefId;
+    }
+
+    public void setGeographyTreeDefId(Integer geographyTreeDefId) {
+        this.geographyTreeDefId = geographyTreeDefId;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+ 
     
     public Integer getFullNameDirection() {
         return fullNameDirection;
@@ -123,53 +141,40 @@ public class Geographytreedef extends BaseEntity {
         this.remarks = remarks;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    @XmlTransient
+    public Collection<Discipline> getDisciplines() {
+        return disciplines;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setDisciplines(Collection<Discipline> disciplines) {
+        this.disciplines = disciplines;
     }
 
     @XmlTransient
-    public Collection<Geographytreedefitem> getGeographytreedefitemCollection() {
-        return geographytreedefitemCollection;
+    public Collection<Geographytreedefitem> getTreeDefItems() {
+        return treeDefItems;
     }
 
-    public void setGeographytreedefitemCollection(Collection<Geographytreedefitem> geographytreedefitemCollection) {
-        this.geographytreedefitemCollection = geographytreedefitemCollection;
-    }
-
-    @XmlTransient
-    public Collection<Geography> getGeographyCollection() {
-        return geographyCollection;
-    }
-
-    public void setGeographyCollection(Collection<Geography> geographyCollection) {
-        this.geographyCollection = geographyCollection;
+    public void setTreeDefItems(Collection<Geographytreedefitem> treeDefItems) {
+        this.treeDefItems = treeDefItems;
     }
 
     @XmlTransient
-    public Collection<Discipline> getDisciplineCollection() {
-        return disciplineCollection;
+    public Collection<Geography> getTreeEntries() {
+        return treeEntries;
     }
 
-    public void setDisciplineCollection(Collection<Discipline> disciplineCollection) {
-        this.disciplineCollection = disciplineCollection;
+    public void setTreeEntries(Collection<Geography> treeEntries) {
+        this.treeEntries = treeEntries;
     }
+
+   
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (geographyTreeDefID != null ? geographyTreeDefID.hashCode() : 0);
+        hash += (geographyTreeDefId != null ? geographyTreeDefId.hashCode() : 0);
         return hash;
     }
 
@@ -180,7 +185,7 @@ public class Geographytreedef extends BaseEntity {
             return false;
         }
         Geographytreedef other = (Geographytreedef) object;
-        if ((this.geographyTreeDefID == null && other.geographyTreeDefID != null) || (this.geographyTreeDefID != null && !this.geographyTreeDefID.equals(other.geographyTreeDefID))) {
+        if ((this.geographyTreeDefId == null && other.geographyTreeDefId != null) || (this.geographyTreeDefId != null && !this.geographyTreeDefId.equals(other.geographyTreeDefId))) {
             return false;
         }
         return true;
@@ -188,7 +193,7 @@ public class Geographytreedef extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Geographytreedef[ geographyTreeDefID=" + geographyTreeDefID + " ]";
+        return "Geographytreedef[ geographyTreeDefID=" + geographyTreeDefId + " ]";
     }
     
 }

@@ -33,11 +33,11 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Preparation.findAll", query = "SELECT p FROM Preparation p"),
-    @NamedQuery(name = "Preparation.findByPreparationID", query = "SELECT p FROM Preparation p WHERE p.preparationID = :preparationID"),
+    @NamedQuery(name = "Preparation.findByPreparationID", query = "SELECT p FROM Preparation p WHERE p.preparationId = :preparationID"),
     @NamedQuery(name = "Preparation.findByTimestampCreated", query = "SELECT p FROM Preparation p WHERE p.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Preparation.findByTimestampModified", query = "SELECT p FROM Preparation p WHERE p.timestampModified = :timestampModified"),
     @NamedQuery(name = "Preparation.findByVersion", query = "SELECT p FROM Preparation p WHERE p.version = :version"),
-    @NamedQuery(name = "Preparation.findByCollectionMemberID", query = "SELECT p FROM Preparation p WHERE p.collectionMemberID = :collectionMemberID"),
+    @NamedQuery(name = "Preparation.findByCollectionMemberID", query = "SELECT p FROM Preparation p WHERE p.collectionMemberId = :collectionMemberID"),
     @NamedQuery(name = "Preparation.findByCountAmt", query = "SELECT p FROM Preparation p WHERE p.countAmt = :countAmt"),
     @NamedQuery(name = "Preparation.findByDescription", query = "SELECT p FROM Preparation p WHERE p.description = :description"),
     @NamedQuery(name = "Preparation.findByNumber1", query = "SELECT p FROM Preparation p WHERE p.number1 = :number1"),
@@ -59,12 +59,12 @@ public class Preparation extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "PreparationID")
-    private Integer preparationID;
+    private Integer preparationId;
  
     @Basic(optional = false)
     @NotNull
     @Column(name = "CollectionMemberID")
-    private int collectionMemberID;
+    private int collectionMemberId;
     
     @Column(name = "CountAmt")
     private Integer countAmt;
@@ -125,76 +125,60 @@ public class Preparation extends BaseEntity {
     
     @JoinColumn(name = "PreparedByID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent preparedByAgentID;            // change name to match common.view.xml
+    private Agent preparedByAgent;            // change name to match common.view.xml
     
     @JoinColumn(name = "StorageID", referencedColumnName = "StorageID")
     @ManyToOne
-    private Storage storageID;
+    private Storage storage;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "CollectionObjectID", referencedColumnName = "CollectionObjectID")
     @ManyToOne(optional = false)
-    private Collectionobject collectionObjectID;
+    private Collectionobject collectionObject;
     
     @JoinColumn(name = "PrepTypeID", referencedColumnName = "PrepTypeID")
     @ManyToOne(optional = false, cascade= CascadeType.ALL)
-    private Preptype prepTypeID;
+    private Preptype prepType;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "PreparationAttributeID", referencedColumnName = "PreparationAttributeID")
     @ManyToOne
-    private Preparationattribute preparationAttributeID;
+    private Preparationattribute preparationAttribute;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "preparationID")
-    private Collection<Preparationattachment> preparationattachmentCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "preparation")
+    private Collection<Preparationattachment> preparationAttachments;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "preparationId")
-    private Collection<Preparationattr> preparationattrCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "preparation")
+    private Collection<Preparationattr> preparationAttrs;
     
-    @OneToMany(mappedBy = "preparationID")
-    private Collection<Giftpreparation> giftpreparationCollection;
+    @OneToMany(mappedBy = "preparation")
+    private Collection<Giftpreparation> giftPreparations;
     
-    @OneToMany(mappedBy = "preparationID")
-    private Collection<Deaccessionpreparation> deaccessionpreparationCollection;
+    @OneToMany(mappedBy = "preparation")
+    private Collection<Deaccessionpreparation> deaccessionPreparations;
     
-    @OneToMany(mappedBy = "preparationID")
-    private Collection<Loanpreparation> loanpreparationCollection;
+    @OneToMany(mappedBy = "preparation")
+    private Collection<Loanpreparation> loanPreparations;
 
     public Preparation() {
     }
 
-    public Preparation(Integer preparationID) {
-        this.preparationID = preparationID;
+    public Preparation(Integer preparationId) {
+        this.preparationId = preparationId;
     }
 
-    public Preparation(Integer preparationID, Date timestampCreated, int collectionMemberID) {
+    public Preparation(Integer preparationId, Date timestampCreated, int collectionMemberId) {
         super(timestampCreated);
-        this.preparationID = preparationID; 
-        this.collectionMemberID = collectionMemberID;
-    }
-
-    public Integer getPreparationID() {
-        return preparationID;
-    }
-
-    public void setPreparationID(Integer preparationID) {
-        this.preparationID = preparationID;
+        this.preparationId = preparationId; 
+        this.collectionMemberId = collectionMemberId;
     }
  
-    public int getCollectionMemberID() {
-        return collectionMemberID;
-    }
-
-    public void setCollectionMemberID(int collectionMemberID) {
-        this.collectionMemberID = collectionMemberID;
-    }
-
     public Integer getCountAmt() {
         return countAmt;
     }
@@ -315,107 +299,126 @@ public class Preparation extends BaseEntity {
         this.yesNo3 = yesNo3;
     }
 
-    public Agent getPreparedByID() {
-        return preparedByAgentID;
+    public int getCollectionMemberId() {
+        return collectionMemberId;
     }
 
-    public void setPreparedByID(Agent preparedByID) {
-        this.preparedByAgentID = preparedByID;
-    }
-
-    public Storage getStorageID() {
-        return storageID;
-    }
-
-    public void setStorageID(Storage storageID) {
-        this.storageID = storageID;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setCollectionMemberId(int collectionMemberId) {
+        this.collectionMemberId = collectionMemberId;
     }
 
     @XmlTransient
-    public Collectionobject getCollectionObjectID() {
-        return collectionObjectID;
+    public Collectionobject getCollectionObject() {
+        return collectionObject;
     }
 
-    public void setCollectionObjectID(Collectionobject collectionObjectID) {
-        this.collectionObjectID = collectionObjectID;
+    public void setCollectionObject(Collectionobject collectionObject) {
+        this.collectionObject = collectionObject;
     }
+
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
+    }
+
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Preptype getPrepType() {
+        return prepType;
+    }
+
+    public void setPrepType(Preptype prepType) {
+        this.prepType = prepType;
+    }
+
+    public Preparationattribute getPreparationAttribute() {
+        return preparationAttribute;
+    }
+
+    public void setPreparationAttribute(Preparationattribute preparationAttribute) {
+        this.preparationAttribute = preparationAttribute;
+    }
+
+    public Integer getPreparationId() {
+        return preparationId;
+    }
+
+    public void setPreparationId(Integer preparationId) {
+        this.preparationId = preparationId;
+    }
+
+    public Agent getPreparedByAgent() {
+        return preparedByAgent;
+    }
+
+    public void setPreparedByAgent(Agent preparedByAgent) {
+        this.preparedByAgent = preparedByAgent;
+    }
+
+    public Storage getStorage() {
+        return storage;
+    }
+
+    public void setStorage(Storage storage) {
+        this.storage = storage;
+    }
+
+    public Collection<Deaccessionpreparation> getDeaccessionPreparations() {
+        return deaccessionPreparations;
+    }
+
+    public void setDeaccessionPreparations(Collection<Deaccessionpreparation> deaccessionPreparations) {
+        this.deaccessionPreparations = deaccessionPreparations;
+    }
+
+    public Collection<Giftpreparation> getGiftPreparations() {
+        return giftPreparations;
+    }
+
+    public void setGiftPreparations(Collection<Giftpreparation> giftPreparations) {
+        this.giftPreparations = giftPreparations;
+    }
+
+    public Collection<Loanpreparation> getLoanPreparations() {
+        return loanPreparations;
+    }
+
+    public void setLoanPreparations(Collection<Loanpreparation> loanPreparations) {
+        this.loanPreparations = loanPreparations;
+    }
+
+    public Collection<Preparationattachment> getPreparationAttachments() {
+        return preparationAttachments;
+    }
+
+    public void setPreparationAttachments(Collection<Preparationattachment> preparationAttachments) {
+        this.preparationAttachments = preparationAttachments;
+    }
+
+    public Collection<Preparationattr> getPreparationAttrs() {
+        return preparationAttrs;
+    }
+
+    public void setPreparationAttrs(Collection<Preparationattr> preparationAttrs) {
+        this.preparationAttrs = preparationAttrs;
+    }
+
+    
  
-    public Preptype getPrepTypeID() {
-        return prepTypeID;
-    }
+   
 
-    public void setPrepTypeID(Preptype prepTypeID) {
-        this.prepTypeID = prepTypeID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
-    public Preparationattribute getPreparationAttributeID() {
-        return preparationAttributeID;
-    }
-
-    public void setPreparationAttributeID(Preparationattribute preparationAttributeID) {
-        this.preparationAttributeID = preparationAttributeID;
-    }
-
-    @XmlTransient
-    public Collection<Preparationattachment> getPreparationattachmentCollection() {
-        return preparationattachmentCollection;
-    }
-
-    public void setPreparationattachmentCollection(Collection<Preparationattachment> preparationattachmentCollection) {
-        this.preparationattachmentCollection = preparationattachmentCollection;
-    }
-
-    @XmlTransient
-    public Collection<Preparationattr> getPreparationattrCollection() {
-        return preparationattrCollection;
-    }
-
-    public void setPreparationattrCollection(Collection<Preparationattr> preparationattrCollection) {
-        this.preparationattrCollection = preparationattrCollection;
-    }
-
-    @XmlTransient
-    public Collection<Giftpreparation> getGiftpreparationCollection() {
-        return giftpreparationCollection;
-    }
-
-    public void setGiftpreparationCollection(Collection<Giftpreparation> giftpreparationCollection) {
-        this.giftpreparationCollection = giftpreparationCollection;
-    }
-
-    @XmlTransient
-    public Collection<Deaccessionpreparation> getDeaccessionpreparationCollection() {
-        return deaccessionpreparationCollection;
-    }
-
-    public void setDeaccessionpreparationCollection(Collection<Deaccessionpreparation> deaccessionpreparationCollection) {
-        this.deaccessionpreparationCollection = deaccessionpreparationCollection;
-    }
-
-    @XmlTransient
-    public Collection<Loanpreparation> getLoanpreparationCollection() {
-        return loanpreparationCollection;
-    }
-
-    public void setLoanpreparationCollection(Collection<Loanpreparation> loanpreparationCollection) {
-        this.loanpreparationCollection = loanpreparationCollection;
-    }
+     
+   
+ 
     
     /**
      * Parent pointer
@@ -426,14 +429,14 @@ public class Preparation extends BaseEntity {
     public void afterUnmarshal(Unmarshaller u, Object parent) {
         
         if(parent instanceof Collectionobject) {
-            this.collectionObjectID = (Collectionobject)parent;
+            this.collectionObject = (Collectionobject)parent;
         } 
     }
      
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (preparationID != null ? preparationID.hashCode() : 0);
+        hash += (preparationId != null ? preparationId.hashCode() : 0);
         return hash;
     }
 
@@ -444,7 +447,7 @@ public class Preparation extends BaseEntity {
             return false;
         }
         Preparation other = (Preparation) object;
-        if ((this.preparationID == null && other.preparationID != null) || (this.preparationID != null && !this.preparationID.equals(other.preparationID))) {
+        if ((this.preparationId == null && other.preparationId != null) || (this.preparationId != null && !this.preparationId.equals(other.preparationId))) {
             return false;
         }
         return true;
@@ -452,7 +455,7 @@ public class Preparation extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Preparation[ preparationID=" + preparationID + " ]";
+        return "Preparation[ preparationID=" + preparationId + " ]";
     }
     
 }

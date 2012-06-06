@@ -26,11 +26,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Collectionobjectattachment.findAll", query = "SELECT c FROM Collectionobjectattachment c"),
-    @NamedQuery(name = "Collectionobjectattachment.findByCollectionObjectAttachmentID", query = "SELECT c FROM Collectionobjectattachment c WHERE c.collectionObjectAttachmentID = :collectionObjectAttachmentID"),
+    @NamedQuery(name = "Collectionobjectattachment.findByCollectionObjectAttachmentID", query = "SELECT c FROM Collectionobjectattachment c WHERE c.collectionObjectAttachmentId = :collectionObjectAttachmentID"),
     @NamedQuery(name = "Collectionobjectattachment.findByTimestampCreated", query = "SELECT c FROM Collectionobjectattachment c WHERE c.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Collectionobjectattachment.findByTimestampModified", query = "SELECT c FROM Collectionobjectattachment c WHERE c.timestampModified = :timestampModified"),
     @NamedQuery(name = "Collectionobjectattachment.findByVersion", query = "SELECT c FROM Collectionobjectattachment c WHERE c.version = :version"),
-    @NamedQuery(name = "Collectionobjectattachment.findByCollectionMemberID", query = "SELECT c FROM Collectionobjectattachment c WHERE c.collectionMemberID = :collectionMemberID"),
+    @NamedQuery(name = "Collectionobjectattachment.findByCollectionMemberID", query = "SELECT c FROM Collectionobjectattachment c WHERE c.collectionMemberId = :collectionMemberID"),
     @NamedQuery(name = "Collectionobjectattachment.findByOrdinal", query = "SELECT c FROM Collectionobjectattachment c WHERE c.ordinal = :ordinal")})
 public class Collectionobjectattachment extends BaseEntity { 
     
@@ -41,12 +41,12 @@ public class Collectionobjectattachment extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "CollectionObjectAttachmentID")
-    private Integer collectionObjectAttachmentID;
+    private Integer collectionObjectAttachmentId;
      
     @Basic(optional = false)
     @NotNull
     @Column(name = "CollectionMemberID")
-    private int collectionMemberID;
+    private int collectionMemberId;
     
     @Column(name = "Ordinal")
     private Integer ordinal;
@@ -58,49 +58,51 @@ public class Collectionobjectattachment extends BaseEntity {
     
     @JoinColumn(name = "AttachmentID", referencedColumnName = "AttachmentID")
     @ManyToOne(optional = false)
-    private Attachment attachmentID;
+    private Attachment attachment;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "CollectionObjectID", referencedColumnName = "CollectionObjectID")
     @ManyToOne(optional = false)
-    private Collectionobject collectionObjectID;
+    private Collectionobject collectionObject;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
 
     public Collectionobjectattachment() {
     }
 
-    public Collectionobjectattachment(Integer collectionObjectAttachmentID) {
-        this.collectionObjectAttachmentID = collectionObjectAttachmentID;
+    public Collectionobjectattachment(Integer collectionObjectAttachmentId) {
+        this.collectionObjectAttachmentId = collectionObjectAttachmentId;
     }
 
-    public Collectionobjectattachment(Integer collectionObjectAttachmentID, Date timestampCreated, int collectionMemberID) {
+    public Collectionobjectattachment(Integer collectionObjectAttachmentId, Date timestampCreated, int collectionMemberId) {
         super(timestampCreated);
-        this.collectionObjectAttachmentID = collectionObjectAttachmentID; 
-        this.collectionMemberID = collectionMemberID;
+        this.collectionObjectAttachmentId = collectionObjectAttachmentId; 
+        this.collectionMemberId = collectionMemberId;
     }
 
-    public Integer getCollectionObjectAttachmentID() {
-        return collectionObjectAttachmentID;
+    public int getCollectionMemberId() {
+        return collectionMemberId;
     }
 
-    public void setCollectionObjectAttachmentID(Integer collectionObjectAttachmentID) {
-        this.collectionObjectAttachmentID = collectionObjectAttachmentID;
+    public void setCollectionMemberId(int collectionMemberId) {
+        this.collectionMemberId = collectionMemberId;
     }
+
+    public Integer getCollectionObjectAttachmentId() {
+        return collectionObjectAttachmentId;
+    }
+
+    public void setCollectionObjectAttachmentId(Integer collectionObjectAttachmentId) {
+        this.collectionObjectAttachmentId = collectionObjectAttachmentId;
+    }
+
  
-    public int getCollectionMemberID() {
-        return collectionMemberID;
-    }
-
-    public void setCollectionMemberID(int collectionMemberID) {
-        this.collectionMemberID = collectionMemberID;
-    }
-
+ 
     public Integer getOrdinal() {
         return ordinal;
     }
@@ -117,42 +119,44 @@ public class Collectionobjectattachment extends BaseEntity {
         this.remarks = remarks;
     }
 
-    public Attachment getAttachmentID() {
-        return attachmentID;
+    public Attachment getAttachment() {
+        return attachment;
     }
 
-    public void setAttachmentID(Attachment attachmentID) {
-        this.attachmentID = attachmentID;
+    public void setAttachment(Attachment attachment) {
+        this.attachment = attachment;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Collectionobject getCollectionObject() {
+        return collectionObject;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setCollectionObject(Collectionobject collectionObject) {
+        this.collectionObject = collectionObject;
     }
 
-    public Collectionobject getCollectionObjectID() {
-        return collectionObjectID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setCollectionObjectID(Collectionobject collectionObjectID) {
-        this.collectionObjectID = collectionObjectID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
+
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (collectionObjectAttachmentID != null ? collectionObjectAttachmentID.hashCode() : 0);
+        hash += (collectionObjectAttachmentId != null ? collectionObjectAttachmentId.hashCode() : 0);
         return hash;
     }
 
@@ -163,7 +167,7 @@ public class Collectionobjectattachment extends BaseEntity {
             return false;
         }
         Collectionobjectattachment other = (Collectionobjectattachment) object;
-        if ((this.collectionObjectAttachmentID == null && other.collectionObjectAttachmentID != null) || (this.collectionObjectAttachmentID != null && !this.collectionObjectAttachmentID.equals(other.collectionObjectAttachmentID))) {
+        if ((this.collectionObjectAttachmentId == null && other.collectionObjectAttachmentId != null) || (this.collectionObjectAttachmentId != null && !this.collectionObjectAttachmentId.equals(other.collectionObjectAttachmentId))) {
             return false;
         }
         return true;
@@ -171,7 +175,7 @@ public class Collectionobjectattachment extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Collectionobjectattachment[ collectionObjectAttachmentID=" + collectionObjectAttachmentID + " ]";
+        return "Collectionobjectattachment[ collectionObjectAttachmentID=" + collectionObjectAttachmentId + " ]";
     }
     
 }

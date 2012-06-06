@@ -31,18 +31,18 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Project.findAll", query = "SELECT p FROM Project p"),
-    @NamedQuery(name = "Project.findByProjectID", query = "SELECT p FROM Project p WHERE p.projectID = :projectID"),
+    @NamedQuery(name = "Project.findByProjectID", query = "SELECT p FROM Project p WHERE p.projectId = :projectID"),
     @NamedQuery(name = "Project.findByTimestampCreated", query = "SELECT p FROM Project p WHERE p.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Project.findByTimestampModified", query = "SELECT p FROM Project p WHERE p.timestampModified = :timestampModified"),
     @NamedQuery(name = "Project.findByVersion", query = "SELECT p FROM Project p WHERE p.version = :version"),
-    @NamedQuery(name = "Project.findByCollectionMemberID", query = "SELECT p FROM Project p WHERE p.collectionMemberID = :collectionMemberID"),
+    @NamedQuery(name = "Project.findByCollectionMemberID", query = "SELECT p FROM Project p WHERE p.collectionMemberId = :collectionMemberID"),
     @NamedQuery(name = "Project.findByEndDate", query = "SELECT p FROM Project p WHERE p.endDate = :endDate"),
     @NamedQuery(name = "Project.findByGrantAgency", query = "SELECT p FROM Project p WHERE p.grantAgency = :grantAgency"),
     @NamedQuery(name = "Project.findByGrantNumber", query = "SELECT p FROM Project p WHERE p.grantNumber = :grantNumber"),
     @NamedQuery(name = "Project.findByNumber1", query = "SELECT p FROM Project p WHERE p.number1 = :number1"),
     @NamedQuery(name = "Project.findByNumber2", query = "SELECT p FROM Project p WHERE p.number2 = :number2"),
     @NamedQuery(name = "Project.findByProjectDescription", query = "SELECT p FROM Project p WHERE p.projectDescription = :projectDescription"),
-    @NamedQuery(name = "Project.findByProjectname", query = "SELECT p FROM Project p WHERE p.projectname = :projectname"),
+    @NamedQuery(name = "Project.findByProjectname", query = "SELECT p FROM Project p WHERE p.projectName = :projectname"),
     @NamedQuery(name = "Project.findByProjectNumber", query = "SELECT p FROM Project p WHERE p.projectNumber = :projectNumber"),
     @NamedQuery(name = "Project.findByStartDate", query = "SELECT p FROM Project p WHERE p.startDate = :startDate"),
     @NamedQuery(name = "Project.findByYesNo1", query = "SELECT p FROM Project p WHERE p.yesNo1 = :yesNo1"),
@@ -56,12 +56,12 @@ public class Project extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "ProjectID")
-    private Integer projectID;
+    private Integer projectId;
     
     @Basic(optional = false)
     @NotNull
     @Column(name = "CollectionMemberID")
-    private int collectionMemberID;
+    private int collectionMemberId;
     
     @Column(name = "EndDate")
     @Temporal(TemporalType.DATE)
@@ -88,7 +88,7 @@ public class Project extends BaseEntity {
     
     @Size(max = 128)
     @Column(name = "projectname")
-    private String projectname;
+    private String projectName;
     
     @Size(max = 64)
     @Column(name = "ProjectNumber")
@@ -124,49 +124,83 @@ public class Project extends BaseEntity {
     @Column(name = "YesNo2")
     private Boolean yesNo2;
     
-    @ManyToMany(mappedBy = "projectCollection")
-    private Collection<Collectionobject> collectionobjectCollection;
+    @ManyToMany(mappedBy = "projects")
+    private Collection<Collectionobject> collectionObjects;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ProjectAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent projectAgentID;
+    private Agent agent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
 
     public Project() {
     }
 
-    public Project(Integer projectID) {
-        this.projectID = projectID;
+    public Project(Integer projectId) {
+        this.projectId = projectId;
     }
 
-    public Project(Integer projectID, Date timestampCreated, int collectionMemberID) {
+    public Project(Integer projectId, Date timestampCreated, int collectionMemberId) {
         super(timestampCreated);
-        this.projectID = projectID; 
-        this.collectionMemberID = collectionMemberID;
+        this.projectId = projectId; 
+        this.collectionMemberId = collectionMemberId;
     }
 
-    public Integer getProjectID() {
-        return projectID;
+    public Agent getAgent() {
+        return agent;
     }
 
-    public void setProjectID(Integer projectID) {
-        this.projectID = projectID;
-    }
- 
-    public int getCollectionMemberID() {
-        return collectionMemberID;
+    public void setAgent(Agent agent) {
+        this.agent = agent;
     }
 
-    public void setCollectionMemberID(int collectionMemberID) {
-        this.collectionMemberID = collectionMemberID;
+    public int getCollectionMemberId() {
+        return collectionMemberId;
     }
+
+    public void setCollectionMemberId(int collectionMemberId) {
+        this.collectionMemberId = collectionMemberId;
+    }
+
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
+    }
+
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Integer getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Integer projectId) {
+        this.projectId = projectId;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
+    
 
     public Date getEndDate() {
         return endDate;
@@ -216,13 +250,7 @@ public class Project extends BaseEntity {
         this.projectDescription = projectDescription;
     }
 
-    public String getProjectname() {
-        return projectname;
-    }
-
-    public void setProjectname(String projectname) {
-        this.projectname = projectname;
-    }
+   
 
     public String getProjectNumber() {
         return projectNumber;
@@ -289,42 +317,20 @@ public class Project extends BaseEntity {
     }
 
     @XmlTransient
-    public Collection<Collectionobject> getCollectionobjectCollection() {
-        return collectionobjectCollection;
+    public Collection<Collectionobject> getCollectionObjects() {
+        return collectionObjects;
     }
 
-    public void setCollectionobjectCollection(Collection<Collectionobject> collectionobjectCollection) {
-        this.collectionobjectCollection = collectionobjectCollection;
+    public void setCollectionObjects(Collection<Collectionobject> collectionObjects) {
+        this.collectionObjects = collectionObjects;
     }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getProjectAgentID() {
-        return projectAgentID;
-    }
-
-    public void setProjectAgentID(Agent projectAgentID) {
-        this.projectAgentID = projectAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
+ 
+    
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (projectID != null ? projectID.hashCode() : 0);
+        hash += (projectId != null ? projectId.hashCode() : 0);
         return hash;
     }
 
@@ -335,7 +341,7 @@ public class Project extends BaseEntity {
             return false;
         }
         Project other = (Project) object;
-        if ((this.projectID == null && other.projectID != null) || (this.projectID != null && !this.projectID.equals(other.projectID))) {
+        if ((this.projectId == null && other.projectId != null) || (this.projectId != null && !this.projectId.equals(other.projectId))) {
             return false;
         }
         return true;
@@ -343,7 +349,7 @@ public class Project extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Project[ projectID=" + projectID + " ]";
+        return "Project[ projectID=" + projectId + " ]";
     }
     
 }

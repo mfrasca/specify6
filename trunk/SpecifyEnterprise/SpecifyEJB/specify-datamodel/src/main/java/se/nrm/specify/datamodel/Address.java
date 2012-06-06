@@ -1,27 +1,11 @@
 package se.nrm.specify.datamodel;
  
-import java.util.Collection;
+import java.util.Collection; 
 import java.util.Date;
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType; 
-//import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size; 
+import javax.persistence.*;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient; 
+import javax.xml.bind.annotation.XmlTransient;
  
 
 
@@ -34,7 +18,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement 
 @NamedQueries({
     @NamedQuery(name = "Address.findAll", query = "SELECT a FROM Address a"),
-    @NamedQuery(name = "Address.findByAddressID", query = "SELECT a FROM Address a WHERE a.addressID = :addressID"),
+    @NamedQuery(name = "Address.findByAddressID", query = "SELECT a FROM Address a WHERE a.addressId = :addressID"),
     @NamedQuery(name = "Address.findByTimestampCreated", query = "SELECT a FROM Address a WHERE a.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Address.findByTimestampModified", query = "SELECT a FROM Address a WHERE a.timestampModified = :timestampModified"),
     @NamedQuery(name = "Address.findByVersion", query = "SELECT a FROM Address a WHERE a.version = :version"),
@@ -68,7 +52,7 @@ public class Address extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "AddressID") 
-    private Integer addressID;
+    private Integer addressId;
       
     @Size(max = 255)
     @Column(name = "Address") 
@@ -156,51 +140,48 @@ public class Address extends BaseEntity {
     @Column(name = "TypeOfAddr") 
     private String typeOfAddr;
     
-    @OneToMany(mappedBy = "addressID", cascade = CascadeType.ALL)
-//    @XmlElement 
-    private Collection<Division> divisionCollection;
+    @OneToMany(mappedBy = "address", cascade = CascadeType.ALL) 
+    private Collection<Division> divisions;
     
-    @OneToMany(mappedBy = "addressID")
-//    @XmlElement 
-    private Collection<Institution> institutionCollection;
+    @OneToMany(mappedBy = "address") 
+    private Collection<Institution> institutions;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
-    @ManyToOne
-//    @XmlInverseReference(mappedBy = "addressCollection") 
+    @ManyToOne 
     @XmlTransient 
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
-    @ManyToOne
-//    @XmlInverseReference(mappedBy = "addressCollection1") 
+    @ManyToOne 
     @XmlTransient 
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "AgentID", referencedColumnName = "AgentID")
     @ManyToOne 
-    private Agent agentID;
+    private Agent agent;
 
     public Address() {
         super();
     }
 
-    public Address(Integer addressID) {
+    public Address(Integer addressId) {
         super();
-        this.addressID = addressID;
+        this.addressId = addressId;
     }
 
-    public Address(Integer addressID, Date timestampCreated) { 
+    public Address(Integer addressId, Date timestampCreated) { 
         super(timestampCreated);
-        this.addressID = addressID; 
+        this.addressId = addressId; 
     }
 
-    public Integer getAddressID() {
-        return addressID;
+    public Integer getAddressId() {
+        return addressId;
     }
 
-    public void setAddressID(Integer addressID) {
-        this.addressID = addressID;
+    public void setAddressId(Integer addressId) {
+        this.addressId = addressId;
     }
+
  
     public String getAddress() {
         return address;
@@ -379,54 +360,56 @@ public class Address extends BaseEntity {
     }
 
     @XmlTransient
-    public Collection<Division> getDivisionCollection() {
-        return divisionCollection;
+    public Collection<Division> getDivisions() {
+        return divisions;
     }
 
-    public void setDivisionCollection(Collection<Division> divisionCollection) {
-        this.divisionCollection = divisionCollection;
-    }
-
-    @XmlTransient
-    public Collection<Institution> getInstitutionCollection() {
-        return institutionCollection;
-    }
-
-    public void setInstitutionCollection(Collection<Institution> institutionCollection) {
-        this.institutionCollection = institutionCollection;
+    public void setDivisions(Collection<Division> divisions) {
+        this.divisions = divisions;
     }
 
     @XmlTransient
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Collection<Institution> getInstitutions() {
+        return institutions;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setInstitutions(Collection<Institution> institutions) {
+        this.institutions = institutions;
     }
 
     @XmlTransient
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Agent getAgent() {
+        return agent;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setAgent(Agent agent) {
+        this.agent = agent;
     }
+
+    @XmlTransient
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
+    }
+
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    @XmlTransient
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
  
-    @XmlTransient
-    public Agent getAgentID() {
-        return agentID;
-    }
-
-    public void setAgentID(Agent agentID) {
-        this.agentID = agentID;
-    }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (addressID != null ? addressID.hashCode() : 0);
+        hash += (addressId != null ? addressId.hashCode() : 0);
         return hash;
     }
 
@@ -437,7 +420,7 @@ public class Address extends BaseEntity {
             return false;
         }
         Address other = (Address) object;
-        if ((this.addressID == null && other.addressID != null) || (this.addressID != null && !this.addressID.equals(other.addressID))) {
+        if ((this.addressId == null && other.addressId != null) || (this.addressId != null && !this.addressId.equals(other.addressId))) {
             return false;
         }
         return true;
@@ -445,6 +428,6 @@ public class Address extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Address[ addressID=" + addressID + " ], version = " + version + " address = " + address + ", " + city + ", " + country;
+        return "Address[ addressId=" + addressId + " ], version = " + version + " address = " + address + ", " + city + ", " + country;
     } 
 }

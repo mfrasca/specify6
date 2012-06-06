@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Appraisal.findAll", query = "SELECT a FROM Appraisal a"),
-    @NamedQuery(name = "Appraisal.findByAppraisalID", query = "SELECT a FROM Appraisal a WHERE a.appraisalID = :appraisalID"),
+    @NamedQuery(name = "Appraisal.findByAppraisalID", query = "SELECT a FROM Appraisal a WHERE a.appraisalId = :appraisalID"),
     @NamedQuery(name = "Appraisal.findByTimestampCreated", query = "SELECT a FROM Appraisal a WHERE a.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Appraisal.findByTimestampModified", query = "SELECT a FROM Appraisal a WHERE a.timestampModified = :timestampModified"),
     @NamedQuery(name = "Appraisal.findByVersion", query = "SELECT a FROM Appraisal a WHERE a.version = :version"),
@@ -48,7 +48,7 @@ public class Appraisal extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "AppraisalID")
-    private Integer appraisalID; 
+    private Integer appraisalId; 
     
     @Basic(optional = false)
     @NotNull
@@ -77,45 +77,46 @@ public class Appraisal extends BaseEntity {
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "AccessionID", referencedColumnName = "AccessionID")
     @ManyToOne
-    private Accession accessionID;
+    private Accession accession;
     
     @JoinColumn(name = "AgentID", referencedColumnName = "AgentID")
     @ManyToOne(optional = false)
-    private Agent agentID;
+    private Agent agent;
     
-    @OneToMany(mappedBy = "appraisalID")
-    private Collection<Collectionobject> collectionobjectCollection;
+    @OneToMany(mappedBy = "appraisal")
+    private Collection<Collectionobject> collectionObjects;
 
     public Appraisal() {
     }
 
-    public Appraisal(Integer appraisalID) {
-        this.appraisalID = appraisalID;
+    public Appraisal(Integer appraisalId) {
+        this.appraisalId = appraisalId;
     }
 
-    public Appraisal(Integer appraisalID, Date timestampCreated, Date appraisalDate, String appraisalNumber) {
+    public Appraisal(Integer appraisalId, Date timestampCreated, Date appraisalDate, String appraisalNumber) {
         super(timestampCreated);
-        this.appraisalID = appraisalID;
+        this.appraisalId = appraisalId;
         this.appraisalDate = appraisalDate;
         this.appraisalNumber = appraisalNumber;
     }
 
-    public Integer getAppraisalID() {
-        return appraisalID;
+    public Integer getAppraisalId() {
+        return appraisalId;
     }
 
-    public void setAppraisalID(Integer appraisalID) {
-        this.appraisalID = appraisalID;
-    } 
+    public void setAppraisalId(Integer appraisalId) {
+        this.appraisalId = appraisalId;
+    }
 
+ 
     public Date getAppraisalDate() {
         return appraisalDate;
     }
@@ -156,51 +157,54 @@ public class Appraisal extends BaseEntity {
         this.notes = notes;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Accession getAccession() {
+        return accession;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setAccession(Accession accession) {
+        this.accession = accession;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Agent getAgent() {
+        return agent;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setAgent(Agent agent) {
+        this.agent = agent;
     }
 
-    public Accession getAccessionID() {
-        return accessionID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setAccessionID(Accession accessionID) {
-        this.accessionID = accessionID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Agent getAgentID() {
-        return agentID;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setAgentID(Agent agentID) {
-        this.agentID = agentID;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
 
     @XmlTransient
-    public Collection<Collectionobject> getCollectionobjectCollection() {
-        return collectionobjectCollection;
+    public Collection<Collectionobject> getCollectionObjects() {
+        return collectionObjects;
     }
 
-    public void setCollectionobjectCollection(Collection<Collectionobject> collectionobjectCollection) {
-        this.collectionobjectCollection = collectionobjectCollection;
+    public void setCollectionObjects(Collection<Collectionobject> collectionObjects) {
+        this.collectionObjects = collectionObjects;
     }
+
+ 
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (appraisalID != null ? appraisalID.hashCode() : 0);
+        hash += (appraisalId != null ? appraisalId.hashCode() : 0);
         return hash;
     }
 
@@ -211,7 +215,7 @@ public class Appraisal extends BaseEntity {
             return false;
         }
         Appraisal other = (Appraisal) object;
-        if ((this.appraisalID == null && other.appraisalID != null) || (this.appraisalID != null && !this.appraisalID.equals(other.appraisalID))) {
+        if ((this.appraisalId == null && other.appraisalId != null) || (this.appraisalId != null && !this.appraisalId.equals(other.appraisalId))) {
             return false;
         }
         return true;
@@ -219,7 +223,7 @@ public class Appraisal extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Appraisal[ appraisalID=" + appraisalID + " ]";
+        return "Appraisal[ appraisalID=" + appraisalId + " ]";
     }
     
 }

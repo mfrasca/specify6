@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Spauditlog.findAll", query = "SELECT s FROM Spauditlog s"),
-    @NamedQuery(name = "Spauditlog.findBySpAuditLogID", query = "SELECT s FROM Spauditlog s WHERE s.spAuditLogID = :spAuditLogID"),
+    @NamedQuery(name = "Spauditlog.findBySpAuditLogID", query = "SELECT s FROM Spauditlog s WHERE s.spAuditLogId = :spAuditLogID"),
     @NamedQuery(name = "Spauditlog.findByTimestampCreated", query = "SELECT s FROM Spauditlog s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Spauditlog.findByTimestampModified", query = "SELECT s FROM Spauditlog s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Spauditlog.findByVersion", query = "SELECT s FROM Spauditlog s WHERE s.version = :version"),
@@ -48,7 +48,7 @@ public class Spauditlog extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "SpAuditLogID")
-    private Integer spAuditLogID;
+    private Integer spAuditLogId;
      
     @Basic(optional = false)
     @NotNull
@@ -80,37 +80,63 @@ public class Spauditlog extends BaseEntity {
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
-    @OneToMany(mappedBy = "spAuditLogID")
-    private Collection<Spauditlogfield> spauditlogfieldCollection;
+    @OneToMany(mappedBy = "spAuditLog")
+    private Collection<Spauditlogfield> fields;
 
     public Spauditlog() {
     }
 
-    public Spauditlog(Integer spAuditLogID) {
-        this.spAuditLogID = spAuditLogID;
+    public Spauditlog(Integer spAuditLogId) {
+        this.spAuditLogId = spAuditLogId;
     }
 
-    public Spauditlog(Integer spAuditLogID, Date timestampCreated, int action, String description, int tableNum) {
+    public Spauditlog(Integer spAuditLogId, Date timestampCreated, int action, String description, int tableNum) {
         super(timestampCreated);
-        this.spAuditLogID = spAuditLogID; 
+        this.spAuditLogId = spAuditLogId; 
         this.action = action;
         this.description = description;
         this.tableNum = tableNum;
     }
 
-    public Integer getSpAuditLogID() {
-        return spAuditLogID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setSpAuditLogID(Integer spAuditLogID) {
-        this.spAuditLogID = spAuditLogID;
-    } 
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    @XmlTransient
+    public Collection<Spauditlogfield> getFields() {
+        return fields;
+    }
+
+    public void setFields(Collection<Spauditlogfield> fields) {
+        this.fields = fields;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Integer getSpAuditLogId() {
+        return spAuditLogId;
+    }
+
+    public void setSpAuditLogId(Integer spAuditLogId) {
+        this.spAuditLogId = spAuditLogId;
+    }
+ 
     
     public int getAction() {
         return action;
@@ -168,35 +194,12 @@ public class Spauditlog extends BaseEntity {
         this.recordVersion = recordVersion;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
-    @XmlTransient
-    public Collection<Spauditlogfield> getSpauditlogfieldCollection() {
-        return spauditlogfieldCollection;
-    }
-
-    public void setSpauditlogfieldCollection(Collection<Spauditlogfield> spauditlogfieldCollection) {
-        this.spauditlogfieldCollection = spauditlogfieldCollection;
-    }
+   
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (spAuditLogID != null ? spAuditLogID.hashCode() : 0);
+        hash += (spAuditLogId != null ? spAuditLogId.hashCode() : 0);
         return hash;
     }
 
@@ -207,7 +210,7 @@ public class Spauditlog extends BaseEntity {
             return false;
         }
         Spauditlog other = (Spauditlog) object;
-        if ((this.spAuditLogID == null && other.spAuditLogID != null) || (this.spAuditLogID != null && !this.spAuditLogID.equals(other.spAuditLogID))) {
+        if ((this.spAuditLogId == null && other.spAuditLogId != null) || (this.spAuditLogId != null && !this.spAuditLogId.equals(other.spAuditLogId))) {
             return false;
         }
         return true;
@@ -215,7 +218,7 @@ public class Spauditlog extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Spauditlog[ spAuditLogID=" + spAuditLogID + " ]";
+        return "Spauditlog[ spAuditLogID=" + spAuditLogId + " ]";
     }
     
 }

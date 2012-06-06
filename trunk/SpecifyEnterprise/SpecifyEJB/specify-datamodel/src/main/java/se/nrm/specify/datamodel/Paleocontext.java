@@ -28,11 +28,11 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Paleocontext.findAll", query = "SELECT p FROM Paleocontext p"),
-    @NamedQuery(name = "Paleocontext.findByPaleoContextID", query = "SELECT p FROM Paleocontext p WHERE p.paleoContextID = :paleoContextID"),
+    @NamedQuery(name = "Paleocontext.findByPaleoContextID", query = "SELECT p FROM Paleocontext p WHERE p.paleoContextId = :paleoContextID"),
     @NamedQuery(name = "Paleocontext.findByTimestampCreated", query = "SELECT p FROM Paleocontext p WHERE p.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Paleocontext.findByTimestampModified", query = "SELECT p FROM Paleocontext p WHERE p.timestampModified = :timestampModified"),
     @NamedQuery(name = "Paleocontext.findByVersion", query = "SELECT p FROM Paleocontext p WHERE p.version = :version"),
-    @NamedQuery(name = "Paleocontext.findByCollectionMemberID", query = "SELECT p FROM Paleocontext p WHERE p.collectionMemberID = :collectionMemberID"),
+    @NamedQuery(name = "Paleocontext.findByCollectionMemberID", query = "SELECT p FROM Paleocontext p WHERE p.collectionMemberId = :collectionMemberID"),
     @NamedQuery(name = "Paleocontext.findByBottomDistance", query = "SELECT p FROM Paleocontext p WHERE p.bottomDistance = :bottomDistance"),
     @NamedQuery(name = "Paleocontext.findByDirection", query = "SELECT p FROM Paleocontext p WHERE p.direction = :direction"),
     @NamedQuery(name = "Paleocontext.findByDistanceUnits", query = "SELECT p FROM Paleocontext p WHERE p.distanceUnits = :distanceUnits"),
@@ -52,12 +52,12 @@ public class Paleocontext extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "PaleoContextID")
-    private Integer paleoContextID;
+    private Integer paleoContextId;
      
     @Basic(optional = false)
     @NotNull
     @Column(name = "CollectionMemberID")
-    private int collectionMemberID;
+    private int collectionMemberId;
     
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "BottomDistance")
@@ -96,61 +96,47 @@ public class Paleocontext extends BaseEntity {
     @Column(name = "Remarks")
     private String remarks;
     
-    @OneToMany(mappedBy = "paleoContextID")
-    private Collection<Collectionobject> collectionobjectCollection;
+    @OneToMany(mappedBy = "paleoContext")
+    private Collection<Collectionobject> collectionObjects;
     
     @JoinColumn(name = "LithoStratID", referencedColumnName = "LithoStratID")
     @ManyToOne
-    private Lithostrat lithoStratID;
+    private Lithostrat lithoStrat;
     
     @JoinColumn(name = "BioStratID", referencedColumnName = "GeologicTimePeriodID")
     @ManyToOne
-    private Geologictimeperiod bioStratID;
+    private Geologictimeperiod bioStrat;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "ChronosStratID", referencedColumnName = "GeologicTimePeriodID")
     @ManyToOne
-    private Geologictimeperiod chronosStratID;
+    private Geologictimeperiod chronosStrat;
     
     @JoinColumn(name = "ChronosStratEndID", referencedColumnName = "GeologicTimePeriodID")
     @ManyToOne
-    private Geologictimeperiod chronosStratEndID;
+    private Geologictimeperiod chronosStratEnd;
 
     public Paleocontext() {
     }
 
-    public Paleocontext(Integer paleoContextID) {
-        this.paleoContextID = paleoContextID;
+    public Paleocontext(Integer paleoContextId) {
+        this.paleoContextId = paleoContextId;
     }
 
-    public Paleocontext(Integer paleoContextID, Date timestampCreated, int collectionMemberID) {
+    public Paleocontext(Integer paleoContextId, Date timestampCreated, int collectionMemberId) {
         super(timestampCreated);
-        this.paleoContextID = paleoContextID; 
-        this.collectionMemberID = collectionMemberID;
+        this.paleoContextId = paleoContextId; 
+        this.collectionMemberId = collectionMemberId;
     }
 
-    public Integer getPaleoContextID() {
-        return paleoContextID;
-    }
-
-    public void setPaleoContextID(Integer paleoContextID) {
-        this.paleoContextID = paleoContextID;
-    } 
-
-    public int getCollectionMemberID() {
-        return collectionMemberID;
-    }
-
-    public void setCollectionMemberID(int collectionMemberID) {
-        this.collectionMemberID = collectionMemberID;
-    }
+     
 
     public Float getBottomDistance() {
         return bottomDistance;
@@ -233,66 +219,86 @@ public class Paleocontext extends BaseEntity {
     }
 
     @XmlTransient
-    public Collection<Collectionobject> getCollectionobjectCollection() {
-        return collectionobjectCollection;
+    public Collection<Collectionobject> getCollectionObjects() {
+        return collectionObjects;
     }
 
-    public void setCollectionobjectCollection(Collection<Collectionobject> collectionobjectCollection) {
-        this.collectionobjectCollection = collectionobjectCollection;
+    public void setCollectionObjects(Collection<Collectionobject> collectionObjects) {
+        this.collectionObjects = collectionObjects;
     }
 
-    public Lithostrat getLithoStratID() {
-        return lithoStratID;
+ 
+
+    public Geologictimeperiod getBioStrat() {
+        return bioStrat;
     }
 
-    public void setLithoStratID(Lithostrat lithoStratID) {
-        this.lithoStratID = lithoStratID;
+    public void setBioStrat(Geologictimeperiod bioStrat) {
+        this.bioStrat = bioStrat;
     }
 
-    public Geologictimeperiod getBioStratID() {
-        return bioStratID;
+    public Geologictimeperiod getChronosStrat() {
+        return chronosStrat;
     }
 
-    public void setBioStratID(Geologictimeperiod bioStratID) {
-        this.bioStratID = bioStratID;
+    public void setChronosStrat(Geologictimeperiod chronosStrat) {
+        this.chronosStrat = chronosStrat;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Geologictimeperiod getChronosStratEnd() {
+        return chronosStratEnd;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setChronosStratEnd(Geologictimeperiod chronosStratEnd) {
+        this.chronosStratEnd = chronosStratEnd;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public int getCollectionMemberId() {
+        return collectionMemberId;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setCollectionMemberId(int collectionMemberId) {
+        this.collectionMemberId = collectionMemberId;
     }
 
-    public Geologictimeperiod getChronosStratID() {
-        return chronosStratID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setChronosStratID(Geologictimeperiod chronosStratID) {
-        this.chronosStratID = chronosStratID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Geologictimeperiod getChronosStratEndID() {
-        return chronosStratEndID;
+    public Lithostrat getLithoStrat() {
+        return lithoStrat;
     }
 
-    public void setChronosStratEndID(Geologictimeperiod chronosStratEndID) {
-        this.chronosStratEndID = chronosStratEndID;
+    public void setLithoStrat(Lithostrat lithoStrat) {
+        this.lithoStrat = lithoStrat;
     }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Integer getPaleoContextId() {
+        return paleoContextId;
+    }
+
+    public void setPaleoContextId(Integer paleoContextId) {
+        this.paleoContextId = paleoContextId;
+    }
+
+    
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (paleoContextID != null ? paleoContextID.hashCode() : 0);
+        hash += (paleoContextId != null ? paleoContextId.hashCode() : 0);
         return hash;
     }
 
@@ -303,7 +309,7 @@ public class Paleocontext extends BaseEntity {
             return false;
         }
         Paleocontext other = (Paleocontext) object;
-        if ((this.paleoContextID == null && other.paleoContextID != null) || (this.paleoContextID != null && !this.paleoContextID.equals(other.paleoContextID))) {
+        if ((this.paleoContextId == null && other.paleoContextId != null) || (this.paleoContextId != null && !this.paleoContextId.equals(other.paleoContextId))) {
             return false;
         }
         return true;
@@ -311,7 +317,7 @@ public class Paleocontext extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Paleocontext[ paleoContextID=" + paleoContextID + " ]";
+        return "Paleocontext[ paleoContextID=" + paleoContextId + " ]";
     }
     
 }

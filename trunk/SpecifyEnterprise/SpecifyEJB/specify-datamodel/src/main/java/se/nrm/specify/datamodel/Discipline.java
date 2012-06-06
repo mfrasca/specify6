@@ -66,107 +66,108 @@ public class Discipline extends BaseEntity {
         @JoinColumn(name = "DisciplineID", referencedColumnName = "UserGroupScopeId")}, inverseJoinColumns = {
         @JoinColumn(name = "AutoNumberingSchemeID", referencedColumnName = "AutoNumberingSchemeID")})
     @ManyToMany
-    private Collection<Autonumberingscheme> autonumberingschemeCollection;
+    private Collection<Autonumberingscheme> numberingSchemes;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "disciplineID")
-    private Collection<Localitynamealias> localitynamealiasCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "discipline")
+    private Collection<Localitynamealias> localitynamealiases;
     
-    @OneToMany(mappedBy = "disciplineID")
-    private Collection<Shipment> shipmentCollection;
+    @OneToMany(mappedBy = "discipline")
+    private Collection<Shipment> shipments;
     
-    @OneToMany(mappedBy = "disciplineID")
-    private Collection<Loanagent> loanagentCollection;
+    @OneToMany(mappedBy = "discipline")
+    private Collection<Loanagent> loanagents;
     
-    @OneToMany(mappedBy = "disciplineID")
-    private Collection<Sptasksemaphore> sptasksemaphoreCollection;
+    @OneToMany(mappedBy = "discipline")
+    private Collection<Sptasksemaphore> sptasksemaphores;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "disciplineID")
-    private Collection<Loan> loanCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "discipline")
+    private Collection<Loan> loans;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "disciplineID") 
-    private Collection<Collectingtrip> collectingtripCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "discipline") 
+    private Collection<Collectingtrip> collectingtrips;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "disciplineID")
-    private Collection<Gift> giftCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "discipline")
+    private Collection<Gift> gifts;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "disciplineID")
-    private Collection<Fieldnotebookpageset> fieldnotebookpagesetCollection;
-    @OneToMany(mappedBy = "disciplineID")
-    private Collection<Giftagent> giftagentCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "discipline")
+    private Collection<Fieldnotebookpageset> fieldnotebookpagesets;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "disciplineID")
-    private Collection<se.nrm.specify.datamodel.Collection> collectionCollection;
+    @OneToMany(mappedBy = "discipline")
+    private Collection<Giftagent> giftagents;
     
-    @OneToMany(mappedBy = "disciplineID")
-    private Collection<Collectingeventattribute> collectingeventattributeCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "discipline")
+    private Collection<se.nrm.specify.datamodel.Collection> collections;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "disciplineID")
-    private Collection<Spexportschema> spexportschemaCollection;
+    @OneToMany(mappedBy = "discipline")
+    private Collection<Collectingeventattribute> collectingeventattributes;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "disciplineID")
-    private Collection<Collectingevent> collectingeventCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "discipline")
+    private Collection<Spexportschema> spExportSchemas;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "disciplineID")
-    private Collection<Attributedef> attributedefCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "discipline")
+    private Collection<Collectingevent> collectingevents;
     
-    @OneToMany(mappedBy = "disciplineID")
-    private Collection<Loanreturnpreparation> loanreturnpreparationCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "discipline")
+    private Collection<Attributedef> attributeDefs;
     
-    @OneToMany(mappedBy = "disciplineID")
-    private Collection<Giftpreparation> giftpreparationCollection;
+    @OneToMany(mappedBy = "discipline")
+    private Collection<Loanreturnpreparation> loanreturnpreparations;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "disciplineID")
-    private Collection<Splocalecontainer> splocalecontainerCollection;
+    @OneToMany(mappedBy = "discipline")
+    private Collection<Giftpreparation> giftpreparations;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "disciplineID")
-    private Collection<Fieldnotebookpage> fieldnotebookpageCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "discipline")
+    private Collection<Splocalecontainer> spLocaleContainers;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "disciplineID")
-    private Collection<Fieldnotebook> fieldnotebookCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "discipline")
+    private Collection<Fieldnotebookpage> fieldnotebookpages;
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "discipline")
+    private Collection<Fieldnotebook> fieldnotebooks;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "TaxonTreeDefID", referencedColumnName = "TaxonTreeDefID")
     @ManyToOne
-    private Taxontreedef taxonTreeDefID;
+    private Taxontreedef taxonTreeDef;
     
     @JoinColumn(name = "DataTypeID", referencedColumnName = "DataTypeID")
     @ManyToOne(optional = false)
-    private Datatype dataTypeID;
+    private Datatype dataType;
     
     @JoinColumn(name = "GeographyTreeDefID", referencedColumnName = "GeographyTreeDefID")
     @ManyToOne(optional = false)
-    private Geographytreedef geographyTreeDefID;
+    private Geographytreedef geographyTreeDef;
     
     @JoinColumn(name = "GeologicTimePeriodTreeDefID", referencedColumnName = "GeologicTimePeriodTreeDefID")
     @ManyToOne(optional = false)
-    private Geologictimeperiodtreedef geologicTimePeriodTreeDefID;
+    private Geologictimeperiodtreedef geologicTimePeriodTreeDef;
     
     @JoinColumn(name = "DivisionID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne(optional = false)
-    private Division divisionID;
+    private Division division;
     
     @JoinColumn(name = "LithoStratTreeDefID", referencedColumnName = "LithoStratTreeDefID")
     @ManyToOne
-    private Lithostrattreedef lithoStratTreeDefID;
+    private Lithostrattreedef lithoStratTreeDef;
     
-    @OneToMany(mappedBy = "disciplineID")
-    private Collection<Spappresourcedir> spappresourcedirCollection;
+    @OneToMany(mappedBy = "discipline")
+    private Collection<Spappresourcedir> spappresourcedirs;
     
-    @OneToMany(mappedBy = "disciplineID")
-    private Collection<Loanpreparation> loanpreparationCollection;
+    @OneToMany(mappedBy = "discipline")
+    private Collection<Loanpreparation> loanpreparations;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "disciplineID")
-    private Collection<Locality> localityCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "discipline")
+    private Collection<Locality> localitys;
     
-    @OneToMany(mappedBy = "disciplineID")
-    private Collection<Localitycitation> localitycitationCollection;
+    @OneToMany(mappedBy = "discipline")
+    private Collection<Localitycitation> localitycitations;
 
     public Discipline() {
     }
@@ -220,285 +221,299 @@ public class Discipline extends BaseEntity {
         this.type = type;
     }
 
-    @XmlTransient
-    public Collection<Autonumberingscheme> getAutonumberingschemeCollection() {
-        return autonumberingschemeCollection;
-    }
-
-    public void setAutonumberingschemeCollection(Collection<Autonumberingscheme> autonumberingschemeCollection) {
-        this.autonumberingschemeCollection = autonumberingschemeCollection;
-    }
+ 
+ 
 
     @XmlTransient
-    public Collection<Localitynamealias> getLocalitynamealiasCollection() {
-        return localitynamealiasCollection;
+    public Collection<Attributedef> getAttributeDefs() {
+        return attributeDefs;
     }
 
-    public void setLocalitynamealiasCollection(Collection<Localitynamealias> localitynamealiasCollection) {
-        this.localitynamealiasCollection = localitynamealiasCollection;
+    public void setAttributeDefs(Collection<Attributedef> attributeDefs) {
+        this.attributeDefs = attributeDefs;
     }
 
-    @XmlTransient
-    public Collection<Shipment> getShipmentCollection() {
-        return shipmentCollection;
+ 
+  
+
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setShipmentCollection(Collection<Shipment> shipmentCollection) {
-        this.shipmentCollection = shipmentCollection;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    @XmlTransient
-    public Collection<Loanagent> getLoanagentCollection() {
-        return loanagentCollection;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setLoanagentCollection(Collection<Loanagent> loanagentCollection) {
-        this.loanagentCollection = loanagentCollection;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
 
     @XmlTransient
-    public Collection<Sptasksemaphore> getSptasksemaphoreCollection() {
-        return sptasksemaphoreCollection;
+    public Collection<Autonumberingscheme> getNumberingSchemes() {
+        return numberingSchemes;
     }
 
-    public void setSptasksemaphoreCollection(Collection<Sptasksemaphore> sptasksemaphoreCollection) {
-        this.sptasksemaphoreCollection = sptasksemaphoreCollection;
-    }
-
-    @XmlTransient
-    public Collection<Loan> getLoanCollection() {
-        return loanCollection;
-    }
-
-    public void setLoanCollection(Collection<Loan> loanCollection) {
-        this.loanCollection = loanCollection;
+    public void setNumberingSchemes(Collection<Autonumberingscheme> numberingSchemes) {
+        this.numberingSchemes = numberingSchemes;
     }
 
     @XmlTransient
-    public Collection<Collectingtrip> getCollectingtripCollection() {
-        return collectingtripCollection;
+    public Collection<Spexportschema> getSpExportSchemas() {
+        return spExportSchemas;
     }
 
-    public void setCollectingtripCollection(Collection<Collectingtrip> collectingtripCollection) {
-        this.collectingtripCollection = collectingtripCollection;
-    }
-
-    @XmlTransient
-    public Collection<Gift> getGiftCollection() {
-        return giftCollection;
-    }
-
-    public void setGiftCollection(Collection<Gift> giftCollection) {
-        this.giftCollection = giftCollection;
+    public void setSpExportSchemas(Collection<Spexportschema> spExportSchemas) {
+        this.spExportSchemas = spExportSchemas;
     }
 
     @XmlTransient
-    public Collection<Fieldnotebookpageset> getFieldnotebookpagesetCollection() {
-        return fieldnotebookpagesetCollection;
+    public Collection<Splocalecontainer> getSpLocaleContainers() {
+        return spLocaleContainers;
     }
 
-    public void setFieldnotebookpagesetCollection(Collection<Fieldnotebookpageset> fieldnotebookpagesetCollection) {
-        this.fieldnotebookpagesetCollection = fieldnotebookpagesetCollection;
+    public void setSpLocaleContainers(Collection<Splocalecontainer> spLocaleContainers) {
+        this.spLocaleContainers = spLocaleContainers;
     }
 
-    @XmlTransient
-    public Collection<Giftagent> getGiftagentCollection() {
-        return giftagentCollection;
+    public Taxontreedef getTaxonTreeDef() {
+        return taxonTreeDef;
     }
 
-    public void setGiftagentCollection(Collection<Giftagent> giftagentCollection) {
-        this.giftagentCollection = giftagentCollection;
+    public void setTaxonTreeDef(Taxontreedef taxonTreeDef) {
+        this.taxonTreeDef = taxonTreeDef;
     }
 
-    @XmlTransient
-    public Collection<se.nrm.specify.datamodel.Collection> getCollectionCollection() {
-        return collectionCollection;
+ 
+
+ 
+
+    public Datatype getDataType() {
+        return dataType;
     }
 
-    public void setCollectionCollection(Collection<se.nrm.specify.datamodel.Collection> collectionCollection) {
-        this.collectionCollection = collectionCollection;
+    public void setDataType(Datatype dataType) {
+        this.dataType = dataType;
     }
 
-    @XmlTransient
-    public Collection<Collectingeventattribute> getCollectingeventattributeCollection() {
-        return collectingeventattributeCollection;
+    public Division getDivision() {
+        return division;
     }
 
-    public void setCollectingeventattributeCollection(Collection<Collectingeventattribute> collectingeventattributeCollection) {
-        this.collectingeventattributeCollection = collectingeventattributeCollection;
+    public void setDivision(Division division) {
+        this.division = division;
     }
 
-    @XmlTransient
-    public Collection<Spexportschema> getSpexportschemaCollection() {
-        return spexportschemaCollection;
+    public Geographytreedef getGeographyTreeDef() {
+        return geographyTreeDef;
     }
 
-    public void setSpexportschemaCollection(Collection<Spexportschema> spexportschemaCollection) {
-        this.spexportschemaCollection = spexportschemaCollection;
+    public void setGeographyTreeDef(Geographytreedef geographyTreeDef) {
+        this.geographyTreeDef = geographyTreeDef;
     }
 
-    @XmlTransient
-    public Collection<Collectingevent> getCollectingeventCollection() {
-        return collectingeventCollection;
+    public Geologictimeperiodtreedef getGeologicTimePeriodTreeDef() {
+        return geologicTimePeriodTreeDef;
     }
 
-    public void setCollectingeventCollection(Collection<Collectingevent> collectingeventCollection) {
-        this.collectingeventCollection = collectingeventCollection;
+    public void setGeologicTimePeriodTreeDef(Geologictimeperiodtreedef geologicTimePeriodTreeDef) {
+        this.geologicTimePeriodTreeDef = geologicTimePeriodTreeDef;
     }
 
-    @XmlTransient
-    public Collection<Attributedef> getAttributedefCollection() {
-        return attributedefCollection;
+    public Lithostrattreedef getLithoStratTreeDef() {
+        return lithoStratTreeDef;
     }
 
-    public void setAttributedefCollection(Collection<Attributedef> attributedefCollection) {
-        this.attributedefCollection = attributedefCollection;
+    public void setLithoStratTreeDef(Lithostrattreedef lithoStratTreeDef) {
+        this.lithoStratTreeDef = lithoStratTreeDef;
     }
 
     @XmlTransient
-    public Collection<Loanreturnpreparation> getLoanreturnpreparationCollection() {
-        return loanreturnpreparationCollection;
+    public Collection<Collectingeventattribute> getCollectingeventattributes() {
+        return collectingeventattributes;
     }
 
-    public void setLoanreturnpreparationCollection(Collection<Loanreturnpreparation> loanreturnpreparationCollection) {
-        this.loanreturnpreparationCollection = loanreturnpreparationCollection;
-    }
-
-    @XmlTransient
-    public Collection<Giftpreparation> getGiftpreparationCollection() {
-        return giftpreparationCollection;
-    }
-
-    public void setGiftpreparationCollection(Collection<Giftpreparation> giftpreparationCollection) {
-        this.giftpreparationCollection = giftpreparationCollection;
+    public void setCollectingeventattributes(Collection<Collectingeventattribute> collectingeventattributes) {
+        this.collectingeventattributes = collectingeventattributes;
     }
 
     @XmlTransient
-    public Collection<Splocalecontainer> getSplocalecontainerCollection() {
-        return splocalecontainerCollection;
+    public Collection<Collectingevent> getCollectingevents() {
+        return collectingevents;
     }
 
-    public void setSplocalecontainerCollection(Collection<Splocalecontainer> splocalecontainerCollection) {
-        this.splocalecontainerCollection = splocalecontainerCollection;
-    }
-
-    @XmlTransient
-    public Collection<Fieldnotebookpage> getFieldnotebookpageCollection() {
-        return fieldnotebookpageCollection;
-    }
-
-    public void setFieldnotebookpageCollection(Collection<Fieldnotebookpage> fieldnotebookpageCollection) {
-        this.fieldnotebookpageCollection = fieldnotebookpageCollection;
+    public void setCollectingevents(Collection<Collectingevent> collectingevents) {
+        this.collectingevents = collectingevents;
     }
 
     @XmlTransient
-    public Collection<Fieldnotebook> getFieldnotebookCollection() {
-        return fieldnotebookCollection;
+    public Collection<Collectingtrip> getCollectingtrips() {
+        return collectingtrips;
     }
 
-    public void setFieldnotebookCollection(Collection<Fieldnotebook> fieldnotebookCollection) {
-        this.fieldnotebookCollection = fieldnotebookCollection;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
-    public Taxontreedef getTaxonTreeDefID() {
-        return taxonTreeDefID;
-    }
-
-    public void setTaxonTreeDefID(Taxontreedef taxonTreeDefID) {
-        this.taxonTreeDefID = taxonTreeDefID;
-    }
-
-    public Datatype getDataTypeID() {
-        return dataTypeID;
-    }
-
-    public void setDataTypeID(Datatype dataTypeID) {
-        this.dataTypeID = dataTypeID;
-    }
-
-    public Geographytreedef getGeographyTreeDefID() {
-        return geographyTreeDefID;
-    }
-
-    public void setGeographyTreeDefID(Geographytreedef geographyTreeDefID) {
-        this.geographyTreeDefID = geographyTreeDefID;
-    }
-
-    public Geologictimeperiodtreedef getGeologicTimePeriodTreeDefID() {
-        return geologicTimePeriodTreeDefID;
-    }
-
-    public void setGeologicTimePeriodTreeDefID(Geologictimeperiodtreedef geologicTimePeriodTreeDefID) {
-        this.geologicTimePeriodTreeDefID = geologicTimePeriodTreeDefID;
-    }
-
-    public Division getDivisionID() {
-        return divisionID;
-    }
-
-    public void setDivisionID(Division divisionID) {
-        this.divisionID = divisionID;
-    }
-
-    public Lithostrattreedef getLithoStratTreeDefID() {
-        return lithoStratTreeDefID;
-    }
-
-    public void setLithoStratTreeDefID(Lithostrattreedef lithoStratTreeDefID) {
-        this.lithoStratTreeDefID = lithoStratTreeDefID;
+    public void setCollectingtrips(Collection<Collectingtrip> collectingtrips) {
+        this.collectingtrips = collectingtrips;
     }
 
     @XmlTransient
-    public Collection<Spappresourcedir> getSpappresourcedirCollection() {
-        return spappresourcedirCollection;
+    public Collection<se.nrm.specify.datamodel.Collection> getCollections() {
+        return collections;
     }
 
-    public void setSpappresourcedirCollection(Collection<Spappresourcedir> spappresourcedirCollection) {
-        this.spappresourcedirCollection = spappresourcedirCollection;
-    }
-
-    @XmlTransient
-    public Collection<Loanpreparation> getLoanpreparationCollection() {
-        return loanpreparationCollection;
-    }
-
-    public void setLoanpreparationCollection(Collection<Loanpreparation> loanpreparationCollection) {
-        this.loanpreparationCollection = loanpreparationCollection;
+    public void setCollections(Collection<se.nrm.specify.datamodel.Collection> collections) {
+        this.collections = collections;
     }
 
     @XmlTransient
-    public Collection<Locality> getLocalityCollection() {
-        return localityCollection;
+    public Collection<Fieldnotebookpage> getFieldnotebookpages() {
+        return fieldnotebookpages;
     }
 
-    public void setLocalityCollection(Collection<Locality> localityCollection) {
-        this.localityCollection = localityCollection;
+    public void setFieldnotebookpages(Collection<Fieldnotebookpage> fieldnotebookpages) {
+        this.fieldnotebookpages = fieldnotebookpages;
     }
 
     @XmlTransient
-    public Collection<Localitycitation> getLocalitycitationCollection() {
-        return localitycitationCollection;
+    public Collection<Fieldnotebookpageset> getFieldnotebookpagesets() {
+        return fieldnotebookpagesets;
     }
 
-    public void setLocalitycitationCollection(Collection<Localitycitation> localitycitationCollection) {
-        this.localitycitationCollection = localitycitationCollection;
+    public void setFieldnotebookpagesets(Collection<Fieldnotebookpageset> fieldnotebookpagesets) {
+        this.fieldnotebookpagesets = fieldnotebookpagesets;
     }
+
+    @XmlTransient
+    public Collection<Fieldnotebook> getFieldnotebooks() {
+        return fieldnotebooks;
+    }
+
+    public void setFieldnotebooks(Collection<Fieldnotebook> fieldnotebooks) {
+        this.fieldnotebooks = fieldnotebooks;
+    }
+
+    @XmlTransient
+    public Collection<Giftagent> getGiftagents() {
+        return giftagents;
+    }
+
+    public void setGiftagents(Collection<Giftagent> giftagents) {
+        this.giftagents = giftagents;
+    }
+
+    @XmlTransient
+    public Collection<Giftpreparation> getGiftpreparations() {
+        return giftpreparations;
+    }
+
+    public void setGiftpreparations(Collection<Giftpreparation> giftpreparations) {
+        this.giftpreparations = giftpreparations;
+    }
+
+    @XmlTransient
+    public Collection<Gift> getGifts() {
+        return gifts;
+    }
+
+    public void setGifts(Collection<Gift> gifts) {
+        this.gifts = gifts;
+    }
+
+    @XmlTransient
+    public Collection<Loanagent> getLoanagents() {
+        return loanagents;
+    }
+
+    public void setLoanagents(Collection<Loanagent> loanagents) {
+        this.loanagents = loanagents;
+    }
+
+    @XmlTransient
+    public Collection<Loanpreparation> getLoanpreparations() {
+        return loanpreparations;
+    }
+
+    public void setLoanpreparations(Collection<Loanpreparation> loanpreparations) {
+        this.loanpreparations = loanpreparations;
+    }
+
+    @XmlTransient
+    public Collection<Loanreturnpreparation> getLoanreturnpreparations() {
+        return loanreturnpreparations;
+    }
+
+    public void setLoanreturnpreparations(Collection<Loanreturnpreparation> loanreturnpreparations) {
+        this.loanreturnpreparations = loanreturnpreparations;
+    }
+
+    @XmlTransient
+    public Collection<Loan> getLoans() {
+        return loans;
+    }
+
+    public void setLoans(Collection<Loan> loans) {
+        this.loans = loans;
+    }
+
+    @XmlTransient
+    public Collection<Localitycitation> getLocalitycitations() {
+        return localitycitations;
+    }
+
+    public void setLocalitycitations(Collection<Localitycitation> localitycitations) {
+        this.localitycitations = localitycitations;
+    }
+
+    @XmlTransient
+    public Collection<Localitynamealias> getLocalitynamealiases() {
+        return localitynamealiases;
+    }
+
+    public void setLocalitynamealiases(Collection<Localitynamealias> localitynamealiases) {
+        this.localitynamealiases = localitynamealiases;
+    }
+
+    @XmlTransient
+    public Collection<Locality> getLocalitys() {
+        return localitys;
+    }
+
+    public void setLocalitys(Collection<Locality> localitys) {
+        this.localitys = localitys;
+    }
+
+    @XmlTransient
+    public Collection<Shipment> getShipments() {
+        return shipments;
+    }
+
+    public void setShipments(Collection<Shipment> shipments) {
+        this.shipments = shipments;
+    }
+
+    @XmlTransient
+    public Collection<Spappresourcedir> getSpappresourcedirs() {
+        return spappresourcedirs;
+    }
+
+    public void setSpappresourcedirs(Collection<Spappresourcedir> spappresourcedirs) {
+        this.spappresourcedirs = spappresourcedirs;
+    }
+
+    @XmlTransient
+    public Collection<Sptasksemaphore> getSptasksemaphores() {
+        return sptasksemaphores;
+    }
+
+    public void setSptasksemaphores(Collection<Sptasksemaphore> sptasksemaphores) {
+        this.sptasksemaphores = sptasksemaphores;
+    }
+
+     
+ 
+   
 
     @Override
     public int hashCode() {

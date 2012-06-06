@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Localityattachment.findAll", query = "SELECT l FROM Localityattachment l"),
-    @NamedQuery(name = "Localityattachment.findByLocalityAttachmentID", query = "SELECT l FROM Localityattachment l WHERE l.localityAttachmentID = :localityAttachmentID"),
+    @NamedQuery(name = "Localityattachment.findByLocalityAttachmentID", query = "SELECT l FROM Localityattachment l WHERE l.localityAttachmentId = :localityAttachmentID"),
     @NamedQuery(name = "Localityattachment.findByTimestampCreated", query = "SELECT l FROM Localityattachment l WHERE l.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Localityattachment.findByTimestampModified", query = "SELECT l FROM Localityattachment l WHERE l.timestampModified = :timestampModified"),
     @NamedQuery(name = "Localityattachment.findByVersion", query = "SELECT l FROM Localityattachment l WHERE l.version = :version"),
@@ -40,7 +40,7 @@ public class Localityattachment extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "LocalityAttachmentID")
-    private Integer localityAttachmentID;
+    private Integer localityAttachmentId;
     
     @Column(name = "Ordinal")
     private Integer ordinal;
@@ -52,40 +52,34 @@ public class Localityattachment extends BaseEntity {
     
     @JoinColumn(name = "AttachmentID", referencedColumnName = "AttachmentID")
     @ManyToOne(optional = false)
-    private Attachment attachmentID;
+    private Attachment attachment;
     
     @JoinColumn(name = "LocalityID", referencedColumnName = "LocalityID")
     @ManyToOne(optional = false)
-    private Locality localityID;
+    private Locality locality;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
 
     public Localityattachment() {
     }
 
-    public Localityattachment(Integer localityAttachmentID) {
-        this.localityAttachmentID = localityAttachmentID;
+    public Localityattachment(Integer localityAttachmentId) {
+        this.localityAttachmentId = localityAttachmentId;
     }
 
-    public Localityattachment(Integer localityAttachmentID, Date timestampCreated) {
-        this.localityAttachmentID = localityAttachmentID;
+    public Localityattachment(Integer localityAttachmentId, Date timestampCreated) {
+        this.localityAttachmentId = localityAttachmentId;
 //        this.timestampCreated = timestampCreated;
         setTimestampCreated(timestampCreated);
     }
 
-    public Integer getLocalityAttachmentID() {
-        return localityAttachmentID;
-    }
-
-    public void setLocalityAttachmentID(Integer localityAttachmentID) {
-        this.localityAttachmentID = localityAttachmentID;
-    }
+    
   
     public Integer getOrdinal() {
         return ordinal;
@@ -103,42 +97,51 @@ public class Localityattachment extends BaseEntity {
         this.remarks = remarks;
     }
 
-    public Attachment getAttachmentID() {
-        return attachmentID;
+    public Attachment getAttachment() {
+        return attachment;
     }
 
-    public void setAttachmentID(Attachment attachmentID) {
-        this.attachmentID = attachmentID;
+    public void setAttachment(Attachment attachment) {
+        this.attachment = attachment;
     }
 
-    public Locality getLocalityID() {
-        return localityID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setLocalityID(Locality localityID) {
-        this.localityID = localityID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Locality getLocality() {
+        return locality;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setLocality(Locality locality) {
+        this.locality = locality;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Integer getLocalityAttachmentId() {
+        return localityAttachmentId;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setLocalityAttachmentId(Integer localityAttachmentId) {
+        this.localityAttachmentId = localityAttachmentId;
     }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (localityAttachmentID != null ? localityAttachmentID.hashCode() : 0);
+        hash += (localityAttachmentId != null ? localityAttachmentId.hashCode() : 0);
         return hash;
     }
 
@@ -149,7 +152,7 @@ public class Localityattachment extends BaseEntity {
             return false;
         }
         Localityattachment other = (Localityattachment) object;
-        if ((this.localityAttachmentID == null && other.localityAttachmentID != null) || (this.localityAttachmentID != null && !this.localityAttachmentID.equals(other.localityAttachmentID))) {
+        if ((this.localityAttachmentId == null && other.localityAttachmentId != null) || (this.localityAttachmentId != null && !this.localityAttachmentId.equals(other.localityAttachmentId))) {
             return false;
         }
         return true;
@@ -157,7 +160,7 @@ public class Localityattachment extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Localityattachment[ localityAttachmentID=" + localityAttachmentID + " ]";
+        return "Localityattachment[ localityAttachmentID=" + localityAttachmentId + " ]";
     }
     
 }

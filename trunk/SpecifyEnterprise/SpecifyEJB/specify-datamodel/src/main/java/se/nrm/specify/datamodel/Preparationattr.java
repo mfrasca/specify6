@@ -25,12 +25,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Preparationattr.findAll", query = "SELECT p FROM Preparationattr p"),
-    @NamedQuery(name = "Preparationattr.findByAttrID", query = "SELECT p FROM Preparationattr p WHERE p.attrID = :attrID"),
+    @NamedQuery(name = "Preparationattr.findByAttrID", query = "SELECT p FROM Preparationattr p WHERE p.attrId = :attrID"),
     @NamedQuery(name = "Preparationattr.findByTimestampCreated", query = "SELECT p FROM Preparationattr p WHERE p.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Preparationattr.findByTimestampModified", query = "SELECT p FROM Preparationattr p WHERE p.timestampModified = :timestampModified"),
     @NamedQuery(name = "Preparationattr.findByVersion", query = "SELECT p FROM Preparationattr p WHERE p.version = :version"),
-    @NamedQuery(name = "Preparationattr.findByCollectionMemberID", query = "SELECT p FROM Preparationattr p WHERE p.collectionMemberID = :collectionMemberID"),
-    @NamedQuery(name = "Preparationattr.findByDoubleValue", query = "SELECT p FROM Preparationattr p WHERE p.doubleValue = :doubleValue"),
+    @NamedQuery(name = "Preparationattr.findByCollectionMemberID", query = "SELECT p FROM Preparationattr p WHERE p.collectionMemberId = :collectionMemberID"),
+    @NamedQuery(name = "Preparationattr.findByDoubleValue", query = "SELECT p FROM Preparationattr p WHERE p.dblValue = :doubleValue"),
     @NamedQuery(name = "Preparationattr.findByStrValue", query = "SELECT p FROM Preparationattr p WHERE p.strValue = :strValue")})
 public class Preparationattr extends BaseEntity {  
     
@@ -41,16 +41,16 @@ public class Preparationattr extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "AttrID")
-    private Integer attrID;
+    private Integer attrId;
      
     @Basic(optional = false)
     @NotNull
     @Column(name = "CollectionMemberID")
-    private int collectionMemberID;
+    private int collectionMemberId;
     
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "DoubleValue")
-    private Double doubleValue;
+    private Double dblValue;
     
     @Size(max = 255)
     @Column(name = "StrValue")
@@ -58,57 +58,34 @@ public class Preparationattr extends BaseEntity {
     
     @JoinColumn(name = "AttributeDefID", referencedColumnName = "AttributeDefID")
     @ManyToOne(optional = false)
-    private Attributedef attributeDefID;
+    private Attributedef definition;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne  
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "PreparationId", referencedColumnName = "PreparationID")
     @ManyToOne(optional = false)
-    private Preparation preparationId;
+    private Preparation preparation;
 
     public Preparationattr() {
     }
 
-    public Preparationattr(Integer attrID) {
-        this.attrID = attrID;
+    public Preparationattr(Integer attrId) {
+        this.attrId = attrId;
     }
 
-    public Preparationattr(Integer attrID, Date timestampCreated, int collectionMemberID) {
+    public Preparationattr(Integer attrId, Date timestampCreated, int collectionMemberId) {
         super(timestampCreated);
-        this.attrID = attrID; 
-        this.collectionMemberID = collectionMemberID;
+        this.attrId = attrId; 
+        this.collectionMemberId = collectionMemberId;
     }
 
-    public Integer getAttrID() {
-        return attrID;
-    }
-
-    public void setAttrID(Integer attrID) {
-        this.attrID = attrID;
-    }
- 
-    public int getCollectionMemberID() {
-        return collectionMemberID;
-    }
-
-    public void setCollectionMemberID(int collectionMemberID) {
-        this.collectionMemberID = collectionMemberID;
-    }
-
-    public Double getDoubleValue() {
-        return doubleValue;
-    }
-
-    public void setDoubleValue(Double doubleValue) {
-        this.doubleValue = doubleValue;
-    }
-
+    
     public String getStrValue() {
         return strValue;
     }
@@ -117,42 +94,68 @@ public class Preparationattr extends BaseEntity {
         this.strValue = strValue;
     }
 
-    public Attributedef getAttributeDefID() {
-        return attributeDefID;
+    public Integer getAttrId() {
+        return attrId;
     }
 
-    public void setAttributeDefID(Attributedef attributeDefID) {
-        this.attributeDefID = attributeDefID;
+    public void setAttrId(Integer attrId) {
+        this.attrId = attrId;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public int getCollectionMemberId() {
+        return collectionMemberId;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setCollectionMemberId(int collectionMemberId) {
+        this.collectionMemberId = collectionMemberId;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Preparation getPreparationId() {
-        return preparationId;
+    public Double getDblValue() {
+        return dblValue;
     }
 
-    public void setPreparationId(Preparation preparationId) {
-        this.preparationId = preparationId;
+    public void setDblValue(Double dblValue) {
+        this.dblValue = dblValue;
     }
+
+    public Attributedef getDefinition() {
+        return definition;
+    }
+
+    public void setDefinition(Attributedef definition) {
+        this.definition = definition;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Preparation getPreparation() {
+        return preparation;
+    }
+
+    public void setPreparation(Preparation preparation) {
+        this.preparation = preparation;
+    }
+
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (attrID != null ? attrID.hashCode() : 0);
+        hash += (attrId != null ? attrId.hashCode() : 0);
         return hash;
     }
 
@@ -163,7 +166,7 @@ public class Preparationattr extends BaseEntity {
             return false;
         }
         Preparationattr other = (Preparationattr) object;
-        if ((this.attrID == null && other.attrID != null) || (this.attrID != null && !this.attrID.equals(other.attrID))) {
+        if ((this.attrId == null && other.attrId != null) || (this.attrId != null && !this.attrId.equals(other.attrId))) {
             return false;
         }
         return true;
@@ -171,7 +174,7 @@ public class Preparationattr extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Preparationattr[ attrID=" + attrID + " ]";
+        return "Preparationattr[ attrID=" + attrId + " ]";
     }
     
 }

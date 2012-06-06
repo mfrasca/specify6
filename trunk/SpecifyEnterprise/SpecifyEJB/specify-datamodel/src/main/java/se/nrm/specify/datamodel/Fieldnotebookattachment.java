@@ -52,19 +52,19 @@ public class Fieldnotebookattachment extends BaseEntity {
     
     @JoinColumn(name = "AttachmentID", referencedColumnName = "AttachmentID")
     @ManyToOne(optional = false)
-    private Attachment attachmentID;
+    private Attachment attachment;
     
     @JoinColumn(name = "FieldNotebookID", referencedColumnName = "FieldNotebookID")
     @ManyToOne(optional = false)
-    private Fieldnotebook fieldNotebookID;
+    private Fieldnotebook fieldNotebook;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
 
     public Fieldnotebookattachment() {
     }
@@ -102,38 +102,38 @@ public class Fieldnotebookattachment extends BaseEntity {
         this.remarks = remarks;
     }
 
-    public Attachment getAttachmentID() {
-        return attachmentID;
+    public Attachment getAttachment() {
+        return attachment;
     }
 
-    public void setAttachmentID(Attachment attachmentID) {
-        this.attachmentID = attachmentID;
+    public void setAttachment(Attachment attachment) {
+        this.attachment = attachment;
     }
 
-    public Fieldnotebook getFieldNotebookID() {
-        return fieldNotebookID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setFieldNotebookID(Fieldnotebook fieldNotebookID) {
-        this.fieldNotebookID = fieldNotebookID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Fieldnotebook getFieldNotebook() {
+        return fieldNotebook;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setFieldNotebook(Fieldnotebook fieldNotebook) {
+        this.fieldNotebook = fieldNotebook;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
-
+ 
     @Override
     public int hashCode() {
         int hash = 0;

@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Workbenchtemplatemappingitem.findAll", query = "SELECT w FROM Workbenchtemplatemappingitem w"),
-    @NamedQuery(name = "Workbenchtemplatemappingitem.findByWorkbenchTemplateMappingItemID", query = "SELECT w FROM Workbenchtemplatemappingitem w WHERE w.workbenchTemplateMappingItemID = :workbenchTemplateMappingItemID"),
+    @NamedQuery(name = "Workbenchtemplatemappingitem.findByWorkbenchTemplateMappingItemID", query = "SELECT w FROM Workbenchtemplatemappingitem w WHERE w.workbenchTemplateMappingItemId = :workbenchTemplateMappingItemID"),
     @NamedQuery(name = "Workbenchtemplatemappingitem.findByTimestampCreated", query = "SELECT w FROM Workbenchtemplatemappingitem w WHERE w.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Workbenchtemplatemappingitem.findByTimestampModified", query = "SELECT w FROM Workbenchtemplatemappingitem w WHERE w.timestampModified = :timestampModified"),
     @NamedQuery(name = "Workbenchtemplatemappingitem.findByVersion", query = "SELECT w FROM Workbenchtemplatemappingitem w WHERE w.version = :version"),
@@ -45,8 +45,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Workbenchtemplatemappingitem.findByIsIncludedInTitle", query = "SELECT w FROM Workbenchtemplatemappingitem w WHERE w.isIncludedInTitle = :isIncludedInTitle"),
     @NamedQuery(name = "Workbenchtemplatemappingitem.findByIsRequired", query = "SELECT w FROM Workbenchtemplatemappingitem w WHERE w.isRequired = :isRequired"),
     @NamedQuery(name = "Workbenchtemplatemappingitem.findByMetaData", query = "SELECT w FROM Workbenchtemplatemappingitem w WHERE w.metaData = :metaData"),
-    @NamedQuery(name = "Workbenchtemplatemappingitem.findByDataColumnIndex", query = "SELECT w FROM Workbenchtemplatemappingitem w WHERE w.dataColumnIndex = :dataColumnIndex"),
-    @NamedQuery(name = "Workbenchtemplatemappingitem.findByTableId", query = "SELECT w FROM Workbenchtemplatemappingitem w WHERE w.tableId = :tableId"),
+    @NamedQuery(name = "Workbenchtemplatemappingitem.findByDataColumnIndex", query = "SELECT w FROM Workbenchtemplatemappingitem w WHERE w.origImportColumnIndex = :dataColumnIndex"),
+    @NamedQuery(name = "Workbenchtemplatemappingitem.findByTableId", query = "SELECT w FROM Workbenchtemplatemappingitem w WHERE w.srcTableId = :tableId"),
     @NamedQuery(name = "Workbenchtemplatemappingitem.findByTableName", query = "SELECT w FROM Workbenchtemplatemappingitem w WHERE w.tableName = :tableName"),
     @NamedQuery(name = "Workbenchtemplatemappingitem.findByViewOrder", query = "SELECT w FROM Workbenchtemplatemappingitem w WHERE w.viewOrder = :viewOrder"),
     @NamedQuery(name = "Workbenchtemplatemappingitem.findByIsEditable", query = "SELECT w FROM Workbenchtemplatemappingitem w WHERE w.isEditable = :isEditable")})
@@ -59,7 +59,7 @@ public class Workbenchtemplatemappingitem extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "WorkbenchTemplateMappingItemID")
-    private Integer workbenchTemplateMappingItemID;
+    private Integer workbenchTemplateMappingItemId;
  
     @Column(name = "XCoord")
     private Short xCoord;
@@ -102,10 +102,10 @@ public class Workbenchtemplatemappingitem extends BaseEntity {
     private String metaData;
     
     @Column(name = "DataColumnIndex")
-    private Short dataColumnIndex;
+    private Short origImportColumnIndex;
     
     @Column(name = "TableId")
-    private Integer tableId;
+    private Integer srcTableId;
     
     @Size(max = 64)
     @Column(name = "TableName")
@@ -119,39 +119,96 @@ public class Workbenchtemplatemappingitem extends BaseEntity {
     
     @JoinColumn(name = "WorkbenchTemplateID", referencedColumnName = "WorkbenchTemplateID")
     @ManyToOne(optional = false)
-    private Workbenchtemplate workbenchTemplateID;
+    private Workbenchtemplate workbenchTemplate;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "workbenchTemplateMappingItemID")
-    private Collection<Workbenchdataitem> workbenchdataitemCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "workbenchTemplateMappingItem")
+    private Collection<Workbenchdataitem> workbenchDataItems;
 
     public Workbenchtemplatemappingitem() {
     }
 
-    public Workbenchtemplatemappingitem(Integer workbenchTemplateMappingItemID) {
-        this.workbenchTemplateMappingItemID = workbenchTemplateMappingItemID;
+    public Workbenchtemplatemappingitem(Integer workbenchTemplateMappingItemId) {
+        this.workbenchTemplateMappingItemId = workbenchTemplateMappingItemId;
     }
 
-    public Workbenchtemplatemappingitem(Integer workbenchTemplateMappingItemID, Date timestampCreated) {
+    public Workbenchtemplatemappingitem(Integer workbenchTemplateMappingItemId, Date timestampCreated) {
         super(timestampCreated);
-        this.workbenchTemplateMappingItemID = workbenchTemplateMappingItemID; 
+        this.workbenchTemplateMappingItemId = workbenchTemplateMappingItemId; 
     }
 
-    public Integer getWorkbenchTemplateMappingItemID() {
-        return workbenchTemplateMappingItemID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setWorkbenchTemplateMappingItemID(Integer workbenchTemplateMappingItemID) {
-        this.workbenchTemplateMappingItemID = workbenchTemplateMappingItemID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Short getOrigImportColumnIndex() {
+        return origImportColumnIndex;
+    }
+
+    public void setOrigImportColumnIndex(Short origImportColumnIndex) {
+        this.origImportColumnIndex = origImportColumnIndex;
+    }
+
+    public Integer getSrcTableId() {
+        return srcTableId;
+    }
+
+    public void setSrcTableId(Integer srcTableId) {
+        this.srcTableId = srcTableId;
+    }
+
+    public Workbenchtemplate getWorkbenchTemplate() {
+        return workbenchTemplate;
+    }
+
+    public void setWorkbenchTemplate(Workbenchtemplate workbenchTemplate) {
+        this.workbenchTemplate = workbenchTemplate;
+    }
+
+    public Integer getWorkbenchTemplateMappingItemId() {
+        return workbenchTemplateMappingItemId;
+    }
+
+    public void setWorkbenchTemplateMappingItemId(Integer workbenchTemplateMappingItemId) {
+        this.workbenchTemplateMappingItemId = workbenchTemplateMappingItemId;
+    }
+
+    public Short getxCoord() {
+        return xCoord;
+    }
+
+    public void setxCoord(Short xCoord) {
+        this.xCoord = xCoord;
+    }
+
+    public Short getyCoord() {
+        return yCoord;
+    }
+
+    public void setyCoord(Short yCoord) {
+        this.yCoord = yCoord;
     }
  
+    
     public Short getXCoord() {
         return xCoord;
     }
@@ -248,21 +305,7 @@ public class Workbenchtemplatemappingitem extends BaseEntity {
         this.metaData = metaData;
     }
 
-    public Short getDataColumnIndex() {
-        return dataColumnIndex;
-    }
-
-    public void setDataColumnIndex(Short dataColumnIndex) {
-        this.dataColumnIndex = dataColumnIndex;
-    }
-
-    public Integer getTableId() {
-        return tableId;
-    }
-
-    public void setTableId(Integer tableId) {
-        this.tableId = tableId;
-    }
+ 
 
     public String getTableName() {
         return tableName;
@@ -288,43 +331,22 @@ public class Workbenchtemplatemappingitem extends BaseEntity {
         this.isEditable = isEditable;
     }
 
-    public Workbenchtemplate getWorkbenchTemplateID() {
-        return workbenchTemplateID;
-    }
-
-    public void setWorkbenchTemplateID(Workbenchtemplate workbenchTemplateID) {
-        this.workbenchTemplateID = workbenchTemplateID;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
     @XmlTransient
-    public Collection<Workbenchdataitem> getWorkbenchdataitemCollection() {
-        return workbenchdataitemCollection;
+    public Collection<Workbenchdataitem> getWorkbenchDataItems() {
+        return workbenchDataItems;
     }
 
-    public void setWorkbenchdataitemCollection(Collection<Workbenchdataitem> workbenchdataitemCollection) {
-        this.workbenchdataitemCollection = workbenchdataitemCollection;
+    public void setWorkbenchDataItems(Collection<Workbenchdataitem> workbenchDataItems) {
+        this.workbenchDataItems = workbenchDataItems;
     }
+ 
+ 
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (workbenchTemplateMappingItemID != null ? workbenchTemplateMappingItemID.hashCode() : 0);
+        hash += (workbenchTemplateMappingItemId != null ? workbenchTemplateMappingItemId.hashCode() : 0);
         return hash;
     }
 
@@ -335,7 +357,7 @@ public class Workbenchtemplatemappingitem extends BaseEntity {
             return false;
         }
         Workbenchtemplatemappingitem other = (Workbenchtemplatemappingitem) object;
-        if ((this.workbenchTemplateMappingItemID == null && other.workbenchTemplateMappingItemID != null) || (this.workbenchTemplateMappingItemID != null && !this.workbenchTemplateMappingItemID.equals(other.workbenchTemplateMappingItemID))) {
+        if ((this.workbenchTemplateMappingItemId == null && other.workbenchTemplateMappingItemId != null) || (this.workbenchTemplateMappingItemId != null && !this.workbenchTemplateMappingItemId.equals(other.workbenchTemplateMappingItemId))) {
             return false;
         }
         return true;
@@ -343,7 +365,7 @@ public class Workbenchtemplatemappingitem extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Workbenchtemplatemappingitem[ workbenchTemplateMappingItemID=" + workbenchTemplateMappingItemID + " ]";
+        return "Workbenchtemplatemappingitem[ workbenchTemplateMappingItemID=" + workbenchTemplateMappingItemId + " ]";
     }
     
 }

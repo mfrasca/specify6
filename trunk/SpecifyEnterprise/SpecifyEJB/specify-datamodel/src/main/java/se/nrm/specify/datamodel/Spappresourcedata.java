@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Spappresourcedata.findAll", query = "SELECT s FROM Spappresourcedata s"),
-    @NamedQuery(name = "Spappresourcedata.findBySpAppResourceDataID", query = "SELECT s FROM Spappresourcedata s WHERE s.spAppResourceDataID = :spAppResourceDataID"),
+    @NamedQuery(name = "Spappresourcedata.findBySpAppResourceDataID", query = "SELECT s FROM Spappresourcedata s WHERE s.spAppResourceDataId = :spAppResourceDataID"),
     @NamedQuery(name = "Spappresourcedata.findByTimestampCreated", query = "SELECT s FROM Spappresourcedata s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Spappresourcedata.findByTimestampModified", query = "SELECT s FROM Spappresourcedata s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Spappresourcedata.findByVersion", query = "SELECT s FROM Spappresourcedata s WHERE s.version = :version")})
@@ -38,7 +38,7 @@ public class Spappresourcedata extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "SpAppResourceDataID")
-    private Integer spAppResourceDataID;
+    private Integer spAppResourceDataId;
      
     @Lob
     @Column(name = "data")
@@ -46,40 +46,73 @@ public class Spappresourcedata extends BaseEntity {
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "SpAppResourceID", referencedColumnName = "SpAppResourceID")
     @ManyToOne
-    private Spappresource spAppResourceID;
+    private Spappresource spAppResource;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "SpViewSetObjID", referencedColumnName = "SpViewSetObjID")
     @ManyToOne
-    private Spviewsetobj spViewSetObjID;
+    private Spviewsetobj spViewSetObj;
 
     public Spappresourcedata() {
     }
 
-    public Spappresourcedata(Integer spAppResourceDataID) {
-        this.spAppResourceDataID = spAppResourceDataID;
+    public Spappresourcedata(Integer spAppResourceDataId) {
+        this.spAppResourceDataId = spAppResourceDataId;
     }
 
-    public Spappresourcedata(Integer spAppResourceDataID, Date timestampCreated) {
+    public Spappresourcedata(Integer spAppResourceDataId, Date timestampCreated) {
         super(timestampCreated);
-        this.spAppResourceDataID = spAppResourceDataID; 
+        this.spAppResourceDataId = spAppResourceDataId; 
     }
 
-    public Integer getSpAppResourceDataID() {
-        return spAppResourceDataID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setSpAppResourceDataID(Integer spAppResourceDataID) {
-        this.spAppResourceDataID = spAppResourceDataID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
- 
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Spappresource getSpAppResource() {
+        return spAppResource;
+    }
+
+    public void setSpAppResource(Spappresource spAppResource) {
+        this.spAppResource = spAppResource;
+    }
+
+    public Integer getSpAppResourceDataId() {
+        return spAppResourceDataId;
+    }
+
+    public void setSpAppResourceDataId(Integer spAppResourceDataId) {
+        this.spAppResourceDataId = spAppResourceDataId;
+    }
+
+    public Spviewsetobj getSpViewSetObj() {
+        return spViewSetObj;
+    }
+
+    public void setSpViewSetObj(Spviewsetobj spViewSetObj) {
+        this.spViewSetObj = spViewSetObj;
+    }
+
+    
     public byte[] getData() {
         return data;
     }
@@ -88,42 +121,12 @@ public class Spappresourcedata extends BaseEntity {
         this.data = data;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Spappresource getSpAppResourceID() {
-        return spAppResourceID;
-    }
-
-    public void setSpAppResourceID(Spappresource spAppResourceID) {
-        this.spAppResourceID = spAppResourceID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
-    public Spviewsetobj getSpViewSetObjID() {
-        return spViewSetObjID;
-    }
-
-    public void setSpViewSetObjID(Spviewsetobj spViewSetObjID) {
-        this.spViewSetObjID = spViewSetObjID;
-    }
+  
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (spAppResourceDataID != null ? spAppResourceDataID.hashCode() : 0);
+        hash += (spAppResourceDataId != null ? spAppResourceDataId.hashCode() : 0);
         return hash;
     }
 
@@ -134,7 +137,7 @@ public class Spappresourcedata extends BaseEntity {
             return false;
         }
         Spappresourcedata other = (Spappresourcedata) object;
-        if ((this.spAppResourceDataID == null && other.spAppResourceDataID != null) || (this.spAppResourceDataID != null && !this.spAppResourceDataID.equals(other.spAppResourceDataID))) {
+        if ((this.spAppResourceDataId == null && other.spAppResourceDataId != null) || (this.spAppResourceDataId != null && !this.spAppResourceDataId.equals(other.spAppResourceDataId))) {
             return false;
         }
         return true;
@@ -142,7 +145,7 @@ public class Spappresourcedata extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Spappresourcedata[ spAppResourceDataID=" + spAppResourceDataID + " ]";
+        return "Spappresourcedata[ spAppResourceDataID=" + spAppResourceDataId + " ]";
     }
     
 }

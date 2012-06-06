@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Picklist.findAll", query = "SELECT p FROM Picklist p"),
-    @NamedQuery(name = "Picklist.findByPickListID", query = "SELECT p FROM Picklist p WHERE p.pickListID = :pickListID"),
+    @NamedQuery(name = "Picklist.findByPickListID", query = "SELECT p FROM Picklist p WHERE p.pickListId = :pickListID"),
     @NamedQuery(name = "Picklist.findByTimestampCreated", query = "SELECT p FROM Picklist p WHERE p.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Picklist.findByTimestampModified", query = "SELECT p FROM Picklist p WHERE p.timestampModified = :timestampModified"),
     @NamedQuery(name = "Picklist.findByVersion", query = "SELECT p FROM Picklist p WHERE p.version = :version"),
@@ -53,7 +53,7 @@ public class Picklist extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "PickListID")
-    private Integer pickListID;
+    private Integer pickListId;
       
     @Size(max = 64)
     @Column(name = "FieldName")
@@ -101,44 +101,39 @@ public class Picklist extends BaseEntity {
     @NotNull
     @Column(name = "Type")
     private short type;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pickListID")
-    private Collection<Picklistitem> picklistitemCollection;
+    
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pickList")
+    private Collection<Picklistitem> pickListItems;
     
     @JoinColumn(name = "CollectionID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne(optional = false)
-    private se.nrm.specify.datamodel.Collection collectionID;
+    private se.nrm.specify.datamodel.Collection collection;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
 
     public Picklist() {
     }
 
-    public Picklist(Integer pickListID) {
-        this.pickListID = pickListID;
+    public Picklist(Integer pickListId) {
+        this.pickListId = pickListId;
     }
 
-    public Picklist(Integer pickListID, Date timestampCreated, boolean isSystem, String name, boolean readOnly, short type) {
+    public Picklist(Integer pickListId, Date timestampCreated, boolean isSystem, String name, boolean readOnly, short type) {
         super(timestampCreated);
-        this.pickListID = pickListID; 
+        this.pickListId = pickListId; 
         this.isSystem = isSystem;
         this.name = name;
         this.readOnly = readOnly;
         this.type = type;
     }
 
-    public Integer getPickListID() {
-        return pickListID;
-    }
-
-    public void setPickListID(Integer pickListID) {
-        this.pickListID = pickListID;
-    }
  
     public String getFieldName() {
         return fieldName;
@@ -228,43 +223,53 @@ public class Picklist extends BaseEntity {
         this.type = type;
     }
 
+    public se.nrm.specify.datamodel.Collection getCollection() {
+        return collection;
+    }
+
+    public void setCollection(se.nrm.specify.datamodel.Collection collection) {
+        this.collection = collection;
+    }
+
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
+    }
+
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Integer getPickListId() {
+        return pickListId;
+    }
+
+    public void setPickListId(Integer pickListId) {
+        this.pickListId = pickListId;
+    }
+
     @XmlTransient
-    public Collection<Picklistitem> getPicklistitemCollection() {
-        return picklistitemCollection;
+    public Collection<Picklistitem> getPickListItems() {
+        return pickListItems;
     }
 
-    public void setPicklistitemCollection(Collection<Picklistitem> picklistitemCollection) {
-        this.picklistitemCollection = picklistitemCollection;
+    public void setPickListItems(Collection<Picklistitem> pickListItems) {
+        this.pickListItems = pickListItems;
     }
 
-    public se.nrm.specify.datamodel.Collection getCollectionID() {
-        return collectionID;
-    }
-
-    public void setCollectionID(se.nrm.specify.datamodel.Collection collectionID) {
-        this.collectionID = collectionID;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
+     
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (pickListID != null ? pickListID.hashCode() : 0);
+        hash += (pickListId != null ? pickListId.hashCode() : 0);
         return hash;
     }
 
@@ -275,7 +280,7 @@ public class Picklist extends BaseEntity {
             return false;
         }
         Picklist other = (Picklist) object;
-        if ((this.pickListID == null && other.pickListID != null) || (this.pickListID != null && !this.pickListID.equals(other.pickListID))) {
+        if ((this.pickListId == null && other.pickListId != null) || (this.pickListId != null && !this.pickListId.equals(other.pickListId))) {
             return false;
         }
         return true;
@@ -283,7 +288,7 @@ public class Picklist extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Picklist[ pickListID=" + pickListID + " ]";
+        return "Picklist[ pickListID=" + pickListId + " ]";
     }
     
 }

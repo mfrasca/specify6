@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Loanagent.findAll", query = "SELECT l FROM Loanagent l"),
-    @NamedQuery(name = "Loanagent.findByLoanAgentID", query = "SELECT l FROM Loanagent l WHERE l.loanAgentID = :loanAgentID"),
+    @NamedQuery(name = "Loanagent.findByLoanAgentID", query = "SELECT l FROM Loanagent l WHERE l.loanAgentId = :loanAgentID"),
     @NamedQuery(name = "Loanagent.findByTimestampCreated", query = "SELECT l FROM Loanagent l WHERE l.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Loanagent.findByTimestampModified", query = "SELECT l FROM Loanagent l WHERE l.timestampModified = :timestampModified"),
     @NamedQuery(name = "Loanagent.findByVersion", query = "SELECT l FROM Loanagent l WHERE l.version = :version"),
@@ -40,7 +40,7 @@ public class Loanagent extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "LoanAgentID")
-    private Integer loanAgentID;
+    private Integer loanAgentId;
      
     @Lob
     @Size(max = 65535)
@@ -55,44 +55,86 @@ public class Loanagent extends BaseEntity {
     
     @JoinColumn(name = "LoanID", referencedColumnName = "LoanID")
     @ManyToOne(optional = false)
-    private Loan loanID;
+    private Loan loan;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "DisciplineID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne
-    private Discipline disciplineID;
+    private Discipline discipline;
     
     @JoinColumn(name = "AgentID", referencedColumnName = "AgentID")
     @ManyToOne(optional = false)
-    private Agent agentID;
+    private Agent agent;
 
     public Loanagent() {
     }
 
-    public Loanagent(Integer loanAgentID) {
-        this.loanAgentID = loanAgentID;
+    public Loanagent(Integer loanAgentId) {
+        this.loanAgentId = loanAgentId;
     }
 
-    public Loanagent(Integer loanAgentID, Date timestampCreated, String role) {
+    public Loanagent(Integer loanAgentId, Date timestampCreated, String role) {
         super(timestampCreated);
-        this.loanAgentID = loanAgentID; 
+        this.loanAgentId = loanAgentId; 
         this.role = role;
     }
 
-    public Integer getLoanAgentID() {
-        return loanAgentID;
+    public Agent getAgent() {
+        return agent;
     }
 
-    public void setLoanAgentID(Integer loanAgentID) {
-        this.loanAgentID = loanAgentID;
+    public void setAgent(Agent agent) {
+        this.agent = agent;
     }
+
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
+    }
+
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Discipline getDiscipline() {
+        return discipline;
+    }
+
+    public void setDiscipline(Discipline discipline) {
+        this.discipline = discipline;
+    }
+
+    public Loan getLoan() {
+        return loan;
+    }
+
+    public void setLoan(Loan loan) {
+        this.loan = loan;
+    }
+
+    public Integer getLoanAgentId() {
+        return loanAgentId;
+    }
+
+    public void setLoanAgentId(Integer loanAgentId) {
+        this.loanAgentId = loanAgentId;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+ 
  
     public String getRemarks() {
         return remarks;
@@ -110,50 +152,14 @@ public class Loanagent extends BaseEntity {
         this.role = role;
     }
 
-    public Loan getLoanID() {
-        return loanID;
-    }
+    
 
-    public void setLoanID(Loan loanID) {
-        this.loanID = loanID;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
-    public Discipline getDisciplineID() {
-        return disciplineID;
-    }
-
-    public void setDisciplineID(Discipline disciplineID) {
-        this.disciplineID = disciplineID;
-    }
-
-    public Agent getAgentID() {
-        return agentID;
-    }
-
-    public void setAgentID(Agent agentID) {
-        this.agentID = agentID;
-    }
+   
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (loanAgentID != null ? loanAgentID.hashCode() : 0);
+        hash += (loanAgentId != null ? loanAgentId.hashCode() : 0);
         return hash;
     }
 
@@ -164,7 +170,7 @@ public class Loanagent extends BaseEntity {
             return false;
         }
         Loanagent other = (Loanagent) object;
-        if ((this.loanAgentID == null && other.loanAgentID != null) || (this.loanAgentID != null && !this.loanAgentID.equals(other.loanAgentID))) {
+        if ((this.loanAgentId == null && other.loanAgentId != null) || (this.loanAgentId != null && !this.loanAgentId.equals(other.loanAgentId))) {
             return false;
         }
         return true;
@@ -172,7 +178,7 @@ public class Loanagent extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Loanagent[ loanAgentID=" + loanAgentID + " ]";
+        return "Loanagent[ loanAgentID=" + loanAgentId + " ]";
     }
     
 }

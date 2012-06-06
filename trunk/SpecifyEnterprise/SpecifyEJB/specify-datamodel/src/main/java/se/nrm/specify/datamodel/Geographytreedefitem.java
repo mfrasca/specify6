@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Geographytreedefitem.findAll", query = "SELECT g FROM Geographytreedefitem g"),
-    @NamedQuery(name = "Geographytreedefitem.findByGeographyTreeDefItemID", query = "SELECT g FROM Geographytreedefitem g WHERE g.geographyTreeDefItemID = :geographyTreeDefItemID"),
+    @NamedQuery(name = "Geographytreedefitem.findByGeographyTreeDefItemID", query = "SELECT g FROM Geographytreedefitem g WHERE g.geographyTreeDefItemId = :geographyTreeDefItemID"),
     @NamedQuery(name = "Geographytreedefitem.findByTimestampCreated", query = "SELECT g FROM Geographytreedefitem g WHERE g.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Geographytreedefitem.findByTimestampModified", query = "SELECT g FROM Geographytreedefitem g WHERE g.timestampModified = :timestampModified"),
     @NamedQuery(name = "Geographytreedefitem.findByVersion", query = "SELECT g FROM Geographytreedefitem g WHERE g.version = :version"),
@@ -38,7 +38,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Geographytreedefitem.findByIsEnforced", query = "SELECT g FROM Geographytreedefitem g WHERE g.isEnforced = :isEnforced"),
     @NamedQuery(name = "Geographytreedefitem.findByIsInFullName", query = "SELECT g FROM Geographytreedefitem g WHERE g.isInFullName = :isInFullName"),
     @NamedQuery(name = "Geographytreedefitem.findByName", query = "SELECT g FROM Geographytreedefitem g WHERE g.name = :name"),
-    @NamedQuery(name = "Geographytreedefitem.findByRankID", query = "SELECT g FROM Geographytreedefitem g WHERE g.rankID = :rankID"),
+    @NamedQuery(name = "Geographytreedefitem.findByRankID", query = "SELECT g FROM Geographytreedefitem g WHERE g.rankId = :rankID"),
     @NamedQuery(name = "Geographytreedefitem.findByTextAfter", query = "SELECT g FROM Geographytreedefitem g WHERE g.textAfter = :textAfter"),
     @NamedQuery(name = "Geographytreedefitem.findByTextBefore", query = "SELECT g FROM Geographytreedefitem g WHERE g.textBefore = :textBefore"),
     @NamedQuery(name = "Geographytreedefitem.findByTitle", query = "SELECT g FROM Geographytreedefitem g WHERE g.title = :title")})
@@ -50,74 +50,98 @@ public class Geographytreedefitem extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "GeographyTreeDefItemID")
-    private Integer geographyTreeDefItemID;
+    private Integer geographyTreeDefItemId;
+    
     @Size(max = 32)
     @Column(name = "FullNameSeparator")
     private String fullNameSeparator;
+    
     @Column(name = "IsEnforced")
     private Boolean isEnforced;
+    
     @Column(name = "IsInFullName")
     private Boolean isInFullName;
+    
     @NotNull
     @Basic(optional = false)
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
+    
     @NotNull
     @Basic(optional = false) 
     @Column(name = "RankID")
-    private int rankID;
+    private int rankId;
+    
     @Lob
     @Size(max = 65535)
     @Column(name = "Remarks")
     private String remarks;
+    
     @Size(max = 64)
     @Column(name = "TextAfter")
     private String textAfter;
+    
     @Size(max = 64)
     @Column(name = "TextBefore")
     private String textBefore;
+    
     @Size(max = 64)
     @Column(name = "Title")
     private String title;
+    
     @JoinColumn(name = "GeographyTreeDefID", referencedColumnName = "GeographyTreeDefID")
     @ManyToOne(optional = false)
-    private Geographytreedef geographyTreeDefID;
-    @OneToMany(mappedBy = "parentItemID")
-    private Collection<Geographytreedefitem> geographytreedefitemCollection;
+    private Geographytreedef treeDef;
+    
+    @OneToMany(mappedBy = "parent")
+    private Collection<Geographytreedefitem> children;
+    
     @JoinColumn(name = "ParentItemID", referencedColumnName = "GeographyTreeDefItemID")
     @ManyToOne
-    private Geographytreedefitem parentItemID;
+    private Geographytreedefitem parent;
+    
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
+    
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "geographyTreeDefItemID")
-    private Collection<Geography> geographyCollection;
+    private Agent modifiedByAgent;
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "definitionItem")
+    private Collection<Geography> treeEntries;
 
     public Geographytreedefitem() {
     }
 
-    public Geographytreedefitem(Integer geographyTreeDefItemID) {
-        this.geographyTreeDefItemID = geographyTreeDefItemID;
+    public Geographytreedefitem(Integer geographyTreeDefItemId) {
+        this.geographyTreeDefItemId = geographyTreeDefItemId;
     }
 
-    public Geographytreedefitem(Integer geographyTreeDefItemID, Date timestampCreated, String name, int rankID) {
+    public Geographytreedefitem(Integer geographyTreeDefItemId, Date timestampCreated, String name, int rankId) {
         super(timestampCreated);
-        this.geographyTreeDefItemID = geographyTreeDefItemID;
+        this.geographyTreeDefItemId = geographyTreeDefItemId;
         this.name = name;
-        this.rankID = rankID;
+        this.rankId = rankId;
     }
 
-    public Integer getGeographyTreeDefItemID() {
-        return geographyTreeDefItemID;
+    public Integer getGeographyTreeDefItemId() {
+        return geographyTreeDefItemId;
     }
 
-    public void setGeographyTreeDefItemID(Integer geographyTreeDefItemID) {
-        this.geographyTreeDefItemID = geographyTreeDefItemID;
+    public void setGeographyTreeDefItemId(Integer geographyTreeDefItemId) {
+        this.geographyTreeDefItemId = geographyTreeDefItemId;
     }
+
+    public int getRankId() {
+        return rankId;
+    }
+
+    public void setRankId(int rankId) {
+        this.rankId = rankId;
+    }
+ 
 
     public String getFullNameSeparator() {
         return fullNameSeparator;
@@ -151,13 +175,7 @@ public class Geographytreedefitem extends BaseEntity {
         this.name = name;
     }
 
-    public int getRankID() {
-        return rankID;
-    }
-
-    public void setRankID(int rankID) {
-        this.rankID = rankID;
-    }
+ 
 
     public String getRemarks() {
         return remarks;
@@ -191,60 +209,63 @@ public class Geographytreedefitem extends BaseEntity {
         this.title = title;
     }
 
-    public Geographytreedef getGeographyTreeDefID() {
-        return geographyTreeDefID;
+    @XmlTransient
+    public Collection<Geographytreedefitem> getChildren() {
+        return children;
     }
 
-    public void setGeographyTreeDefID(Geographytreedef geographyTreeDefID) {
-        this.geographyTreeDefID = geographyTreeDefID;
+    public void setChildren(Collection<Geographytreedefitem> children) {
+        this.children = children;
+    }
+
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
+    }
+
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Geographytreedefitem getParent() {
+        return parent;
+    }
+
+    public void setParent(Geographytreedefitem parent) {
+        this.parent = parent;
+    }
+
+    public Geographytreedef getTreeDef() {
+        return treeDef;
+    }
+
+    public void setTreeDef(Geographytreedef treeDef) {
+        this.treeDef = treeDef;
     }
 
     @XmlTransient
-    public Collection<Geographytreedefitem> getGeographytreedefitemCollection() {
-        return geographytreedefitemCollection;
+    public Collection<Geography> getTreeEntries() {
+        return treeEntries;
     }
 
-    public void setGeographytreedefitemCollection(Collection<Geographytreedefitem> geographytreedefitemCollection) {
-        this.geographytreedefitemCollection = geographytreedefitemCollection;
+    public void setTreeEntries(Collection<Geography> treeEntries) {
+        this.treeEntries = treeEntries;
     }
 
-    public Geographytreedefitem getParentItemID() {
-        return parentItemID;
-    }
-
-    public void setParentItemID(Geographytreedefitem parentItemID) {
-        this.parentItemID = parentItemID;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
-    @XmlTransient
-    public Collection<Geography> getGeographyCollection() {
-        return geographyCollection;
-    }
-
-    public void setGeographyCollection(Collection<Geography> geographyCollection) {
-        this.geographyCollection = geographyCollection;
-    }
+    
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (geographyTreeDefItemID != null ? geographyTreeDefItemID.hashCode() : 0);
+        hash += (geographyTreeDefItemId != null ? geographyTreeDefItemId.hashCode() : 0);
         return hash;
     }
 
@@ -255,7 +276,7 @@ public class Geographytreedefitem extends BaseEntity {
             return false;
         }
         Geographytreedefitem other = (Geographytreedefitem) object;
-        if ((this.geographyTreeDefItemID == null && other.geographyTreeDefItemID != null) || (this.geographyTreeDefItemID != null && !this.geographyTreeDefItemID.equals(other.geographyTreeDefItemID))) {
+        if ((this.geographyTreeDefItemId == null && other.geographyTreeDefItemId != null) || (this.geographyTreeDefItemId != null && !this.geographyTreeDefItemId.equals(other.geographyTreeDefItemId))) {
             return false;
         }
         return true;
@@ -263,6 +284,6 @@ public class Geographytreedefitem extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Geographytreedefitem[ geographyTreeDefItemID=" + geographyTreeDefItemID + " ]";
+        return "Geographytreedefitem[ geographyTreeDefItemID=" + geographyTreeDefItemId + " ]";
     }
 }

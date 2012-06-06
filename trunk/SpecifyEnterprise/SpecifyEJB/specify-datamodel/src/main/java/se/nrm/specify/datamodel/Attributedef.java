@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Attributedef.findAll", query = "SELECT a FROM Attributedef a"),
-    @NamedQuery(name = "Attributedef.findByAttributeDefID", query = "SELECT a FROM Attributedef a WHERE a.attributeDefID = :attributeDefID"),
+    @NamedQuery(name = "Attributedef.findByAttributeDefID", query = "SELECT a FROM Attributedef a WHERE a.attributeDefId = :attributeDefID"),
     @NamedQuery(name = "Attributedef.findByTimestampCreated", query = "SELECT a FROM Attributedef a WHERE a.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Attributedef.findByTimestampModified", query = "SELECT a FROM Attributedef a WHERE a.timestampModified = :timestampModified"),
     @NamedQuery(name = "Attributedef.findByVersion", query = "SELECT a FROM Attributedef a WHERE a.version = :version"),
@@ -45,7 +45,7 @@ public class Attributedef extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "AttributeDefID")
-    private Integer attributeDefID;
+    private Integer attributeDefId;
      
     @Column(name = "DataType")
     private Short dataType;
@@ -57,50 +57,111 @@ public class Attributedef extends BaseEntity {
     @Column(name = "TableType")
     private Short tableType;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "attributeDefID")
-    private Collection<Collectingeventattr> collectingeventattrCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "definition")
+    private Collection<Collectingeventattr> collectingEventAttrs;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "attributeDefID")
-    private Collection<Collectionobjectattr> collectionobjectattrCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "definition")
+    private Collection<Collectionobjectattr> collectionObjectAttrs;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "attributeDefID")
-    private Collection<Preparationattr> preparationattrCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "definition")
+    private Collection<Preparationattr> preparationAttrs;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "PrepTypeID", referencedColumnName = "PrepTypeID")
     @ManyToOne
-    private Preptype prepTypeID;
+    private Preptype prepType;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "DisciplineID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne(optional = false)
-    private Discipline disciplineID;
+    private Discipline discipline;
 
     public Attributedef() {
     }
 
-    public Attributedef(Integer attributeDefID) {
-        this.attributeDefID = attributeDefID;
+    public Attributedef(Integer attributeDefId) {
+        this.attributeDefId = attributeDefId;
     }
 
-    public Attributedef(Integer attributeDefID, Date timestampCreated) {
+    public Attributedef(Integer attributeDefId, Date timestampCreated) {
         super(timestampCreated);
-        this.attributeDefID = attributeDefID; 
+        this.attributeDefId = attributeDefId; 
     }
 
-    public Integer getAttributeDefID() {
-        return attributeDefID;
+    public Integer getAttributeDefId() {
+        return attributeDefId;
     }
 
-    public void setAttributeDefID(Integer attributeDefID) {
-        this.attributeDefID = attributeDefID;
-    } 
+    public void setAttributeDefId(Integer attributeDefId) {
+        this.attributeDefId = attributeDefId;
+    }
+
+    @XmlTransient
+    public Collection<Collectingeventattr> getCollectingEventAttrs() {
+        return collectingEventAttrs;
+    }
+
+    public void setCollectingEventAttrs(Collection<Collectingeventattr> collectingEventAttrs) {
+        this.collectingEventAttrs = collectingEventAttrs;
+    }
+
+    @XmlTransient
+    public Collection<Collectionobjectattr> getCollectionObjectAttrs() {
+        return collectionObjectAttrs;
+    }
+
+    public void setCollectionObjectAttrs(Collection<Collectionobjectattr> collectionObjectAttrs) {
+        this.collectionObjectAttrs = collectionObjectAttrs;
+    }
+
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
+    }
+
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Discipline getDiscipline() {
+        return discipline;
+    }
+
+    public void setDiscipline(Discipline discipline) {
+        this.discipline = discipline;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Preptype getPrepType() {
+        return prepType;
+    }
+
+    public void setPrepType(Preptype prepType) {
+        this.prepType = prepType;
+    }
+
+    @XmlTransient
+    public Collection<Preparationattr> getPreparationAttrs() {
+        return preparationAttrs;
+    }
+
+    public void setPreparationAttrs(Collection<Preparationattr> preparationAttrs) {
+        this.preparationAttrs = preparationAttrs;
+    }
+
+ 
     
     public Short getDataType() {
         return dataType;
@@ -126,69 +187,15 @@ public class Attributedef extends BaseEntity {
         this.tableType = tableType;
     }
 
-    @XmlTransient
-    public Collection<Collectingeventattr> getCollectingeventattrCollection() {
-        return collectingeventattrCollection;
-    }
+ 
+    
 
-    public void setCollectingeventattrCollection(Collection<Collectingeventattr> collectingeventattrCollection) {
-        this.collectingeventattrCollection = collectingeventattrCollection;
-    }
-
-    @XmlTransient
-    public Collection<Collectionobjectattr> getCollectionobjectattrCollection() {
-        return collectionobjectattrCollection;
-    }
-
-    public void setCollectionobjectattrCollection(Collection<Collectionobjectattr> collectionobjectattrCollection) {
-        this.collectionobjectattrCollection = collectionobjectattrCollection;
-    }
-
-    @XmlTransient
-    public Collection<Preparationattr> getPreparationattrCollection() {
-        return preparationattrCollection;
-    }
-
-    public void setPreparationattrCollection(Collection<Preparationattr> preparationattrCollection) {
-        this.preparationattrCollection = preparationattrCollection;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Preptype getPrepTypeID() {
-        return prepTypeID;
-    }
-
-    public void setPrepTypeID(Preptype prepTypeID) {
-        this.prepTypeID = prepTypeID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
-    public Discipline getDisciplineID() {
-        return disciplineID;
-    }
-
-    public void setDisciplineID(Discipline disciplineID) {
-        this.disciplineID = disciplineID;
-    }
+   
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (attributeDefID != null ? attributeDefID.hashCode() : 0);
+        hash += (attributeDefId != null ? attributeDefId.hashCode() : 0);
         return hash;
     }
 
@@ -199,7 +206,7 @@ public class Attributedef extends BaseEntity {
             return false;
         }
         Attributedef other = (Attributedef) object;
-        if ((this.attributeDefID == null && other.attributeDefID != null) || (this.attributeDefID != null && !this.attributeDefID.equals(other.attributeDefID))) {
+        if ((this.attributeDefId == null && other.attributeDefId != null) || (this.attributeDefId != null && !this.attributeDefId.equals(other.attributeDefId))) {
             return false;
         }
         return true;
@@ -207,7 +214,7 @@ public class Attributedef extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Attributedef[ attributeDefID=" + attributeDefID + " ]";
+        return "Attributedef[ attributeDefId=" + attributeDefId + " ]";
     }
     
 }

@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Agentspecialty.findAll", query = "SELECT a FROM Agentspecialty a"),
-    @NamedQuery(name = "Agentspecialty.findByAgentSpecialtyID", query = "SELECT a FROM Agentspecialty a WHERE a.agentSpecialtyID = :agentSpecialtyID"),
+    @NamedQuery(name = "Agentspecialty.findByAgentSpecialtyID", query = "SELECT a FROM Agentspecialty a WHERE a.agentSpecialtyId = :agentSpecialtyID"),
     @NamedQuery(name = "Agentspecialty.findByTimestampCreated", query = "SELECT a FROM Agentspecialty a WHERE a.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Agentspecialty.findByTimestampModified", query = "SELECT a FROM Agentspecialty a WHERE a.timestampModified = :timestampModified"),
     @NamedQuery(name = "Agentspecialty.findByVersion", query = "SELECT a FROM Agentspecialty a WHERE a.version = :version"),
@@ -40,7 +40,7 @@ public class Agentspecialty extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "AgentSpecialtyID")
-    private Integer agentSpecialtyID;
+    private Integer agentSpecialtyId;
      
     @Basic(optional = false)
     @NotNull
@@ -55,37 +55,30 @@ public class Agentspecialty extends BaseEntity {
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "AgentID", referencedColumnName = "AgentID")
     @ManyToOne(optional = false)
-    private Agent agentID;
+    private Agent agent;
 
     public Agentspecialty() {
     }
 
-    public Agentspecialty(Integer agentSpecialtyID) {
-        this.agentSpecialtyID = agentSpecialtyID;
+    public Agentspecialty(Integer agentSpecialtyId) {
+        this.agentSpecialtyId = agentSpecialtyId;
     }
 
-    public Agentspecialty(Integer agentSpecialtyID, Date timestampCreated, int orderNumber, String specialtyName) {
+    public Agentspecialty(Integer agentSpecialtyId, Date timestampCreated, int orderNumber, String specialtyName) {
         super(timestampCreated);
-        this.agentSpecialtyID = agentSpecialtyID; 
+        this.agentSpecialtyId = agentSpecialtyId; 
         this.orderNumber = orderNumber;
         this.specialtyName = specialtyName;
     }
-
-    public Integer getAgentSpecialtyID() {
-        return agentSpecialtyID;
-    }
-
-    public void setAgentSpecialtyID(Integer agentSpecialtyID) {
-        this.agentSpecialtyID = agentSpecialtyID;
-    } 
+ 
     
     public int getOrderNumber() {
         return orderNumber;
@@ -103,34 +96,44 @@ public class Agentspecialty extends BaseEntity {
         this.specialtyName = specialtyName;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Agent getAgent() {
+        return agent;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setAgent(Agent agent) {
+        this.agent = agent;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Integer getAgentSpecialtyId() {
+        return agentSpecialtyId;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setAgentSpecialtyId(Integer agentSpecialtyId) {
+        this.agentSpecialtyId = agentSpecialtyId;
     }
 
-    public Agent getAgentID() {
-        return agentID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setAgentID(Agent agentID) {
-        this.agentID = agentID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (agentSpecialtyID != null ? agentSpecialtyID.hashCode() : 0);
+        hash += (agentSpecialtyId != null ? agentSpecialtyId.hashCode() : 0);
         return hash;
     }
 
@@ -141,7 +144,7 @@ public class Agentspecialty extends BaseEntity {
             return false;
         }
         Agentspecialty other = (Agentspecialty) object;
-        if ((this.agentSpecialtyID == null && other.agentSpecialtyID != null) || (this.agentSpecialtyID != null && !this.agentSpecialtyID.equals(other.agentSpecialtyID))) {
+        if ((this.agentSpecialtyId == null && other.agentSpecialtyId != null) || (this.agentSpecialtyId != null && !this.agentSpecialtyId.equals(other.agentSpecialtyId))) {
             return false;
         }
         return true;
@@ -149,7 +152,7 @@ public class Agentspecialty extends BaseEntity {
 
     @Override
     public String toString() {
-        return "se.nrm.specify.datamodel.Agentspecialty[ agentSpecialtyID=" + agentSpecialtyID + " ]";
+        return "se.nrm.specify.datamodel.Agentspecialty[ agentSpecialtyID=" + agentSpecialtyId + " ]";
     }
     
 }

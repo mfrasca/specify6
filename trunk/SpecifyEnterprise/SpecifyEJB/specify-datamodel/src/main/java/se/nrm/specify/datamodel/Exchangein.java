@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Exchangein.findAll", query = "SELECT e FROM Exchangein e"),
-    @NamedQuery(name = "Exchangein.findByExchangeInID", query = "SELECT e FROM Exchangein e WHERE e.exchangeInID = :exchangeInID"),
+    @NamedQuery(name = "Exchangein.findByExchangeInID", query = "SELECT e FROM Exchangein e WHERE e.exchangeInId = :exchangeInID"),
     @NamedQuery(name = "Exchangein.findByTimestampCreated", query = "SELECT e FROM Exchangein e WHERE e.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Exchangein.findByTimestampModified", query = "SELECT e FROM Exchangein e WHERE e.timestampModified = :timestampModified"),
     @NamedQuery(name = "Exchangein.findByVersion", query = "SELECT e FROM Exchangein e WHERE e.version = :version"),
@@ -50,7 +50,7 @@ public class Exchangein extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "ExchangeInID")
-    private Integer exchangeInID;
+    private Integer exchangeInId;
      
     @Size(max = 120)
     @Column(name = "DescriptionOfMaterial")
@@ -101,47 +101,49 @@ public class Exchangein extends BaseEntity {
     
     @JoinColumn(name = "ReceivedFromOrganizationID", referencedColumnName = "AgentID")
     @ManyToOne(optional = false)
-    private Agent receivedFromOrganizationID;
+    private Agent agentReceivedFrom;
     
     @JoinColumn(name = "AddressOfRecordID", referencedColumnName = "AddressOfRecordID")
     @ManyToOne
-    private Addressofrecord addressOfRecordID;
+    private Addressofrecord addressOfRecord;
     
     @JoinColumn(name = "DivisionID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne(optional = false)
-    private Division divisionID;
+    private Division division;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "CatalogedByID", referencedColumnName = "AgentID")
     @ManyToOne(optional = false)
-    private Agent catalogedByID;
+    private Agent agentCatalogedBy;
 
     public Exchangein() {
     }
 
-    public Exchangein(Integer exchangeInID) {
-        this.exchangeInID = exchangeInID;
+    public Exchangein(Integer exchangeInId) {
+        this.exchangeInId = exchangeInId;
     }
 
-    public Exchangein(Integer exchangeInID, Date timestampCreated) {
+    public Exchangein(Integer exchangeInId, Date timestampCreated) {
         super(timestampCreated);
-        this.exchangeInID = exchangeInID; 
+        this.exchangeInId = exchangeInId; 
     }
 
-    public Integer getExchangeInID() {
-        return exchangeInID;
+    public Integer getExchangeInId() {
+        return exchangeInId;
     }
 
-    public void setExchangeInID(Integer exchangeInID) {
-        this.exchangeInID = exchangeInID;
+    public void setExchangeInId(Integer exchangeInId) {
+        this.exchangeInId = exchangeInId;
     }
+
+ 
  
     public String getDescriptionOfMaterial() {
         return descriptionOfMaterial;
@@ -239,58 +241,59 @@ public class Exchangein extends BaseEntity {
         this.yesNo2 = yesNo2;
     }
 
-    public Agent getReceivedFromOrganizationID() {
-        return receivedFromOrganizationID;
+    public Addressofrecord getAddressOfRecord() {
+        return addressOfRecord;
     }
 
-    public void setReceivedFromOrganizationID(Agent receivedFromOrganizationID) {
-        this.receivedFromOrganizationID = receivedFromOrganizationID;
+    public void setAddressOfRecord(Addressofrecord addressOfRecord) {
+        this.addressOfRecord = addressOfRecord;
     }
 
-    public Addressofrecord getAddressOfRecordID() {
-        return addressOfRecordID;
+    public Agent getAgentCatalogedBy() {
+        return agentCatalogedBy;
     }
 
-    public void setAddressOfRecordID(Addressofrecord addressOfRecordID) {
-        this.addressOfRecordID = addressOfRecordID;
+    public void setAgentCatalogedBy(Agent agentCatalogedBy) {
+        this.agentCatalogedBy = agentCatalogedBy;
     }
 
-    public Division getDivisionID() {
-        return divisionID;
+    public Agent getAgentReceivedFrom() {
+        return agentReceivedFrom;
     }
 
-    public void setDivisionID(Division divisionID) {
-        this.divisionID = divisionID;
+    public void setAgentReceivedFrom(Agent agentReceivedFrom) {
+        this.agentReceivedFrom = agentReceivedFrom;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Division getDivision() {
+        return division;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setDivision(Division division) {
+        this.division = division;
     }
 
-    public Agent getCatalogedByID() {
-        return catalogedByID;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setCatalogedByID(Agent catalogedByID) {
-        this.catalogedByID = catalogedByID;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (exchangeInID != null ? exchangeInID.hashCode() : 0);
+        hash += (exchangeInId != null ? exchangeInId.hashCode() : 0);
         return hash;
     }
 
@@ -301,7 +304,7 @@ public class Exchangein extends BaseEntity {
             return false;
         }
         Exchangein other = (Exchangein) object;
-        if ((this.exchangeInID == null && other.exchangeInID != null) || (this.exchangeInID != null && !this.exchangeInID.equals(other.exchangeInID))) {
+        if ((this.exchangeInId == null && other.exchangeInId != null) || (this.exchangeInId != null && !this.exchangeInId.equals(other.exchangeInId))) {
             return false;
         }
         return true;
@@ -309,7 +312,7 @@ public class Exchangein extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Exchangein[ exchangeInID=" + exchangeInID + " ]";
+        return "Exchangein[ exchangeInID=" + exchangeInId + " ]";
     }
     
 }

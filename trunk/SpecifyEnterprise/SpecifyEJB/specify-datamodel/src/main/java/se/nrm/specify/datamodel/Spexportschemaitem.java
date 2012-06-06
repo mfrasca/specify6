@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Spexportschemaitem.findAll", query = "SELECT s FROM Spexportschemaitem s"),
-    @NamedQuery(name = "Spexportschemaitem.findBySpExportSchemaItemID", query = "SELECT s FROM Spexportschemaitem s WHERE s.spExportSchemaItemID = :spExportSchemaItemID"),
+    @NamedQuery(name = "Spexportschemaitem.findBySpExportSchemaItemID", query = "SELECT s FROM Spexportschemaitem s WHERE s.spExportSchemaItemId = :spExportSchemaItemID"),
     @NamedQuery(name = "Spexportschemaitem.findByTimestampCreated", query = "SELECT s FROM Spexportschemaitem s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Spexportschemaitem.findByTimestampModified", query = "SELECT s FROM Spexportschemaitem s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Spexportschemaitem.findByVersion", query = "SELECT s FROM Spexportschemaitem s WHERE s.version = :version"),
@@ -46,7 +46,7 @@ public class Spexportschemaitem extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "SpExportSchemaItemID")
-    private Integer spExportSchemaItemID;
+    private Integer spExportSchemaItemId;
      
     @Size(max = 32)
     @Column(name = "DataType")
@@ -64,45 +64,38 @@ public class Spexportschemaitem extends BaseEntity {
     @Column(name = "Formatter")
     private String formatter;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "exportSchemaItemID")
-    private Collection<Spexportschemaitemmapping> spexportschemaitemmappingCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "exportSchemaItem")
+    private Collection<Spexportschemaitemmapping> spexportschemaitemmappings;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "SpLocaleContainerItemID", referencedColumnName = "SpLocaleContainerItemID")
     @ManyToOne
-    private Splocalecontaineritem spLocaleContainerItemID;
+    private Splocalecontaineritem spLocaleContainerItem;
     
     @JoinColumn(name = "SpExportSchemaID", referencedColumnName = "SpExportSchemaID")
     @ManyToOne(optional = false)
-    private Spexportschema spExportSchemaID;
+    private Spexportschema spExportSchema;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
 
     public Spexportschemaitem() {
     }
 
-    public Spexportschemaitem(Integer spExportSchemaItemID) {
-        this.spExportSchemaItemID = spExportSchemaItemID;
+    public Spexportschemaitem(Integer spExportSchemaItemId) {
+        this.spExportSchemaItemId = spExportSchemaItemId;
     }
 
-    public Spexportschemaitem(Integer spExportSchemaItemID, Date timestampCreated) {
+    public Spexportschemaitem(Integer spExportSchemaItemId, Date timestampCreated) {
         super(timestampCreated);
-        this.spExportSchemaItemID = spExportSchemaItemID; 
+        this.spExportSchemaItemId = spExportSchemaItemId; 
     }
 
-    public Integer getSpExportSchemaItemID() {
-        return spExportSchemaItemID;
-    }
-
-    public void setSpExportSchemaItemID(Integer spExportSchemaItemID) {
-        this.spExportSchemaItemID = spExportSchemaItemID;
-    }
- 
+  
     public String getDataType() {
         return dataType;
     }
@@ -135,51 +128,61 @@ public class Spexportschemaitem extends BaseEntity {
         this.formatter = formatter;
     }
 
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
+    }
+
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Spexportschema getSpExportSchema() {
+        return spExportSchema;
+    }
+
+    public void setSpExportSchema(Spexportschema spExportSchema) {
+        this.spExportSchema = spExportSchema;
+    }
+
+    public Integer getSpExportSchemaItemId() {
+        return spExportSchemaItemId;
+    }
+
+    public void setSpExportSchemaItemId(Integer spExportSchemaItemId) {
+        this.spExportSchemaItemId = spExportSchemaItemId;
+    }
+
+    public Splocalecontaineritem getSpLocaleContainerItem() {
+        return spLocaleContainerItem;
+    }
+
+    public void setSpLocaleContainerItem(Splocalecontaineritem spLocaleContainerItem) {
+        this.spLocaleContainerItem = spLocaleContainerItem;
+    }
+
     @XmlTransient
-    public Collection<Spexportschemaitemmapping> getSpexportschemaitemmappingCollection() {
-        return spexportschemaitemmappingCollection;
+    public Collection<Spexportschemaitemmapping> getSpexportschemaitemmappings() {
+        return spexportschemaitemmappings;
     }
 
-    public void setSpexportschemaitemmappingCollection(Collection<Spexportschemaitemmapping> spexportschemaitemmappingCollection) {
-        this.spexportschemaitemmappingCollection = spexportschemaitemmappingCollection;
+    public void setSpexportschemaitemmappings(Collection<Spexportschemaitemmapping> spexportschemaitemmappings) {
+        this.spexportschemaitemmappings = spexportschemaitemmappings;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Splocalecontaineritem getSpLocaleContainerItemID() {
-        return spLocaleContainerItemID;
-    }
-
-    public void setSpLocaleContainerItemID(Splocalecontaineritem spLocaleContainerItemID) {
-        this.spLocaleContainerItemID = spLocaleContainerItemID;
-    }
-
-    public Spexportschema getSpExportSchemaID() {
-        return spExportSchemaID;
-    }
-
-    public void setSpExportSchemaID(Spexportschema spExportSchemaID) {
-        this.spExportSchemaID = spExportSchemaID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
+    
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (spExportSchemaItemID != null ? spExportSchemaItemID.hashCode() : 0);
+        hash += (spExportSchemaItemId != null ? spExportSchemaItemId.hashCode() : 0);
         return hash;
     }
 
@@ -190,7 +193,7 @@ public class Spexportschemaitem extends BaseEntity {
             return false;
         }
         Spexportschemaitem other = (Spexportschemaitem) object;
-        if ((this.spExportSchemaItemID == null && other.spExportSchemaItemID != null) || (this.spExportSchemaItemID != null && !this.spExportSchemaItemID.equals(other.spExportSchemaItemID))) {
+        if ((this.spExportSchemaItemId == null && other.spExportSchemaItemId != null) || (this.spExportSchemaItemId != null && !this.spExportSchemaItemId.equals(other.spExportSchemaItemId))) {
             return false;
         }
         return true;
@@ -198,7 +201,7 @@ public class Spexportschemaitem extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Spexportschemaitem[ spExportSchemaItemID=" + spExportSchemaItemID + " ]";
+        return "Spexportschemaitem[ spExportSchemaItemID=" + spExportSchemaItemId + " ]";
     }
     
 }

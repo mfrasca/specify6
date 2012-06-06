@@ -31,7 +31,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Spexportschema.findAll", query = "SELECT s FROM Spexportschema s"),
-    @NamedQuery(name = "Spexportschema.findBySpExportSchemaID", query = "SELECT s FROM Spexportschema s WHERE s.spExportSchemaID = :spExportSchemaID"),
+    @NamedQuery(name = "Spexportschema.findBySpExportSchemaID", query = "SELECT s FROM Spexportschema s WHERE s.spExportSchemaId = :spExportSchemaID"),
     @NamedQuery(name = "Spexportschema.findByTimestampCreated", query = "SELECT s FROM Spexportschema s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Spexportschema.findByTimestampModified", query = "SELECT s FROM Spexportschema s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Spexportschema.findByVersion", query = "SELECT s FROM Spexportschema s WHERE s.version = :version"),
@@ -47,7 +47,7 @@ public class Spexportschema extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "SpExportSchemaID")
-    private Integer spExportSchemaID;
+    private Integer spExportSchemaId;
      
     @Size(max = 255)
     @Column(name = "Description")
@@ -65,41 +65,85 @@ public class Spexportschema extends BaseEntity {
         @JoinColumn(name = "SpExportSchemaID", referencedColumnName = "SpExportSchemaID")}, inverseJoinColumns = {
         @JoinColumn(name = "SpExportSchemaMappingID", referencedColumnName = "SpExportSchemaMappingID")})
     @ManyToMany
-    private Collection<Spexportschemamapping> spexportschemamappingCollection;
+    private Collection<Spexportschemamapping> spExportSchemaMappings;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "DisciplineID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne(optional = false)
-    private Discipline disciplineID;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "spExportSchemaID")
-    private Collection<Spexportschemaitem> spexportschemaitemCollection;
+    private Discipline discipline
+            ;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "spExportSchema")
+    private Collection<Spexportschemaitem> spExportSchemaItems;
 
     public Spexportschema() {
     }
 
-    public Spexportschema(Integer spExportSchemaID) {
-        this.spExportSchemaID = spExportSchemaID;
+    public Spexportschema(Integer spExportSchemaId) {
+        this.spExportSchemaId = spExportSchemaId;
     }
 
-    public Spexportschema(Integer spExportSchemaID, Date timestampCreated) {
+    public Spexportschema(Integer spExportSchemaId, Date timestampCreated) {
         super(timestampCreated);
-        this.spExportSchemaID = spExportSchemaID; 
+        this.spExportSchemaId = spExportSchemaId; 
     }
 
-    public Integer getSpExportSchemaID() {
-        return spExportSchemaID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setSpExportSchemaID(Integer spExportSchemaID) {
-        this.spExportSchemaID = spExportSchemaID;
-    } 
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Discipline getDiscipline() {
+        return discipline;
+    }
+
+    public void setDiscipline(Discipline discipline) {
+        this.discipline = discipline;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Integer getSpExportSchemaId() {
+        return spExportSchemaId;
+    }
+
+    public void setSpExportSchemaId(Integer spExportSchemaId) {
+        this.spExportSchemaId = spExportSchemaId;
+    }
+
+    @XmlTransient
+    public Collection<Spexportschemaitem> getSpExportSchemaItems() {
+        return spExportSchemaItems;
+    }
+
+    public void setSpExportSchemaItems(Collection<Spexportschemaitem> spExportSchemaItems) {
+        this.spExportSchemaItems = spExportSchemaItems;
+    }
+
+    @XmlTransient
+    public Collection<Spexportschemamapping> getSpExportSchemaMappings() {
+        return spExportSchemaMappings;
+    }
+
+    public void setSpExportSchemaMappings(Collection<Spexportschemamapping> spExportSchemaMappings) {
+        this.spExportSchemaMappings = spExportSchemaMappings;
+    }
+ 
 
     public String getDescription() {
         return description;
@@ -124,53 +168,12 @@ public class Spexportschema extends BaseEntity {
     public void setSchemaVersion(String schemaVersion) {
         this.schemaVersion = schemaVersion;
     }
-
-    @XmlTransient
-    public Collection<Spexportschemamapping> getSpexportschemamappingCollection() {
-        return spexportschemamappingCollection;
-    }
-
-    public void setSpexportschemamappingCollection(Collection<Spexportschemamapping> spexportschemamappingCollection) {
-        this.spexportschemamappingCollection = spexportschemamappingCollection;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
-    public Discipline getDisciplineID() {
-        return disciplineID;
-    }
-
-    public void setDisciplineID(Discipline disciplineID) {
-        this.disciplineID = disciplineID;
-    }
-
-    @XmlTransient
-    public Collection<Spexportschemaitem> getSpexportschemaitemCollection() {
-        return spexportschemaitemCollection;
-    }
-
-    public void setSpexportschemaitemCollection(Collection<Spexportschemaitem> spexportschemaitemCollection) {
-        this.spexportschemaitemCollection = spexportschemaitemCollection;
-    }
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (spExportSchemaID != null ? spExportSchemaID.hashCode() : 0);
+        hash += (spExportSchemaId != null ? spExportSchemaId.hashCode() : 0);
         return hash;
     }
 
@@ -181,7 +184,7 @@ public class Spexportschema extends BaseEntity {
             return false;
         }
         Spexportschema other = (Spexportschema) object;
-        if ((this.spExportSchemaID == null && other.spExportSchemaID != null) || (this.spExportSchemaID != null && !this.spExportSchemaID.equals(other.spExportSchemaID))) {
+        if ((this.spExportSchemaId == null && other.spExportSchemaId != null) || (this.spExportSchemaId != null && !this.spExportSchemaId.equals(other.spExportSchemaId))) {
             return false;
         }
         return true;
@@ -189,7 +192,7 @@ public class Spexportschema extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Spexportschema[ spExportSchemaID=" + spExportSchemaID + " ]";
+        return "Spexportschema[ spExportSchemaID=" + spExportSchemaId + " ]";
     }
     
 }

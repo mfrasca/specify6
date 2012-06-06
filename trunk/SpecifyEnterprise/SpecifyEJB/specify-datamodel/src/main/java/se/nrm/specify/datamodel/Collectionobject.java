@@ -24,8 +24,7 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement; 
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter; 
+import javax.xml.bind.annotation.XmlTransient; 
 
 /**
  *
@@ -38,11 +37,11 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Collectionobject.findAll", query = "SELECT c FROM Collectionobject c"),
-    @NamedQuery(name = "Collectionobject.findByCollectionObjectID", query = "SELECT c FROM Collectionobject c WHERE c.collectionObjectID = :collectionObjectID"),
+    @NamedQuery(name = "Collectionobject.findByCollectionObjectID", query = "SELECT c FROM Collectionobject c WHERE c.collectionObjectId = :collectionObjectID"),
     @NamedQuery(name = "Collectionobject.findByTimestampCreated", query = "SELECT c FROM Collectionobject c WHERE c.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Collectionobject.findByTimestampModified", query = "SELECT c FROM Collectionobject c WHERE c.timestampModified = :timestampModified"),
     @NamedQuery(name = "Collectionobject.findByVersion", query = "SELECT c FROM Collectionobject c WHERE c.version = :version"),
-    @NamedQuery(name = "Collectionobject.findByCollectionMemberID", query = "SELECT c FROM Collectionobject c WHERE c.collectionMemberID = :collectionMemberID"),
+    @NamedQuery(name = "Collectionobject.findByCollectionMemberID", query = "SELECT c FROM Collectionobject c WHERE c.collectionMemberId = :collectionMemberID"),
     @NamedQuery(name = "Collectionobject.findByAltCatalogNumber", query = "SELECT c FROM Collectionobject c WHERE c.altCatalogNumber = :altCatalogNumber"),
     @NamedQuery(name = "Collectionobject.findByAvailability", query = "SELECT c FROM Collectionobject c WHERE c.availability = :availability"),
     @NamedQuery(name = "Collectionobject.findByCatalogNumber", query = "SELECT c FROM Collectionobject c WHERE c.catalogNumber = :catalogNumber"),
@@ -65,8 +64,8 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
     @NamedQuery(name = "Collectionobject.findByRestrictions", query = "SELECT c FROM Collectionobject c WHERE c.restrictions = :restrictions"),
     @NamedQuery(name = "Collectionobject.findByTotalValue", query = "SELECT c FROM Collectionobject c WHERE c.totalValue = :totalValue"),
     @NamedQuery(name = "Collectionobject.findByVisibility", query = "SELECT c FROM Collectionobject c WHERE c.visibility = :visibility"),
-    @NamedQuery(name = "Collectionobject.findLastRecordByCollectionCode", query = "select c from Collectionobject c where c.collectionID.code = :code order by c.collectionObjectID desc"),
-    @NamedQuery(name = "Collectionobject.findByCollectingEventIDAndYesNo2", query = "SELECT c FROM Collectionobject c WHERE c.collectingEventID = :collectingEventID and c.yesNo2 IS NULL"),  
+    @NamedQuery(name = "Collectionobject.findLastRecordByCollectionCode", query = "select c from Collectionobject c where c.collection.code = :code order by c.collectionObjectId desc"),
+    @NamedQuery(name = "Collectionobject.findByCollectingEventIDAndYesNo2", query = "SELECT c FROM Collectionobject c WHERE c.collectingEvent = :collectingEventID and c.yesNo2 IS NULL"),  
     @NamedQuery(name = "Collectionobject.findByYesNo1", query = "SELECT c FROM Collectionobject c WHERE c.yesNo1 = :yesNo1"),
     @NamedQuery(name = "Collectionobject.findByYesNo2", query = "SELECT c FROM Collectionobject c WHERE c.yesNo2 = :yesNo2"),
     @NamedQuery(name = "Collectionobject.findByYesNo3", query = "SELECT c FROM Collectionobject c WHERE c.yesNo3 = :yesNo3"),
@@ -82,12 +81,12 @@ public class Collectionobject extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "CollectionObjectID")
-    private Integer collectionObjectID;
+    private Integer collectionObjectId;
       
     @NotNull
     @Basic(optional = false) 
     @Column(name = "CollectionMemberID")
-    private int collectionMemberID;
+    private int collectionMemberId;
     
     @Size(max = 32)
     @Column(name = "AltCatalogNumber")
@@ -208,125 +207,160 @@ public class Collectionobject extends BaseEntity {
         @JoinColumn(name = "CollectionObjectID", referencedColumnName = "CollectionObjectID")}, inverseJoinColumns = {
         @JoinColumn(name = "ProjectID", referencedColumnName = "ProjectID")})
     @ManyToMany
-    private Collection<Project> projectCollection;
+    private Collection<Project> projects;
     
-    @OneToMany(mappedBy = "collectionObjectID")
-    private Collection<Treatmentevent> treatmenteventCollection;
+    @OneToMany(mappedBy = "collectionObject")
+    private Collection<Treatmentevent> treatmentEvents;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "collectionObjectID")
-    private Collection<Preparation> preparationCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "collectionObject")
+    private Collection<Preparation> preparations;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "collectionObjectID")
-    private Collection<Otheridentifier> otheridentifierCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "collectionObject")
+    private Collection<Otheridentifier> otherIdentifiers;
     
-    @OneToMany(mappedBy = "collectionObjectID")
-    private Collection<Conservdescription> conservdescriptionCollection;
+    @OneToMany(mappedBy = "collectionObject")
+    private Collection<Conservdescription> conservDescriptions;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "rightSideCollectionID")
-    private Collection<Collectionrelationship> collectionrelationshipCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "rightSide")
+    private Collection<Collectionrelationship> rightSideRels;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "leftSideCollectionID")
-    private Collection<Collectionrelationship> collectionrelationshipCollection1;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "leftSide")
+    private Collection<Collectionrelationship> leftSideRels;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "collectionObjectID")
-    private Collection<Collectionobjectattr> collectionobjectattrCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "collectionObject")
+    private Collection<Collectionobjectattr> collectionObjectAttrs;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "collectionObjectID")
-    private Collection<Determination> determinationCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "collectionObject")
+    private Collection<Determination> determinations;
     
-    @OneToMany(mappedBy = "collectionObjectID")
-    private Collection<Dnasequence> dnasequenceCollection;
+    @OneToMany(mappedBy = "collectionObject")
+    private Collection<Dnasequence> dnaSequences;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "collectionObjectID")
-    private Collection<Collectionobjectattachment> collectionobjectattachmentCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "collectionObject")
+    private Collection<Collectionobjectattachment> collectionObjectAttachments;
     
     @JoinColumn(name = "AccessionID", referencedColumnName = "AccessionID")
     @ManyToOne
-    private Accession accessionID;
+    private Accession accession;
     
     @JoinColumn(name = "CatalogerID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent catalogerID;
+    private Agent cataloger;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "FieldNotebookPageID", referencedColumnName = "FieldNotebookPageID")
     @ManyToOne
-    private Fieldnotebookpage fieldNotebookPageID;
+    private Fieldnotebookpage fieldNotebookPage;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "VisibilitySetByID", referencedColumnName = "SpecifyUserID")
     @ManyToOne
-    private Specifyuser visibilitySetByID;
+    private Specifyuser visibilitySetBy;
     
     @JoinColumn(name = "CollectionID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne(optional = false)
-    private se.nrm.specify.datamodel.Collection collectionID;
+    private se.nrm.specify.datamodel.Collection collection;
     
     @JoinColumn(name = "PaleoContextID", referencedColumnName = "PaleoContextID")
     @ManyToOne
-    private Paleocontext paleoContextID;
+    private Paleocontext paleoContext;
     
     @JoinColumn(name = "CollectionObjectAttributeID", referencedColumnName = "CollectionObjectAttributeID")
     @ManyToOne
-    private Collectionobjectattribute collectionObjectAttributeID;
+    private Collectionobjectattribute collectionObjectAttribute;
     
     @JoinColumn(name = "ContainerOwnerID", referencedColumnName = "ContainerID")
     @ManyToOne
-    private Container containerOwnerID;
+    private Container containerOwner;
     
     @JoinColumn(name = "AppraisalID", referencedColumnName = "AppraisalID")
     @ManyToOne
-    private Appraisal appraisalID;
+    private Appraisal appraisal;
     
     @JoinColumn(name = "CollectingEventID", referencedColumnName = "CollectingEventID")
     @ManyToOne
-    private Collectingevent collectingEventID;
+    private Collectingevent collectingEvent;
     
     @JoinColumn(name = "ContainerID", referencedColumnName = "ContainerID")
     @ManyToOne
-    private Container containerID;
+    private Container container;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "collectionObjectID")
-    private Collection<Collectionobjectcitation> collectionobjectcitationCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "collectionObject")
+    private Collection<Collectionobjectcitation> collectionObjectCitations;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "collectionObjectID")
-    private Collection<Exsiccataitem> exsiccataitemCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "collectionObject")
+    private Collection<Exsiccataitem> exsiccataItems;
 
     public Collectionobject() {
         super();
     }
 
-    public Collectionobject(Integer collectionObjectID) {
-        this.collectionObjectID = collectionObjectID;
+    public Collectionobject(Integer collectionObjectId) {
+        this.collectionObjectId = collectionObjectId;
     }
 
-    public Collectionobject(Integer collectionObjectID, Date timestampCreated, int collectionMemberID) {
+    public Collectionobject(Integer collectionObjectId, Date timestampCreated, int collectionMemberId) {
         super(timestampCreated);
-        this.collectionObjectID = collectionObjectID; 
-        this.collectionMemberID = collectionMemberID;
+        this.collectionObjectId = collectionObjectId; 
+        this.collectionMemberId = collectionMemberId;
     }
 
-    public Integer getCollectionObjectID() {
-        return collectionObjectID;
+    public int getCollectionMemberId() {
+        return collectionMemberId;
     }
 
-    public void setCollectionObjectID(Integer collectionObjectID) {
-        this.collectionObjectID = collectionObjectID;
+    public void setCollectionMemberId(int collectionMemberId) {
+        this.collectionMemberId = collectionMemberId;
     }
+
+    public Integer getCollectionObjectId() {
+        return collectionObjectId;
+    }
+
+    public void setCollectionObjectId(Integer collectionObjectId) {
+        this.collectionObjectId = collectionObjectId;
+    }
+
+    public Accession getAccession() {
+        return accession;
+    }
+
+    public void setAccession(Accession accession) {
+        this.accession = accession;
+    }
+
+    public Appraisal getAppraisal() {
+        return appraisal;
+    }
+
+    public void setAppraisal(Appraisal appraisal) {
+        this.appraisal = appraisal;
+    }
+
+    public Agent getCataloger() {
+        return cataloger;
+    }
+
+    public void setCataloger(Agent cataloger) {
+        this.cataloger = cataloger;
+    }
+
+    public Collectingevent getCollectingEvent() {
+        return collectingEvent;
+    }
+
+    public void setCollectingEvent(Collectingevent collectingEvent) {
+        this.collectingEvent = collectingEvent;
+    }
+
  
-    public int getCollectionMemberID() {
-        return collectionMemberID;
-    }
-
-    public void setCollectionMemberID(int collectionMemberID) {
-        this.collectionMemberID = collectionMemberID;
-    }
+ 
 
     public String getAltCatalogNumber() {
         return altCatalogNumber;
@@ -577,230 +611,215 @@ public class Collectionobject extends BaseEntity {
     }
 
     @XmlTransient
-    public Collection<Project> getProjectCollection() {
-        return projectCollection;
+    public Collection<Project> getProjects() {
+        return projects;
     }
 
-    public void setProjectCollection(Collection<Project> projectCollection) {
-        this.projectCollection = projectCollection;
+    public void setProjects(Collection<Project> projects) {
+        this.projects = projects;
     }
 
-    @XmlTransient
-    public Collection<Treatmentevent> getTreatmenteventCollection() {
-        return treatmenteventCollection;
+ 
+
+    public Paleocontext getPaleoContext() {
+        return paleoContext;
     }
 
-    public void setTreatmenteventCollection(Collection<Treatmentevent> treatmenteventCollection) {
-        this.treatmenteventCollection = treatmenteventCollection;
+    public void setPaleoContext(Paleocontext paleoContext) {
+        this.paleoContext = paleoContext;
     }
 
-//    @XmlTransient
-    public Collection<Preparation> getPreparationCollection() {
-        return preparationCollection;
+    public Collection<Preparation> getPreparations() {
+        return preparations;
     }
 
-    public void setPreparationCollection(Collection<Preparation> preparationCollection) {
-        this.preparationCollection = preparationCollection;
-    }
-
-    @XmlTransient
-    public Collection<Otheridentifier> getOtheridentifierCollection() {
-        return otheridentifierCollection;
-    }
-
-    public void setOtheridentifierCollection(Collection<Otheridentifier> otheridentifierCollection) {
-        this.otheridentifierCollection = otheridentifierCollection;
+    public void setPreparations(Collection<Preparation> preparations) {
+        this.preparations = preparations;
     }
 
     @XmlTransient
-    public Collection<Conservdescription> getConservdescriptionCollection() {
-        return conservdescriptionCollection;
+    public Collection<Treatmentevent> getTreatmentEvents() {
+        return treatmentEvents;
     }
 
-    public void setConservdescriptionCollection(Collection<Conservdescription> conservdescriptionCollection) {
-        this.conservdescriptionCollection = conservdescriptionCollection;
+    public void setTreatmentEvents(Collection<Treatmentevent> treatmentEvents) {
+        this.treatmentEvents = treatmentEvents;
+    }
+
+    public Specifyuser getVisibilitySetBy() {
+        return visibilitySetBy;
+    }
+
+    public void setVisibilitySetBy(Specifyuser visibilitySetBy) {
+        this.visibilitySetBy = visibilitySetBy;
+    }
+ 
+
+    @XmlTransient
+    public Collection<Collectionrelationship> getLeftSideRels() {
+        return leftSideRels;
+    }
+
+    public void setLeftSideRels(Collection<Collectionrelationship> leftSideRels) {
+        this.leftSideRels = leftSideRels;
     }
 
     @XmlTransient
-    public Collection<Collectionrelationship> getCollectionrelationshipCollection() {
-        return collectionrelationshipCollection;
+    public Collection<Otheridentifier> getOtherIdentifiers() {
+        return otherIdentifiers;
     }
 
-    public void setCollectionrelationshipCollection(Collection<Collectionrelationship> collectionrelationshipCollection) {
-        this.collectionrelationshipCollection = collectionrelationshipCollection;
-    }
-
-    @XmlTransient
-    public Collection<Collectionrelationship> getCollectionrelationshipCollection1() {
-        return collectionrelationshipCollection1;
-    }
-
-    public void setCollectionrelationshipCollection1(Collection<Collectionrelationship> collectionrelationshipCollection1) {
-        this.collectionrelationshipCollection1 = collectionrelationshipCollection1;
+    public void setOtherIdentifiers(Collection<Otheridentifier> otherIdentifiers) {
+        this.otherIdentifiers = otherIdentifiers;
     }
 
     @XmlTransient
-    public Collection<Collectionobjectattr> getCollectionobjectattrCollection() {
-        return collectionobjectattrCollection;
+    public Collection<Collectionrelationship> getRightSideRels() {
+        return rightSideRels;
     }
 
-    public void setCollectionobjectattrCollection(Collection<Collectionobjectattr> collectionobjectattrCollection) {
-        this.collectionobjectattrCollection = collectionobjectattrCollection;
+    public void setRightSideRels(Collection<Collectionrelationship> rightSideRels) {
+        this.rightSideRels = rightSideRels;
+    }
+ 
+ 
+
+ 
+
+    
+    public Collection<Determination> getDeterminations() {
+        return determinations;
     }
 
-//    @XmlTransient
-    public Collection<Determination> getDeterminationCollection() {
-        return determinationCollection;
-    }
-
-    public void setDeterminationCollection(Collection<Determination> determinationCollection) {
-        this.determinationCollection = determinationCollection;
-    }
-
-    @XmlTransient
-    public Collection<Dnasequence> getDnasequenceCollection() {
-        return dnasequenceCollection;
-    }
-
-    public void setDnasequenceCollection(Collection<Dnasequence> dnasequenceCollection) {
-        this.dnasequenceCollection = dnasequenceCollection;
+    public void setDeterminations(Collection<Determination> determinations) {
+        this.determinations = determinations;
     }
 
     @XmlTransient
-    public Collection<Collectionobjectattachment> getCollectionobjectattachmentCollection() {
-        return collectionobjectattachmentCollection;
+    public Collection<Dnasequence> getDnaSequences() {
+        return dnaSequences;
     }
 
-    public void setCollectionobjectattachmentCollection(Collection<Collectionobjectattachment> collectionobjectattachmentCollection) {
-        this.collectionobjectattachmentCollection = collectionobjectattachmentCollection;
+    public void setDnaSequences(Collection<Dnasequence> dnaSequences) {
+        this.dnaSequences = dnaSequences;
     }
 
-    public Accession getAccessionID() {
-        return accessionID;
+ 
+
+ 
+
+    public Container getContainer() {
+        return container;
     }
 
-    public void setAccessionID(Accession accessionID) {
-        this.accessionID = accessionID;
+    public void setContainer(Container container) {
+        this.container = container;
     }
 
-    public Agent getCatalogerID() {
-        return catalogerID;
+    public Container getContainerOwner() {
+        return containerOwner;
     }
 
-    public void setCatalogerID(Agent catalogerID) {
-        this.catalogerID = catalogerID;
+    public void setContainerOwner(Container containerOwner) {
+        this.containerOwner = containerOwner;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Fieldnotebookpage getFieldNotebookPageID() {
-        return fieldNotebookPageID;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setFieldNotebookPageID(Fieldnotebookpage fieldNotebookPageID) {
-        this.fieldNotebookPageID = fieldNotebookPageID;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Fieldnotebookpage getFieldNotebookPage() {
+        return fieldNotebookPage;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setFieldNotebookPage(Fieldnotebookpage fieldNotebookPage) {
+        this.fieldNotebookPage = fieldNotebookPage;
     }
 
-    public Specifyuser getVisibilitySetByID() {
-        return visibilitySetByID;
+    public se.nrm.specify.datamodel.Collection getCollection() {
+        return collection;
     }
 
-    public void setVisibilitySetByID(Specifyuser visibilitySetByID) {
-        this.visibilitySetByID = visibilitySetByID;
+    public void setCollection(se.nrm.specify.datamodel.Collection collection) {
+        this.collection = collection;
     }
 
-    public se.nrm.specify.datamodel.Collection getCollectionID() {
-        return collectionID;
+  
+
+    @XmlTransient
+    public Collection<Collectionobjectattachment> getCollectionObjectAttachments() {
+        return collectionObjectAttachments;
     }
 
-    public void setCollectionID(se.nrm.specify.datamodel.Collection collectionID) {
-        this.collectionID = collectionID;
+    public void setCollectionObjectAttachments(Collection<Collectionobjectattachment> collectionObjectAttachments) {
+        this.collectionObjectAttachments = collectionObjectAttachments;
     }
 
-    public Paleocontext getPaleoContextID() {
-        return paleoContextID;
+    public Collectionobjectattribute getCollectionObjectAttribute() {
+        return collectionObjectAttribute;
     }
 
-    public void setPaleoContextID(Paleocontext paleoContextID) {
-        this.paleoContextID = paleoContextID;
+    public void setCollectionObjectAttribute(Collectionobjectattribute collectionObjectAttribute) {
+        this.collectionObjectAttribute = collectionObjectAttribute;
     }
 
-    public Collectionobjectattribute getCollectionObjectAttributeID() {
-        return collectionObjectAttributeID;
-    }
+ 
+ 
 
-    public void setCollectionObjectAttributeID(Collectionobjectattribute collectionObjectAttributeID) {
-        this.collectionObjectAttributeID = collectionObjectAttributeID;
+    @XmlTransient
+    public Collection<Collectionobjectattr> getCollectionObjectAttrs() {
+        return collectionObjectAttrs;
     }
-
-    public Container getContainerOwnerID() {
-        return containerOwnerID;
-    }
-
-    public void setContainerOwnerID(Container containerOwnerID) {
-        this.containerOwnerID = containerOwnerID;
-    }
-
-    public Appraisal getAppraisalID() {
-        return appraisalID;
-    }
-
-    public void setAppraisalID(Appraisal appraisalID) {
-        this.appraisalID = appraisalID;
-    }
-
-    public Collectingevent getCollectingEventID() {
-        return collectingEventID;
-    }
-
-    public void setCollectingEventID(Collectingevent collectingEventID) {
-        this.collectingEventID = collectingEventID;
-    }
-
-    public Container getContainerID() {
-        return containerID;
-    }
-
-    public void setContainerID(Container containerID) {
-        this.containerID = containerID;
+ 
+    public void setCollectionObjectAttrs(Collection<Collectionobjectattr> collectionObjectAttrs) {
+        this.collectionObjectAttrs = collectionObjectAttrs;
     }
 
     @XmlTransient
-    public Collection<Collectionobjectcitation> getCollectionobjectcitationCollection() {
-        return collectionobjectcitationCollection;
+    public Collection<Collectionobjectcitation> getCollectionObjectCitations() {
+        return collectionObjectCitations;
     }
 
-    public void setCollectionobjectcitationCollection(Collection<Collectionobjectcitation> collectionobjectcitationCollection) {
-        this.collectionobjectcitationCollection = collectionobjectcitationCollection;
+    public void setCollectionObjectCitations(Collection<Collectionobjectcitation> collectionObjectCitations) {
+        this.collectionObjectCitations = collectionObjectCitations;
     }
 
     @XmlTransient
-    public Collection<Exsiccataitem> getExsiccataitemCollection() {
-        return exsiccataitemCollection;
+    public Collection<Conservdescription> getConservDescriptions() {
+        return conservDescriptions;
     }
 
-    public void setExsiccataitemCollection(Collection<Exsiccataitem> exsiccataitemCollection) {
-        this.exsiccataitemCollection = exsiccataitemCollection;
+    public void setConservDescriptions(Collection<Conservdescription> conservDescriptions) {
+        this.conservDescriptions = conservDescriptions;
     }
+
+    public Collection<Exsiccataitem> getExsiccataItems() {
+        return exsiccataItems;
+    }
+
+    public void setExsiccataItems(Collection<Exsiccataitem> exsiccataItems) {
+        this.exsiccataItems = exsiccataItems;
+    }
+
+ 
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (collectionObjectID != null ? collectionObjectID.hashCode() : 0);
+        hash += (collectionObjectId != null ? collectionObjectId.hashCode() : 0);
         return hash;
     }
 
@@ -811,7 +830,7 @@ public class Collectionobject extends BaseEntity {
             return false;
         }
         Collectionobject other = (Collectionobject) object;
-        if ((this.collectionObjectID == null && other.collectionObjectID != null) || (this.collectionObjectID != null && !this.collectionObjectID.equals(other.collectionObjectID))) {
+        if ((this.collectionObjectId == null && other.collectionObjectId != null) || (this.collectionObjectId != null && !this.collectionObjectId.equals(other.collectionObjectId))) {
             return false;
         }
         return true;
@@ -820,7 +839,7 @@ public class Collectionobject extends BaseEntity {
     
     @Override
     public String toString() {
-        return "Collectionobject[ collectionObjectID=" + collectionObjectID + " ]";
+        return "Collectionobject[ collectionObjectId=" + collectionObjectId + " ]";
     }
     
 }

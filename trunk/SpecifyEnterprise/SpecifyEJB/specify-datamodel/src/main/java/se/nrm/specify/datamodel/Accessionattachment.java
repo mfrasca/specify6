@@ -1,19 +1,7 @@
 package se.nrm.specify.datamodel;
 
 import java.util.Date;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;  
-//import javax.validation.constraints.NotNull;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -26,7 +14,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Accessionattachment.findAll", query = "SELECT a FROM Accessionattachment a"),
-    @NamedQuery(name = "Accessionattachment.findByAccessionAttachmentID", query = "SELECT a FROM Accessionattachment a WHERE a.accessionAttachmentID = :accessionAttachmentID"),
+    @NamedQuery(name = "Accessionattachment.findByAccessionAttachmentID", query = "SELECT a FROM Accessionattachment a WHERE a.accessionAttachmentId = :accessionAttachmentID"),
     @NamedQuery(name = "Accessionattachment.findByTimestampCreated", query = "SELECT a FROM Accessionattachment a WHERE a.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Accessionattachment.findByTimestampModified", query = "SELECT a FROM Accessionattachment a WHERE a.timestampModified = :timestampModified"),
     @NamedQuery(name = "Accessionattachment.findByVersion", query = "SELECT a FROM Accessionattachment a WHERE a.version = :version"),
@@ -40,7 +28,7 @@ public class Accessionattachment extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "AccessionAttachmentID")
-    private Integer accessionAttachmentID;
+    private Integer accessionAttachmentId;
      
     @Column(name = "Ordinal")
     private Integer ordinal;
@@ -52,39 +40,41 @@ public class Accessionattachment extends BaseEntity {
     
     @JoinColumn(name = "AttachmentID", referencedColumnName = "AttachmentID")
     @ManyToOne(optional = false)
-    private Attachment attachmentID;
+    private Attachment attachment;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "AccessionID", referencedColumnName = "AccessionID")
     @ManyToOne(optional = false)
-    private Accession accessionID;
+    private Accession accession;
 
     public Accessionattachment() {
     }
 
-    public Accessionattachment(Integer accessionAttachmentID) {
-        this.accessionAttachmentID = accessionAttachmentID;
+    public Accessionattachment(Integer accessionAttachmentId) {
+        this.accessionAttachmentId = accessionAttachmentId;
     }
 
-    public Accessionattachment(Integer accessionAttachmentID, Date timestampCreated) {
+    public Accessionattachment(Integer accessionAttachmentId, Date timestampCreated) {
         super(timestampCreated);
-        this.accessionAttachmentID = accessionAttachmentID; 
+        this.accessionAttachmentId = accessionAttachmentId; 
     }
 
-    public Integer getAccessionAttachmentID() {
-        return accessionAttachmentID;
+    public Integer getAccessionAttachmentId() {
+        return accessionAttachmentId;
     }
 
-    public void setAccessionAttachmentID(Integer accessionAttachmentID) {
-        this.accessionAttachmentID = accessionAttachmentID;
-    }  
+    public void setAccessionAttachmentId(Integer accessionAttachmentId) {
+        this.accessionAttachmentId = accessionAttachmentId;
+    }
+
+  
     
     public Integer getOrdinal() {
         return ordinal;
@@ -102,42 +92,46 @@ public class Accessionattachment extends BaseEntity {
         this.remarks = remarks;
     }
 
-    public Attachment getAttachmentID() {
-        return attachmentID;
+    public Accession getAccession() {
+        return accession;
     }
 
-    public void setAttachmentID(Attachment attachmentID) {
-        this.attachmentID = attachmentID;
+    public void setAccession(Accession accession) {
+        this.accession = accession;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Attachment getAttachment() {
+        return attachment;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setAttachment(Attachment attachment) {
+        this.attachment = attachment;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Accession getAccessionID() {
-        return accessionID;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setAccessionID(Accession accessionID) {
-        this.accessionID = accessionID;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
+
+ 
+
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (accessionAttachmentID != null ? accessionAttachmentID.hashCode() : 0);
+        hash += (accessionAttachmentId != null ? accessionAttachmentId.hashCode() : 0);
         return hash;
     }
 
@@ -148,7 +142,7 @@ public class Accessionattachment extends BaseEntity {
             return false;
         }
         Accessionattachment other = (Accessionattachment) object;
-        if ((this.accessionAttachmentID == null && other.accessionAttachmentID != null) || (this.accessionAttachmentID != null && !this.accessionAttachmentID.equals(other.accessionAttachmentID))) {
+        if ((this.accessionAttachmentId == null && other.accessionAttachmentId != null) || (this.accessionAttachmentId != null && !this.accessionAttachmentId.equals(other.accessionAttachmentId))) {
             return false;
         }
         return true;
@@ -156,7 +150,7 @@ public class Accessionattachment extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Accessionattachment[ accessionAttachmentID=" + accessionAttachmentID + " ]";
+        return "Accessionattachment[ accessionAttachmentId=" + accessionAttachmentId + " ]";
     }
     
 }

@@ -2,20 +2,7 @@ package se.nrm.specify.datamodel;
  
 import java.util.Collection;
 import java.util.Date;
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table; 
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -31,7 +18,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Taxontreedefitem.findAll", query = "SELECT t FROM Taxontreedefitem t"),
-    @NamedQuery(name = "Taxontreedefitem.findByTaxonTreeDefItemID", query = "SELECT t FROM Taxontreedefitem t WHERE t.taxonTreeDefItemID = :taxonTreeDefItemID"),
+    @NamedQuery(name = "Taxontreedefitem.findByTaxonTreeDefItemID", query = "SELECT t FROM Taxontreedefitem t WHERE t.taxonTreeDefItemId = :taxonTreeDefItemID"),
     @NamedQuery(name = "Taxontreedefitem.findByTimestampCreated", query = "SELECT t FROM Taxontreedefitem t WHERE t.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Taxontreedefitem.findByTimestampModified", query = "SELECT t FROM Taxontreedefitem t WHERE t.timestampModified = :timestampModified"),
     @NamedQuery(name = "Taxontreedefitem.findByVersion", query = "SELECT t FROM Taxontreedefitem t WHERE t.version = :version"),
@@ -40,7 +27,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Taxontreedefitem.findByIsEnforced", query = "SELECT t FROM Taxontreedefitem t WHERE t.isEnforced = :isEnforced"),
     @NamedQuery(name = "Taxontreedefitem.findByIsInFullName", query = "SELECT t FROM Taxontreedefitem t WHERE t.isInFullName = :isInFullName"),
     @NamedQuery(name = "Taxontreedefitem.findByName", query = "SELECT t FROM Taxontreedefitem t WHERE t.name = :name"),
-    @NamedQuery(name = "Taxontreedefitem.findByRankID", query = "SELECT t FROM Taxontreedefitem t WHERE t.rankID = :rankID"),
+    @NamedQuery(name = "Taxontreedefitem.findByRankID", query = "SELECT t FROM Taxontreedefitem t WHERE t.rankId = :rankID"),
     @NamedQuery(name = "Taxontreedefitem.findByTextAfter", query = "SELECT t FROM Taxontreedefitem t WHERE t.textAfter = :textAfter"),
     @NamedQuery(name = "Taxontreedefitem.findByTextBefore", query = "SELECT t FROM Taxontreedefitem t WHERE t.textBefore = :textBefore"),
     @NamedQuery(name = "Taxontreedefitem.findByTitle", query = "SELECT t FROM Taxontreedefitem t WHERE t.title = :title")})
@@ -53,7 +40,7 @@ public class Taxontreedefitem extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "TaxonTreeDefItemID")
-    private Integer taxonTreeDefItemID;
+    private Integer taxonTreeDefItemId;
      
     @Size(max = 32)
     @Column(name = "FormatToken")
@@ -78,7 +65,7 @@ public class Taxontreedefitem extends BaseEntity {
     @Basic(optional = false)
     @NotNull
     @Column(name = "RankID")
-    private int rankID;
+    private int rankId;
     
     @Lob
     @Size(max = 65535)
@@ -97,49 +84,108 @@ public class Taxontreedefitem extends BaseEntity {
     @Column(name = "Title")
     private String title;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "taxonTreeDefItemID")
-    private Collection<Taxon> taxonCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "definitionItem")
+    private Collection<Taxon> treeEntries;
     
     @JoinColumn(name = "TaxonTreeDefID", referencedColumnName = "TaxonTreeDefID")
     @ManyToOne(optional = false)
-    private Taxontreedef taxonTreeDefID;
+    private Taxontreedef treeDef;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
-    @OneToMany(mappedBy = "parentItemID")
-    private Collection<Taxontreedefitem> taxontreedefitemCollection;
+    @OneToMany(mappedBy = "parent")
+    private Collection<Taxontreedefitem> children;
     
     @JoinColumn(name = "ParentItemID", referencedColumnName = "TaxonTreeDefItemID")
     @ManyToOne
-    private Taxontreedefitem parentItemID;
+    private Taxontreedefitem parent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
 
     public Taxontreedefitem() {
     }
 
-    public Taxontreedefitem(Integer taxonTreeDefItemID) {
-        this.taxonTreeDefItemID = taxonTreeDefItemID;
+    public Taxontreedefitem(Integer taxonTreeDefItemId) {
+        this.taxonTreeDefItemId = taxonTreeDefItemId;
     }
 
-    public Taxontreedefitem(Integer taxonTreeDefItemID, Date timestampCreated, String name, int rankID) {
+    public Taxontreedefitem(Integer taxonTreeDefItemId, Date timestampCreated, String name, int rankId) {
         super(timestampCreated);
-        this.taxonTreeDefItemID = taxonTreeDefItemID; 
+        this.taxonTreeDefItemId = taxonTreeDefItemId; 
         this.name = name;
-        this.rankID = rankID;
+        this.rankId = rankId;
     }
 
-    public Integer getTaxonTreeDefItemID() {
-        return taxonTreeDefItemID;
+    @XmlTransient
+    public Collection<Taxontreedefitem> getChildren() {
+        return children;
     }
 
-    public void setTaxonTreeDefItemID(Integer taxonTreeDefItemID) {
-        this.taxonTreeDefItemID = taxonTreeDefItemID;
+    public void setChildren(Collection<Taxontreedefitem> children) {
+        this.children = children;
     }
+
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
+    }
+
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Taxontreedefitem getParent() {
+        return parent;
+    }
+
+    public void setParent(Taxontreedefitem parent) {
+        this.parent = parent;
+    }
+
+    public int getRankId() {
+        return rankId;
+    }
+
+    public void setRankId(int rankId) {
+        this.rankId = rankId;
+    }
+
+    public Integer getTaxonTreeDefItemId() {
+        return taxonTreeDefItemId;
+    }
+
+    public void setTaxonTreeDefItemId(Integer taxonTreeDefItemId) {
+        this.taxonTreeDefItemId = taxonTreeDefItemId;
+    }
+
+    public Taxontreedef getTreeDef() {
+        return treeDef;
+    }
+
+    public void setTreeDef(Taxontreedef treeDef) {
+        this.treeDef = treeDef;
+    }
+
+    @XmlTransient
+    public Collection<Taxon> getTreeEntries() {
+        return treeEntries;
+    }
+
+    public void setTreeEntries(Collection<Taxon> treeEntries) {
+        this.treeEntries = treeEntries;
+    }
+ 
  
     public String getFormatToken() {
         return formatToken;
@@ -181,13 +227,7 @@ public class Taxontreedefitem extends BaseEntity {
         this.name = name;
     }
 
-    public int getRankID() {
-        return rankID;
-    }
-
-    public void setRankID(int rankID) {
-        this.rankID = rankID;
-    }
+ 
 
     public String getRemarks() {
         return remarks;
@@ -220,61 +260,11 @@ public class Taxontreedefitem extends BaseEntity {
     public void setTitle(String title) {
         this.title = title;
     }
-
-    @XmlTransient
-    public Collection<Taxon> getTaxonCollection() {
-        return taxonCollection;
-    }
-
-    public void setTaxonCollection(Collection<Taxon> taxonCollection) {
-        this.taxonCollection = taxonCollection;
-    }
-
-    public Taxontreedef getTaxonTreeDefID() {
-        return taxonTreeDefID;
-    }
-
-    public void setTaxonTreeDefID(Taxontreedef taxonTreeDefID) {
-        this.taxonTreeDefID = taxonTreeDefID;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    @XmlTransient
-    public Collection<Taxontreedefitem> getTaxontreedefitemCollection() {
-        return taxontreedefitemCollection;
-    }
-
-    public void setTaxontreedefitemCollection(Collection<Taxontreedefitem> taxontreedefitemCollection) {
-        this.taxontreedefitemCollection = taxontreedefitemCollection;
-    }
-
-    public Taxontreedefitem getParentItemID() {
-        return parentItemID;
-    }
-
-    public void setParentItemID(Taxontreedefitem parentItemID) {
-        this.parentItemID = parentItemID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
+ 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (taxonTreeDefItemID != null ? taxonTreeDefItemID.hashCode() : 0);
+        hash += (taxonTreeDefItemId != null ? taxonTreeDefItemId.hashCode() : 0);
         return hash;
     }
 
@@ -285,7 +275,7 @@ public class Taxontreedefitem extends BaseEntity {
             return false;
         }
         Taxontreedefitem other = (Taxontreedefitem) object;
-        if ((this.taxonTreeDefItemID == null && other.taxonTreeDefItemID != null) || (this.taxonTreeDefItemID != null && !this.taxonTreeDefItemID.equals(other.taxonTreeDefItemID))) {
+        if ((this.taxonTreeDefItemId == null && other.taxonTreeDefItemId != null) || (this.taxonTreeDefItemId != null && !this.taxonTreeDefItemId.equals(other.taxonTreeDefItemId))) {
             return false;
         }
         return true;
@@ -293,7 +283,7 @@ public class Taxontreedefitem extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Taxontreedefitem[ taxonTreeDefItemID=" + taxonTreeDefItemID + " ]";
+        return "Taxontreedefitem[ taxonTreeDefItemID=" + taxonTreeDefItemId + " ]";
     }
     
 }

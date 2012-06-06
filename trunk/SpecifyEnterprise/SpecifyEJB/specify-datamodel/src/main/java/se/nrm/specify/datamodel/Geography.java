@@ -22,9 +22,7 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import org.eclipse.persistence.annotations.FetchAttribute;
-import org.eclipse.persistence.annotations.FetchGroup;
+import javax.xml.bind.annotation.XmlTransient; 
 
 /**
  *
@@ -35,9 +33,9 @@ import org.eclipse.persistence.annotations.FetchGroup;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Geography.findAll", query = "SELECT g FROM Geography g"),
-    @NamedQuery(name = "Geography.findByGeographyID", query = "SELECT g FROM Geography g WHERE g.geographyID = :geographyID"),
-    @NamedQuery(name = "Geography.findByGeographytreedefitemId", query = "SELECT g FROM Geography g WHERE g.geographyTreeDefItemID = :geographyTreeDefItemID"),
-    @NamedQuery(name = "Geography.findByContinent", query = "SELECT g FROM Geography g WHERE g.geographyTreeDefItemID.name = :name"),
+    @NamedQuery(name = "Geography.findByGeographyID", query = "SELECT g FROM Geography g WHERE g.geographyId = :geographyID"),
+    @NamedQuery(name = "Geography.findByGeographytreedefitemId", query = "SELECT g FROM Geography g WHERE g.definitionItem = :geographyTreeDefItemID"),
+    @NamedQuery(name = "Geography.findByContinent", query = "SELECT g FROM Geography g WHERE g.definitionItem.name = :name"),
     @NamedQuery(name = "Geography.findByTimestampCreated", query = "SELECT g FROM Geography g WHERE g.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Geography.findByTimestampModified", query = "SELECT g FROM Geography g WHERE g.timestampModified = :timestampModified"),
     @NamedQuery(name = "Geography.findByVersion", query = "SELECT g FROM Geography g WHERE g.version = :version"),
@@ -46,7 +44,7 @@ import org.eclipse.persistence.annotations.FetchGroup;
     @NamedQuery(name = "Geography.findByCentroidLon", query = "SELECT g FROM Geography g WHERE g.centroidLon = :centroidLon"),
     @NamedQuery(name = "Geography.findByCommonName", query = "SELECT g FROM Geography g WHERE g.commonName = :commonName"),
     @NamedQuery(name = "Geography.findByFullName", query = "SELECT g FROM Geography g WHERE g.fullName = :fullName"),
-    @NamedQuery(name = "Geography.findByParent", query = "SELECT g FROM Geography g WHERE g.parentID.geographyID = :geographyID"),
+    @NamedQuery(name = "Geography.findByParent", query = "SELECT g FROM Geography g WHERE g.parent.geographyId = :geographyID"),
     @NamedQuery(name = "Geography.findByGeographyCode", query = "SELECT g FROM Geography g WHERE g.geographyCode = :geographyCode"),
     @NamedQuery(name = "Geography.findByGuid", query = "SELECT g FROM Geography g WHERE g.guid = :guid"),
     @NamedQuery(name = "Geography.findByHighestChildNodeNumber", query = "SELECT g FROM Geography g WHERE g.highestChildNodeNumber = :highestChildNodeNumber"),
@@ -56,7 +54,7 @@ import org.eclipse.persistence.annotations.FetchGroup;
     @NamedQuery(name = "Geography.findByNodeNumber", query = "SELECT g FROM Geography g WHERE g.nodeNumber = :nodeNumber"),
     @NamedQuery(name = "Geography.findByNumber1", query = "SELECT g FROM Geography g WHERE g.number1 = :number1"),
     @NamedQuery(name = "Geography.findByNumber2", query = "SELECT g FROM Geography g WHERE g.number2 = :number2"),
-    @NamedQuery(name = "Geography.findByRankID", query = "SELECT g FROM Geography g WHERE g.rankID = :rankID"),
+    @NamedQuery(name = "Geography.findByRankID", query = "SELECT g FROM Geography g WHERE g.rankId = :rankID"),
     @NamedQuery(name = "Geography.findByText1", query = "SELECT g FROM Geography g WHERE g.text1 = :text1"),
     @NamedQuery(name = "Geography.findByText2", query = "SELECT g FROM Geography g WHERE g.text2 = :text2"),
     @NamedQuery(name = "Geography.findByTimestampVersion", query = "SELECT g FROM Geography g WHERE g.timestampVersion = :timestampVersion")})
@@ -68,7 +66,7 @@ public class Geography extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull 
     @Column(name = "GeographyID")
-    private Integer geographyID;
+    private Integer geographyId;
     
     @Size(max = 16)
     @Column(name = "Abbrev")
@@ -129,7 +127,7 @@ public class Geography extends BaseEntity {
     @NotNull
     @Basic(optional = false) 
     @Column(name = "RankID")
-    private int rankID;
+    private int rankId;
     
     @Lob
     @Size(max = 65535)
@@ -148,56 +146,72 @@ public class Geography extends BaseEntity {
     @Temporal(TemporalType.TIMESTAMP) 
     private Date timestampVersion;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "geographyID")
-    private Collection<Agentgeography> agentgeographyCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "geography")
+    private Collection<Agentgeography> agentgeographys;
     
-    @OneToMany(mappedBy = "acceptedID")
-    private Collection<Geography> geographyCollection;
+    @OneToMany(mappedBy = "acceptedGeography")
+    private Collection<Geography> acceptedChildren;
+    
     @JoinColumn(name = "AcceptedID", referencedColumnName = "GeographyID")
     @ManyToOne
-    private Geography acceptedID;
+    private Geography acceptedGeography;
+    
     @JoinColumn(name = "GeographyTreeDefItemID", referencedColumnName = "GeographyTreeDefItemID")
     @ManyToOne(optional = false)
-    private Geographytreedefitem geographyTreeDefItemID;
+    private Geographytreedefitem definitionItem;
+    
     @JoinColumn(name = "GeographyTreeDefID", referencedColumnName = "GeographyTreeDefID")
     @ManyToOne(optional = false)
-    private Geographytreedef geographyTreeDefID;
-    @OneToMany(mappedBy = "parentID")
-    private Collection<Geography> geographyCollection1;
+    private Geographytreedef definition;
+    
+    @OneToMany(mappedBy = "parent")
+    private Collection<Geography> children;
+    
     @JoinColumn(name = "ParentID", referencedColumnName = "GeographyID")
     @ManyToOne
-    private Geography parentID;
+    private Geography parent;
+    
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
+    
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
-    @OneToMany(mappedBy = "geographyID")
-    private Collection<Locality> localityCollection;
+    private Agent modifiedByAgent;
+    
+    @OneToMany(mappedBy = "geography")
+    private Collection<Locality> localities;
 
     public Geography() {
     }
 
-    public Geography(Integer geographyID) {
-        this.geographyID = geographyID;
+    public Geography(Integer geographyId) {
+        this.geographyId = geographyId;
     }
 
-    public Geography(Integer geographyID, Date timestampCreated, String name, int rankID) {
+    public Geography(Integer geographyId, Date timestampCreated, String name, int rankId) {
         super(timestampCreated);
-        this.geographyID = geographyID;
+        this.geographyId = geographyId;
         this.name = name;
-        this.rankID = rankID;
+        this.rankId = rankId;
     }
 
-    public Integer getGeographyID() {
-        return geographyID;
+    public Integer getGeographyId() {
+        return geographyId;
     }
 
-    public void setGeographyID(Integer geographyID) {
-        this.geographyID = geographyID;
+    public void setGeographyId(Integer geographyId) {
+        this.geographyId = geographyId;
     }
 
+    public int getRankId() {
+        return rankId;
+    }
+
+    public void setRankId(int rankId) {
+        this.rankId = rankId;
+    }
+ 
     public String getAbbrev() {
         return abbrev;
     }
@@ -317,14 +331,7 @@ public class Geography extends BaseEntity {
     public void setNumber2(Integer number2) {
         this.number2 = number2;
     }
-
-    public int getRankID() {
-        return rankID;
-    }
-
-    public void setRankID(int rankID) {
-        this.rankID = rankID;
-    }
+ 
 
     public String getRemarks() {
         return remarks;
@@ -359,109 +366,114 @@ public class Geography extends BaseEntity {
     }
 
     @XmlTransient
-    public Collection<Agentgeography> getAgentgeographyCollection() {
-        return agentgeographyCollection;
+    public Collection<Agentgeography> getAgentgeographys() {
+        return agentgeographys;
     }
 
-    public void setAgentgeographyCollection(Collection<Agentgeography> agentgeographyCollection) {
-        this.agentgeographyCollection = agentgeographyCollection;
+    public void setAgentgeographys(Collection<Agentgeography> agentgeographys) {
+        this.agentgeographys = agentgeographys;
+    }
+
+ 
+
+    @XmlTransient
+    public Collection<Geography> getAcceptedChildren() {
+        return acceptedChildren;
+    }
+
+    public void setAcceptedChildren(Collection<Geography> acceptedChildren) {
+        this.acceptedChildren = acceptedChildren;
+    }
+
+    public Geographytreedef getDefinition() {
+        return definition;
+    }
+
+    public void setDefinition(Geographytreedef definition) {
+        this.definition = definition;
+    }
+
+    public Geographytreedefitem getDefinitionItem() {
+        return definitionItem;
+    }
+
+    public void setDefinitionItem(Geographytreedefitem definitionItem) {
+        this.definitionItem = definitionItem;
+    }
+
+    public Geography getParent() {
+        return parent;
+    }
+
+    public void setParent(Geography parent) {
+        this.parent = parent;
+    }
+
+  
+
+    @XmlTransient
+    public Collection<Geography> getChildren() {
+        return children;
+    }
+
+    public void setChildren(Collection<Geography> children) {
+        this.children = children;
+    } 
+
+    public Geography getAcceptedGeography() {
+        return acceptedGeography;
+    }
+
+    public void setAcceptedGeography(Geography acceptedGeography) {
+        this.acceptedGeography = acceptedGeography;
+    }
+
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
+    }
+
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
 
     @XmlTransient
-    public Collection<Geography> getGeographyCollection() {
-        return geographyCollection;
+    public Collection<Locality> getLocalities() {
+        return localities;
     }
 
-    public void setGeographyCollection(Collection<Geography> geographyCollection) {
-        this.geographyCollection = geographyCollection;
+    public void setLocalities(Collection<Locality> localities) {
+        this.localities = localities;
     }
 
-    public Geography getAcceptedID() {
-        return acceptedID;
-    }
-
-    public void setAcceptedID(Geography acceptedID) {
-        this.acceptedID = acceptedID;
-    }
-
-    public Geographytreedefitem getGeographyTreeDefItemID() {
-        return geographyTreeDefItemID;
-    }
-
-    public void setGeographyTreeDefItemID(Geographytreedefitem geographyTreeDefItemID) {
-        this.geographyTreeDefItemID = geographyTreeDefItemID;
-    }
-
-    public Geographytreedef getGeographyTreeDefID() {
-        return geographyTreeDefID;
-    }
-
-    public void setGeographyTreeDefID(Geographytreedef geographyTreeDefID) {
-        this.geographyTreeDefID = geographyTreeDefID;
-    }
-
-    @XmlTransient
-    public Collection<Geography> getGeographyCollection1() {
-        return geographyCollection1;
-    }
-
-    public void setGeographyCollection1(Collection<Geography> geographyCollection1) {
-        this.geographyCollection1 = geographyCollection1;
-    }
-
-    public Geography getParentID() {
-        return parentID;
-    }
-
-    public void setParentID(Geography parentID) {
-        this.parentID = parentID;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
-    @XmlTransient
-    public Collection<Locality> getLocalityCollection() {
-        return localityCollection;
-    }
-
-    public void setLocalityCollection(Collection<Locality> localityCollection) {
-        this.localityCollection = localityCollection;
-    }
-
+  
     public Geography getCountry() {
 
-        if (rankID > 200) {
-            Geography parent = parentID;
-            while (!parent.getGeographyTreeDefItemID().getName().equals("Country")) {
-                parent = parent.getParentID();
+        if (rankId > 200) {
+            Geography newParent = parent;
+            while (!newParent.getDefinitionItem().getName().equals("Country")) {
+                newParent = newParent.getParent();
             }
-            return parent;
+            return newParent;
         }
         return new Geography();
     }
 
     public Geography getContinent() {
 
-        if (rankID > 100) {
-            Geography parent = parentID;
-            while (!parent.getGeographyTreeDefItemID().getName().equals("Continent")) {
-                parent = parent.getParentID();
+        if (rankId > 100) {
+            Geography newParent = parent;
+            while (!newParent.getDefinitionItem().getName().equals("Continent")) {
+                newParent = newParent.getParent();
             }
-            return parent;
+            return newParent;
         }
         return new Geography();
     }
@@ -469,7 +481,7 @@ public class Geography extends BaseEntity {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (geographyID != null ? geographyID.hashCode() : 0);
+        hash += (geographyId != null ? geographyId.hashCode() : 0);
         return hash;
     }
 
@@ -480,7 +492,7 @@ public class Geography extends BaseEntity {
             return false;
         }
         Geography other = (Geography) object;
-        if ((this.geographyID == null && other.geographyID != null) || (this.geographyID != null && !this.geographyID.equals(other.geographyID))) {
+        if ((this.geographyId == null && other.geographyId != null) || (this.geographyId != null && !this.geographyId.equals(other.geographyId))) {
             return false;
         }
         return true;
@@ -488,6 +500,6 @@ public class Geography extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Geography[ geographyID=" + geographyID + " ]";
+        return "Geography[ geographyID=" + geographyId + " ]";
     }
 }

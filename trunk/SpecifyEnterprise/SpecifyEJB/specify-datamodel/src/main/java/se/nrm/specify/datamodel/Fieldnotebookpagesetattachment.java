@@ -52,19 +52,19 @@ public class Fieldnotebookpagesetattachment extends BaseEntity {
     
     @JoinColumn(name = "AttachmentID", referencedColumnName = "AttachmentID")
     @ManyToOne(optional = false)
-    private Attachment attachmentID;
+    private Attachment attachment;
     
     @JoinColumn(name = "FieldNotebookPageSetID", referencedColumnName = "FieldNotebookPageSetID")
     @ManyToOne(optional = false)
-    private Fieldnotebookpageset fieldNotebookPageSetID;
+    private Fieldnotebookpageset fieldNotebookPageSet;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
 
     public Fieldnotebookpagesetattachment() {
     }
@@ -102,37 +102,39 @@ public class Fieldnotebookpagesetattachment extends BaseEntity {
         this.remarks = remarks;
     }
 
-    public Attachment getAttachmentID() {
-        return attachmentID;
+    public Attachment getAttachment() {
+        return attachment;
     }
 
-    public void setAttachmentID(Attachment attachmentID) {
-        this.attachmentID = attachmentID;
+    public void setAttachment(Attachment attachment) {
+        this.attachment = attachment;
     }
 
-    public Fieldnotebookpageset getFieldNotebookPageSetID() {
-        return fieldNotebookPageSetID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setFieldNotebookPageSetID(Fieldnotebookpageset fieldNotebookPageSetID) {
-        this.fieldNotebookPageSetID = fieldNotebookPageSetID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Fieldnotebookpageset getFieldNotebookPageSet() {
+        return fieldNotebookPageSet;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setFieldNotebookPageSet(Fieldnotebookpageset fieldNotebookPageSet) {
+        this.fieldNotebookPageSet = fieldNotebookPageSet;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
+
+ 
 
     @Override
     public int hashCode() {

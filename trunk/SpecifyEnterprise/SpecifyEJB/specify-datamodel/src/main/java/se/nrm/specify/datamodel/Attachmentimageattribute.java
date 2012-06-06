@@ -25,21 +25,21 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Attachmentimageattribute.findAll", query = "SELECT a FROM Attachmentimageattribute a"),
-    @NamedQuery(name = "Attachmentimageattribute.findByAttachmentImageAttributeID", query = "SELECT a FROM Attachmentimageattribute a WHERE a.attachmentImageAttributeID = :attachmentImageAttributeID"),
+    @NamedQuery(name = "Attachmentimageattribute.findByAttachmentImageAttributeID", query = "SELECT a FROM Attachmentimageattribute a WHERE a.attachmentImageAttributeId = :attachmentImageAttributeID"),
     @NamedQuery(name = "Attachmentimageattribute.findByTimestampCreated", query = "SELECT a FROM Attachmentimageattribute a WHERE a.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Attachmentimageattribute.findByTimestampModified", query = "SELECT a FROM Attachmentimageattribute a WHERE a.timestampModified = :timestampModified"),
     @NamedQuery(name = "Attachmentimageattribute.findByVersion", query = "SELECT a FROM Attachmentimageattribute a WHERE a.version = :version"),
     @NamedQuery(name = "Attachmentimageattribute.findByCreativeCommons", query = "SELECT a FROM Attachmentimageattribute a WHERE a.creativeCommons = :creativeCommons"),
     @NamedQuery(name = "Attachmentimageattribute.findByHeight", query = "SELECT a FROM Attachmentimageattribute a WHERE a.height = :height"),
     @NamedQuery(name = "Attachmentimageattribute.findByMagnification", query = "SELECT a FROM Attachmentimageattribute a WHERE a.magnification = :magnification"),
-    @NamedQuery(name = "Attachmentimageattribute.findByMBImageID", query = "SELECT a FROM Attachmentimageattribute a WHERE a.mBImageID = :mBImageID"),
+    @NamedQuery(name = "Attachmentimageattribute.findByMBImageID", query = "SELECT a FROM Attachmentimageattribute a WHERE a.mbImageId = :mBImageID"),
     @NamedQuery(name = "Attachmentimageattribute.findByResolution", query = "SELECT a FROM Attachmentimageattribute a WHERE a.resolution = :resolution"),
     @NamedQuery(name = "Attachmentimageattribute.findByTimestampLastSend", query = "SELECT a FROM Attachmentimageattribute a WHERE a.timestampLastSend = :timestampLastSend"),
     @NamedQuery(name = "Attachmentimageattribute.findByTimestampLastUpdateCheck", query = "SELECT a FROM Attachmentimageattribute a WHERE a.timestampLastUpdateCheck = :timestampLastUpdateCheck"),
     @NamedQuery(name = "Attachmentimageattribute.findByWidth", query = "SELECT a FROM Attachmentimageattribute a WHERE a.width = :width"),
-    @NamedQuery(name = "Attachmentimageattribute.findByCreatedByAgentID", query = "SELECT a FROM Attachmentimageattribute a WHERE a.createdByAgentID = :createdByAgentID"),
-    @NamedQuery(name = "Attachmentimageattribute.findByModifiedByAgentID", query = "SELECT a FROM Attachmentimageattribute a WHERE a.modifiedByAgentID = :modifiedByAgentID"),
-    @NamedQuery(name = "Attachmentimageattribute.findByMorphBankViewID", query = "SELECT a FROM Attachmentimageattribute a WHERE a.morphBankViewID = :morphBankViewID")})
+    @NamedQuery(name = "Attachmentimageattribute.findByCreatedByAgentID", query = "SELECT a FROM Attachmentimageattribute a WHERE a.createdByAgent = :createdByAgentID"),
+    @NamedQuery(name = "Attachmentimageattribute.findByModifiedByAgentID", query = "SELECT a FROM Attachmentimageattribute a WHERE a.modifiedByAgent = :modifiedByAgentID"),
+    @NamedQuery(name = "Attachmentimageattribute.findByMorphBankViewID", query = "SELECT a FROM Attachmentimageattribute a WHERE a.morphBankView = :morphBankViewID")})
 public class Attachmentimageattribute extends BaseEntity { 
     
     private static final long serialVersionUID = 1L;
@@ -49,7 +49,7 @@ public class Attachmentimageattribute extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "AttachmentImageAttributeID")
-    private Integer attachmentImageAttributeID;
+    private Integer attachmentImageAttributeId;
      
     @Size(max = 128)
     @Column(name = "CreativeCommons")
@@ -63,7 +63,7 @@ public class Attachmentimageattribute extends BaseEntity {
     private Double magnification;
     
     @Column(name = "MBImageID")
-    private Integer mBImageID;
+    private Integer mbImageId;
     
     @Column(name = "Resolution")
     private Double resolution;
@@ -80,33 +80,43 @@ public class Attachmentimageattribute extends BaseEntity {
     private Integer width;
     
     @Column(name = "CreatedByAgentID")
-    private Integer createdByAgentID;
+    private Integer createdByAgent;
     
     @Column(name = "ModifiedByAgentID")
-    private Integer modifiedByAgentID;
+    private Integer modifiedByAgent;
     
     @Column(name = "MorphBankViewID")
-    private Integer morphBankViewID;
+    private Integer morphBankView;
 
     public Attachmentimageattribute() {
     }
 
-    public Attachmentimageattribute(Integer attachmentImageAttributeID) {
-        this.attachmentImageAttributeID = attachmentImageAttributeID;
+    public Attachmentimageattribute(Integer attachmentImageAttributeId) {
+        this.attachmentImageAttributeId = attachmentImageAttributeId;
     }
 
-    public Attachmentimageattribute(Integer attachmentImageAttributeID, Date timestampCreated) {
+    public Attachmentimageattribute(Integer attachmentImageAttributeId, Date timestampCreated) {
         super(timestampCreated);
-        this.attachmentImageAttributeID = attachmentImageAttributeID;  
+        this.attachmentImageAttributeId = attachmentImageAttributeId;  
     }
 
-    public Integer getAttachmentImageAttributeID() {
-        return attachmentImageAttributeID;
+    public Integer getAttachmentImageAttributeId() {
+        return attachmentImageAttributeId;
     }
 
-    public void setAttachmentImageAttributeID(Integer attachmentImageAttributeID) {
-        this.attachmentImageAttributeID = attachmentImageAttributeID;
+    public void setAttachmentImageAttributeId(Integer attachmentImageAttributeId) {
+        this.attachmentImageAttributeId = attachmentImageAttributeId;
     }
+
+    public Integer getMbImageId() {
+        return mbImageId;
+    }
+
+    public void setMbImageId(Integer mbImageId) {
+        this.mbImageId = mbImageId;
+    }
+
+ 
  
     public String getCreativeCommons() {
         return creativeCommons;
@@ -132,13 +142,7 @@ public class Attachmentimageattribute extends BaseEntity {
         this.magnification = magnification;
     }
 
-    public Integer getMBImageID() {
-        return mBImageID;
-    }
-
-    public void setMBImageID(Integer mBImageID) {
-        this.mBImageID = mBImageID;
-    }
+ 
 
     public Double getResolution() {
         return resolution;
@@ -172,34 +176,36 @@ public class Attachmentimageattribute extends BaseEntity {
         this.width = width;
     }
 
-    public Integer getCreatedByAgentID() {
-        return createdByAgentID;
+    public Integer getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setCreatedByAgentID(Integer createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setCreatedByAgent(Integer createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Integer getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Integer getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setModifiedByAgentID(Integer modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setModifiedByAgent(Integer modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
 
-    public Integer getMorphBankViewID() {
-        return morphBankViewID;
+    public Integer getMorphBankView() {
+        return morphBankView;
     }
 
-    public void setMorphBankViewID(Integer morphBankViewID) {
-        this.morphBankViewID = morphBankViewID;
+    public void setMorphBankView(Integer morphBankView) {
+        this.morphBankView = morphBankView;
     }
+
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (attachmentImageAttributeID != null ? attachmentImageAttributeID.hashCode() : 0);
+        hash += (attachmentImageAttributeId != null ? attachmentImageAttributeId.hashCode() : 0);
         return hash;
     }
 
@@ -210,7 +216,7 @@ public class Attachmentimageattribute extends BaseEntity {
             return false;
         }
         Attachmentimageattribute other = (Attachmentimageattribute) object;
-        if ((this.attachmentImageAttributeID == null && other.attachmentImageAttributeID != null) || (this.attachmentImageAttributeID != null && !this.attachmentImageAttributeID.equals(other.attachmentImageAttributeID))) {
+        if ((this.attachmentImageAttributeId == null && other.attachmentImageAttributeId != null) || (this.attachmentImageAttributeId != null && !this.attachmentImageAttributeId.equals(other.attachmentImageAttributeId))) {
             return false;
         }
         return true;
@@ -218,7 +224,7 @@ public class Attachmentimageattribute extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Attachmentimageattribute[ attachmentImageAttributeID=" + attachmentImageAttributeID + " ]";
+        return "Attachmentimageattribute[ attachmentImageAttributeId=" + attachmentImageAttributeId + " ]";
     }
     
 }

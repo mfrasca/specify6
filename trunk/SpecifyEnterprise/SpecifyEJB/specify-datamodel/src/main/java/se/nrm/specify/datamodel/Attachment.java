@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Attachment.findAll", query = "SELECT a FROM Attachment a"),
-    @NamedQuery(name = "Attachment.findByAttachmentID", query = "SELECT a FROM Attachment a WHERE a.attachmentID = :attachmentID"),
+    @NamedQuery(name = "Attachment.findByAttachmentID", query = "SELECT a FROM Attachment a WHERE a.attachmentId = :attachmentID"),
     @NamedQuery(name = "Attachment.findByTimestampCreated", query = "SELECT a FROM Attachment a WHERE a.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Attachment.findByTimestampModified", query = "SELECT a FROM Attachment a WHERE a.timestampModified = :timestampModified"),
     @NamedQuery(name = "Attachment.findByVersion", query = "SELECT a FROM Attachment a WHERE a.version = :version"),
@@ -47,7 +47,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Attachment.findByOrigFilename", query = "SELECT a FROM Attachment a WHERE a.origFilename = :origFilename"),
     @NamedQuery(name = "Attachment.findByTitle", query = "SELECT a FROM Attachment a WHERE a.title = :title"),
     @NamedQuery(name = "Attachment.findByVisibility", query = "SELECT a FROM Attachment a WHERE a.visibility = :visibility"),
-    @NamedQuery(name = "Attachment.findByAttachmentImageAttributeID", query = "SELECT a FROM Attachment a WHERE a.attachmentImageAttributeID = :attachmentImageAttributeID")})
+    @NamedQuery(name = "Attachment.findByAttachmentImageAttributeID", query = "SELECT a FROM Attachment a WHERE a.attachmentImageAttribute = :attachmentImageAttributeID")})
 public class Attachment extends BaseEntity {  
     
     private static final long serialVersionUID = 1L;
@@ -57,7 +57,7 @@ public class Attachment extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "AttachmentID")
-    private Integer attachmentID;
+    private Integer attachmentId;
      
     @Size(max = 128)
     @Column(name = "AttachmentLocation")
@@ -110,95 +110,99 @@ public class Attachment extends BaseEntity {
     private Short visibility;
     
     @Column(name = "AttachmentImageAttributeID")
-    private Integer attachmentImageAttributeID;
+    private Integer attachmentImageAttribute;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "attachmentID")
-    private Collection<Loanattachment> loanattachmentCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "attachment")
+    private Collection<Loanattachment> loanAttachments;
     
-    @OneToMany(mappedBy = "attachmentID", cascade= CascadeType.ALL)
-    private Collection<Attachmentmetadata> attachmentmetadataCollection;
+    @OneToMany(mappedBy = "attachment", cascade= CascadeType.ALL)
+    private Collection<Attachmentmetadata> metadata;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "attachmentID")
-    private Collection<Agentattachment> agentattachmentCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "attachment")
+    private Collection<Agentattachment> agentAttachments;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "attachmentID")
-    private Collection<Fieldnotebookpagesetattachment> fieldnotebookpagesetattachmentCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "attachment")
+    private Collection<Fieldnotebookpagesetattachment> fieldNotebookPageSetAttachments;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "attachmentID")
-    private Collection<Repositoryagreementattachment> repositoryagreementattachmentCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "attachment")
+    private Collection<Repositoryagreementattachment> repositoryAgreementAttachments;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "attachmentID")
-    private Collection<Permitattachment> permitattachmentCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "attachment")
+    private Collection<Permitattachment> permitAttachments;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "attachmentID")
-    private Collection<Dnasequenceattachment> dnasequenceattachmentCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "attachment")
+    private Collection<Dnasequenceattachment> dnaSequenceAttachments;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "attachmentID")
-    private Collection<Preparationattachment> preparationattachmentCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "attachment")
+    private Collection<Preparationattachment> preparationAttachments;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "attachmentID")
-    private Collection<Localityattachment> localityattachmentCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "attachment")
+    private Collection<Localityattachment> localityAttachments;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "attachmentID")
-    private Collection<Collectionobjectattachment> collectionobjectattachmentCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "attachment")
+    private Collection<Collectionobjectattachment> collectionObjectAttachments;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "attachmentID")
-    private Collection<Taxonattachment> taxonattachmentCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "attachment")
+    private Collection<Taxonattachment> taxonAttachments;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "attachmentID")
-    private Collection<Fieldnotebookpageattachment> fieldnotebookpageattachmentCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "attachment")
+    private Collection<Fieldnotebookpageattachment> fieldNotebookPageAttachments;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "attachmentID")
-    private Collection<Fieldnotebookattachment> fieldnotebookattachmentCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "attachment")
+    private Collection<Fieldnotebookattachment> fieldNotebookAttachments;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "attachmentID")
-    private Collection<Conserveventattachment> conserveventattachmentCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "attachment")
+    private Collection<Conserveventattachment> conservEventAttachments;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "attachmentID")
-    private Collection<Accessionattachment> accessionattachmentCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "attachment")
+    private Collection<Accessionattachment> accessionAttachments;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "attachmentID")
-    private Collection<Conservdescriptionattachment> conservdescriptionattachmentCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "attachment")
+    private Collection<Conservdescriptionattachment> conservDescriptionAttachments;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "attachmentID")
-    private Collection<Collectingeventattachment> collectingeventattachmentCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "attachment")
+    private Collection<Collectingeventattachment> collectingEventAttachments;
     
     @JoinColumn(name = "VisibilitySetByID", referencedColumnName = "SpecifyUserID")
     @ManyToOne
-    private Specifyuser visibilitySetByID;
+    private Specifyuser visibilitySetBy;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "attachmentID")
-    private Collection<Attachmenttag> attachmenttagCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "attachment")
+    private Collection<Attachmenttag> tags;
 
     public Attachment() {
     }
 
-    public Attachment(Integer attachmentID) {
-        this.attachmentID = attachmentID;
+    public Attachment(Integer attachmentId) {
+        this.attachmentId = attachmentId;
     }
 
-    public Attachment(Integer attachmentID, Date timestampCreated, String origFilename) {
+    public Attachment(Integer attachmentId, Date timestampCreated, String origFilename) {
         super(timestampCreated);
-        this.attachmentID = attachmentID; 
+        this.attachmentId = attachmentId; 
         this.origFilename = origFilename;
     }
 
     public Integer getAttachmentID() {
-        return attachmentID;
+        return attachmentId;
     }
 
-    public void setAttachmentID(Integer attachmentID) {
-        this.attachmentID = attachmentID;
-    } 
-    
+    public Integer getAttachmentId() {
+        return attachmentId;
+    }
+
+    public void setAttachmentId(Integer attachmentId) {
+        this.attachmentId = attachmentId;
+    }
+
     public String getAttachmentLocation() {
         return attachmentLocation;
     }
@@ -206,6 +210,9 @@ public class Attachment extends BaseEntity {
     public void setAttachmentLocation(String attachmentLocation) {
         this.attachmentLocation = attachmentLocation;
     }
+
+ 
+ 
 
     public String getCopyrightDate() {
         return copyrightDate;
@@ -295,204 +302,218 @@ public class Attachment extends BaseEntity {
         this.visibility = visibility;
     }
 
-    public Integer getAttachmentImageAttributeID() {
-        return attachmentImageAttributeID;
+    public Integer getAttachmentImageAttribute() {
+        return attachmentImageAttribute;
     }
 
-    public void setAttachmentImageAttributeID(Integer attachmentImageAttributeID) {
-        this.attachmentImageAttributeID = attachmentImageAttributeID;
+    public void setAttachmentImageAttribute(Integer attachmentImageAttribute) {
+        this.attachmentImageAttribute = attachmentImageAttribute;
+    }
+
+ 
+
+   
+ 
+ 
+
+  
+ 
+    @XmlTransient
+    public Collection<Accessionattachment> getAccessionAttachments() {
+        return accessionAttachments;
+    }
+
+    public void setAccessionAttachments(Collection<Accessionattachment> accessionAttachments) {
+        this.accessionAttachments = accessionAttachments;
     }
 
     @XmlTransient
-    public Collection<Loanattachment> getLoanattachmentCollection() {
-        return loanattachmentCollection;
+    public Collection<Agentattachment> getAgentAttachments() {
+        return agentAttachments;
     }
 
-    public void setLoanattachmentCollection(Collection<Loanattachment> loanattachmentCollection) {
-        this.loanattachmentCollection = loanattachmentCollection;
-    }
-
-    @XmlTransient
-    public Collection<Attachmentmetadata> getAttachmentmetadataCollection() {
-        return attachmentmetadataCollection;
-    }
-
-    public void setAttachmentmetadataCollection(Collection<Attachmentmetadata> attachmentmetadataCollection) {
-        this.attachmentmetadataCollection = attachmentmetadataCollection;
+    public void setAgentAttachments(Collection<Agentattachment> agentAttachments) {
+        this.agentAttachments = agentAttachments;
     }
 
     @XmlTransient
-    public Collection<Agentattachment> getAgentattachmentCollection() {
-        return agentattachmentCollection;
+    public Collection<Collectingeventattachment> getCollectingEventAttachments() {
+        return collectingEventAttachments;
     }
 
-    public void setAgentattachmentCollection(Collection<Agentattachment> agentattachmentCollection) {
-        this.agentattachmentCollection = agentattachmentCollection;
-    }
-
-    @XmlTransient
-    public Collection<Fieldnotebookpagesetattachment> getFieldnotebookpagesetattachmentCollection() {
-        return fieldnotebookpagesetattachmentCollection;
-    }
-
-    public void setFieldnotebookpagesetattachmentCollection(Collection<Fieldnotebookpagesetattachment> fieldnotebookpagesetattachmentCollection) {
-        this.fieldnotebookpagesetattachmentCollection = fieldnotebookpagesetattachmentCollection;
+    public void setCollectingEventAttachments(Collection<Collectingeventattachment> collectingEventAttachments) {
+        this.collectingEventAttachments = collectingEventAttachments;
     }
 
     @XmlTransient
-    public Collection<Repositoryagreementattachment> getRepositoryagreementattachmentCollection() {
-        return repositoryagreementattachmentCollection;
+    public Collection<Collectionobjectattachment> getCollectionObjectAttachments() {
+        return collectionObjectAttachments;
     }
 
-    public void setRepositoryagreementattachmentCollection(Collection<Repositoryagreementattachment> repositoryagreementattachmentCollection) {
-        this.repositoryagreementattachmentCollection = repositoryagreementattachmentCollection;
-    }
-
-    @XmlTransient
-    public Collection<Permitattachment> getPermitattachmentCollection() {
-        return permitattachmentCollection;
-    }
-
-    public void setPermitattachmentCollection(Collection<Permitattachment> permitattachmentCollection) {
-        this.permitattachmentCollection = permitattachmentCollection;
+    public void setCollectionObjectAttachments(Collection<Collectionobjectattachment> collectionObjectAttachments) {
+        this.collectionObjectAttachments = collectionObjectAttachments;
     }
 
     @XmlTransient
-    public Collection<Dnasequenceattachment> getDnasequenceattachmentCollection() {
-        return dnasequenceattachmentCollection;
+    public Collection<Conservdescriptionattachment> getConservDescriptionAttachments() {
+        return conservDescriptionAttachments;
     }
 
-    public void setDnasequenceattachmentCollection(Collection<Dnasequenceattachment> dnasequenceattachmentCollection) {
-        this.dnasequenceattachmentCollection = dnasequenceattachmentCollection;
-    }
-
-    @XmlTransient
-    public Collection<Preparationattachment> getPreparationattachmentCollection() {
-        return preparationattachmentCollection;
-    }
-
-    public void setPreparationattachmentCollection(Collection<Preparationattachment> preparationattachmentCollection) {
-        this.preparationattachmentCollection = preparationattachmentCollection;
+    public void setConservDescriptionAttachments(Collection<Conservdescriptionattachment> conservDescriptionAttachments) {
+        this.conservDescriptionAttachments = conservDescriptionAttachments;
     }
 
     @XmlTransient
-    public Collection<Localityattachment> getLocalityattachmentCollection() {
-        return localityattachmentCollection;
+    public Collection<Conserveventattachment> getConservEventAttachments() {
+        return conservEventAttachments;
     }
 
-    public void setLocalityattachmentCollection(Collection<Localityattachment> localityattachmentCollection) {
-        this.localityattachmentCollection = localityattachmentCollection;
+    public void setConservEventAttachments(Collection<Conserveventattachment> conservEventAttachments) {
+        this.conservEventAttachments = conservEventAttachments;
     }
 
-    @XmlTransient
-    public Collection<Collectionobjectattachment> getCollectionobjectattachmentCollection() {
-        return collectionobjectattachmentCollection;
+ 
+ 
+
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setCollectionobjectattachmentCollection(Collection<Collectionobjectattachment> collectionobjectattachmentCollection) {
-        this.collectionobjectattachmentCollection = collectionobjectattachmentCollection;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    @XmlTransient
-    public Collection<Taxonattachment> getTaxonattachmentCollection() {
-        return taxonattachmentCollection;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setTaxonattachmentCollection(Collection<Taxonattachment> taxonattachmentCollection) {
-        this.taxonattachmentCollection = taxonattachmentCollection;
-    }
-
-    @XmlTransient
-    public Collection<Fieldnotebookpageattachment> getFieldnotebookpageattachmentCollection() {
-        return fieldnotebookpageattachmentCollection;
-    }
-
-    public void setFieldnotebookpageattachmentCollection(Collection<Fieldnotebookpageattachment> fieldnotebookpageattachmentCollection) {
-        this.fieldnotebookpageattachmentCollection = fieldnotebookpageattachmentCollection;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
 
     @XmlTransient
-    public Collection<Fieldnotebookattachment> getFieldnotebookattachmentCollection() {
-        return fieldnotebookattachmentCollection;
+    public Collection<Dnasequenceattachment> getDnaSequenceAttachments() {
+        return dnaSequenceAttachments;
     }
 
-    public void setFieldnotebookattachmentCollection(Collection<Fieldnotebookattachment> fieldnotebookattachmentCollection) {
-        this.fieldnotebookattachmentCollection = fieldnotebookattachmentCollection;
-    }
-
-    @XmlTransient
-    public Collection<Conserveventattachment> getConserveventattachmentCollection() {
-        return conserveventattachmentCollection;
-    }
-
-    public void setConserveventattachmentCollection(Collection<Conserveventattachment> conserveventattachmentCollection) {
-        this.conserveventattachmentCollection = conserveventattachmentCollection;
+    public void setDnaSequenceAttachments(Collection<Dnasequenceattachment> dnaSequenceAttachments) {
+        this.dnaSequenceAttachments = dnaSequenceAttachments;
     }
 
     @XmlTransient
-    public Collection<Accessionattachment> getAccessionattachmentCollection() {
-        return accessionattachmentCollection;
+    public Collection<Fieldnotebookattachment> getFieldNotebookAttachments() {
+        return fieldNotebookAttachments;
     }
 
-    public void setAccessionattachmentCollection(Collection<Accessionattachment> accessionattachmentCollection) {
-        this.accessionattachmentCollection = accessionattachmentCollection;
-    }
-
-    @XmlTransient
-    public Collection<Conservdescriptionattachment> getConservdescriptionattachmentCollection() {
-        return conservdescriptionattachmentCollection;
-    }
-
-    public void setConservdescriptionattachmentCollection(Collection<Conservdescriptionattachment> conservdescriptionattachmentCollection) {
-        this.conservdescriptionattachmentCollection = conservdescriptionattachmentCollection;
+    public void setFieldNotebookAttachments(Collection<Fieldnotebookattachment> fieldNotebookAttachments) {
+        this.fieldNotebookAttachments = fieldNotebookAttachments;
     }
 
     @XmlTransient
-    public Collection<Collectingeventattachment> getCollectingeventattachmentCollection() {
-        return collectingeventattachmentCollection;
+    public Collection<Fieldnotebookpageattachment> getFieldNotebookPageAttachments() {
+        return fieldNotebookPageAttachments;
     }
 
-    public void setCollectingeventattachmentCollection(Collection<Collectingeventattachment> collectingeventattachmentCollection) {
-        this.collectingeventattachmentCollection = collectingeventattachmentCollection;
-    }
-
-    public Specifyuser getVisibilitySetByID() {
-        return visibilitySetByID;
-    }
-
-    public void setVisibilitySetByID(Specifyuser visibilitySetByID) {
-        this.visibilitySetByID = visibilitySetByID;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setFieldNotebookPageAttachments(Collection<Fieldnotebookpageattachment> fieldNotebookPageAttachments) {
+        this.fieldNotebookPageAttachments = fieldNotebookPageAttachments;
     }
 
     @XmlTransient
-    public Collection<Attachmenttag> getAttachmenttagCollection() {
-        return attachmenttagCollection;
+    public Collection<Fieldnotebookpagesetattachment> getFieldNotebookPageSetAttachments() {
+        return fieldNotebookPageSetAttachments;
     }
 
-    public void setAttachmenttagCollection(Collection<Attachmenttag> attachmenttagCollection) {
-        this.attachmenttagCollection = attachmenttagCollection;
+    public void setFieldNotebookPageSetAttachments(Collection<Fieldnotebookpagesetattachment> fieldNotebookPageSetAttachments) {
+        this.fieldNotebookPageSetAttachments = fieldNotebookPageSetAttachments;
     }
+
+    @XmlTransient
+    public Collection<Loanattachment> getLoanAttachments() {
+        return loanAttachments;
+    }
+
+    public void setLoanAttachments(Collection<Loanattachment> loanAttachments) {
+        this.loanAttachments = loanAttachments;
+    }
+
+    @XmlTransient
+    public Collection<Localityattachment> getLocalityAttachments() {
+        return localityAttachments;
+    }
+
+    public void setLocalityAttachments(Collection<Localityattachment> localityAttachments) {
+        this.localityAttachments = localityAttachments;
+    }
+
+    @XmlTransient
+    public Collection<Attachmentmetadata> getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(Collection<Attachmentmetadata> metadata) {
+        this.metadata = metadata;
+    }
+
+    @XmlTransient
+    public Collection<Permitattachment> getPermitAttachments() {
+        return permitAttachments;
+    }
+
+    public void setPermitAttachments(Collection<Permitattachment> permitAttachments) {
+        this.permitAttachments = permitAttachments;
+    }
+
+    @XmlTransient
+    public Collection<Preparationattachment> getPreparationAttachments() {
+        return preparationAttachments;
+    }
+
+    public void setPreparationAttachments(Collection<Preparationattachment> preparationAttachments) {
+        this.preparationAttachments = preparationAttachments;
+    }
+
+    @XmlTransient
+    public Collection<Repositoryagreementattachment> getRepositoryAgreementAttachments() {
+        return repositoryAgreementAttachments;
+    }
+
+    public void setRepositoryAgreementAttachments(Collection<Repositoryagreementattachment> repositoryAgreementAttachments) {
+        this.repositoryAgreementAttachments = repositoryAgreementAttachments;
+    }
+
+    @XmlTransient
+    public Collection<Attachmenttag> getTags() {
+        return tags;
+    }
+ 
+    public void setTags(Collection<Attachmenttag> tags) {
+        this.tags = tags;
+    }
+
+    @XmlTransient
+    public Collection<Taxonattachment> getTaxonAttachments() {
+        return taxonAttachments;
+    }
+
+    public void setTaxonAttachments(Collection<Taxonattachment> taxonAttachments) {
+        this.taxonAttachments = taxonAttachments;
+    }
+
+    public Specifyuser getVisibilitySetBy() {
+        return visibilitySetBy;
+    }
+
+    public void setVisibilitySetBy(Specifyuser visibilitySetBy) {
+        this.visibilitySetBy = visibilitySetBy;
+    }
+
+ 
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (attachmentID != null ? attachmentID.hashCode() : 0);
+        hash += (attachmentId != null ? attachmentId.hashCode() : 0);
         return hash;
     }
 
@@ -503,7 +524,7 @@ public class Attachment extends BaseEntity {
             return false;
         }
         Attachment other = (Attachment) object;
-        if ((this.attachmentID == null && other.attachmentID != null) || (this.attachmentID != null && !this.attachmentID.equals(other.attachmentID))) {
+        if ((this.attachmentId == null && other.attachmentId != null) || (this.attachmentId != null && !this.attachmentId.equals(other.attachmentId))) {
             return false;
         }
         return true;
@@ -511,7 +532,7 @@ public class Attachment extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Attachment[ attachmentID=" + attachmentID + " ]";
+        return "Attachment[ attachmentId=" + attachmentId + " ]";
     }
     
 }

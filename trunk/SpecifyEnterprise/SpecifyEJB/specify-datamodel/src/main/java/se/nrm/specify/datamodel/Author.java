@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Author.findAll", query = "SELECT a FROM Author a"),
-    @NamedQuery(name = "Author.findByAuthorID", query = "SELECT a FROM Author a WHERE a.authorID = :authorID"),
+    @NamedQuery(name = "Author.findByAuthorID", query = "SELECT a FROM Author a WHERE a.authorId = :authorID"),
     @NamedQuery(name = "Author.findByTimestampCreated", query = "SELECT a FROM Author a WHERE a.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Author.findByTimestampModified", query = "SELECT a FROM Author a WHERE a.timestampModified = :timestampModified"),
     @NamedQuery(name = "Author.findByVersion", query = "SELECT a FROM Author a WHERE a.version = :version"),
@@ -40,7 +40,7 @@ public class Author extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "AuthorID")
-    private Integer authorID;
+    private Integer authorId;
      
     @Basic(optional = false)
     @NotNull
@@ -54,40 +54,74 @@ public class Author extends BaseEntity {
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ReferenceWorkID", referencedColumnName = "ReferenceWorkID")
     @ManyToOne(optional = false)
-    private Referencework referenceWorkID;
+    private Referencework referenceWork;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "AgentID", referencedColumnName = "AgentID")
     @ManyToOne(optional = false)
-    private Agent agentID;
+    private Agent agent;
 
     public Author() {
     }
 
-    public Author(Integer authorID) {
-        this.authorID = authorID;
+    public Author(Integer authorId) {
+        this.authorId = authorId;
     }
 
-    public Author(Integer authorID, Date timestampCreated, short orderNumber) {
+    public Author(Integer authorId, Date timestampCreated, short orderNumber) {
         super(timestampCreated);
-        this.authorID = authorID; 
+        this.authorId = authorId; 
         this.orderNumber = orderNumber;
     }
 
-    public Integer getAuthorID() {
-        return authorID;
+    public Agent getAgent() {
+        return agent;
     }
 
-    public void setAuthorID(Integer authorID) {
-        this.authorID = authorID;
-    } 
+    public void setAgent(Agent agent) {
+        this.agent = agent;
+    }
+
+    public Integer getAuthorId() {
+        return authorId;
+    }
+
+    public void setAuthorId(Integer authorId) {
+        this.authorId = authorId;
+    }
+
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
+    }
+
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Referencework getReferenceWork() {
+        return referenceWork;
+    }
+
+    public void setReferenceWork(Referencework referenceWork) {
+        this.referenceWork = referenceWork;
+    }
+
+ 
 
     public short getOrderNumber() {
         return orderNumber;
@@ -105,42 +139,12 @@ public class Author extends BaseEntity {
         this.remarks = remarks;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Referencework getReferenceWorkID() {
-        return referenceWorkID;
-    }
-
-    public void setReferenceWorkID(Referencework referenceWorkID) {
-        this.referenceWorkID = referenceWorkID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
-    public Agent getAgentID() {
-        return agentID;
-    }
-
-    public void setAgentID(Agent agentID) {
-        this.agentID = agentID;
-    }
+  
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (authorID != null ? authorID.hashCode() : 0);
+        hash += (authorId != null ? authorId.hashCode() : 0);
         return hash;
     }
 
@@ -151,7 +155,7 @@ public class Author extends BaseEntity {
             return false;
         }
         Author other = (Author) object;
-        if ((this.authorID == null && other.authorID != null) || (this.authorID != null && !this.authorID.equals(other.authorID))) {
+        if ((this.authorId == null && other.authorId != null) || (this.authorId != null && !this.authorId.equals(other.authorId))) {
             return false;
         }
         return true;
@@ -159,7 +163,7 @@ public class Author extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Author[ authorID=" + authorID + " ]";
+        return "Author[ authorID=" + authorId + " ]";
     }
     
 }

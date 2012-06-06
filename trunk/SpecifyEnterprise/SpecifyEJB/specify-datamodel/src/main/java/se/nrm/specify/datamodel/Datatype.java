@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Datatype.findAll", query = "SELECT d FROM Datatype d"),
-    @NamedQuery(name = "Datatype.findByDataTypeID", query = "SELECT d FROM Datatype d WHERE d.dataTypeID = :dataTypeID"),
+    @NamedQuery(name = "Datatype.findByDataTypeID", query = "SELECT d FROM Datatype d WHERE d.dataTypeId = :dataTypeID"),
     @NamedQuery(name = "Datatype.findByTimestampCreated", query = "SELECT d FROM Datatype d WHERE d.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Datatype.findByTimestampModified", query = "SELECT d FROM Datatype d WHERE d.timestampModified = :timestampModified"),
     @NamedQuery(name = "Datatype.findByVersion", query = "SELECT d FROM Datatype d WHERE d.version = :version"),
@@ -43,7 +43,7 @@ public class Datatype extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "DataTypeID")
-    private Integer dataTypeID;
+    private Integer dataTypeId;
       
     @Size(max = 50)
     @Column(name = "Name")
@@ -51,35 +51,53 @@ public class Datatype extends BaseEntity {
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "dataTypeID")
-    private Collection<Discipline> disciplineCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "dataType")
+    private Collection<Discipline> disciplines;
 
     public Datatype() {
     }
 
-    public Datatype(Integer dataTypeID) {
-        this.dataTypeID = dataTypeID;
+    public Datatype(Integer dataTypeId) {
+        this.dataTypeId = dataTypeId;
     }
 
-    public Datatype(Integer dataTypeID, Date timestampCreated) {
+    public Datatype(Integer dataTypeId, Date timestampCreated) {
         super();
-        this.dataTypeID = dataTypeID;
+        this.dataTypeId = dataTypeId;
         setTimestampCreated(timestampCreated); 
     }
 
-    public Integer getDataTypeID() {
-        return dataTypeID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setDataTypeID(Integer dataTypeID) {
-        this.dataTypeID = dataTypeID;
-    } 
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Integer getDataTypeId() {
+        return dataTypeId;
+    }
+
+    public void setDataTypeId(Integer dataTypeId) {
+        this.dataTypeId = dataTypeId;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+ 
 
     public String getName() {
         return name;
@@ -89,35 +107,22 @@ public class Datatype extends BaseEntity {
         this.name = name;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
     @XmlTransient
-    public Collection<Discipline> getDisciplineCollection() {
-        return disciplineCollection;
+    public Collection<Discipline> getDisciplines() {
+        return disciplines;
     }
 
-    public void setDisciplineCollection(Collection<Discipline> disciplineCollection) {
-        this.disciplineCollection = disciplineCollection;
+    public void setDisciplines(Collection<Discipline> disciplines) {
+        this.disciplines = disciplines;
     }
+ 
+
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (dataTypeID != null ? dataTypeID.hashCode() : 0);
+        hash += (dataTypeId != null ? dataTypeId.hashCode() : 0);
         return hash;
     }
 
@@ -128,7 +133,7 @@ public class Datatype extends BaseEntity {
             return false;
         }
         Datatype other = (Datatype) object;
-        if ((this.dataTypeID == null && other.dataTypeID != null) || (this.dataTypeID != null && !this.dataTypeID.equals(other.dataTypeID))) {
+        if ((this.dataTypeId == null && other.dataTypeId != null) || (this.dataTypeId != null && !this.dataTypeId.equals(other.dataTypeId))) {
             return false;
         }
         return true;
@@ -136,7 +141,7 @@ public class Datatype extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Datatype[ dataTypeID=" + dataTypeID + " ]";
+        return "Datatype[ dataTypeId=" + dataTypeId + " ]";
     }
     
 }

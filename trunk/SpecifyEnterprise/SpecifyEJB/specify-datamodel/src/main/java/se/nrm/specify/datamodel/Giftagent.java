@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Giftagent.findAll", query = "SELECT g FROM Giftagent g"),
-    @NamedQuery(name = "Giftagent.findByGiftAgentID", query = "SELECT g FROM Giftagent g WHERE g.giftAgentID = :giftAgentID"),
+    @NamedQuery(name = "Giftagent.findByGiftAgentID", query = "SELECT g FROM Giftagent g WHERE g.giftAgentId = :giftAgentID"),
     @NamedQuery(name = "Giftagent.findByTimestampCreated", query = "SELECT g FROM Giftagent g WHERE g.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Giftagent.findByTimestampModified", query = "SELECT g FROM Giftagent g WHERE g.timestampModified = :timestampModified"),
     @NamedQuery(name = "Giftagent.findByVersion", query = "SELECT g FROM Giftagent g WHERE g.version = :version"),
@@ -40,7 +40,7 @@ public class Giftagent extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "GiftAgentID")
-    private Integer giftAgentID;
+    private Integer giftAgentId;
       
     @Lob
     @Size(max = 65535)
@@ -55,44 +55,38 @@ public class Giftagent extends BaseEntity {
     
     @JoinColumn(name = "GiftID", referencedColumnName = "GiftID")
     @ManyToOne(optional = false)
-    private Gift giftID;
+    private Gift gift;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "DisciplineID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne
-    private Discipline disciplineID;
+    private Discipline discipline;
     
     @JoinColumn(name = "AgentID", referencedColumnName = "AgentID")
     @ManyToOne(optional = false)
-    private Agent agentID;
+    private Agent agent;
 
     public Giftagent() {
     }
 
-    public Giftagent(Integer giftAgentID) {
-        this.giftAgentID = giftAgentID;
+    public Giftagent(Integer giftAgentId) {
+        this.giftAgentId = giftAgentId;
     }
 
-    public Giftagent(Integer giftAgentID, Date timestampCreated, String role) {
+    public Giftagent(Integer giftAgentId, Date timestampCreated, String role) {
         super(timestampCreated);
-        this.giftAgentID = giftAgentID; 
+        this.giftAgentId = giftAgentId; 
         this.role = role;
     }
 
-    public Integer getGiftAgentID() {
-        return giftAgentID;
-    }
-
-    public void setGiftAgentID(Integer giftAgentID) {
-        this.giftAgentID = giftAgentID;
-    } 
+  
 
     public String getRemarks() {
         return remarks;
@@ -110,50 +104,60 @@ public class Giftagent extends BaseEntity {
         this.role = role;
     }
 
-    public Gift getGiftID() {
-        return giftID;
+    public Agent getAgent() {
+        return agent;
     }
 
-    public void setGiftID(Gift giftID) {
-        this.giftID = giftID;
+    public void setAgent(Agent agent) {
+        this.agent = agent;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Discipline getDiscipline() {
+        return discipline;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setDiscipline(Discipline discipline) {
+        this.discipline = discipline;
     }
 
-    public Discipline getDisciplineID() {
-        return disciplineID;
+    public Gift getGift() {
+        return gift;
     }
 
-    public void setDisciplineID(Discipline disciplineID) {
-        this.disciplineID = disciplineID;
+    public void setGift(Gift gift) {
+        this.gift = gift;
     }
 
-    public Agent getAgentID() {
-        return agentID;
+    public Integer getGiftAgentId() {
+        return giftAgentId;
     }
 
-    public void setAgentID(Agent agentID) {
-        this.agentID = agentID;
+    public void setGiftAgentId(Integer giftAgentId) {
+        this.giftAgentId = giftAgentId;
     }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+   
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (giftAgentID != null ? giftAgentID.hashCode() : 0);
+        hash += (giftAgentId != null ? giftAgentId.hashCode() : 0);
         return hash;
     }
 
@@ -164,7 +168,7 @@ public class Giftagent extends BaseEntity {
             return false;
         }
         Giftagent other = (Giftagent) object;
-        if ((this.giftAgentID == null && other.giftAgentID != null) || (this.giftAgentID != null && !this.giftAgentID.equals(other.giftAgentID))) {
+        if ((this.giftAgentId == null && other.giftAgentId != null) || (this.giftAgentId != null && !this.giftAgentId.equals(other.giftAgentId))) {
             return false;
         }
         return true;
@@ -172,7 +176,7 @@ public class Giftagent extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Giftagent[ giftAgentID=" + giftAgentID + " ]";
+        return "Giftagent[ giftAgentID=" + giftAgentId + " ]";
     }
     
 }

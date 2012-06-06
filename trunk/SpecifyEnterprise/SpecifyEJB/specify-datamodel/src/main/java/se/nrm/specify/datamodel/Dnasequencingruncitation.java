@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Dnasequencingruncitation.findAll", query = "SELECT d FROM Dnasequencingruncitation d"),
-    @NamedQuery(name = "Dnasequencingruncitation.findByDNASequencingRunCitationID", query = "SELECT d FROM Dnasequencingruncitation d WHERE d.dNASequencingRunCitationID = :dNASequencingRunCitationID"),
+    @NamedQuery(name = "Dnasequencingruncitation.findByDNASequencingRunCitationID", query = "SELECT d FROM Dnasequencingruncitation d WHERE d.dnaSequencingRunCitationId = :dNASequencingRunCitationID"),
     @NamedQuery(name = "Dnasequencingruncitation.findByTimestampCreated", query = "SELECT d FROM Dnasequencingruncitation d WHERE d.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Dnasequencingruncitation.findByTimestampModified", query = "SELECT d FROM Dnasequencingruncitation d WHERE d.timestampModified = :timestampModified"),
     @NamedQuery(name = "Dnasequencingruncitation.findByVersion", query = "SELECT d FROM Dnasequencingruncitation d WHERE d.version = :version"),
@@ -43,7 +43,7 @@ public class Dnasequencingruncitation extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "DNASequencingRunCitationID")
-    private Integer dNASequencingRunCitationID; 
+    private Integer dnaSequencingRunCitationId; 
     
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "Number1")
@@ -75,39 +75,72 @@ public class Dnasequencingruncitation extends BaseEntity {
     
     @JoinColumn(name = "DNASequencingRunID", referencedColumnName = "DNASequencingRunID")
     @ManyToOne(optional = false)
-    private Dnasequencingrun dNASequencingRunID;
+    private Dnasequencingrun sequencingRun;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ReferenceWorkID", referencedColumnName = "ReferenceWorkID")
     @ManyToOne(optional = false)
-    private Referencework referenceWorkID;
+    private Referencework referenceWork;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
 
     public Dnasequencingruncitation() {
     }
 
-    public Dnasequencingruncitation(Integer dNASequencingRunCitationID) {
-        this.dNASequencingRunCitationID = dNASequencingRunCitationID;
+    public Dnasequencingruncitation(Integer dnaSequencingRunCitationId) {
+        this.dnaSequencingRunCitationId = dnaSequencingRunCitationId;
     }
 
-    public Dnasequencingruncitation(Integer dNASequencingRunCitationID, Date timestampCreated) {
+    public Dnasequencingruncitation(Integer dnaSequencingRunCitationId, Date timestampCreated) {
         super(timestampCreated);
-        this.dNASequencingRunCitationID = dNASequencingRunCitationID; 
+        this.dnaSequencingRunCitationId = dnaSequencingRunCitationId; 
     }
 
-    public Integer getDNASequencingRunCitationID() {
-        return dNASequencingRunCitationID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setDNASequencingRunCitationID(Integer dNASequencingRunCitationID) {
-        this.dNASequencingRunCitationID = dNASequencingRunCitationID;
-    } 
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Integer getDnaSequencingRunCitationId() {
+        return dnaSequencingRunCitationId;
+    }
+
+    public void setDnaSequencingRunCitationId(Integer dnaSequencingRunCitationId) {
+        this.dnaSequencingRunCitationId = dnaSequencingRunCitationId;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Referencework getReferenceWork() {
+        return referenceWork;
+    }
+
+    public void setReferenceWork(Referencework referenceWork) {
+        this.referenceWork = referenceWork;
+    }
+
+    public Dnasequencingrun getSequencingRun() {
+        return sequencingRun;
+    }
+
+    public void setSequencingRun(Dnasequencingrun sequencingRun) {
+        this.sequencingRun = sequencingRun;
+    }
+ 
     
     public Float getNumber1() {
         return number1;
@@ -165,42 +198,12 @@ public class Dnasequencingruncitation extends BaseEntity {
         this.yesNo2 = yesNo2;
     }
 
-    public Dnasequencingrun getDNASequencingRunID() {
-        return dNASequencingRunID;
-    }
-
-    public void setDNASequencingRunID(Dnasequencingrun dNASequencingRunID) {
-        this.dNASequencingRunID = dNASequencingRunID;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Referencework getReferenceWorkID() {
-        return referenceWorkID;
-    }
-
-    public void setReferenceWorkID(Referencework referenceWorkID) {
-        this.referenceWorkID = referenceWorkID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
+    
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (dNASequencingRunCitationID != null ? dNASequencingRunCitationID.hashCode() : 0);
+        hash += (dnaSequencingRunCitationId != null ? dnaSequencingRunCitationId.hashCode() : 0);
         return hash;
     }
 
@@ -211,7 +214,7 @@ public class Dnasequencingruncitation extends BaseEntity {
             return false;
         }
         Dnasequencingruncitation other = (Dnasequencingruncitation) object;
-        if ((this.dNASequencingRunCitationID == null && other.dNASequencingRunCitationID != null) || (this.dNASequencingRunCitationID != null && !this.dNASequencingRunCitationID.equals(other.dNASequencingRunCitationID))) {
+        if ((this.dnaSequencingRunCitationId == null && other.dnaSequencingRunCitationId != null) || (this.dnaSequencingRunCitationId != null && !this.dnaSequencingRunCitationId.equals(other.dnaSequencingRunCitationId))) {
             return false;
         }
         return true;
@@ -219,7 +222,7 @@ public class Dnasequencingruncitation extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Dnasequencingruncitation[ dNASequencingRunCitationID=" + dNASequencingRunCitationID + " ]";
+        return "Dnasequencingruncitation[ dnaSequencingRunCitationId=" + dnaSequencingRunCitationId + " ]";
     }
     
 }

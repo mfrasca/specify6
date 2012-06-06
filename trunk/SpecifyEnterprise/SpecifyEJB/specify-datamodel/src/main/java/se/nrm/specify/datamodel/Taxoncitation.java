@@ -1,19 +1,7 @@
 package se.nrm.specify.datamodel;
  
 import java.util.Date;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
-//import javax.validation.constraints.NotNull;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -26,7 +14,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Taxoncitation.findAll", query = "SELECT t FROM Taxoncitation t"),
-    @NamedQuery(name = "Taxoncitation.findByTaxonCitationID", query = "SELECT t FROM Taxoncitation t WHERE t.taxonCitationID = :taxonCitationID"),
+    @NamedQuery(name = "Taxoncitation.findByTaxonCitationID", query = "SELECT t FROM Taxoncitation t WHERE t.taxonCitationId = :taxonCitationID"),
     @NamedQuery(name = "Taxoncitation.findByTimestampCreated", query = "SELECT t FROM Taxoncitation t WHERE t.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Taxoncitation.findByTimestampModified", query = "SELECT t FROM Taxoncitation t WHERE t.timestampModified = :timestampModified"),
     @NamedQuery(name = "Taxoncitation.findByVersion", query = "SELECT t FROM Taxoncitation t WHERE t.version = :version"),
@@ -43,7 +31,7 @@ public class Taxoncitation extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "TaxonCitationID")
-    private Integer taxonCitationID;
+    private Integer taxonCitationId;
      
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "Number1")
@@ -75,40 +63,72 @@ public class Taxoncitation extends BaseEntity {
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ReferenceWorkID", referencedColumnName = "ReferenceWorkID")
     @ManyToOne(optional = false)
-    private Referencework referenceWorkID;
+    private Referencework referenceWork;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "TaxonID", referencedColumnName = "TaxonID")
     @ManyToOne(optional = false)
-    private Taxon taxonID;
+    private Taxon taxon;
 
     public Taxoncitation() {
     }
 
-    public Taxoncitation(Integer taxonCitationID) {
-        this.taxonCitationID = taxonCitationID;
+    public Taxoncitation(Integer taxonCitationId) {
+        this.taxonCitationId = taxonCitationId;
     }
 
-    public Taxoncitation(Integer taxonCitationID, Date timestampCreated) {
+    public Taxoncitation(Integer taxonCitationId, Date timestampCreated) {
         super(timestampCreated);
-        this.taxonCitationID = taxonCitationID; 
+        this.taxonCitationId = taxonCitationId; 
     }
 
-    public Integer getTaxonCitationID() {
-        return taxonCitationID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setTaxonCitationID(Integer taxonCitationID) {
-        this.taxonCitationID = taxonCitationID;
-    } 
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
 
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Referencework getReferenceWork() {
+        return referenceWork;
+    }
+
+    public void setReferenceWork(Referencework referenceWork) {
+        this.referenceWork = referenceWork;
+    }
+
+    public Taxon getTaxon() {
+        return taxon;
+    }
+
+    public void setTaxon(Taxon taxon) {
+        this.taxon = taxon;
+    }
+
+    public Integer getTaxonCitationId() {
+        return taxonCitationId;
+    }
+
+    public void setTaxonCitationId(Integer taxonCitationId) {
+        this.taxonCitationId = taxonCitationId;
+    }
+    
     public Float getNumber1() {
         return number1;
     }
@@ -164,43 +184,12 @@ public class Taxoncitation extends BaseEntity {
     public void setYesNo2(Boolean yesNo2) {
         this.yesNo2 = yesNo2;
     }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Referencework getReferenceWorkID() {
-        return referenceWorkID;
-    }
-
-    public void setReferenceWorkID(Referencework referenceWorkID) {
-        this.referenceWorkID = referenceWorkID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
-    }
-
-    public Taxon getTaxonID() {
-        return taxonID;
-    }
-
-    public void setTaxonID(Taxon taxonID) {
-        this.taxonID = taxonID;
-    }
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (taxonCitationID != null ? taxonCitationID.hashCode() : 0);
+        hash += (taxonCitationId != null ? taxonCitationId.hashCode() : 0);
         return hash;
     }
 
@@ -211,7 +200,7 @@ public class Taxoncitation extends BaseEntity {
             return false;
         }
         Taxoncitation other = (Taxoncitation) object;
-        if ((this.taxonCitationID == null && other.taxonCitationID != null) || (this.taxonCitationID != null && !this.taxonCitationID.equals(other.taxonCitationID))) {
+        if ((this.taxonCitationId == null && other.taxonCitationId != null) || (this.taxonCitationId != null && !this.taxonCitationId.equals(other.taxonCitationId))) {
             return false;
         }
         return true;
@@ -219,7 +208,7 @@ public class Taxoncitation extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Taxoncitation[ taxonCitationID=" + taxonCitationID + " ]";
+        return "Taxoncitation[ taxonCitationID=" + taxonCitationId + " ]";
     }
     
 }

@@ -33,7 +33,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Collectingevent.findAll", query = "SELECT c FROM Collectingevent c"),
-    @NamedQuery(name = "Collectingevent.findByCollectingEventID", query = "SELECT c FROM Collectingevent c WHERE c.collectingEventID = :collectingEventID"), 
+    @NamedQuery(name = "Collectingevent.findByCollectingEventID", query = "SELECT c FROM Collectingevent c WHERE c.collectingEventId = :collectingEventID"), 
     @NamedQuery(name = "Collectingevent.findByTimestampCreated", query = "SELECT c FROM Collectingevent c WHERE c.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Collectingevent.findByTimestampModified", query = "SELECT c FROM Collectingevent c WHERE c.timestampModified = :timestampModified"),
     @NamedQuery(name = "Collectingevent.findByVersion", query = "SELECT c FROM Collectingevent c WHERE c.version = :version"),
@@ -41,7 +41,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Collectingevent.findByEndDatePrecision", query = "SELECT c FROM Collectingevent c WHERE c.endDatePrecision = :endDatePrecision"),
     @NamedQuery(name = "Collectingevent.findByEndDateVerbatim", query = "SELECT c FROM Collectingevent c WHERE c.endDateVerbatim = :endDateVerbatim"),
     @NamedQuery(name = "Collectingevent.findByEndTime", query = "SELECT c FROM Collectingevent c WHERE c.endTime = :endTime"),
-    @NamedQuery(name = "Collectingevent.findByLocality", query = "SELECT c FROM Collectingevent c WHERE c.localityID.localityName like :localityName"),
+    @NamedQuery(name = "Collectingevent.findByLocality", query = "SELECT c FROM Collectingevent c WHERE c.locality.localityName like :localityName"),
     @NamedQuery(name = "Collectingevent.findByMethod", query = "SELECT c FROM Collectingevent c WHERE c.method = :method"),
     @NamedQuery(name = "Collectingevent.findByStartDate", query = "SELECT c FROM Collectingevent c WHERE c.startDate = :startDate"),
     @NamedQuery(name = "Collectingevent.findByStartDatePrecision", query = "SELECT c FROM Collectingevent c WHERE c.startDatePrecision = :startDatePrecision"),
@@ -59,7 +59,7 @@ public class Collectingevent extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "CollectingEventID")
-    private Integer collectingEventID;
+    private Integer collectingEventId;
      
     @Column(name = "EndDate")
     @Temporal(TemporalType.DATE)
@@ -114,68 +114,62 @@ public class Collectingevent extends BaseEntity {
     @Column(name = "Visibility")
     private Short visibility;
      
-    @OneToOne(mappedBy = "collectingEventID")
-    private Collector collectorID;
+    @OneToOne(mappedBy = "collectingEvent")
+    private Collector collector;
  
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "collectingEventID")
-    private Collection<Collectingeventattr> collectingeventattrCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "collectingEvent")
+    private Collection<Collectingeventattr> collectingEventAttrs;
     
     @JoinColumn(name = "CollectingEventAttributeID", referencedColumnName = "CollectingEventAttributeID")
     @ManyToOne
-    private Collectingeventattribute collectingEventAttributeID;
+    private Collectingeventattribute collectingEventAttribute;
     
     @JoinColumn(name = "LocalityID", referencedColumnName = "LocalityID")
     @ManyToOne
-    private Locality localityID;
+    private Locality locality;
     
     @JoinColumn(name = "VisibilitySetByID", referencedColumnName = "SpecifyUserID")
     @ManyToOne
-    private Specifyuser visibilitySetByID;
+    private Specifyuser visibilitySetBy;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "CollectingTripID", referencedColumnName = "CollectingTripID")
     @ManyToOne
-    private Collectingtrip collectingTripID;
+    private Collectingtrip collectingTrip;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "DisciplineID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne(optional = false)
-    private Discipline disciplineID;
+    private Discipline discipline;
     
-    @OneToMany(mappedBy = "collectingEventID")
-    private Collection<Collectionobject> collectionobjectCollection;
+    @OneToMany(mappedBy = "collectingEvent")
+    private Collection<Collectionobject> collectionObjects;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "collectingEventID")
-    private Collection<Collector> collectorCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "collectingEvent")
+    private Collection<Collector> collectors;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "collectingEventID")
-    private Collection<Collectingeventattachment> collectingeventattachmentCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "collectingEvent")
+    private Collection<Collectingeventattachment> collectingEventAttachments;
 
     public Collectingevent() {
     }
 
-    public Collectingevent(Integer collectingEventID) {
-        this.collectingEventID = collectingEventID;
+    public Collectingevent(Integer collectingEventId) {
+        this.collectingEventId = collectingEventId;
     }
 
-    public Collectingevent(Integer collectingEventID, Date timestampCreated) {
+    public Collectingevent(Integer collectingEventId, Date timestampCreated) {
         super(timestampCreated);
-        this.collectingEventID = collectingEventID; 
+        this.collectingEventId = collectingEventId; 
     }
 
-    public Integer getCollectingEventID() {
-        return collectingEventID;
-    }
-
-    public void setCollectingEventID(Integer collectingEventID) {
-        this.collectingEventID = collectingEventID;
-    } 
+ 
     
     public Date getEndDate() {
         return endDate;
@@ -290,109 +284,123 @@ public class Collectingevent extends BaseEntity {
     }
 
     @XmlTransient
-    public Collection<Collectingeventattr> getCollectingeventattrCollection() {
-        return collectingeventattrCollection;
+    public Collection<Collectingeventattachment> getCollectingEventAttachments() {
+        return collectingEventAttachments;
     }
 
-    public void setCollectingeventattrCollection(Collection<Collectingeventattr> collectingeventattrCollection) {
-        this.collectingeventattrCollection = collectingeventattrCollection;
+    public void setCollectingEventAttachments(Collection<Collectingeventattachment> collectingEventAttachments) {
+        this.collectingEventAttachments = collectingEventAttachments;
     }
 
-    public Collectingeventattribute getCollectingEventAttributeID() {
-        return collectingEventAttributeID;
+    public Collectingeventattribute getCollectingEventAttribute() {
+        return collectingEventAttribute;
     }
 
-    public void setCollectingEventAttributeID(Collectingeventattribute collectingEventAttributeID) {
-        this.collectingEventAttributeID = collectingEventAttributeID;
+    public void setCollectingEventAttribute(Collectingeventattribute collectingEventAttribute) {
+        this.collectingEventAttribute = collectingEventAttribute;
     }
 
-    public Locality getLocalityID() {
-        return localityID;
+    @XmlTransient
+    public Collection<Collectingeventattr> getCollectingEventAttrs() {
+        return collectingEventAttrs;
     }
 
-    public void setLocalityID(Locality localityID) {
-        this.localityID = localityID;
+    public void setCollectingEventAttrs(Collection<Collectingeventattr> collectingEventAttrs) {
+        this.collectingEventAttrs = collectingEventAttrs;
     }
 
-    public Specifyuser getVisibilitySetByID() {
-        return visibilitySetByID;
+    public Integer getCollectingEventId() {
+        return collectingEventId;
     }
 
-    public void setVisibilitySetByID(Specifyuser visibilitySetByID) {
-        this.visibilitySetByID = visibilitySetByID;
+    public void setCollectingEventId(Integer collectingEventId) {
+        this.collectingEventId = collectingEventId;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Collectingtrip getCollectingTrip() {
+        return collectingTrip;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setCollectingTrip(Collectingtrip collectingTrip) {
+        this.collectingTrip = collectingTrip;
     }
 
-    public Collectingtrip getCollectingTripID() {
-        return collectingTripID;
+    @XmlTransient
+    public Collection<Collectionobject> getCollectionObjects() {
+        return collectionObjects;
     }
 
-    public void setCollectingTripID(Collectingtrip collectingTripID) {
-        this.collectingTripID = collectingTripID;
+    public void setCollectionObjects(Collection<Collectionobject> collectionObjects) {
+        this.collectionObjects = collectionObjects;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Collector getCollector() {
+        return collector;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setCollector(Collector collector) {
+        this.collector = collector;
     }
 
-    public Discipline getDisciplineID() {
-        return disciplineID;
+    @XmlTransient
+    public Collection<Collector> getCollectors() {
+        return collectors;
     }
 
-    public void setDisciplineID(Discipline disciplineID) {
-        this.disciplineID = disciplineID;
+    public void setCollectors(Collection<Collector> collectors) {
+        this.collectors = collectors;
     }
+
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
+    }
+
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Discipline getDiscipline() {
+        return discipline;
+    }
+
+    public void setDiscipline(Discipline discipline) {
+        this.discipline = discipline;
+    }
+
+    public Locality getLocality() {
+        return locality;
+    }
+
+    public void setLocality(Locality locality) {
+        this.locality = locality;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    public Specifyuser getVisibilitySetBy() {
+        return visibilitySetBy;
+    }
+
+    public void setVisibilitySetBy(Specifyuser visibilitySetBy) {
+        this.visibilitySetBy = visibilitySetBy;
+    }
+
+   
+
     
-    public Collector getCollectorID() {
-        return collectorID;
-    }
-
-    public void setCollectorID(Collector collectorID) {
-        this.collectorID = collectorID;
-    }
-
-    @XmlTransient
-    public Collection<Collectionobject> getCollectionobjectCollection() {
-        return collectionobjectCollection;
-    }
-
-    public void setCollectionobjectCollection(Collection<Collectionobject> collectionobjectCollection) {
-        this.collectionobjectCollection = collectionobjectCollection;
-    }
-
-    @XmlTransient
-    public Collection<Collector> getCollectorCollection() {
-        return collectorCollection;
-    }
-
-    public void setCollectorCollection(Collection<Collector> collectorCollection) {
-        this.collectorCollection = collectorCollection;
-    }
-
-    @XmlTransient
-    public Collection<Collectingeventattachment> getCollectingeventattachmentCollection() {
-        return collectingeventattachmentCollection;
-    }
-
-    public void setCollectingeventattachmentCollection(Collection<Collectingeventattachment> collectingeventattachmentCollection) {
-        this.collectingeventattachmentCollection = collectingeventattachmentCollection;
-    }
+ 
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (collectingEventID != null ? collectingEventID.hashCode() : 0);
+        hash += (collectingEventId != null ? collectingEventId.hashCode() : 0);
         return hash;
     }
 
@@ -403,7 +411,7 @@ public class Collectingevent extends BaseEntity {
             return false;
         }
         Collectingevent other = (Collectingevent) object;
-        if ((this.collectingEventID == null && other.collectingEventID != null) || (this.collectingEventID != null && !this.collectingEventID.equals(other.collectingEventID))) {
+        if ((this.collectingEventId == null && other.collectingEventId != null) || (this.collectingEventId != null && !this.collectingEventId.equals(other.collectingEventId))) {
             return false;
         }
         return true;
@@ -411,7 +419,7 @@ public class Collectingevent extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Collectingevent[ collectingEventID=" + collectingEventID + " ]";
+        return "Collectingevent[ collectingEventId=" + collectingEventId + " ]";
     }
     
 }

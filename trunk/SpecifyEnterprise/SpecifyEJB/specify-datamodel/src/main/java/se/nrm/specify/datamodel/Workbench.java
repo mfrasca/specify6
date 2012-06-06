@@ -2,21 +2,7 @@ package se.nrm.specify.datamodel;
  
 import java.util.Collection;
 import java.util.Date;
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table; 
-//import javax.validation.constraints.NotNull;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -30,12 +16,12 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Workbench.findAll", query = "SELECT w FROM Workbench w"),
-    @NamedQuery(name = "Workbench.findByWorkbenchID", query = "SELECT w FROM Workbench w WHERE w.workbenchID = :workbenchID"),
+    @NamedQuery(name = "Workbench.findByWorkbenchID", query = "SELECT w FROM Workbench w WHERE w.workbenchId = :workbenchID"),
     @NamedQuery(name = "Workbench.findByTimestampCreated", query = "SELECT w FROM Workbench w WHERE w.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Workbench.findByTimestampModified", query = "SELECT w FROM Workbench w WHERE w.timestampModified = :timestampModified"),
     @NamedQuery(name = "Workbench.findByVersion", query = "SELECT w FROM Workbench w WHERE w.version = :version"),
     @NamedQuery(name = "Workbench.findByAllPermissionLevel", query = "SELECT w FROM Workbench w WHERE w.allPermissionLevel = :allPermissionLevel"),
-    @NamedQuery(name = "Workbench.findByTableID", query = "SELECT w FROM Workbench w WHERE w.tableID = :tableID"),
+    @NamedQuery(name = "Workbench.findByTableID", query = "SELECT w FROM Workbench w WHERE w.dbTableId = :tableID"),
     @NamedQuery(name = "Workbench.findByExportInstitutionName", query = "SELECT w FROM Workbench w WHERE w.exportInstitutionName = :exportInstitutionName"),
     @NamedQuery(name = "Workbench.findByFormId", query = "SELECT w FROM Workbench w WHERE w.formId = :formId"),
     @NamedQuery(name = "Workbench.findByGroupPermissionLevel", query = "SELECT w FROM Workbench w WHERE w.groupPermissionLevel = :groupPermissionLevel"),
@@ -53,13 +39,13 @@ public class Workbench extends BaseEntity {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "WorkbenchID")
-    private Integer workbenchID;
+    private Integer workbenchId;
      
     @Column(name = "AllPermissionLevel")
     private Integer allPermissionLevel;
     
     @Column(name = "TableID")
-    private Integer tableID;
+    private Integer dbTableId;
     
     @Size(max = 128)
     @Column(name = "ExportInstitutionName")
@@ -97,45 +83,37 @@ public class Workbench extends BaseEntity {
     
     @JoinColumn(name = "SpPrincipalID", referencedColumnName = "SpPrincipalID")
     @ManyToOne
-    private Spprincipal spPrincipalID;
+    private Spprincipal group;
     
     @JoinColumn(name = "WorkbenchTemplateID", referencedColumnName = "WorkbenchTemplateID")
     @ManyToOne(optional = false)
-    private Workbenchtemplate workbenchTemplateID;
+    private Workbenchtemplate workbenchTemplate;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
+    private Agent modifiedByAgent;
     
     @JoinColumn(name = "SpecifyUserID", referencedColumnName = "SpecifyUserID")
     @ManyToOne(optional = false)
-    private Specifyuser specifyUserID;
+    private Specifyuser specifyUser;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "workbenchID")
-    private Collection<Workbenchrow> workbenchrowCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "workbench")
+    private Collection<Workbenchrow> workbenchRows;
 
     public Workbench() {
     }
 
-    public Workbench(Integer workbenchID) {
-        this.workbenchID = workbenchID;
+    public Workbench(Integer workbenchId) {
+        this.workbenchId = workbenchId;
     }
 
-    public Workbench(Integer workbenchID, Date timestampCreated) {
+    public Workbench(Integer workbenchId, Date timestampCreated) {
         super(timestampCreated);
-        this.workbenchID = workbenchID; 
-    }
-
-    public Integer getWorkbenchID() {
-        return workbenchID;
-    }
-
-    public void setWorkbenchID(Integer workbenchID) {
-        this.workbenchID = workbenchID;
+        this.workbenchId = workbenchId; 
     }
  
     public Integer getAllPermissionLevel() {
@@ -145,15 +123,7 @@ public class Workbench extends BaseEntity {
     public void setAllPermissionLevel(Integer allPermissionLevel) {
         this.allPermissionLevel = allPermissionLevel;
     }
-
-    public Integer getTableID() {
-        return tableID;
-    }
-
-    public void setTableID(Integer tableID) {
-        this.tableID = tableID;
-    }
-
+ 
     public String getExportInstitutionName() {
         return exportInstitutionName;
     }
@@ -226,59 +196,76 @@ public class Workbench extends BaseEntity {
         this.exportedFromTableName = exportedFromTableName;
     }
 
-    public Spprincipal getSpPrincipalID() {
-        return spPrincipalID;
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
     }
 
-    public void setSpPrincipalID(Spprincipal spPrincipalID) {
-        this.spPrincipalID = spPrincipalID;
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
     }
 
-    public Workbenchtemplate getWorkbenchTemplateID() {
-        return workbenchTemplateID;
+    public Integer getDbTableId() {
+        return dbTableId;
     }
 
-    public void setWorkbenchTemplateID(Workbenchtemplate workbenchTemplateID) {
-        this.workbenchTemplateID = workbenchTemplateID;
+    public void setDbTableId(Integer dbTableId) {
+        this.dbTableId = dbTableId;
     }
 
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
+    public Spprincipal getGroup() {
+        return group;
     }
 
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
+    public void setGroup(Spprincipal group) {
+        this.group = group;
     }
 
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
     }
 
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
 
-    public Specifyuser getSpecifyUserID() {
-        return specifyUserID;
+    public Specifyuser getSpecifyUser() {
+        return specifyUser;
     }
 
-    public void setSpecifyUserID(Specifyuser specifyUserID) {
-        this.specifyUserID = specifyUserID;
+    public void setSpecifyUser(Specifyuser specifyUser) {
+        this.specifyUser = specifyUser;
+    }
+
+    public Integer getWorkbenchId() {
+        return workbenchId;
+    }
+
+    public void setWorkbenchId(Integer workbenchId) {
+        this.workbenchId = workbenchId;
     }
 
     @XmlTransient
-    public Collection<Workbenchrow> getWorkbenchrowCollection() {
-        return workbenchrowCollection;
+    public Collection<Workbenchrow> getWorkbenchRows() {
+        return workbenchRows;
     }
 
-    public void setWorkbenchrowCollection(Collection<Workbenchrow> workbenchrowCollection) {
-        this.workbenchrowCollection = workbenchrowCollection;
+    public void setWorkbenchRows(Collection<Workbenchrow> workbenchRows) {
+        this.workbenchRows = workbenchRows;
     }
+
+    public Workbenchtemplate getWorkbenchTemplate() {
+        return workbenchTemplate;
+    }
+
+    public void setWorkbenchTemplate(Workbenchtemplate workbenchTemplate) {
+        this.workbenchTemplate = workbenchTemplate;
+    }
+ 
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (workbenchID != null ? workbenchID.hashCode() : 0);
+        hash += (workbenchId != null ? workbenchId.hashCode() : 0);
         return hash;
     }
 
@@ -289,7 +276,7 @@ public class Workbench extends BaseEntity {
             return false;
         }
         Workbench other = (Workbench) object;
-        if ((this.workbenchID == null && other.workbenchID != null) || (this.workbenchID != null && !this.workbenchID.equals(other.workbenchID))) {
+        if ((this.workbenchId == null && other.workbenchId != null) || (this.workbenchId != null && !this.workbenchId.equals(other.workbenchId))) {
             return false;
         }
         return true;
@@ -297,7 +284,7 @@ public class Workbench extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Workbench[ workbenchID=" + workbenchID + " ]";
+        return "Workbench[ workbenchID=" + workbenchId + " ]";
     }
     
 }

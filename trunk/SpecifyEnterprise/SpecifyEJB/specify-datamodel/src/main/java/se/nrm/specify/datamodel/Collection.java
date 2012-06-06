@@ -35,7 +35,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Collection.findByTimestampCreated", query = "SELECT c FROM Collection c WHERE c.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Collection.findByTimestampModified", query = "SELECT c FROM Collection c WHERE c.timestampModified = :timestampModified"),
     @NamedQuery(name = "Collection.findByVersion", query = "SELECT c FROM Collection c WHERE c.version = :version"),
-    @NamedQuery(name = "Collection.findByCatalogFormatNumName", query = "SELECT c FROM Collection c WHERE c.catalogFormatNumName = :catalogFormatNumName"),
+    @NamedQuery(name = "Collection.findByCatalogFormatNumName", query = "SELECT c FROM Collection c WHERE c.catalogNumFormatName = :catalogFormatNumName"),
     @NamedQuery(name = "Collection.findByCode", query = "SELECT c FROM Collection c WHERE c.code = :code"),
     @NamedQuery(name = "Collection.findByCollectionId", query = "SELECT c FROM Collection c WHERE c.collectionId = :collectionId"),
     @NamedQuery(name = "Collection.findByCollectionName", query = "SELECT c FROM Collection c WHERE c.collectionName = :collectionName"),
@@ -61,107 +61,142 @@ public class Collection extends BaseEntity {
     @NotNull
     @Column(name = "UserGroupScopeId")
     private Integer userGroupScopeId;
+    
     @Basic(optional = false)
 //    @NotNull
     @Size(min = 1, max = 64)
     @Column(name = "CatalogFormatNumName")
-    private String catalogFormatNumName;
+    private String catalogNumFormatName;
+    
     @Size(max = 50)
     @Column(name = "Code")
     private String code;
+    
     @Column(name = "collectionId")
     private Integer collectionId;
+    
     @Size(max = 50)
     @Column(name = "CollectionName")
     private String collectionName;
+    
     @Size(max = 32)
     @Column(name = "CollectionType")
     private String collectionType;
+    
     @Size(max = 32)
     @Column(name = "DbContentVersion")
     private String dbContentVersion;
+    
     @Lob
     @Size(max = 65535)
     @Column(name = "Description")
     private String description;
+    
     @Size(max = 32)
     @Column(name = "DevelopmentStatus")
     private String developmentStatus;
+    
     @Column(name = "EstimatedSize")
     private Integer estimatedSize;
+    
     @Size(max = 32)
     @Column(name = "InstitutionType")
     private String institutionType;
+    
     @Basic(optional = false)
     @NotNull
     @Column(name = "IsEmbeddedCollectingEvent")
     private boolean isEmbeddedCollectingEvent;
+    
     @Size(max = 24)
     @Column(name = "IsaNumber")
     private String isaNumber;
+    
     @Size(max = 32)
     @Column(name = "KingdomCoverage")
     private String kingdomCoverage;
+    
     @Size(max = 32)
     @Column(name = "PreservationMethodType")
     private String preservationMethodType;
+    
     @Size(max = 32)
     @Column(name = "PrimaryFocus")
     private String primaryFocus;
+    
     @Size(max = 32)
     @Column(name = "PrimaryPurpose")
     private String primaryPurpose;
+    
     @Size(max = 24)
     @Column(name = "RegNumber")
     private String regNumber;
+    
     @Lob
     @Size(max = 65535)
     @Column(name = "Remarks")
     private String remarks;
+    
     @Lob
     @Size(max = 65535)
     @Column(name = "Scope")
     private String scope;
+    
     @Size(max = 255)
     @Column(name = "WebPortalURI")
     private String webPortalURI;
+    
     @Size(max = 255)
     @Column(name = "WebSiteURI")
     private String webSiteURI;
+    
     @JoinTable(name = "autonumsch_coll", joinColumns = {
         @JoinColumn(name = "CollectionID", referencedColumnName = "UserGroupScopeId")}, inverseJoinColumns = {
         @JoinColumn(name = "AutoNumberingSchemeID", referencedColumnName = "AutoNumberingSchemeID")})
     @ManyToMany
-    private java.util.Collection<Autonumberingscheme> autonumberingschemeCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "collectionID")
-    private java.util.Collection<Preptype> preptypeCollection;
-    @OneToMany(mappedBy = "collectionID", cascade = CascadeType.ALL)
-    private java.util.Collection<Sptasksemaphore> sptasksemaphoreCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "collectionID")
-    private java.util.Collection<Picklist> picklistCollection;
+    private java.util.Collection<Autonumberingscheme> numberingSchemes;
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "collection")
+    private java.util.Collection<Preptype> prepTypes;
+    
+    @OneToMany(mappedBy = "collection", cascade = CascadeType.ALL)
+    private java.util.Collection<Sptasksemaphore> sptasksemaphores;
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "collection")
+    private java.util.Collection<Picklist> pickLists;
+    
     @JoinColumn(name = "DisciplineID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne(optional = false)
-    private Discipline disciplineID;
+    private Discipline discipline;
+    
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent createdByAgentID;
+    private Agent createdByAgent;
+    
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
-    private Agent modifiedByAgentID;
-    @OneToMany(mappedBy = "rightSideCollectionID")
-    private java.util.Collection<Collectionreltype> collectionreltypeCollection;
-    @OneToMany(mappedBy = "leftSideCollectionID")
-    private java.util.Collection<Collectionreltype> collectionreltypeCollection1;
-    @OneToMany(mappedBy = "collectionTCID")
-    private java.util.Collection<Agent> agentCollection;
-    @OneToMany(mappedBy = "collectionCCID")
-    private java.util.Collection<Agent> agentCollection1;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "collectionID")
-    private java.util.Collection<Collectionobject> collectionobjectCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "collectionID")
-    private java.util.Collection<Fieldnotebook> fieldnotebookCollection;
-    @OneToMany(mappedBy = "collectionID")
-    private java.util.Collection<Spappresourcedir> spappresourcedirCollection;
+    private Agent modifiedByAgent;
+    
+    @OneToMany(mappedBy = "rightSideCollection")
+    private java.util.Collection<Collectionreltype> rightSideRelTypes;
+    
+    @OneToMany(mappedBy = "leftSideCollection")
+    private java.util.Collection<Collectionreltype> leftSideRelTypes;
+    
+    @OneToMany(mappedBy = "collTechContact")
+    private java.util.Collection<Agent> technicalContacts;
+    
+    @OneToMany(mappedBy = "collContentContact")
+    private java.util.Collection<Agent> contentContacts;
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "collection")
+    private java.util.Collection<Collectionobject> collectionobjects;
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "collection")
+    private java.util.Collection<Fieldnotebook> fieldnotebooks;
+    
+    @OneToMany(mappedBy = "collection")
+    private java.util.Collection<Spappresourcedir> spappresourcedirs;
 
     public Collection() {
     }
@@ -170,10 +205,10 @@ public class Collection extends BaseEntity {
         this.userGroupScopeId = userGroupScopeId;
     }
 
-    public Collection(Integer userGroupScopeId, Date timestampCreated, String catalogFormatNumName, boolean isEmbeddedCollectingEvent) {
+    public Collection(Integer userGroupScopeId, Date timestampCreated, String catalogNumFormatName, boolean isEmbeddedCollectingEvent) {
         super(timestampCreated);
         this.userGroupScopeId = userGroupScopeId;
-        this.catalogFormatNumName = catalogFormatNumName;
+        this.catalogNumFormatName = catalogNumFormatName;
         this.isEmbeddedCollectingEvent = isEmbeddedCollectingEvent;
     }
 
@@ -185,13 +220,15 @@ public class Collection extends BaseEntity {
         this.userGroupScopeId = userGroupScopeId;
     }
 
-    public String getCatalogFormatNumName() {
-        return catalogFormatNumName;
+    public String getCatalogNumFormatName() {
+        return catalogNumFormatName;
     }
 
-    public void setCatalogFormatNumName(String catalogFormatNumName) {
-        this.catalogFormatNumName = catalogFormatNumName;
+    public void setCatalogNumFormatName(String catalogNumFormatName) {
+        this.catalogNumFormatName = catalogNumFormatName;
     }
+
+ 
 
     public String getCode() {
         return code;
@@ -354,127 +391,131 @@ public class Collection extends BaseEntity {
     }
 
     @XmlTransient
-    public java.util.Collection<Autonumberingscheme> getAutonumberingschemeCollection() {
-        return autonumberingschemeCollection;
+    public java.util.Collection<Agent> getContentContacts() {
+        return contentContacts;
     }
 
-    public void setAutonumberingschemeCollection(java.util.Collection<Autonumberingscheme> autonumberingschemeCollection) {
-        this.autonumberingschemeCollection = autonumberingschemeCollection;
-    }
-
-    @XmlTransient
-    public java.util.Collection<Preptype> getPreptypeCollection() {
-        return preptypeCollection;
-    }
-
-    public void setPreptypeCollection(java.util.Collection<Preptype> preptypeCollection) {
-        this.preptypeCollection = preptypeCollection;
+    public void setContentContacts(java.util.Collection<Agent> contentContacts) {
+        this.contentContacts = contentContacts;
     }
 
     @XmlTransient
-    public java.util.Collection<Sptasksemaphore> getSptasksemaphoreCollection() {
-        return sptasksemaphoreCollection;
+    public java.util.Collection<Collectionreltype> getLeftSideRelTypes() {
+        return leftSideRelTypes;
     }
 
-    public void setSptasksemaphoreCollection(java.util.Collection<Sptasksemaphore> sptasksemaphoreCollection) {
-        this.sptasksemaphoreCollection = sptasksemaphoreCollection;
-    }
-
-    @XmlTransient
-    public java.util.Collection<Picklist> getPicklistCollection() {
-        return picklistCollection;
-    }
-
-    public void setPicklistCollection(java.util.Collection<Picklist> picklistCollection) {
-        this.picklistCollection = picklistCollection;
-    }
-
-    public Discipline getDisciplineID() {
-        return disciplineID;
-    }
-
-    public void setDisciplineID(Discipline disciplineID) {
-        this.disciplineID = disciplineID;
-    }
-
-    public Agent getCreatedByAgentID() {
-        return createdByAgentID;
-    }
-
-    public void setCreatedByAgentID(Agent createdByAgentID) {
-        this.createdByAgentID = createdByAgentID;
-    }
-
-    public Agent getModifiedByAgentID() {
-        return modifiedByAgentID;
-    }
-
-    public void setModifiedByAgentID(Agent modifiedByAgentID) {
-        this.modifiedByAgentID = modifiedByAgentID;
+    public void setLeftSideRelTypes(java.util.Collection<Collectionreltype> leftSideRelTypes) {
+        this.leftSideRelTypes = leftSideRelTypes;
     }
 
     @XmlTransient
-    public java.util.Collection<Collectionreltype> getCollectionreltypeCollection() {
-        return collectionreltypeCollection;
+    public java.util.Collection<Autonumberingscheme> getNumberingSchemes() {
+        return numberingSchemes;
     }
 
-    public void setCollectionreltypeCollection(java.util.Collection<Collectionreltype> collectionreltypeCollection) {
-        this.collectionreltypeCollection = collectionreltypeCollection;
-    }
-
-    @XmlTransient
-    public java.util.Collection<Collectionreltype> getCollectionreltypeCollection1() {
-        return collectionreltypeCollection1;
-    }
-
-    public void setCollectionreltypeCollection1(java.util.Collection<Collectionreltype> collectionreltypeCollection1) {
-        this.collectionreltypeCollection1 = collectionreltypeCollection1;
+    public void setNumberingSchemes(java.util.Collection<Autonumberingscheme> numberingSchemes) {
+        this.numberingSchemes = numberingSchemes;
     }
 
     @XmlTransient
-    public java.util.Collection<Agent> getAgentCollection() {
-        return agentCollection;
+    public java.util.Collection<Picklist> getPickLists() {
+        return pickLists;
     }
 
-    public void setAgentCollection(java.util.Collection<Agent> agentCollection) {
-        this.agentCollection = agentCollection;
-    }
-
-    @XmlTransient
-    public java.util.Collection<Agent> getAgentCollection1() {
-        return agentCollection1;
-    }
-
-    public void setAgentCollection1(java.util.Collection<Agent> agentCollection1) {
-        this.agentCollection1 = agentCollection1;
+    public void setPickLists(java.util.Collection<Picklist> pickLists) {
+        this.pickLists = pickLists;
     }
 
     @XmlTransient
-    public java.util.Collection<Collectionobject> getCollectionobjectCollection() {
-        return collectionobjectCollection;
+    public java.util.Collection<Preptype> getPrepTypes() {
+        return prepTypes;
     }
 
-    public void setCollectionobjectCollection(java.util.Collection<Collectionobject> collectionobjectCollection) {
-        this.collectionobjectCollection = collectionobjectCollection;
-    }
-
-    @XmlTransient
-    public java.util.Collection<Fieldnotebook> getFieldnotebookCollection() {
-        return fieldnotebookCollection;
-    }
-
-    public void setFieldnotebookCollection(java.util.Collection<Fieldnotebook> fieldnotebookCollection) {
-        this.fieldnotebookCollection = fieldnotebookCollection;
+    public void setPrepTypes(java.util.Collection<Preptype> prepTypes) {
+        this.prepTypes = prepTypes;
     }
 
     @XmlTransient
-    public java.util.Collection<Spappresourcedir> getSpappresourcedirCollection() {
-        return spappresourcedirCollection;
+    public java.util.Collection<Collectionreltype> getRightSideRelTypes() {
+        return rightSideRelTypes;
     }
 
-    public void setSpappresourcedirCollection(java.util.Collection<Spappresourcedir> spappresourcedirCollection) {
-        this.spappresourcedirCollection = spappresourcedirCollection;
+    public void setRightSideRelTypes(java.util.Collection<Collectionreltype> rightSideRelTypes) {
+        this.rightSideRelTypes = rightSideRelTypes;
     }
+
+    @XmlTransient
+    public java.util.Collection<Agent> getTechnicalContacts() {
+        return technicalContacts;
+    }
+
+    public void setTechnicalContacts(java.util.Collection<Agent> technicalContacts) {
+        this.technicalContacts = technicalContacts;
+    }
+ 
+
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
+    }
+
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    public Discipline getDiscipline() {
+        return discipline;
+    }
+
+    public void setDiscipline(Discipline discipline) {
+        this.discipline = discipline;
+    }
+
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
+    }
+
+    @XmlTransient
+    public java.util.Collection<Collectionobject> getCollectionobjects() {
+        return collectionobjects;
+    }
+
+    public void setCollectionobjects(java.util.Collection<Collectionobject> collectionobjects) {
+        this.collectionobjects = collectionobjects;
+    }
+
+    @XmlTransient
+    public java.util.Collection<Fieldnotebook> getFieldnotebooks() {
+        return fieldnotebooks;
+    }
+
+    public void setFieldnotebooks(java.util.Collection<Fieldnotebook> fieldnotebooks) {
+        this.fieldnotebooks = fieldnotebooks;
+    }
+
+    @XmlTransient
+    public java.util.Collection<Spappresourcedir> getSpappresourcedirs() {
+        return spappresourcedirs;
+    }
+
+    public void setSpappresourcedirs(java.util.Collection<Spappresourcedir> spappresourcedirs) {
+        this.spappresourcedirs = spappresourcedirs;
+    }
+
+    @XmlTransient
+    public java.util.Collection<Sptasksemaphore> getSptasksemaphores() {
+        return sptasksemaphores;
+    }
+
+    public void setSptasksemaphores(java.util.Collection<Sptasksemaphore> sptasksemaphores) {
+        this.sptasksemaphores = sptasksemaphores;
+    }
+
+ 
+ 
 
     @Override
     public int hashCode() {

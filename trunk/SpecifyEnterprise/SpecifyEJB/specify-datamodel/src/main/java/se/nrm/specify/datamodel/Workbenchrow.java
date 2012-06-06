@@ -2,21 +2,7 @@ package se.nrm.specify.datamodel;
 
 import java.io.Serializable;
 import java.util.Collection;
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-//import javax.validation.constraints.NotNull;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -30,7 +16,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Workbenchrow.findAll", query = "SELECT w FROM Workbenchrow w"),
-    @NamedQuery(name = "Workbenchrow.findByWorkbenchRowID", query = "SELECT w FROM Workbenchrow w WHERE w.workbenchRowID = :workbenchRowID"),
+    @NamedQuery(name = "Workbenchrow.findByWorkbenchRowID", query = "SELECT w FROM Workbenchrow w WHERE w.workbenchRowId = :workbenchRowID"),
     @NamedQuery(name = "Workbenchrow.findByCardImageFullPath", query = "SELECT w FROM Workbenchrow w WHERE w.cardImageFullPath = :cardImageFullPath"),
     @NamedQuery(name = "Workbenchrow.findByLat1Text", query = "SELECT w FROM Workbenchrow w WHERE w.lat1Text = :lat1Text"),
     @NamedQuery(name = "Workbenchrow.findByLat2Text", query = "SELECT w FROM Workbenchrow w WHERE w.lat2Text = :lat2Text"),
@@ -38,7 +24,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Workbenchrow.findByLong2Text", query = "SELECT w FROM Workbenchrow w WHERE w.long2Text = :long2Text"),
     @NamedQuery(name = "Workbenchrow.findByRowNumber", query = "SELECT w FROM Workbenchrow w WHERE w.rowNumber = :rowNumber"),
     @NamedQuery(name = "Workbenchrow.findByUploadStatus", query = "SELECT w FROM Workbenchrow w WHERE w.uploadStatus = :uploadStatus"),
-    @NamedQuery(name = "Workbenchrow.findByRecordID", query = "SELECT w FROM Workbenchrow w WHERE w.recordID = :recordID")})
+    @NamedQuery(name = "Workbenchrow.findByRecordID", query = "SELECT w FROM Workbenchrow w WHERE w.recordId = :recordID")})
 public class Workbenchrow implements Serializable, SpecifyBean {
     
     private static final long serialVersionUID = 1L;
@@ -48,7 +34,7 @@ public class Workbenchrow implements Serializable, SpecifyBean {
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "WorkbenchRowID")
-    private Integer workbenchRowID;
+    private Integer workbenchRowId;
     
     @Lob
     @Size(max = 65535)
@@ -86,32 +72,25 @@ public class Workbenchrow implements Serializable, SpecifyBean {
     private Short uploadStatus;
     
     @Column(name = "RecordID")
-    private Integer recordID;
+    private Integer recordId;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "workbenchRowID")
-    private Collection<Workbenchrowimage> workbenchrowimageCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "workbenchRow")
+    private Collection<Workbenchrowimage> workbenchRowImages;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "workbenchRowID")
-    private Collection<Workbenchdataitem> workbenchdataitemCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "workbenchRow")
+    private Collection<Workbenchdataitem> workbenchDataItems;
     
     @JoinColumn(name = "WorkbenchID", referencedColumnName = "WorkbenchID")
     @ManyToOne(optional = false)
-    private Workbench workbenchID;
+    private Workbench workbench;
 
     public Workbenchrow() {
     }
 
-    public Workbenchrow(Integer workbenchRowID) {
-        this.workbenchRowID = workbenchRowID;
+    public Workbenchrow(Integer workbenchRowId) {
+        this.workbenchRowId = workbenchRowId;
     }
-
-    public Integer getWorkbenchRowID() {
-        return workbenchRowID;
-    }
-
-    public void setWorkbenchRowID(Integer workbenchRowID) {
-        this.workbenchRowID = workbenchRowID;
-    }
+ 
 
     public String getBioGeomancerResults() {
         return bioGeomancerResults;
@@ -185,44 +164,55 @@ public class Workbenchrow implements Serializable, SpecifyBean {
         this.uploadStatus = uploadStatus;
     }
 
-    public Integer getRecordID() {
-        return recordID;
+    public Integer getRecordId() {
+        return recordId;
     }
 
-    public void setRecordID(Integer recordID) {
-        this.recordID = recordID;
+    public void setRecordId(Integer recordId) {
+        this.recordId = recordId;
+    }
+
+    public Workbench getWorkbench() {
+        return workbench;
+    }
+
+    public void setWorkbench(Workbench workbench) {
+        this.workbench = workbench;
     }
 
     @XmlTransient
-    public Collection<Workbenchrowimage> getWorkbenchrowimageCollection() {
-        return workbenchrowimageCollection;
+    public Collection<Workbenchdataitem> getWorkbenchDataItems() {
+        return workbenchDataItems;
     }
 
-    public void setWorkbenchrowimageCollection(Collection<Workbenchrowimage> workbenchrowimageCollection) {
-        this.workbenchrowimageCollection = workbenchrowimageCollection;
+    public void setWorkbenchDataItems(Collection<Workbenchdataitem> workbenchDataItems) {
+        this.workbenchDataItems = workbenchDataItems;
+    }
+
+    public Integer getWorkbenchRowId() {
+        return workbenchRowId;
+    }
+
+    public void setWorkbenchRowId(Integer workbenchRowId) {
+        this.workbenchRowId = workbenchRowId;
     }
 
     @XmlTransient
-    public Collection<Workbenchdataitem> getWorkbenchdataitemCollection() {
-        return workbenchdataitemCollection;
+    public Collection<Workbenchrowimage> getWorkbenchRowImages() {
+        return workbenchRowImages;
     }
 
-    public void setWorkbenchdataitemCollection(Collection<Workbenchdataitem> workbenchdataitemCollection) {
-        this.workbenchdataitemCollection = workbenchdataitemCollection;
+    public void setWorkbenchRowImages(Collection<Workbenchrowimage> workbenchRowImages) {
+        this.workbenchRowImages = workbenchRowImages;
     }
+ 
 
-    public Workbench getWorkbenchID() {
-        return workbenchID;
-    }
-
-    public void setWorkbenchID(Workbench workbenchID) {
-        this.workbenchID = workbenchID;
-    }
+    
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (workbenchRowID != null ? workbenchRowID.hashCode() : 0);
+        hash += (workbenchRowId != null ? workbenchRowId.hashCode() : 0);
         return hash;
     }
 
@@ -233,7 +223,7 @@ public class Workbenchrow implements Serializable, SpecifyBean {
             return false;
         }
         Workbenchrow other = (Workbenchrow) object;
-        if ((this.workbenchRowID == null && other.workbenchRowID != null) || (this.workbenchRowID != null && !this.workbenchRowID.equals(other.workbenchRowID))) {
+        if ((this.workbenchRowId == null && other.workbenchRowId != null) || (this.workbenchRowId != null && !this.workbenchRowId.equals(other.workbenchRowId))) {
             return false;
         }
         return true;
@@ -241,7 +231,7 @@ public class Workbenchrow implements Serializable, SpecifyBean {
 
     @Override
     public String toString() {
-        return "se.nrm.specify.datamodel.Workbenchrow[ workbenchRowID=" + workbenchRowID + " ]";
+        return "se.nrm.specify.datamodel.Workbenchrow[ workbenchRowID=" + workbenchRowId + " ]";
     }
     
 }
