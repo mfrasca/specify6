@@ -1,11 +1,11 @@
 package se.nrm.specify.data.service;
 
-import com.google.gson.Gson; 
+import com.google.gson.Gson;
 import com.sun.jersey.spi.resource.PerRequest; 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set; 
+import java.util.Set;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -24,14 +24,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.nrm.specify.business.logic.smtp.SMTPLogic;
 import se.nrm.specify.business.logic.specify.SpecifyLogic;
-import se.nrm.specify.datamodel.Address;
 import se.nrm.specify.datamodel.DataWrapper;
 import se.nrm.specify.datamodel.Locality;
 import se.nrm.specify.datamodel.SpecifyBean;
 import se.nrm.specify.datamodel.SpecifyBeanWrapper;
 import se.nrm.specify.datamodel.Specifyuser;
-import se.nrm.specify.datamodel.Taxon; 
+import se.nrm.specify.datamodel.Taxon;
 import se.nrm.specify.ui.form.data.service.UIDataConstractor;
+import se.nrm.specify.ui.form.data.util.UIXmlUtil;
 import se.nrm.specify.ui.form.data.xml.model.ViewData;
 
 /**
@@ -79,26 +79,23 @@ public class SpecyResource {
         return new SpecifyBeanWrapper(bean);
     }
 
- 
-
-    /**
-     * Generic method to get an entity by entity id from database.  
-     * This method passes in a PathParam entity class name and entity id
-     * 
-     * @param entity - class name of the entity
-     * @param id - entity id
-     * 
-     * @return entity
-     */
-    @GET
-    @Path("search/entitybyid/{entity}/{id}")
-    public SpecifyBeanWrapper getEntityById(@PathParam("entity") String entity, @PathParam("id") String id) {
-
-        logger.info("getEntity - entity: {}, id: {}", entity, id);
-        SpecifyBean bean = specify.getDao().getById(Integer.parseInt(id), getEntityClass(entity));
-        return new SpecifyBeanWrapper(bean);
-    }
-
+//    /**
+//     * Generic method to get an entity by entity id from database.  
+//     * This method passes in a PathParam entity class name and entity id
+//     * 
+//     * @param entity - class name of the entity
+//     * @param id - entity id
+//     * 
+//     * @return entity
+//     */
+//    @GET
+//    @Path("search/entitybyid/{entity}/{id}")
+//    public SpecifyBeanWrapper getEntityById(@PathParam("entity") String entity, @PathParam("id") String id) {
+//
+//        logger.info("getEntity - entity: {}, id: {}", entity, id);
+//        SpecifyBean bean = specify.getDao().getById(Integer.parseInt(id), getEntityClass(entity));
+//        return new SpecifyBeanWrapper(bean);
+//    }
     /**
      * Generic method to create an entity.  This method passes entity class name and an entity as json string
      * 
@@ -301,6 +298,28 @@ public class SpecyResource {
     }
 
     @GET
+    @Path("search/uidata/{discipline}/{entity}/{id}")
+    public SpecifyBean fetchGroupEntityById(@PathParam("discipline") String discipline, @PathParam("entity") String entity, @PathParam("id") String id) {
+
+        logger.info("getEntityById: {} - {}", entity, id);
+
+        String entityName = UIXmlUtil.entityNameConvert(entity);
+        String namedQuery = entityName + ".findBy" + entity + "ID";
+        
+        ViewData viewdata = uidata.initData(discipline, entity);
+        if(viewdata != null) {
+            List<String> fields = uidata.constructSearchFields(viewdata);
+
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put(UIXmlUtil.entityFieldNameConvert(entity) + "ID", Integer.parseInt(id));
+            
+            return specify.getDao().getFetchGroupByNamedQuery(entityName, namedQuery, map, fields);  
+        } else {
+            return null;
+        } 
+    }
+
+    @GET
     @Path("search/uidata/{discipline}/{view}")
     public SpecifyBeanWrapper fetchUIData(@PathParam("discipline") String discipline, @PathParam("view") String view, @Context UriInfo uri) {
         logger.info("fetchUIData - discipline: {} - view: {}", discipline, view);
@@ -328,34 +347,34 @@ public class SpecyResource {
         List<String> fields = (List<String>) map.get(entity);
 
         List<SpecifyBean> list = (List<SpecifyBean>) specify.getDao().getListByJPQLByFetchGroup(entity, jpql, fields);
-        
+
         logger.info("list: {}", list);
         return new SpecifyBeanWrapper(list);
     }
 
-    @GET
-    @Path("search/bygroup/bynqry/{namedqry}")
-    public SpecifyBeanWrapper fetchGroupByNamedQuery(@PathParam("namedqry") String namedqry, @Context UriInfo uri) {
-        logger.info("fetchByGroup - entity: {}", namedqry);
-
-        MultivaluedMap map = uri.getQueryParameters();
-        List<String> fields = (List<String>) map.get("fields");
-        map.remove("fields");
-
-        Map<String, Object> conditions = new HashMap<String, Object>();
-
-        Set<String> set = map.keySet();
-        for (String key : set) {
-            List<Object> list = (List<Object>) map.get(key);
-            conditions.put(key, list.get(0));
-        }
-
-        SpecifyBean bean = specify.getDao().getFetchgroupByNameedQuery(namedqry, conditions, fields);
-        if(bean != null) {
-            return new SpecifyBeanWrapper(bean);
-        }
-        return new SpecifyBeanWrapper();
-    }
+//    @GET
+//    @Path("search/bygroup/bynqry/{namedqry}")
+//    public SpecifyBeanWrapper fetchGroupByNamedQuery(@PathParam("namedqry") String namedqry, @Context UriInfo uri) {
+//        logger.info("fetchByGroup - entity: {}", namedqry);
+//
+//        MultivaluedMap map = uri.getQueryParameters();
+//        List<String> fields = (List<String>) map.get("fields");
+//        map.remove("fields");
+//
+//        Map<String, Object> conditions = new HashMap<String, Object>();
+//
+//        Set<String> set = map.keySet();
+//        for (String key : set) {
+//            List<Object> list = (List<Object>) map.get(key);
+//            conditions.put(key, list.get(0));
+//        }
+//
+//        SpecifyBean bean = specify.getDao().getFetchgroupByNamedQuery(namedqry, conditions, fields);
+//        if (bean != null) {
+//            return new SpecifyBeanWrapper(bean);
+//        }
+//        return new SpecifyBeanWrapper();
+//    }
 
     @GET
     @Path("search/all/bygroup/bynqry/{namedqry}/{classname}")
@@ -426,44 +445,6 @@ public class SpecyResource {
         smtp.saveSMTPBatchData(wrapper, userid);
     }
 
-//    /**
-//     * Get list of determination by taxon name, stationfieldnumber and collection code
-//     * @param taxonname
-//     * @param eventId
-//     * @param collection code
-//     * @return 
-//     */
-//    @GET
-//    @Path("search/determinations/{taxonname}/{eventid}/{collection}")
-//    public List<Determination> getDeterminationsbyTaxonnameAndCollecdtingevent(@PathParam("taxonname") String taxonname, @PathParam("eventid") String eventId, @PathParam("collection") String collection) {
-//
-//        logger.info("getDeterminations");
-//
-//        return specify.getDao().getDeterminationsByTaxonNameAndCollectingevent(taxonname, new Collectingevent(Integer.parseInt(eventId)), collection);
-//    }
-//    @GET
-//    @Path("search/determinationsbyevent/{eventid}/{code}")
-//    public DataWrapper getDeterminationsByCollectingevent(@PathParam("eventid") String eventid, @PathParam("code") String collectionCode) {
-//
-//        logger.info("getDeterminationsByCollectingevent: {}, {}", eventid, collectionCode);
-//        return specify.getDao().getDeterminationsByCollectingEvent(new Collectingevent(Integer.parseInt(eventid)), collectionCode);
-//    }
-//    /**
-//     * get determination taxon names by localityId
-//     * 
-//     * @param locality
-//     * @param collection
-//     * @return 
-//     * 
-//     */
-//    @GET
-//    @Path("search/determinationsbylocalityid/{locality}/{collection}")
-//    public DataWrapper getDeterminationsByLocalityId(@PathParam("locality") String locality, @PathParam("collection") String collectionCode) {
-//
-//        logger.info("getDeterminationsByLocalityId: {}, {}", locality, collectionCode);
-//
-//        return new DataWrapper(specify.getDao().getDeterminationByLocalityID(new Locality(Integer.parseInt(locality)), collectionCode));
-//    }
     @GET
     @Path("search/determinations/{node}/{childnode}/{collection}")
     public DataWrapper getDeterminationsByTaxonId(@PathParam("node") String node, @PathParam("childnode") String childNode, @PathParam("collection") String collectionCode) {
