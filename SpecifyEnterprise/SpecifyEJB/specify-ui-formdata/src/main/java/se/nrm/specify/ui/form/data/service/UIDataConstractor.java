@@ -42,7 +42,7 @@ public class UIDataConstractor {
 
     public List<String> constructSearchFields(ViewData viewdata) {
         
-        logger.info("constructSearchFields");
+        logger.info("constructSearchFields: {}", viewdata);
         List<String> fieldlist = new ArrayList<String>();
         try {
             fieldlist.addAll(viewdata.getViewdef().getFieldList());
@@ -69,7 +69,7 @@ public class UIDataConstractor {
     public String getEntityName(ViewData viewdata) {
         return UIXmlUtil.entityNameConvert(viewdata.getViewdef().getViewDefClass());
     }
-
+ 
     
     public String getJpql(String discipline, String view, MultivaluedMap<String, List<Object>> searchConditions, ViewData viewdata) {
         
@@ -103,9 +103,7 @@ public class UIDataConstractor {
                     jpqlSB.append(" AND o.");
                 }
             }
-        }
-        
-        logger.info("jpql: {}", jpqlSB.toString());
+        } 
         return jpqlSB.toString(); 
     }
     
@@ -155,11 +153,7 @@ public class UIDataConstractor {
         return queryParams;
     }
 
-    private List<String> getSubviews(String parent, Map<String, String> map, FormDataType type, int levelCount) {
-        
-         
-        
-        logger.info("subview: {} {}", map, parent);
+    private List<String> getSubviews(String parent, Map<String, String> map, FormDataType type, int levelCount) { 
         
         List<String> fieldList = new ArrayList<String>();
            
