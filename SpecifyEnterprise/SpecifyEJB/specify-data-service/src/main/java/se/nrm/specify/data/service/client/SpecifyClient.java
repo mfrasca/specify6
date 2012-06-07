@@ -65,10 +65,16 @@ public class SpecifyClient {
         //        testGetEntitiesByJPQL(); 
 
 //        testGetEntityById();
-        testUIView();
-//        testAddAnnotation();
+//        testUIView(); 
+        testGetEntityByEntityID();
 
     }
+    
+    
+    private static void testGetEntityByEntityID() {
+        String xml = service.path("search").path("uidata").path("fish").path("CollectionObject").path("245").accept(MediaType.APPLICATION_XML).get(String.class);
+        System.out.println("xml: " + xml);
+    } 
     
     private static void testAddAnnotation() {
         String xml = service.path("search").path("entity").path("test").accept(MediaType.APPLICATION_XML).get(String.class);
@@ -91,8 +97,10 @@ public class SpecifyClient {
     
     private static void testGetEntityById() {
 
-        String entity = Agent.class.getName();
-        String id = "237";
+        String entity = Collectionobject.class.getName();
+        String id = "425";
+        
+        
 
         // JSON
         SpecifyBeanWrapper bean = service.path("search").path("entity").path(entity).path(id).accept(MediaType.APPLICATION_JSON).get(SpecifyBeanWrapper.class);
