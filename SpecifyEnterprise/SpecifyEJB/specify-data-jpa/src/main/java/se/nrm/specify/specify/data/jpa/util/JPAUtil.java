@@ -116,9 +116,9 @@ public class JPAUtil {
                                 beanmap.put(entityname, sb);
                             }
                         } catch (IllegalArgumentException ex) {
-                            logger.error("IllegalArgumentException: {}", ex.getMessage());
+                            logger.error("IllegalArgumentException: {} - {}", ex.getMessage(), parent);
                         } catch (NoSuchFieldException ex) {
-                            logger.error("NoSuchFieldException: {}", ex.getMessage());
+                            logger.error("NoSuchFieldException: {} - {}", ex.getMessage(), parent);
                             removelist = removeFetchGroup(key, fields, removelist);
                         }
                     }
