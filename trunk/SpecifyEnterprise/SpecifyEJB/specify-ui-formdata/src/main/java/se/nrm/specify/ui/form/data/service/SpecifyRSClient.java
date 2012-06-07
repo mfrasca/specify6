@@ -216,8 +216,8 @@ public class SpecifyRSClient {
         SpecifyRSClient client = new SpecifyRSClient(creator);
 
         MultivaluedMapImpl queryParams = new MultivaluedMapImpl();
-        queryParams.add("catalogNumber", "NHRS-GULI000000970");
-         
+//        queryParams.add("catalogNumber", "NHRS-GULI000000970");
+         queryParams.add("collectionObjectId", 425);
           
         String json = client.getJSONResult(discipline, view, queryParams);
         String xml = client.getXMLResult(discipline, view, queryParams);
@@ -231,6 +231,9 @@ public class SpecifyRSClient {
    
     
 //    http://localhost:8080/specify-data-service/search/uidata/fish/CollectionObject?catalogNumber=NHRS-GULI000000970
+        
+        
+ //       http://localhost:8080/specify-data-service/search/uidata/fish/CollectionObject/425
         
     } 
 }
