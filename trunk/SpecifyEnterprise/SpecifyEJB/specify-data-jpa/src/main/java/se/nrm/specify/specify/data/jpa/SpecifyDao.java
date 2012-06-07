@@ -60,7 +60,9 @@ public interface SpecifyDao {
 
     public <T extends SpecifyBean> List getListByJPQLByFetchGroup(String classname, String jpql, List<String> fields);
     
-    public SpecifyBean getFetchgroupByNameedQuery(String nameedQuery, Map<String, Object> conditions, List<String> fields);
+//    public SpecifyBean getFetchgroupByNamedQuery(String nameedQuery, Map<String, Object> conditions, List<String> fields);
+    
+    public SpecifyBean getFetchGroupByNamedQuery(String classname, String namedQuery, Map<String, Object> map, List<String> fields);
     
     public <T extends SpecifyBean> List getAllFetchgroupByNameedQuery(String namedQuery, String classname, Map<String, Object> conditions, List<String> fields);
 

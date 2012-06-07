@@ -81,7 +81,7 @@ public class EntityMapping {
 
     private void setSubEntity(SpecifyBean subo, SpecifyBean o, SpecifyBean bean, Field field, List<String> fields) { 
         
-        logger.info("setSubEntity: {} - {}", o, bean);
+//        logger.info("setSubEntity: {} - {}", o, bean);
         
         String classname = field.getName(); 
         Map<String, List<String>> map = JPAUtil.createMap(classname, fields);  
@@ -107,24 +107,27 @@ public class EntityMapping {
                                 ReflectionUtil.makeAccessible(subfield);
                                 Collection<SpecifyBean> collectionbeans = (Collection<SpecifyBean>) subfield.get(value);
 
-                                int size = collectionbeans.size();      // this is needed for IndirectList: not instantiated
-                                if (size > 0) {
-                                    Collection<SpecifyBean> newcollections = new ArrayList<SpecifyBean>();
-                                    for (SpecifyBean sb : collectionbeans) {
-                                        SpecifyBean gsubo = JPAUtil.createNewInstance(sb.getClass().getSimpleName());
-                                        List<String> list = map.get(key);
-                                        for (String string : list) {
-                                            Field f = ReflectionUtil.getField(sb.getClass(), string);
-                                            setFieldValue(gsubo, sb, f);
+                                if(collectionbeans != null) {
+                                    int size = collectionbeans.size();      // this is needed for IndirectList: not instantiated
+                                    if (size > 0) {
+                                        Collection<SpecifyBean> newcollections = new ArrayList<SpecifyBean>();
+                                        for (SpecifyBean sb : collectionbeans) {
+                                            SpecifyBean gsubo = JPAUtil.createNewInstance(sb.getClass().getSimpleName());
+                                            List<String> list = map.get(key);
+                                            for (String string : list) {
+                                                Field f = ReflectionUtil.getField(sb.getClass(), string);
+                                                setFieldValue(gsubo, sb, f);
+                                            }
+
+                                            newcollections.add(gsubo);
+
+                                            Field newField = ReflectionUtil.getField(subo.getClass(), subfield.getName());
+                                            ReflectionUtil.makeAccessible(newField);
+                                            newField.set(subo, newcollections); 
                                         }
-
-                                        newcollections.add(gsubo);
-
-                                        Field newField = ReflectionUtil.getField(subo.getClass(), subfield.getName());
-                                        ReflectionUtil.makeAccessible(newField);
-                                        newField.set(subo, newcollections); 
                                     }
                                 }
+                                
                             } else {
                                 SpecifyBean gsubo = JPAUtil.createNewInstance(subfield.getType().getSimpleName());
                                 setSubEntity(gsubo, subo, value, subfield, map.get(key)); 
