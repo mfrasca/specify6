@@ -16,7 +16,7 @@ public class SpecifyBeanWrapper {
         @XmlElement(name = "accession", type = Accession.class),
         @XmlElement(name = "agent", type = Agent.class),
         @XmlElement(name = "address", type = Address.class),
-        @XmlElement(name = "attachment", type = Attachment.class), 
+        @XmlElement(name = "attachment", type = Attachment.class),
         @XmlElement(name = "author", type = Author.class),
         @XmlElement(name = "autonumberingscheme", type = Autonumberingscheme.class),
         @XmlElement(name = "borrow", type = Borrow.class),
@@ -33,6 +33,7 @@ public class SpecifyBeanWrapper {
         @XmlElement(name = "specifyuser", type = Specifyuser.class)
     })
     private SpecifyBean bean;
+    
     @XmlElements({
         @XmlElement(name = "accessions", type = Accession.class),
         @XmlElement(name = "addresses", type = Address.class),

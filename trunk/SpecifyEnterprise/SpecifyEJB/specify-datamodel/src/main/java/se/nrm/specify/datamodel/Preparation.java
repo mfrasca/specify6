@@ -21,6 +21,7 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -186,7 +187,7 @@ public class Preparation extends BaseEntity {
     public void setCountAmt(Integer countAmt) {
         this.countAmt = countAmt;
     }
-
+ 
     public String getDescription() {
         return description;
     }
@@ -194,15 +195,15 @@ public class Preparation extends BaseEntity {
     public void setDescription(String description) {
         this.description = description;
     }
-
+ 
     public Float getNumber1() {
         return number1;
     }
-
+ 
     public void setNumber1(Float number1) {
         this.number1 = number1;
     }
-
+ 
     public Float getNumber2() {
         return number2;
     }
@@ -372,6 +373,7 @@ public class Preparation extends BaseEntity {
         this.storage = storage;
     }
 
+    @XmlTransient
     public Collection<Deaccessionpreparation> getDeaccessionPreparations() {
         return deaccessionPreparations;
     }
@@ -380,6 +382,7 @@ public class Preparation extends BaseEntity {
         this.deaccessionPreparations = deaccessionPreparations;
     }
 
+    @XmlTransient
     public Collection<Giftpreparation> getGiftPreparations() {
         return giftPreparations;
     }
@@ -388,6 +391,7 @@ public class Preparation extends BaseEntity {
         this.giftPreparations = giftPreparations;
     }
 
+    @XmlTransient
     public Collection<Loanpreparation> getLoanPreparations() {
         return loanPreparations;
     }
@@ -396,6 +400,7 @@ public class Preparation extends BaseEntity {
         this.loanPreparations = loanPreparations;
     }
 
+    @XmlTransient
     public Collection<Preparationattachment> getPreparationAttachments() {
         return preparationAttachments;
     }
@@ -404,6 +409,7 @@ public class Preparation extends BaseEntity {
         this.preparationAttachments = preparationAttachments;
     }
 
+    @XmlTransient
     public Collection<Preparationattr> getPreparationAttrs() {
         return preparationAttrs;
     }

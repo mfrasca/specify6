@@ -1,5 +1,5 @@
 package se.nrm.specify.datamodel;
- 
+
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.*;
@@ -105,156 +105,116 @@ public class Taxon extends BaseEntity {
     
     @Column(name = "HighestChildNodeNumber")
     private Integer highestChildNodeNumber;
-    
     @Column(name = "IsAccepted")
     private Boolean isAccepted;
-    
     @Column(name = "IsHybrid")
     private Boolean isHybrid;
-    
     @Size(max = 16)
     @Column(name = "IsisNumber")
     private String isisNumber;
-    
     @Size(max = 64)
     @Column(name = "LabelFormat")
     private String labelFormat;
-    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
-    
     @Size(max = 8)
     @Column(name = "NcbiTaxonNumber")
     private String ncbiTaxonNumber;
-    
     @Column(name = "NodeNumber")
     private Integer nodeNumber;
-    
     @Column(name = "Number1")
     private Integer number1;
-    
     @Column(name = "Number2")
     private Integer number2;
-    
     @Basic(optional = false)
     @NotNull
     @Column(name = "RankID")
     private int rankId;
-    
     @Lob
     @Size(max = 65535)
     @Column(name = "Remarks")
     private String remarks;
-    
     @Size(max = 64)
     @Column(name = "Source")
     private String source;
-    
     @Size(max = 50)
     @Column(name = "TaxonomicSerialNumber")
     private String taxonomicSerialNumber;
-    
     @Size(max = 32)
     @Column(name = "Text1")
     private String text1;
-    
     @Size(max = 32)
     @Column(name = "Text2")
     private String text2;
-    
     @Size(max = 50)
     @Column(name = "UnitInd1")
     private String unitInd1;
-    
     @Size(max = 50)
     @Column(name = "UnitInd2")
     private String unitInd2;
-    
     @Size(max = 50)
     @Column(name = "UnitInd3")
     private String unitInd3;
-    
     @Size(max = 50)
     @Column(name = "UnitInd4")
     private String unitInd4;
-    
     @Size(max = 50)
     @Column(name = "UnitName1")
     private String unitName1;
-    
     @Size(max = 50)
     @Column(name = "UnitName2")
     private String unitName2;
-    
     @Size(max = 50)
     @Column(name = "UnitName3")
     private String unitName3;
-    
     @Size(max = 50)
     @Column(name = "UnitName4")
     private String unitName4;
-    
     @Size(max = 16)
     @Column(name = "UsfwsCode")
     private String usfwsCode;
-    
     @Column(name = "Visibility")
     private Short visibility;
-    
     @JoinColumn(name = "TaxonTreeDefID", referencedColumnName = "TaxonTreeDefID")
     @ManyToOne(optional = false)
     private Taxontreedef definition;
-    
     @OneToMany(mappedBy = "parent")
     private Collection<Taxon> children;
-    
     @JoinColumn(name = "ParentID", referencedColumnName = "TaxonID")
     @ManyToOne
     private Taxon parent;
-    
     @JoinColumn(name = "TaxonTreeDefItemID", referencedColumnName = "TaxonTreeDefItemID")
     @ManyToOne(optional = false)
     private Taxontreedefitem definitionItem;
-    
     @JoinColumn(name = "VisibilitySetByID", referencedColumnName = "SpecifyUserID")
     @ManyToOne
     private Specifyuser visibilitySetBy;
-    
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
     private Agent createdByAgent;
-    
     @OneToMany(mappedBy = "hybridParent2")
     private Collection<Taxon> hybridChildren2;
-    
     @JoinColumn(name = "HybridParent2ID", referencedColumnName = "TaxonID")
     @ManyToOne
     private Taxon hybridParent2;
-    
     @OneToMany(mappedBy = "hybridParent1")
     private Collection<Taxon> hybridChildren1;
-    
     @JoinColumn(name = "HybridParent1ID", referencedColumnName = "TaxonID")
     @ManyToOne
     private Taxon hybridParent1;
-    
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
     private Agent modifiedByAgent;
-    
     @OneToMany(mappedBy = "acceptedTaxon")
     private Collection<Taxon> acceptedChildren;
-    
     @JoinColumn(name = "AcceptedID", referencedColumnName = "TaxonID")
     @ManyToOne
     private Taxon acceptedTaxon;
-    
     @OneToMany(mappedBy = "hostTaxon")
     private Collection<Collectingeventattribute> collectingEventAttributes;
-    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "taxon")
     private Collection<Commonnametx> commonNames;
     
@@ -374,8 +334,6 @@ public class Taxon extends BaseEntity {
         this.determinations1 = determinations1;
     }
 
- 
-
     @XmlTransient
     public Collection<Determination> getDeterminations() {
         return determinations;
@@ -477,8 +435,6 @@ public class Taxon extends BaseEntity {
         this.visibilitySetBy = visibilitySetBy;
     }
 
- 
-
     public String getAuthor() {
         return author;
     }
@@ -495,7 +451,6 @@ public class Taxon extends BaseEntity {
         this.citesStatus = citesStatus;
     }
 
- 
     public String getCommonName() {
         return commonName;
     }
@@ -632,7 +587,6 @@ public class Taxon extends BaseEntity {
         this.number2 = number2;
     }
 
- 
     public String getRemarks() {
         return remarks;
     }
@@ -753,11 +707,6 @@ public class Taxon extends BaseEntity {
         this.visibility = visibility;
     }
 
-   
- 
-   
-  
-
     @XmlTransient
     public int getNumDetermination() {
         return determinations.size();
@@ -765,17 +714,24 @@ public class Taxon extends BaseEntity {
 
     public Taxon getTaxonFamily() {
 
-        if(rankId > 140) {
-            if (definitionItem.getName().equals("Family")) {
+        if (rankId > 140) {
+            if (definitionItem != null && definitionItem.getName().equals("Family")) {
                 return this;
             } else {
                 Taxon newParent = parent;
-                while (!newParent.getDefinitionItem().getName().equals("Family")) {
-                    newParent = newParent.getParent();
+
+                if (parent != null) {
+                    Taxontreedefitem item = newParent.getDefinitionItem();
+
+                    while (item != null && !item.getName().equals("Family")) {
+                        newParent = newParent.getParent();
+                        item = newParent.getDefinitionItem();
+                    }
                 }
-                return parent;
-            } 
-        } 
+
+                return newParent;
+            }
+        }
         return new Taxon();
     }
 
