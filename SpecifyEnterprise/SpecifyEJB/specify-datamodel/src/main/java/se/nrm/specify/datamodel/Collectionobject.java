@@ -23,6 +23,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement; 
 import javax.xml.bind.annotation.XmlTransient; 
 
@@ -229,6 +231,7 @@ public class Collectionobject extends BaseEntity {
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "collectionObject")
     private Collection<Collectionobjectattr> collectionObjectAttrs;
+    
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "collectionObject")
     private Collection<Determination> determinations;
@@ -628,15 +631,7 @@ public class Collectionobject extends BaseEntity {
     public void setPaleoContext(Paleocontext paleoContext) {
         this.paleoContext = paleoContext;
     }
-
-    public Collection<Preparation> getPreparations() {
-        return preparations;
-    }
-
-    public void setPreparations(Collection<Preparation> preparations) {
-        this.preparations = preparations;
-    }
-
+  
     @XmlTransient
     public Collection<Treatmentevent> getTreatmentEvents() {
         return treatmentEvents;
@@ -683,10 +678,19 @@ public class Collectionobject extends BaseEntity {
     }
  
  
+    @XmlElement
+    public Collection<Preparation> getPreparations() {
+        return preparations;
+    }
 
+    public void setPreparations(Collection<Preparation> preparations) {
+        this.preparations = preparations;
+    }
  
 
-    
+//    @XmlElementWrapper(name="determinations")
+//    @XmlElement(name="determination")
+    @XmlElement 
     public Collection<Determination> getDeterminations() {
         return determinations;
     }
@@ -767,6 +771,7 @@ public class Collectionobject extends BaseEntity {
         this.collectionObjectAttachments = collectionObjectAttachments;
     }
 
+    
     public Collectionobjectattribute getCollectionObjectAttribute() {
         return collectionObjectAttribute;
     }
@@ -775,8 +780,7 @@ public class Collectionobject extends BaseEntity {
         this.collectionObjectAttribute = collectionObjectAttribute;
     }
 
- 
- 
+  
 
     @XmlTransient
     public Collection<Collectionobjectattr> getCollectionObjectAttrs() {
@@ -805,6 +809,7 @@ public class Collectionobject extends BaseEntity {
         this.conservDescriptions = conservDescriptions;
     }
 
+    @XmlTransient
     public Collection<Exsiccataitem> getExsiccataItems() {
         return exsiccataItems;
     }
