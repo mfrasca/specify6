@@ -51,7 +51,7 @@ public class SpecifyRSClient {
     }
 
     public List<SpecifyBean> getEntityResult(String discipline, String view, MultivaluedMapImpl searchConditions) { 
-        SpecifyBeanWrapper wrapper = service.path("search").path("uidata").path(discipline).path(view).queryParams(searchConditions).accept(MediaType.APPLICATION_XML).get(SpecifyBeanWrapper.class); 
+        SpecifyBeanWrapper wrapper = service.path("search").path("uidata").path(discipline).path(view).queryParams(searchConditions).accept(MediaType.APPLICATION_JSON).get(SpecifyBeanWrapper.class); 
 
         return (List<SpecifyBean>) wrapper.getBeans();
     }
@@ -216,8 +216,8 @@ public class SpecifyRSClient {
         SpecifyRSClient client = new SpecifyRSClient(creator);
 
         MultivaluedMapImpl queryParams = new MultivaluedMapImpl();
-//        queryParams.add("catalogNumber", "NHRS-GULI000000970");
-         queryParams.add("collectionObjectId", 425);
+        queryParams.add("catalogNumber", "NHRS-GULI000000970");
+//         queryParams.add("collectionObjectId", 425);
           
         String json = client.getJSONResult(discipline, view, queryParams);
         String xml = client.getXMLResult(discipline, view, queryParams);
@@ -234,6 +234,8 @@ public class SpecifyRSClient {
         
         
  //       http://localhost:8080/specify-data-service/search/uidata/fish/CollectionObject/425
+        
+        // NRM-ORTH0004377
         
     } 
 }
