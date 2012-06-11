@@ -1,6 +1,6 @@
 package se.nrm.specify.data.service;
 
-import com.google.gson.Gson;
+import com.google.gson.Gson; 
 import com.sun.jersey.spi.resource.PerRequest; 
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +20,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriInfo;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.nrm.specify.business.logic.smtp.SMTPLogic;
@@ -352,29 +353,31 @@ public class SpecyResource {
         return new SpecifyBeanWrapper(list);
     }
 
-//    @GET
-//    @Path("search/bygroup/bynqry/{namedqry}")
-//    public SpecifyBeanWrapper fetchGroupByNamedQuery(@PathParam("namedqry") String namedqry, @Context UriInfo uri) {
-//        logger.info("fetchByGroup - entity: {}", namedqry);
-//
-//        MultivaluedMap map = uri.getQueryParameters();
-//        List<String> fields = (List<String>) map.get("fields");
-//        map.remove("fields");
-//
-//        Map<String, Object> conditions = new HashMap<String, Object>();
-//
-//        Set<String> set = map.keySet();
-//        for (String key : set) {
-//            List<Object> list = (List<Object>) map.get(key);
-//            conditions.put(key, list.get(0));
-//        }
-//
-//        SpecifyBean bean = specify.getDao().getFetchgroupByNamedQuery(namedqry, conditions, fields);
-//        if (bean != null) {
-//            return new SpecifyBeanWrapper(bean);
-//        }
-//        return new SpecifyBeanWrapper();
-//    }
+    @GET
+    @Path("search/bygroup/bynqry/{namedqry}")
+    public SpecifyBeanWrapper fetchGroupByNamedQuery(@PathParam("namedqry") String namedqry, @Context UriInfo uri) {
+        logger.info("fetchByGroup - entity: {}", namedqry);
+        
+        String entityName = StringUtils.substringBefore(namedqry, "."); 
+        MultivaluedMap map = uri.getQueryParameters();
+        List<String> fields = (List<String>) map.get("fields");
+        map.remove("fields");
+
+        Map<String, Object> conditions = new HashMap<String, Object>();
+
+        Set<String> set = map.keySet();
+        for (String key : set) {
+            List<Object> list = (List<Object>) map.get(key);
+            conditions.put(key, list.get(0));
+        }
+
+        SpecifyBean bean = specify.getDao().getFetchGroupByNamedQuery(entityName, namedqry, conditions, fields);   
+        
+        if (bean != null) {
+            return new SpecifyBeanWrapper(bean);
+        }
+        return new SpecifyBeanWrapper();
+    }
 
     @GET
     @Path("search/all/bygroup/bynqry/{namedqry}/{classname}")
