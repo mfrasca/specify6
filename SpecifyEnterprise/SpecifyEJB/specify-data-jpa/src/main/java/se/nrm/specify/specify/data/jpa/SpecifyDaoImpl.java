@@ -24,10 +24,11 @@ public class SpecifyDaoImpl implements SpecifyDao {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Inject
     private EntityMapping entitymapping;
-//    @PersistenceContext(unitName = "jpa-local")               //  persistence unit connect to local database 
+    
+    @PersistenceContext(unitName = "jpa-local")               //  persistence unit connect to local database 
 //    @PersistenceContext(unitName = "jpa-development")         //  persistence unit connect to development database
 //    @PersistenceContext(unitName = "jpa-production")          //  persistence unit connect to development database
-    @PersistenceContext(unitName = "jpa-test")                  //  persistence unit connect to test database
+//    @PersistenceContext(unitName = "jpa-test")                  //  persistence unit connect to test database
     private EntityManager entityManager;
 
     public SpecifyDaoImpl() {
@@ -211,7 +212,7 @@ public class SpecifyDaoImpl implements SpecifyDao {
 
     private SpecifyBean copyEntity(SpecifyBean bean, List<String> fields, String classname) {
 
-        logger.info("copyEntity: {} - {}", bean, classname);
+//        logger.info("copyEntity: {} - {}", bean, classname);
 
         Map<String, SpecifyBean> beanmap = new HashMap<String, SpecifyBean>();
         beanmap.put(classname, bean);
