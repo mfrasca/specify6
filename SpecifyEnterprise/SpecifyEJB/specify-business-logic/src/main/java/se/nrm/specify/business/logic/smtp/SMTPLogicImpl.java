@@ -46,11 +46,11 @@ public class SMTPLogicImpl implements SMTPLogic {
 
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT DISTINCT lc FROM Locality lc ");
-        sb.append("JOIN lc.collectingeventCollection ce ");
-        sb.append("JOIN ce.collectionobjectCollection co ");
-        sb.append("WHERE lc = ce.localityID ");
-        sb.append("AND ce = co.collectingEventID ");
-        sb.append("AND co.collectionID.code= '");
+        sb.append("JOIN lc.collectingevents ce ");
+        sb.append("JOIN ce.collectionObjects co ");
+        sb.append("WHERE lc = ce.locality ");
+        sb.append("AND ce = co.collectingEvent ");
+        sb.append("AND co.collection.code= '");
         sb.append(collectionCode);
         sb.append("' ");
         sb.append("AND lc.longitude1 IS NOT NULL ");
@@ -62,21 +62,19 @@ public class SMTPLogicImpl implements SMTPLogic {
         fields.add("localityName");
         fields.add("longitude1");
         fields.add("latitude1");
-        fields.add("lat1Text");
-        fields.add("long1Text");
-        fields.add("localityID");
-
-        List<Locality> localities = (List<Locality>) dao.getListByJPQLByFetchGroup(entity, sb.toString(), fields);
-
-        return localities;
+        fields.add("lat1text");
+        fields.add("long1text");
+        fields.add("localityId");
+        
+        return (List<Locality>) dao.getListByJPQLByFetchGroup(entity, sb.toString(), fields);
     }
 
     public DataWrapper getDeterminationsData(String taxonNode, String highestChildNode, String collectionCode) {
 
         StringBuilder queryBuilder = new StringBuilder();
-        queryBuilder.append("SELECT d FROM Determination AS d where d.collectionObjectID.collectionID.code = '");
+        queryBuilder.append("SELECT d FROM Determination AS d where d.collectionObject.collection.code = '");
         queryBuilder.append(collectionCode);
-        queryBuilder.append("' AND d.taxonID.nodeNumber BETWEEN ");
+        queryBuilder.append("' AND d.taxon.nodeNumber BETWEEN ");
         queryBuilder.append(taxonNode);
         queryBuilder.append(" AND ");
         queryBuilder.append(highestChildNode);
@@ -86,12 +84,12 @@ public class SMTPLogicImpl implements SMTPLogic {
         String entity = Determination.class.getSimpleName();
 
         List<String> fields = new ArrayList<String>();
-        fields.add("taxonID.fullName");
-        fields.add("collectionObjectID.collectionObjectID");
-        fields.add("collectionObjectID.collectingEventID");
-        fields.add("collectionObjectID.collectingEventID.collectingEventID");
-        fields.add("collectionObjectID.collectingEventID.collectingEventID");
-        fields.add("collectionObjectID.collectingEventID.localityID.localityID");
+        fields.add("taxon.fullName");
+        fields.add("collectionObject.collectionObjectId");
+//        fields.add("collectionObject.collectingEvent");
+        fields.add("collectionObject.collectingEvent.collectingEventId");
+        fields.add("collectionObject.collectingEvent.collectingEventId");
+        fields.add("collectionObject.collectingEvent.locality.localityId");
 
         List<Determination> determinations = (List<Determination>) dao.getListByJPQLByFetchGroup(entity, queryBuilder.toString(), fields);
 
