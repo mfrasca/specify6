@@ -1399,6 +1399,7 @@ public class Agent extends BaseEntity {
         this.instTechContact = instTechContact;
     }
 
+    @XmlTransient
     public Collection<Agent> getOrgMembers() {
         return orgMembers;
     }
@@ -1569,6 +1570,7 @@ public class Agent extends BaseEntity {
     }
 
     
+    @XmlTransient
     public Collection<Address> getAddresses1() {
         return addresses1;
     }
@@ -1577,6 +1579,7 @@ public class Agent extends BaseEntity {
         this.addresses1 = addresses1;
     }
 
+    @XmlTransient
     public Collection<Address> getAddresses2() {
         return addresses2;
     }
