@@ -145,6 +145,7 @@ public class JPAUtil {
                     group.addAttribute(field);
                 }
             }
+            
             query.setHint(QueryHints.FETCH_GROUP, group);
         }
 
