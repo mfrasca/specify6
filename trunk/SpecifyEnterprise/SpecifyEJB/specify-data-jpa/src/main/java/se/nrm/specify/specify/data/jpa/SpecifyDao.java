@@ -1,117 +1,84 @@
 package se.nrm.specify.specify.data.jpa;
-
-import java.util.List;
+ 
+import java.util.List; 
 import java.util.Map;
-import se.nrm.specify.datamodel.Collectingevent;
-import se.nrm.specify.datamodel.Collectionobject; 
-import se.nrm.specify.datamodel.Determination; 
 import se.nrm.specify.datamodel.SpecifyBean;
-import se.nrm.specify.datamodel.Specifyuser;
-import se.nrm.specify.datamodel.Taxon;
 
 /**
  *  
  * @author idali
  */
-public interface SpecifyDao {
-
+public interface SpecifyDao<T extends SpecifyBean> {
+     
     /**
-     * Persist entity in database
-     * 
-     * @param sBean the entity bean
+     * Finds all the instances of an entity in the database.
+     * @return a <code>List</code> of all the entities in the database.
      */
-    public void createEntity(SpecifyBean sBean);
-
+    public List<T> findAll(Class<T> clazz);
+    
     /**
-     * Edit entity
+     * Finds a {@link BaseEntity} by its database ID.
+     * @param id the database id of the entity we want.
      * 
-     * @param sBean the entity bean
+     * @return the instance of the entity from the database with the given id.
      */
-    public String editEntity(SpecifyBean sBean);
-
+    public T findById(int id, Class<T> clazz);
+    
     /**
-     * Delete entity in database
+     * Find an instance whose state may be lazily fetched
      * 
-     * @param sBean the entity bean
-     */
-    public void deleteEntity(SpecifyBean sBean);
-
-    /**
-     * Get the entity by entity id
-     * 
-     * @param <T> the entity class
-     * @param id the entity id
-     * @param clazz entity
-     * 
-     * @return the entity
-     */
-    public <T extends SpecifyBean> T getById(int id, Class<T> clazz);
-
-    /**
-     * getByReference - Get an instance whose state may be lazily fetched
      * @param <T> entityClass
-     * @param id
+     * @param id the database id of the entity we want.
      * @param clazz
-     * @return entity instance
+     * 
+     * @return the instance of the entity from the database with the given id.
+     */ 
+    public T findByReference(int id, Class<T> clazz);
+    
+    /**
+     * Saves a transient or persistent {@link BaseEntity} to the database. 
+     * 
+     * @param entity the entity to save.
+     * @return a persistent copy of the entity.
      */
-    public <T extends SpecifyBean> T getByReference(int id, Class<T> clazz);
-
-    public <T extends SpecifyBean> List getAllByFetchGroup(Class<T> clazz, List<String> fields);
-
-    public <T extends SpecifyBean> List getListByJPQLByFetchGroup(String classname, String jpql, List<String> fields);
+    public T create(T entity);
     
-//    public SpecifyBean getFetchgroupByNamedQuery(String nameedQuery, Map<String, Object> conditions, List<String> fields);
     
-    public SpecifyBean getFetchGroupByNamedQuery(String classname, String namedQuery, Map<String, Object> map, List<String> fields);
+    /**
+     * Saves a transient {@link BaseEntity} to the database. 
+     * 
+     * @param entity the entity to save.
+     * @return a persistent copy of the entity.
+     */
+    public T merge(T entity);
     
-    public <T extends SpecifyBean> List getAllFetchgroupByNameedQuery(String namedQuery, String classname, Map<String, Object> conditions, List<String> fields);
-
     
-
-    public List<Object[]> getDataListByJPQL(String jpql);
+    /**
+     * Method for save and delete entity validation
+     * 
+     * @param bean
+     * @param jpql
+     * @return int
+     */
+    public int getCountByJPQL(T bean, String jpql);
+    
+     
 
     /**
-     * Get the list of entity
+     * Deletes a {@link BaseEntity} from the database. If the delete
+     * was successful, the entity's ID will be null.
      * 
-     * @param <T> the entity class 
-     * @param clazz entity
-     * 
-     * @return the List<entity>
+     * @param entity the entity to delete. 
      */
-    public <T extends SpecifyBean> List getAll(Class<T> clazz);
-
-    public SpecifyBean getEntityByJPQL(String jpql);
-
-    public SpecifyBean getEntityByNamedQuery(String namedQuery, Map<String, Object> parameters);
-
-    public List<String> getTextListByJPQL(String jpql);
-
-    public <T extends SpecifyBean> List getAllEntitiesByNamedQuery(String namedQuery, Map<String, Object> parameters);
-
-    public <T extends SpecifyBean> List getAllEntitiesByJPQL(String jpql);
-
-    public List<String> getSynomyList(Taxon taxon);
-
-    /**
-     * Get List of Determination by taxon name. collectingevent and collection code
-     * @param taxonName
-     * @param event
-     * @param code
-     * @return List<Determination>
-     */
-    public List<Determination> getDeterminationsByTaxonNameAndCollectingevent(String taxonName, Collectingevent event, String code);
-
-    public Collectionobject getLastCollectionobjectByGroup(String collectionCode);
-
-    public List<Collectionobject> getCollectionobjectByCollectingEventAndYesno2(Collectingevent event); 
+    public void delete(T entity);
     
-    public Taxon getTaxonByCollectionobject(Collectionobject collectionobject); 
+    public List<T> getListByJPQLByFetchGroup(String classname, String jpql, List<String> fields);
     
-    public Taxon getTaxonAndParents(String taxonName);
+    public T getFetchGroupByNamedQuery(String classname, String namedQuery, Map<String, Object> conditions, List<String> fields);
+
+    public T getEntityByNamedQuery(String namedQuery, Map<String, Object> parameters);
+  
+    public List getAllEntitiesByNamedQuery(String namedQuery, Map<String, Object> parameters);
     
-    public boolean isCatalogNumberExist(String catalognumber);
-    
-    public Specifyuser loginSpecifyUser(Specifyuser user);
-    
-    public void logoutSpecifyUser(Specifyuser user); 
+    public T getEntityByJPQL(String jpql);  
 }

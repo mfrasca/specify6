@@ -1,17 +1,21 @@
 package se.nrm.specify.specify.data.jpa;
-
+ 
 import java.sql.Timestamp;
-import java.util.*;
-import javax.ejb.Stateless;
+import java.util.*; 
+import javax.ejb.Stateless;  
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.persistence.*;
 import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import org.eclipse.persistence.config.QueryHints;
-import org.eclipse.persistence.queries.FetchGroup;
+import javax.validation.ConstraintViolationException;  
+import org.eclipse.persistence.jpa.JpaEntityManager; 
+import org.eclipse.persistence.sessions.CopyGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.nrm.specify.datamodel.*;
+import se.nrm.specify.specify.data.jpa.exceptions.DataStoreException;
+import se.nrm.specify.specify.data.jpa.exceptions.ExceptionUtil;
 import se.nrm.specify.specify.data.jpa.util.JPAUtil;
 
 /**
@@ -19,21 +23,30 @@ import se.nrm.specify.specify.data.jpa.util.JPAUtil;
  * @author idali
  */
 @Stateless
-public class SpecifyDaoImpl implements SpecifyDao {
+public class SpecifyDaoImpl<T extends SpecifyBean> implements SpecifyDao<T> {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final static String OPTIMISTIC_LOCK_EXCEPTION_MSG = " cannot be updated because it has changed or bean deleted since it was last read.";
+    
+    private static Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+    
+    
     @Inject
     private EntityMapping entitymapping;
-    
-    @PersistenceContext(unitName = "jpa-local")               //  persistence unit connect to local database 
-//    @PersistenceContext(unitName = "jpa-development")         //  persistence unit connect to development database
-//    @PersistenceContext(unitName = "jpa-production")          //  persistence unit connect to development database
-//    @PersistenceContext(unitName = "jpa-test")                  //  persistence unit connect to test database
+     
+    @PersistenceContext(unitName = "jpa-test")                  //  persistence unit connect to test database
     private EntityManager entityManager;
 
     public SpecifyDaoImpl() {
     }
 
+    /**
+     * Pass the EntityManager for this instance.  This is only here for 
+     * testing purposes, and should not be used in production.  In production,
+     * an entityManager will be injected via the PersistenceContext annotation.
+     * 
+     * @return The entity manager in use
+     */
     public SpecifyDaoImpl(EntityManager em) {
         this.entityManager = em;
     }
@@ -41,72 +54,58 @@ public class SpecifyDaoImpl implements SpecifyDao {
     /**
      * Generic method create an entities
      *
-     * @param sBean , the entity to newBaseEntity created
-     */
-    public void createEntity(SpecifyBean sBean) {
+     * @param sBean , the entity to newBaseEntity created 
+     */ 
+    public T create(T entity) {
 
-        logger.info("Persisting: {}", sBean);
+        logger.trace("save(T) : {}", entity);
 
+        T tmp = entity;
         try {
-            entityManager.persist(sBean);
-            logger.info("{} persisted", sBean);
+            entityManager.persist(entity);
+            entityManager.flush();
+            entityManager.refresh(tmp);
         } catch (ConstraintViolationException e) {
-            handleConstraintViolation(e);
-        }
+            throw new DataStoreException(handleConstraintViolation(e));
+        } catch (Exception e) {
+            throw new DataStoreException(ExceptionUtil.unwindException(e).getMessage());
+        }   
+        return tmp;
     }
-
+ 
+ 
+    
     /**
-     * Generic method edit an entity
-     *
-     * @param sBean, the entity to newBaseEntity edited
+     * Generic method merge an entity
+     * 
+     * @param entity, the entity to newBaseEntity merged
+     *  
      */
-    public String editEntity(SpecifyBean sBean) {
+    public T merge(T entity) {
+        
+        logger.info("merge: {}", entity);
 
-        logger.info("editEntity: {}", sBean.toString());
-
-        try {
-            //    entityManager.flush();                        // for throwing OptimisticLockException before merge
-            entityManager.merge(sBean);
-
+        T tmp = entity;
+        try { 
+            tmp = entityManager.merge(entity); 
             entityManager.flush();                              // this one used for throwing OptimisticLockException if method called with web service
         } catch (OptimisticLockException e) {
-            logger.error("OptimisticLockException - error messages: {}", e.getMessage());
-            return sBean.toString() + "cannot be updated because it has changed or been deleted since it was last read. ";
+            throw new DataStoreException(entity.toString() + OPTIMISTIC_LOCK_EXCEPTION_MSG);
         } catch (ConstraintViolationException e) {
-            handleConstraintViolation(e);
-        }
-        return "Successful";
+            throw new DataStoreException(handleConstraintViolation(e));
+        } catch (Exception e) { 
+            throw new DataStoreException(ExceptionUtil.unwindException(e).getMessage());
+        }  
+        return tmp;
     }
+     
+    
+    
+    public T findById(int id, Class<T> clazz) {
 
-    /**
-     * Generic method delete an entity
-     *
-     * @param sBean, the entity to newBaseEntity deleted
-     */
-    public void deleteEntity(SpecifyBean sBean) {
-
-        logger.info("deleteEntity {}", sBean);
-
-        try {
-            entityManager.remove(sBean);
-        } catch (ConstraintViolationException e) {
-            handleConstraintViolation(e);
-        }
-    }
-
-    /**
-     * Generic method retrieves an entity by entity id
-     *
-     * @param <T>   Entity
-     * @param id:   the id of the entity 
-     * @param clazz:  the class of the entity 
-     * @return the entity
-     */
-    public <T extends SpecifyBean> T getById(int id, Class<T> clazz) {
-
-        logger.info("getById - Class: {} - id: {}", clazz.toString(), id);
-
-        // Entity has no version can not have Optimistic lock
+        logger.info("findById - class : {} - id : {}", clazz, id);
+ 
+         // Entity has no version can not have Optimistic lock
         if (clazz.getSimpleName().equals(Recordsetitem.class.getSimpleName())
                 || clazz.getSimpleName().equals(Sppermission.class.getSimpleName())
                 || clazz.getSimpleName().equals(Workbenchrow.class.getSimpleName())) {
@@ -114,20 +113,69 @@ public class SpecifyDaoImpl implements SpecifyDao {
             return entityManager.find(clazz, id, LockModeType.PESSIMISTIC_WRITE);
         }
 
-        T bean = null;
+        T tmp = null;
         try {
-            bean = entityManager.find(clazz, id, LockModeType.OPTIMISTIC);
+            tmp = entityManager.find(clazz, id, LockModeType.OPTIMISTIC);
             entityManager.flush();
-        } catch (OptimisticLockException ex) {
-            logger.error(ex.getMessage());
-            entityManager.refresh(bean);
-        }
-        return bean;
+        } catch (OptimisticLockException ex) { 
+            entityManager.refresh(tmp);
+        } catch(Exception e) {
+            throw new DataStoreException(ExceptionUtil.unwindException(e).getMessage());
+        } 
+        return tmp; 
     }
-
-    public <T extends SpecifyBean> T getByReference(int id, Class<T> clazz) {
+    
+    
+    public T findByReference(int id, Class<T> clazz) {
         return entityManager.getReference(clazz, id);
     }
+     
+
+    /**
+     * Generic method delete an entity
+     *
+     * @param sBean, the entity to newBaseEntity deleted 
+     */
+    public void delete(T entity) throws DataStoreException {
+
+        logger.info("delete - {}", entity);
+
+        try {
+            entityManager.remove(entity);
+            entityManager.flush();                              // this is needed for throwing internal exception
+        } catch (ConstraintViolationException e) {
+            throw new DataStoreException(handleConstraintViolation(e), e);
+        } catch (Exception e) {
+            throw new DataStoreException(ExceptionUtil.unwindException(e).getMessage());
+        }
+    }
+    
+    /**
+     * 
+     * @param bean
+     * @param namedQry
+     * @return 
+     * 
+     * TODO: current
+     */
+    public int getCountByJPQL(SpecifyBean bean, String jpql) {
+
+        logger.info("getCountByJPQL: {} - {}", bean, jpql);
+
+        Query query = entityManager.createQuery(jpql);
+        try {
+            if (bean != null) {
+                query.setParameter(bean.getClass().getSimpleName().toLowerCase(), bean);
+            }
+            Number number = (Number) query.getSingleResult();
+            return number.intValue();
+        } catch (Exception e) {
+            throw new DataStoreException(e);
+        }
+    }
+    
+ 
+ 
 
     /**
      * getListByJPQLByFetchGroup - only fetches required fields as fetch group.
@@ -138,12 +186,13 @@ public class SpecifyDaoImpl implements SpecifyDao {
      * @param fields -fields required.
      * 
      * @return SpecifyBean
-     */
-    public <T extends SpecifyBean> List getListByJPQLByFetchGroup(String classname, String jpql, List<String> fields) {
+     */ 
+    public List<T> getListByJPQLByFetchGroup(String classname, String jpql, List<String> fields) {
 
         logger.info("getListByJPQLByFetchGroup - classname: {} - jpql: {}", classname, jpql);
 
         Query query = entityManager.createQuery(jpql);
+//        query.setHint("javax.persistence.cache.storeMode", "REFRESH");
 
         if (fields == null) {
             fields = new ArrayList<String>();
@@ -151,56 +200,54 @@ public class SpecifyDaoImpl implements SpecifyDao {
         List<String> removelist = JPAUtil.addFetchGroup(fields, query, classname);
 
         List<T> beans = (List<T>) query.getResultList();
-
+        
+        logger.info("getListByJPQLByFetchGroup : fetched. {}", beans);
+  
         if (removelist != null) {
             fields.removeAll(removelist);
         }
 
-
-        List<SpecifyBean> list = copyEntityGroup(beans, fields, classname);
-        return list;
+        
+//        return copyEntity(beans, fields); 
+        return copyEntityGroup(beans, fields, classname); 
     }
-
-    public SpecifyBean getFetchGroupByNamedQuery(String classname, String namedQuery, Map<String, Object> conditions, List<String> fields) {
-
+ 
+    public T getFetchGroupByNamedQuery(String classname, String namedQuery, Map<String, Object> conditions, List<String> fields) {
+        
         logger.info("getFetchGroupByNamedQuery - classname: {} - jpql: {}", classname, namedQuery);
+     
 
         Query query = entityManager.createNamedQuery(namedQuery);
+//        query.setHint("javax.persistence.cache.storeMode", "REFRESH");
         for (Map.Entry<String, Object> map : conditions.entrySet()) {
             query.setParameter(map.getKey(), map.getValue());
         }
+        
+        
 
         if (fields == null) {
             fields = new ArrayList<String>();
         }
         List<String> removelist = JPAUtil.addFetchGroup(fields, query, classname);
-
-        try {
-            SpecifyBean bean = (SpecifyBean) query.getSingleResult();
-
-            if (removelist != null) {
-                fields.removeAll(removelist);
-            }
-            return copyEntity(bean, fields, classname);
-        } catch (NoResultException ex) { 
-            return null;
+        if (removelist != null) {
+            fields.removeAll(removelist);
         }
+        
+ 
+ 
+        logger.info("fields : {} - removelist: {}", fields, removelist);
+        
+        
+        SpecifyBean bean = (SpecifyBean) query.getSingleResult();
+          
+        logger.info("getFetchGroupByNamedQuery : fetched. {}", bean);
+        
+//        return copyEntity(bean, fields); 
+        
+        return copyEntity(bean, fields, classname);
     }
-
-    public <T extends SpecifyBean> List getAllByFetchGroup(Class<T> clazz, List<String> fields) {
-
-        logger.info("getAllByFetchGroup - Clazz: {}", clazz);
-
-        Query query = entityManager.createNamedQuery(clazz.getSimpleName() + ".findAll");
-        JPAUtil.addFetchGroup(fields, query, clazz.getSimpleName());
-
-        List<T> beans = (List<T>) query.getResultList();
-
-        List<SpecifyBean> list = copyEntityGroup(beans, fields, clazz.getSimpleName());
-        return list;
-    }
-
-    private <T extends SpecifyBean> List copyEntityGroup(List<T> beans, List<String> fields, String classname) {
+ 
+     private List copyEntityGroup(List<T> beans, List<String> fields, String classname) {
 
         List newBeans = new ArrayList();
 
@@ -210,26 +257,29 @@ public class SpecifyDaoImpl implements SpecifyDao {
         return newBeans;
     }
 
-    private SpecifyBean copyEntity(SpecifyBean bean, List<String> fields, String classname) {
+    private T copyEntity(SpecifyBean bean, List<String> fields, String classname) {
 
 //        logger.info("copyEntity: {} - {}", bean, classname);
 
         Map<String, SpecifyBean> beanmap = new HashMap<String, SpecifyBean>();
         beanmap.put(classname, bean);
-        SpecifyBean obj = JPAUtil.createNewInstance(classname);
+        T obj = JPAUtil.createNewInstance(classname);
         entitymapping.setEntityValue(obj, classname, fields, beanmap);
 
         return obj;
     }
 
+ 
     /**
      * Generic method retrieves all the entity with named query - ClassName.findAll
      * 
      * @param <T>       Entity
      * @param clazz:    the class of the entity
      * @return :        List<Entity>
+     * 
+     * TODO: current
      */
-    public <T extends SpecifyBean> List getAll(Class<T> clazz) {
+    public List<T> findAll(Class<T> clazz) {
 
         logger.info("getAll - Clazz: {}", clazz);
 
@@ -244,13 +294,13 @@ public class SpecifyDaoImpl implements SpecifyDao {
      * 
      * @return Entity
      */
-    public SpecifyBean getEntityByNamedQuery(String namedQuery, Map<String, Object> parameters) {
+    public T getEntityByNamedQuery(String namedQuery, Map<String, Object> parameters) {
 
         logger.info("getEntityByNamedQuery - namedquery: {}, parameters: {}", namedQuery, parameters);
 
         Query query = createQuery(namedQuery, parameters);
         try {
-            return (SpecifyBean) query.getSingleResult();
+            return (T) query.getSingleResult();
         } catch (javax.persistence.NoResultException ex) {
             logger.error(ex.getMessage());
             return null;                        // if no result, return null
@@ -260,13 +310,13 @@ public class SpecifyDaoImpl implements SpecifyDao {
         }
     }
 
-    public SpecifyBean getEntityByJPQL(String jpql) {
+    public T getEntityByJPQL(String jpql) {
 
         logger.info("getEntityByJPQL - jpql: {}", jpql);
 
         Query query = entityManager.createQuery(jpql);
         try {
-            return (SpecifyBean) query.getSingleResult();
+            return (T)query.getSingleResult();
         } catch (javax.persistence.NoResultException ex) {
             logger.error(ex.getMessage());
             return null;                        // if no result, return null
@@ -282,233 +332,54 @@ public class SpecifyDaoImpl implements SpecifyDao {
      * @param parameters
      * @return 
      */
-    public <T extends SpecifyBean> List getAllEntitiesByNamedQuery(String namedQuery, Map<String, Object> parameters) {
+    public List getAllEntitiesByNamedQuery(String namedQuery, Map<String, Object> parameters) {
 
         logger.info("getAllEntitiesByNamedQuery - parameters: {}", parameters);
 
-        return createQuery(namedQuery, parameters).getResultList();
+        List<T> list = createQuery(namedQuery, parameters).getResultList();
+        
+        logger.info("get...: {}", list);
+        return list;
     }
 
-    public <T extends SpecifyBean> List getAllEntitiesByJPQL(String jpql) {
+    public  List<T> getAllEntitiesByJPQL(String jpql) {
 
         logger.info("getAllEntitiesByJPQL - jpql: {}", jpql);
 
         Query query = entityManager.createQuery(jpql);
-        List<SpecifyBean> list = query.getResultList();
+        List<T> list = query.getResultList();
         return list;
     }
-
-    /**
-     * Generic method search by jpql
-     * 
-     * @param jpql
-     * @return List<String>
-     */
-    public List<String> getTextListByJPQL(String jpql) {
-
-        logger.info("getTextListByJPQL: {}", jpql);
-
-        TypedQuery<String> query = entityManager.createQuery(jpql, String.class);
-        return query.getResultList();
-    }
-
-    public List<Object[]> getDataListByJPQL(String jpql) {
-
-        logger.info("getDataListByJPQL: {}", jpql);
-
-        TypedQuery<Object[]> query = entityManager.createQuery(jpql, Object[].class);
-        List list = query.getResultList();
-
-        return list;
-    }
-
-    public List<String> getSynomyList(Taxon taxon) {
-
-        logger.info("getSynomyList - taxon: {}", taxon);
-
-        List<String> synomyList = new ArrayList<String>();
-
-        Taxon t = getById(taxon.getTaxonId(), Taxon.class);
-        for (Taxon tx : t.getAcceptedChildren()) {
-            if (tx.getIsAccepted()) {
-                synomyList.add(taxon.getFullName());
-            }
-        }
-        return synomyList;
-    }
-
-    /**
-     * get current determinations by taxonname and collectingevent
-     * 
-     * @param taxonName
-     * @param collectionevent
-     * @return List<Determination>
-     */
-    public List<Determination> getDeterminationsByTaxonNameAndCollectingevent(String taxonName, Collectingevent event, String code) {
-
-        logger.info("getDeterminationsByTaxonNameAndCollection - taxon name: {}, code: {}", taxonName, code);
-
-        Query query = entityManager.createNamedQuery("Determination.findCurrentByTaxonNameAndEvent");
-        query.setParameter("fullName", taxonName);
-        query.setParameter("collectingEventID", event);
-        query.setParameter("code", code);
-        query.setParameter("isCurrent", true);
-
-        return query.getResultList();
-    }
-
-    /**
-     * get last collectionobject for collection
-     * 
-     * @param collectionId
-     * @return Collectionobject
-     */
-    public Collectionobject getLastCollectionobjectByGroup(String collectionCode) {
-
-        logger.info("getLastCollectionobjectByGroup: {}", collectionCode);
-
-        Query query = entityManager.createNamedQuery("Collectionobject.findLastRecordByCollectionCode");
-        query.setParameter("code", collectionCode);
-        query.setMaxResults(1);
-
-        return (Collectionobject) query.getResultList().get(0);
-    }
-
-    public List<Collectionobject> getCollectionobjectByCollectingEventAndYesno2(Collectingevent event) {
-
-        logger.info("getCollectionobjectByCollectingEventAndYesno2");
-
-        Query query = entityManager.createNamedQuery("Collectionobject.findByCollectingEventIDAndYesNo2");
-        query.setParameter("collectingEventID", event);
-
-        return query.getResultList();
-    }
-
-    /**
-     * get taxon by Collectionobject.
-     * 
-     * @param object - Collectionobject. 
-     * @return Taxon
-     */
-    public Taxon getTaxonByCollectionobject(Collectionobject object) {
-
-        Query query = entityManager.createNamedQuery("Determination.findCurrentByCollectionobjectID");
-        query.setParameter("collectionObjectId", object);
-        query.setParameter("isCurrent", true);
-        Determination determination = (Determination) query.getSingleResult();
-        return (determination == null) ? null : determination.getTaxon();
-    }
-
-//    public SpecifyBean getFetchgroupByNamedQuery(String namedQuery, Map<String, Object> conditions, List<String> fields) {
+ 
+     
+    
+    
+//    private List<T> copyEntity(List<T> beans, List<String> copyFields) {
 //
-//        logger.info("getFetchgroupByNameedQuery: {}", namedQuery);
-//        Query query = entityManager.createNamedQuery(namedQuery);
-//
-//        for (Map.Entry<String, Object> map : conditions.entrySet()) {
-//            query.setParameter(map.getKey(), map.getValue());
-//        }
-//
-//
-//        FetchGroup group = new FetchGroup();
-//        for (String string : fields) {
-//            group.addAttribute(string);
-//        }
-//
-//        query.setHint(QueryHints.FETCH_GROUP, group);
-//
-//        try {
-//            SpecifyBean bean = (SpecifyBean) query.getSingleResult();
-//            return copyEntity(bean, fields, bean.getClass().getSimpleName());
-//        } catch (NoResultException e) {
-//            return null;
-//        }
+//        logger.info("copy fleld : {}", copyFields);
+//        List<T> copyBeans = new ArrayList<T>();
+//        for (SpecifyBean bean : beans) {
+//            copyBeans.add((T) copyEntity(bean, copyFields));
+//        } 
+//        logger.info("copyEntity : fetched. {}", copyBeans);
+//        return copyBeans;
 //    }
-    public <T extends SpecifyBean> List getAllFetchgroupByNameedQuery(String namedQuery, String classname, Map<String, Object> conditions, List<String> fields) {
-
-        logger.info("getFetchgroupByNameedQuery: {}", namedQuery);
-
-        Query query = entityManager.createNamedQuery(namedQuery);
-
-        for (Map.Entry<String, Object> map : conditions.entrySet()) {
-            query.setParameter(map.getKey(), map.getValue());
-        }
-
-        FetchGroup group = new FetchGroup();
-        for (String string : fields) {
-            group.addAttribute(string);
-        }
-
-        query.setHint(QueryHints.FETCH_GROUP, group);
-
-        List<SpecifyBean> beans = query.getResultList();
-        if (beans != null) {
-            return copyEntityGroup(beans, fields, classname);
-        }
-        return new ArrayList();
-    }
-
-    public boolean isCatalogNumberExist(String catalognumber) {
-        Query qry = entityManager.createNamedQuery("Collectionobject.findByCatalogNumber");
-        qry.setParameter("catalogNumber", catalognumber);
-
-        List<Collectionobject> list = (List<Collectionobject>) qry.getResultList();
-        return list.size() > 0 ? true : false;
-    }
-
-    public Taxon getTaxonAndParents(String taxonName) {
-
-        Query qry = entityManager.createNamedQuery("Taxon.findByFullName");
-        qry.setParameter("fullName", taxonName);
-        return ((List<Taxon>) qry.getResultList()).get(0);
-    }
-
-    public Specifyuser loginSpecifyUser(Specifyuser user) {
-
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-
-        logger.info("loginSpecifyUser: {}", user);
-
-        List<String> fields = new ArrayList<String>();
-        fields.add("specifyUserId");
-        fields.add("name");
-        fields.add("email");
-        fields.add("loginOutTime");
-        fields.add("userType");
-        fields.add("isLoggedIn");
-
-        Query query = entityManager.createNamedQuery("Specifyuser.findByName");
-        FetchGroup group = new FetchGroup();
-
-        for (String string : fields) {
-            group.addAttribute(string);
-        }
-
-        query.setHint(QueryHints.FETCH_GROUP, group);
-        query.setParameter("name", user.getName());
-        user = (Specifyuser) query.getSingleResult();
-
-        if (user != null) {
-            Specifyuser spUser = getByReference(user.getSpecifyUserId(), Specifyuser.class);
-            spUser.setIsLoggedIn(true);
-            spUser.setLoginOutTime(timestamp);
-            editEntity(spUser);
-        }
-        return (Specifyuser) copyEntity(user, fields, Specifyuser.class.getSimpleName());
-    }
-
-    public void logoutSpecifyUser(Specifyuser user) {
-
-        logger.info("logoutSpecifyUser: {}", user);
-
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-
-        Specifyuser spUser = getByReference(user.getSpecifyUserId(), Specifyuser.class);
-        if (spUser != null) {
-            spUser.setIsLoggedIn(false);
-            spUser.setLoginOutTime(timestamp);
-            editEntity(spUser);
-        }
-    }
+//
+//    private T copyEntity(SpecifyBean entity, List<String> copyFields) {
+//        
+//        logger.info("copy fleld : {}", copyFields);
+//        CopyGroup cg = new CopyGroup();
+//        cg.setDepth(3);
+//        cg.cascadePrivateParts();
+//         
+//
+//        for (String string : copyFields) {
+//            cg.addAttribute(string);
+//        }
+//        JpaEntityManager nativeEM = entityManager.unwrap(JpaEntityManager.class);
+//
+//        return (T) nativeEM.copy(entity, cg);
+//    }
 
     private Query createQuery(String namedQuery, Map<String, Object> parameters) {
 
@@ -527,19 +398,34 @@ public class SpecifyDaoImpl implements SpecifyDao {
      * 
      * @param e 
      */
-    private void handleConstraintViolation(ConstraintViolationException e) {
+    private String handleConstraintViolation(ConstraintViolationException e) {
+
+        StringBuilder sb = new StringBuilder();
 
         Set<ConstraintViolation<?>> cvs = e.getConstraintViolations();
         for (ConstraintViolation<?> cv : cvs) {
             logger.info("------------------------------------------------");
             logger.info("Violation: {}", cv.getMessage());
+            sb.append("Violation:");
+            sb.append(cv.getMessage());
+
             logger.info("Entity: {}", cv.getRootBeanClass().getSimpleName());
+            sb.append(" - Entity: ");
+            sb.append(cv.getRootBeanClass().getSimpleName());
             // The violation occurred on a leaf bean (embeddable)
             if (cv.getLeafBean() != null && cv.getRootBean() != cv.getLeafBean()) {
                 logger.info("Embeddable: {}", cv.getLeafBean().getClass().getSimpleName());
+                sb.append(" - Embeddable: ");
+                sb.append(cv.getLeafBean().getClass().getSimpleName());
             }
             logger.info("Attribute: {}", cv.getPropertyPath());
+            sb.append(" - Attribute: ");
+            sb.append(cv.getPropertyPath());
+
             logger.info("Invalid value: {}", cv.getInvalidValue());
+            sb.append(" - Invalid value: ");
+            sb.append(cv.getInvalidValue());
         }
-    }
+        return sb.toString();
+    } 
 }
