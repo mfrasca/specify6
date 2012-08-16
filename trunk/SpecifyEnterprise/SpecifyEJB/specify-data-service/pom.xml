@@ -28,9 +28,19 @@
             <name>Repository for library Library[restlib]</name>
         </repository>  
     </repositories>-->
+    
+    <repositories>
+        <repository>
+            <url>http://download.eclipse.org/rt/eclipselink/maven.repo</url>
+            <id>eclipselink</id>
+            <layout>default</layout>
+            <name>Repository for library Library[eclipselink]</name>
+        </repository>
+    </repositories> 
 
-    <dependencies>   
-         
+
+    <dependencies>    
+        
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
             <artifactId>specify-business-logic</artifactId>
@@ -44,7 +54,7 @@
             <version>${project.parent.version}</version>
             <type>ejb</type>
         </dependency>
- 
+   
  
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -55,19 +65,31 @@
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-json</artifactId>
-            <version>1.11</version>
+            <version>1.13</version>
         </dependency>
         
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-server</artifactId>
-            <version>1.11</version>
+            <version>1.13</version>
         </dependency>
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-client</artifactId>
-            <version>1.11</version>
+            <version>1.13</version>
         </dependency>
+        
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.2.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+            <version>2.2.2</version>
+        </dependency>
+        
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
