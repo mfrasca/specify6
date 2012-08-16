@@ -76,14 +76,10 @@
  
     <modules>  
         <module>specify-datamodel</module>    
-        <module>specify-data-jpa</module>
-        
+        <module>specify-data-jpa</module> 
         <module>specify-business-logic</module>
-        <module>specify-data-service</module> 
-        
-        <module>specify-ui-formdata</module>
-<!--        <module>specify-smtp</module>-->
-        
+        <module>specify-ui-formdata</module> 
+        <module>specify-data-service</module>  
     </modules>
 
     <dependencies>
