@@ -1,5 +1,8 @@
 package se.nrm.specify.business.logic.specify;
-
+ 
+import se.nrm.specify.business.logic.validation.Validation;  
+import se.nrm.specify.business.logic.validation.SpecifyBeanId;
+import se.nrm.specify.datamodel.SpecifyBean;
 import se.nrm.specify.specify.data.jpa.SpecifyDao;
 
 /**
@@ -9,7 +12,10 @@ import se.nrm.specify.specify.data.jpa.SpecifyDao;
 public interface SpecifyLogic {
     
     public SpecifyDao getDao();
+      
+    public Validation deleteEntity(SpecifyBeanId spId); 
     
-    public String getDNASequenceList();
+    public Validation createEntity(SpecifyBean bean);
     
+    public Validation mergeEntity(SpecifyBean bean);
 }
