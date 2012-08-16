@@ -1,11 +1,12 @@
 package se.nrm.specify.datamodel;
  
+import com.sun.xml.bind.CycleRecoverable;
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Entity;
+import javax.persistence.Entity; 
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -15,9 +16,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table; 
-//import javax.validation.constraints.NotNull;
+import javax.persistence.Table;  
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute; 
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient; 
 
@@ -42,12 +46,12 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Division.findByName", query = "SELECT d FROM Division d WHERE d.name = :name"),
     @NamedQuery(name = "Division.findByRegNumber", query = "SELECT d FROM Division d WHERE d.regNumber = :regNumber"),
     @NamedQuery(name = "Division.findByUri", query = "SELECT d FROM Division d WHERE d.uri = :uri")})
-public class Division extends BaseEntity { 
-    
+public class Division extends BaseEntity implements CycleRecoverable {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
-    @Basic(optional = false)
+    @Basic(optional = false) 
 //    @NotNull
     @Column(name = "UserGroupScopeId")
     private Integer userGroupScopeId;
@@ -115,7 +119,7 @@ public class Division extends BaseEntity {
     private Collection<Conservdescription> conservdescriptions;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
-    @ManyToOne 
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE })  
     private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
@@ -123,13 +127,11 @@ public class Division extends BaseEntity {
     private Agent modifiedByAgent;
     
     @JoinColumn(name = "AddressID", referencedColumnName = "AddressID")
-    @ManyToOne 
-    @XmlTransient 
+    @ManyToOne  
     private Address address;
     
     @JoinColumn(name = "InstitutionID", referencedColumnName = "UserGroupScopeId")
-    @ManyToOne(optional = false) 
-    @XmlTransient 
+    @ManyToOne(optional = false)  
     private Institution institution;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "division")
@@ -165,6 +167,26 @@ public class Division extends BaseEntity {
         this.userGroupScopeId = userGroupScopeId; 
     }
 
+ 
+    
+    @Override
+    public Division onCycleDetected(Context context) {
+       // Context provides access to the Marshaller being used:
+       System.out.println("JAXB Marshaller is: " + context.getMarshaller() + " -- " + this.getClass().getSimpleName());
+        
+       Division d = new Division(userGroupScopeId);  
+       d.setName(name);
+       
+       return d;
+   }
+
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (userGroupScopeId != null) ? userGroupScopeId.toString() : "0";
+    }
+    
     public Integer getUserGroupScopeId() {
         return userGroupScopeId;
     }
@@ -336,11 +358,7 @@ public class Division extends BaseEntity {
     public void setTreatmentevents(Collection<Treatmentevent> treatmentevents) {
         this.treatmentevents = treatmentevents;
     }
-
  
-    
- 
-
     public Address getAddress() {
         return address;
     }
@@ -349,7 +367,7 @@ public class Division extends BaseEntity {
         this.address = address;
     }
 
-    @XmlTransient
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -357,7 +375,7 @@ public class Division extends BaseEntity {
     public void setCreatedByAgent(Agent createdByAgent) {
         this.createdByAgent = createdByAgent;
     }
-
+ 
     public String getDiscipline() {
         return discipline;
     }
@@ -365,8 +383,8 @@ public class Division extends BaseEntity {
     public void setDiscipline(String discipline) {
         this.discipline = discipline;
     }
-
-    @XmlTransient
+ 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -374,10 +392,7 @@ public class Division extends BaseEntity {
     public void setModifiedByAgent(Agent modifiedByAgent) {
         this.modifiedByAgent = modifiedByAgent;
     }
-
  
-
-    
     @XmlTransient
     public Collection<Discipline> getDisciplines() {
         return disciplines;
@@ -386,7 +401,8 @@ public class Division extends BaseEntity {
     public void setDisciplines(Collection<Discipline> disciplines) {
         this.disciplines = disciplines;
     }
-
+  
+    @NotNull(message="Institution must be specified.")
     public Institution getInstitution() {
         return institution;
     }
@@ -394,7 +410,7 @@ public class Division extends BaseEntity {
     public void setInstitution(Institution institution) {
         this.institution = institution;
     }
-
+ 
     @XmlTransient
     public Collection<Agent> getMembers() {
         return members;
@@ -439,5 +455,5 @@ public class Division extends BaseEntity {
     public String toString() {
         return "Division[ userGroupScopeId=" + userGroupScopeId + " ]";
     }
-    
+ 
 }

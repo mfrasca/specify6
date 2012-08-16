@@ -12,10 +12,15 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -32,8 +37,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Collectionobjectcitation.findByVersion", query = "SELECT c FROM Collectionobjectcitation c WHERE c.version = :version"),
     @NamedQuery(name = "Collectionobjectcitation.findByCollectionMemberID", query = "SELECT c FROM Collectionobjectcitation c WHERE c.collectionMemberId = :collectionMemberID"),
     @NamedQuery(name = "Collectionobjectcitation.findByIsFigured", query = "SELECT c FROM Collectionobjectcitation c WHERE c.isFigured = :isFigured")})
-public class Collectionobjectcitation extends BaseEntity { 
-    
+public class Collectionobjectcitation extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -84,6 +89,13 @@ public class Collectionobjectcitation extends BaseEntity {
         this.collectionObjectCitationId = collectionObjectCitationId; 
         this.collectionMemberId = collectionMemberId;
     }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (collectionObjectCitationId != null) ? collectionObjectCitationId.toString() : "0";
+    }
 
     public int getCollectionMemberId() {
         return collectionMemberId;
@@ -118,6 +130,8 @@ public class Collectionobjectcitation extends BaseEntity {
         this.remarks = remarks;
     }
 
+    @XmlTransient
+    @NotNull(message="CollectionObject must be specified.")
     public Collectionobject getCollectionObject() {
         return collectionObject;
     }
@@ -126,6 +140,7 @@ public class Collectionobjectcitation extends BaseEntity {
         this.collectionObject = collectionObject;
     }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -134,6 +149,7 @@ public class Collectionobjectcitation extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -142,6 +158,7 @@ public class Collectionobjectcitation extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
 
+    @NotNull(message="Reference must be specified.")
     public Referencework getReferenceWork() {
         return referenceWork;
     }
@@ -152,7 +169,17 @@ public class Collectionobjectcitation extends BaseEntity {
 
  
 
- 
+     /**
+     * Parent pointer
+     * 
+     * @param u
+     * @param parent 
+     */
+    public void afterUnmarshal(Unmarshaller u, Object parent) {  
+        if(parent instanceof Collectionobject) {
+            this.collectionObject = (Collectionobject)parent;   
+        }
+    }
 
     @Override
     public int hashCode() {
@@ -178,5 +205,6 @@ public class Collectionobjectcitation extends BaseEntity {
     public String toString() {
         return "Collectionobjectcitation[ collectionObjectCitationID=" + collectionObjectCitationId + " ]";
     }
-    
+
+  
 }

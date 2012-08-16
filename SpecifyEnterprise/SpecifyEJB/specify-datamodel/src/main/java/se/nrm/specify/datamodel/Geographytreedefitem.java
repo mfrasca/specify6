@@ -15,9 +15,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.Table; 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -43,8 +46,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Geographytreedefitem.findByTextBefore", query = "SELECT g FROM Geographytreedefitem g WHERE g.textBefore = :textBefore"),
     @NamedQuery(name = "Geographytreedefitem.findByTitle", query = "SELECT g FROM Geographytreedefitem g WHERE g.title = :title")})
 public class Geographytreedefitem extends BaseEntity {
-
+ 
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -61,8 +65,7 @@ public class Geographytreedefitem extends BaseEntity {
     
     @Column(name = "IsInFullName")
     private Boolean isInFullName;
-    
-    @NotNull
+     
     @Basic(optional = false)
     @Size(min = 1, max = 64)
     @Column(name = "Name")
@@ -125,6 +128,13 @@ public class Geographytreedefitem extends BaseEntity {
         this.name = name;
         this.rankId = rankId;
     }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (geographyTreeDefItemId != null) ? geographyTreeDefItemId.toString() : "0";
+    }
 
     public Integer getGeographyTreeDefItemId() {
         return geographyTreeDefItemId;
@@ -167,6 +177,7 @@ public class Geographytreedefitem extends BaseEntity {
         this.isInFullName = isInFullName;
     }
 
+    @NotNull(message="Name must be specified.")
     public String getName() {
         return name;
     }
@@ -218,6 +229,7 @@ public class Geographytreedefitem extends BaseEntity {
         this.children = children;
     }
 
+    @XmlIDREF 
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -226,6 +238,7 @@ public class Geographytreedefitem extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -234,6 +247,7 @@ public class Geographytreedefitem extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
 
+    @XmlIDREF
     public Geographytreedefitem getParent() {
         return parent;
     }
@@ -242,6 +256,7 @@ public class Geographytreedefitem extends BaseEntity {
         this.parent = parent;
     }
 
+    @NotNull(message="TreeDef must be specified.")
     public Geographytreedef getTreeDef() {
         return treeDef;
     }
@@ -286,4 +301,5 @@ public class Geographytreedefitem extends BaseEntity {
     public String toString() {
         return "Geographytreedefitem[ geographyTreeDefItemID=" + geographyTreeDefItemId + " ]";
     }
+ 
 }

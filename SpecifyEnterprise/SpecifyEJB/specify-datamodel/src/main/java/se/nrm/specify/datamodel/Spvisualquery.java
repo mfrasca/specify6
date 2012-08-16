@@ -11,8 +11,12 @@ import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table; 
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -32,8 +36,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Spvisualquery.findByCreatedByAgentID", query = "SELECT s FROM Spvisualquery s WHERE s.createdByAgent = :createdByAgentID"),
     @NamedQuery(name = "Spvisualquery.findBySpecifyUserID", query = "SELECT s FROM Spvisualquery s WHERE s.specifyUser = :specifyUserID"),
     @NamedQuery(name = "Spvisualquery.findByModifiedByAgentID", query = "SELECT s FROM Spvisualquery s WHERE s.modifiedByAgent = :modifiedByAgentID")})
-public class Spvisualquery extends BaseEntity {  
-    
+public class Spvisualquery extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -48,8 +52,7 @@ public class Spvisualquery extends BaseEntity {
     @Column(name = "Description")
     private String description;
     
-    @Basic(optional = false)
-    @NotNull
+    @Basic(optional = false) 
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
@@ -78,6 +81,13 @@ public class Spvisualquery extends BaseEntity {
         this.name = name;
         this.specifyUser = specifyUser;
     }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (spVisualQueryId != null) ? spVisualQueryId.toString() : "0";
+    }
 
     public Integer getSpVisualQueryId() {
         return spVisualQueryId;
@@ -96,6 +106,7 @@ public class Spvisualquery extends BaseEntity {
         this.description = description;
     }
 
+    @NotNull(message="Name must be specified.")
     public String getName() {
         return name;
     }
@@ -154,5 +165,5 @@ public class Spvisualquery extends BaseEntity {
     public String toString() {
         return "Spvisualquery[ spVisualQueryID=" + spVisualQueryId + " ]";
     }
-    
+ 
 }

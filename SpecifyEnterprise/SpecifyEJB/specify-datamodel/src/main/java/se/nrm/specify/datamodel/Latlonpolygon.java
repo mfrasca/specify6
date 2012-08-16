@@ -11,8 +11,12 @@ import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table; 
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -34,8 +38,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Latlonpolygon.findByLocalityID", query = "SELECT l FROM Latlonpolygon l WHERE l.locality = :localityID"),
     @NamedQuery(name = "Latlonpolygon.findByCreatedByAgentID", query = "SELECT l FROM Latlonpolygon l WHERE l.createdByAgent = :createdByAgentID"),
     @NamedQuery(name = "Latlonpolygon.findByModifiedByAgentID", query = "SELECT l FROM Latlonpolygon l WHERE l.modifiedByAgent = :modifiedByAgentID")})
-public class Latlonpolygon extends BaseEntity {  
-    
+public class Latlonpolygon extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -55,8 +59,7 @@ public class Latlonpolygon extends BaseEntity {
     @Column(name = "IsPolyline")
     private boolean isPolyline;
     
-    @Basic(optional = false)
-    @NotNull
+    @Basic(optional = false) 
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
@@ -87,6 +90,13 @@ public class Latlonpolygon extends BaseEntity {
         this.name = name;
     }
  
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (latLonPolygonId != null) ? latLonPolygonId.toString() : "0";
+    }
+    
     public String getDescription() {
         return description;
     }
@@ -103,6 +113,7 @@ public class Latlonpolygon extends BaseEntity {
         this.isPolyline = isPolyline;
     }
 
+    @NotNull(message="Name must be specified.")
     public String getName() {
         return name;
     }
@@ -177,5 +188,6 @@ public class Latlonpolygon extends BaseEntity {
     public String toString() {
         return "Latlonpolygon[ latLonPolygonID=" + latLonPolygonId + " ]";
     }
+ 
     
 }

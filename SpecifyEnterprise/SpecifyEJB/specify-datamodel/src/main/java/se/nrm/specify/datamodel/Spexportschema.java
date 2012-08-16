@@ -16,9 +16,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table; 
-//import javax.validation.constraints.NotNull;
+import javax.persistence.Table;  
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -38,8 +40,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Spexportschema.findByDescription", query = "SELECT s FROM Spexportschema s WHERE s.description = :description"),
     @NamedQuery(name = "Spexportschema.findBySchemaName", query = "SELECT s FROM Spexportschema s WHERE s.schemaName = :schemaName"),
     @NamedQuery(name = "Spexportschema.findBySchemaVersion", query = "SELECT s FROM Spexportschema s WHERE s.schemaVersion = :schemaVersion")})
-public class Spexportschema extends BaseEntity {  
-    
+public class Spexportschema extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -93,7 +95,14 @@ public class Spexportschema extends BaseEntity {
         super(timestampCreated);
         this.spExportSchemaId = spExportSchemaId; 
     }
-
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (spExportSchemaId != null) ? spExportSchemaId.toString() : "0";
+    }
+    
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -102,6 +111,7 @@ public class Spexportschema extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @NotNull(message="Discipline must be specified.")
     public Discipline getDiscipline() {
         return discipline;
     }
@@ -194,5 +204,5 @@ public class Spexportschema extends BaseEntity {
     public String toString() {
         return "Spexportschema[ spExportSchemaID=" + spExportSchemaId + " ]";
     }
-    
+ 
 }

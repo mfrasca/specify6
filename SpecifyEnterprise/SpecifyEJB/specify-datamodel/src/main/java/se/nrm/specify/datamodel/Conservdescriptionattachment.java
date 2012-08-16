@@ -12,9 +12,11 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
-//import javax.validation.constraints.NotNull;
+import javax.persistence.Table;  
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -31,8 +33,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Conservdescriptionattachment.findByTimestampModified", query = "SELECT c FROM Conservdescriptionattachment c WHERE c.timestampModified = :timestampModified"),
     @NamedQuery(name = "Conservdescriptionattachment.findByVersion", query = "SELECT c FROM Conservdescriptionattachment c WHERE c.version = :version"),
     @NamedQuery(name = "Conservdescriptionattachment.findByOrdinal", query = "SELECT c FROM Conservdescriptionattachment c WHERE c.ordinal = :ordinal")})
-public class Conservdescriptionattachment extends BaseEntity {  
-    
+public class Conservdescriptionattachment extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -78,7 +80,13 @@ public class Conservdescriptionattachment extends BaseEntity {
         this.conservDescriptionAttachmentId = conservDescriptionAttachmentId; 
     }
  
- 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (conservDescriptionAttachmentId != null) ? conservDescriptionAttachmentId.toString() : "0";
+    }
+    
     public Integer getOrdinal() {
         return ordinal;
     }
@@ -95,6 +103,7 @@ public class Conservdescriptionattachment extends BaseEntity {
         this.remarks = remarks;
     }
 
+    @NotNull(message="Attachment must be specified.")
     public Attachment getAttachment() {
         return attachment;
     }
@@ -103,6 +112,7 @@ public class Conservdescriptionattachment extends BaseEntity {
         this.attachment = attachment;
     }
 
+    @NotNull(message="ConservDescription must be specified.")
     public Conservdescription getConservDescription() {
         return conservDescription;
     }
@@ -161,5 +171,5 @@ public class Conservdescriptionattachment extends BaseEntity {
     public String toString() {
         return "Conservdescriptionattachment[ conservDescriptionAttachmentId=" + conservDescriptionAttachmentId + " ]";
     }
-    
+ 
 }

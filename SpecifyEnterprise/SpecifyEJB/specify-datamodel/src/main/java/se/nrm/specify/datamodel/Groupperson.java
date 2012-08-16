@@ -12,9 +12,12 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -31,8 +34,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Groupperson.findByTimestampModified", query = "SELECT g FROM Groupperson g WHERE g.timestampModified = :timestampModified"),
     @NamedQuery(name = "Groupperson.findByVersion", query = "SELECT g FROM Groupperson g WHERE g.version = :version"),
     @NamedQuery(name = "Groupperson.findByOrderNumber", query = "SELECT g FROM Groupperson g WHERE g.orderNumber = :orderNumber")})
-public class Groupperson extends BaseEntity { 
-    
+public class Groupperson extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -84,7 +87,16 @@ public class Groupperson extends BaseEntity {
         this.groupPersonId = groupPersonId; 
         this.orderNumber = orderNumber;
     }
+ 
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (groupPersonId != null) ? groupPersonId.toString() : "0";
+    }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -101,6 +113,8 @@ public class Groupperson extends BaseEntity {
         this.division = division;
     }
 
+    @NotNull(message="Group must be specified.")
+    @XmlIDREF
     public Agent getGroup() {
         return group;
     }
@@ -117,6 +131,7 @@ public class Groupperson extends BaseEntity {
         this.groupPersonId = groupPersonId;
     }
 
+    @NotNull(message="Member must be specified.")
     public Agent getMember() {
         return member;
     }
@@ -175,6 +190,5 @@ public class Groupperson extends BaseEntity {
     @Override
     public String toString() {
         return "Groupperson[ groupPersonID=" + groupPersonId + " ]";
-    }
-    
+    } 
 }

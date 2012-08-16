@@ -3,7 +3,11 @@ package se.nrm.specify.datamodel;
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -30,7 +34,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Workbench.findByOwnerPermissionLevel", query = "SELECT w FROM Workbench w WHERE w.ownerPermissionLevel = :ownerPermissionLevel"),
     @NamedQuery(name = "Workbench.findBySrcFilePath", query = "SELECT w FROM Workbench w WHERE w.srcFilePath = :srcFilePath"),
     @NamedQuery(name = "Workbench.findByExportedFromTableName", query = "SELECT w FROM Workbench w WHERE w.exportedFromTableName = :exportedFromTableName")})
-public class Workbench extends BaseEntity {  
+public class Workbench extends BaseEntity {
     
     private static final long serialVersionUID = 1L;
     
@@ -115,6 +119,13 @@ public class Workbench extends BaseEntity {
         super(timestampCreated);
         this.workbenchId = workbenchId; 
     }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (workbenchId != null) ? workbenchId.toString() : "0";
+    }
  
     public Integer getAllPermissionLevel() {
         return allPermissionLevel;
@@ -196,6 +207,7 @@ public class Workbench extends BaseEntity {
         this.exportedFromTableName = exportedFromTableName;
     }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -220,6 +232,7 @@ public class Workbench extends BaseEntity {
         this.group = group;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -228,6 +241,8 @@ public class Workbench extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
 
+    @NotNull(message="SpecifyUser must be specified.")
+    @XmlIDREF
     public Specifyuser getSpecifyUser() {
         return specifyUser;
     }
@@ -253,6 +268,7 @@ public class Workbench extends BaseEntity {
         this.workbenchRows = workbenchRows;
     }
 
+    @NotNull(message="Workbenchtemplate must be specified.")
     public Workbenchtemplate getWorkbenchTemplate() {
         return workbenchTemplate;
     }
@@ -286,5 +302,7 @@ public class Workbench extends BaseEntity {
     public String toString() {
         return "Workbench[ workbenchID=" + workbenchId + " ]";
     }
+
+   
     
 }

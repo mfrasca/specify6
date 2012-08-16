@@ -1,5 +1,6 @@
 package se.nrm.specify.datamodel;
  
+import com.sun.xml.bind.CycleRecoverable;
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
@@ -13,9 +14,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table; 
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;   
 
@@ -51,8 +55,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Institution.findByCurrentManagedSchemaVersion", query = "SELECT i FROM Institution i WHERE i.currentManagedSchemaVersion = :currentManagedSchemaVersion"),
     @NamedQuery(name = "Institution.findByIsReleaseManagedGlobally", query = "SELECT i FROM Institution i WHERE i.isReleaseManagedGlobally = :isReleaseManagedGlobally"),
     @NamedQuery(name = "Institution.findByMinimumPwdLength", query = "SELECT i FROM Institution i WHERE i.minimumPwdLength = :minimumPwdLength")})
-public class Institution extends BaseEntity {  
-    
+public class Institution extends BaseEntity implements CycleRecoverable {
+   
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -177,9 +181,11 @@ public class Institution extends BaseEntity {
     @OneToMany(mappedBy = "instContentContact")
     private Collection<Agent> contentContacts;
     
+    @OneToMany(mappedBy = "institution")
+    private Collection<se.nrm.specify.datamodel.Collection> collections;
+    
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
-    @ManyToOne 
-    @XmlTransient 
+    @ManyToOne  
     private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
@@ -187,13 +193,11 @@ public class Institution extends BaseEntity {
     private Agent modifiedByAgent;
     
     @JoinColumn(name = "AddressID", referencedColumnName = "AddressID")
-    @ManyToOne  
-    @XmlTransient 
+    @ManyToOne   
     private Address address;
     
     @JoinColumn(name = "StorageTreeDefID", referencedColumnName = "StorageTreeDefID")
-    @ManyToOne
-    @XmlTransient 
+    @ManyToOne 
     private Storagetreedef storageTreeDef;
 
     public Institution() {
@@ -210,7 +214,26 @@ public class Institution extends BaseEntity {
         this.isSecurityOn = isSecurityOn;
         this.isServerBased = isServerBased;
     }
+    
+ 
+    @Override
+    public Institution onCycleDetected(Context context) {
+       // Context provides access to the Marshaller being used:
+       System.out.println("JAXB Marshaller is: " + context.getMarshaller()  + " -- " + this.getClass().getSimpleName());
+        
+       Institution inst = new Institution(userGroupScopeId);  
+       inst.setName(name);
+       
+       return inst;
+   }
 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (userGroupScopeId != null) ? userGroupScopeId.toString() : "0";
+    }
+    
     public Integer getUserGroupScopeId() {
         return userGroupScopeId;
     }
@@ -428,6 +451,16 @@ public class Institution extends BaseEntity {
     }
 
     @XmlTransient
+    public Collection<se.nrm.specify.datamodel.Collection> getCollections() {
+        return collections;
+    }
+
+    public void setCollections(Collection<se.nrm.specify.datamodel.Collection> collections) {
+        this.collections = collections;
+    }
+
+    
+    @XmlTransient
     public Collection<Agent> getContentContacts() {
         return contentContacts;
     }
@@ -463,7 +496,7 @@ public class Institution extends BaseEntity {
         this.address = address;
     }
 
-    @XmlTransient
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -472,7 +505,7 @@ public class Institution extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
-    @XmlTransient
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -481,6 +514,7 @@ public class Institution extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
 
+    @XmlIDREF
     public Storagetreedef getStorageTreeDef() {
         return storageTreeDef;
     }
@@ -515,5 +549,5 @@ public class Institution extends BaseEntity {
     public String toString() {
         return "Institution[ userGroupScopeId=" + userGroupScopeId + " ]";
     }
-    
+ 
 }

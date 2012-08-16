@@ -14,9 +14,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table; 
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -34,8 +36,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Exsiccata.findByTimestampModified", query = "SELECT e FROM Exsiccata e WHERE e.timestampModified = :timestampModified"),
     @NamedQuery(name = "Exsiccata.findByVersion", query = "SELECT e FROM Exsiccata e WHERE e.version = :version"),
     @NamedQuery(name = "Exsiccata.findByTitle", query = "SELECT e FROM Exsiccata e WHERE e.title = :title")})
-public class Exsiccata extends BaseEntity { 
-    
+public class Exsiccata extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -45,8 +47,7 @@ public class Exsiccata extends BaseEntity {
     @Column(name = "ExsiccataID")
     private Integer exsiccataId;
      
-    @Basic(optional = false)
-    @NotNull
+    @Basic(optional = false) 
     @Size(min = 1, max = 255)
     @Column(name = "Title")
     private String title;
@@ -79,8 +80,14 @@ public class Exsiccata extends BaseEntity {
         this.title = title;
     }
 
-  
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (exsiccataId != null) ? exsiccataId.toString() : "0";
+    }
  
+    @NotNull(message="Title must be specified.")
     public String getTitle() {
         return title;
     }
@@ -113,6 +120,7 @@ public class Exsiccata extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
 
+    @NotNull(message="Referencework must be specified.")
     public Referencework getReferenceWork() {
         return referenceWork;
     }
@@ -156,5 +164,5 @@ public class Exsiccata extends BaseEntity {
     public String toString() {
         return "Exsiccata[ exsiccataID=" + exsiccataId + " ]";
     }
-    
+ 
 }

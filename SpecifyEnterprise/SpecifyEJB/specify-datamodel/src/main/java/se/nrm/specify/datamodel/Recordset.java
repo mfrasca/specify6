@@ -15,9 +15,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table; 
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -41,8 +43,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Recordset.findByName", query = "SELECT r FROM Recordset r WHERE r.name = :name"),
     @NamedQuery(name = "Recordset.findByOwnerPermissionLevel", query = "SELECT r FROM Recordset r WHERE r.ownerPermissionLevel = :ownerPermissionLevel"),
     @NamedQuery(name = "Recordset.findByType", query = "SELECT r FROM Recordset r WHERE r.type = :type")})
-public class Recordset extends BaseEntity {  
-    
+public class Recordset extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -68,8 +70,7 @@ public class Recordset extends BaseEntity {
     @Column(name = "GroupPermissionLevel")
     private Integer groupPermissionLevel;
     
-    @Basic(optional = false)
-    @NotNull
+    @Basic(optional = false) 
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
@@ -126,6 +127,12 @@ public class Recordset extends BaseEntity {
         this.type = type;
     }
 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (recordSetId != null) ? recordSetId.toString() : "0";
+    }
    
     public Integer getAllPermissionLevel() {
         return allPermissionLevel;
@@ -145,6 +152,7 @@ public class Recordset extends BaseEntity {
         this.groupPermissionLevel = groupPermissionLevel;
     }
 
+    @NotNull(message="Name must be specified.")
     public String getName() {
         return name;
     }
@@ -242,6 +250,7 @@ public class Recordset extends BaseEntity {
         this.recordSetItems = recordSetItems;
     }
 
+    @NotNull(message="SpecifyUser must be specified.")
     public Specifyuser getSpecifyUser() {
         return specifyUser;
     }
@@ -276,5 +285,6 @@ public class Recordset extends BaseEntity {
     public String toString() {
         return "Recordset[ recordSetID=" + recordSetId + " ]";
     }
-    
+
+ 
 }

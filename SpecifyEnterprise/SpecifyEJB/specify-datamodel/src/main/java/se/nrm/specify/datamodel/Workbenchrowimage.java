@@ -2,7 +2,10 @@ package se.nrm.specify.datamodel;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -20,6 +23,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Workbenchrowimage.findByImageOrder", query = "SELECT w FROM Workbenchrowimage w WHERE w.imageOrder = :imageOrder")})
 public class Workbenchrowimage implements Serializable, SpecifyBean {
     
+    
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -33,10 +37,6 @@ public class Workbenchrowimage implements Serializable, SpecifyBean {
     @Column(name = "AttachToTableName")
     private String attachToTableName;
     
-    @Lob
-    @Column(name = "CardImageData")
-    private byte[] cardImageData;
-    
     @Size(max = 255)
     @Column(name = "CardImageFullPath")
     private String cardImageFullPath;
@@ -47,6 +47,11 @@ public class Workbenchrowimage implements Serializable, SpecifyBean {
     @JoinColumn(name = "WorkbenchRowID", referencedColumnName = "WorkbenchRowID")
     @ManyToOne(optional = false)
     private Workbenchrow workbenchRow;
+    
+    @Lob
+    @Column(name = "CardImageData")
+    private byte[] cardImageData;
+    
 
     public Workbenchrowimage() {
     }
@@ -54,7 +59,14 @@ public class Workbenchrowimage implements Serializable, SpecifyBean {
     public Workbenchrowimage(Integer workbenchRowImageId) {
         this.workbenchRowImageId = workbenchRowImageId;
     }
+    
+    @XmlID
+    @XmlAttribute(name = "id") 
+    public String getIdentityString() {
+        return (workbenchRowImageId != null) ? workbenchRowImageId.toString() : "0";
+    }
 
+    @NotNull(message="WorkbenchRow must be specified.")
     public Workbenchrow getWorkbenchRow() {
         return workbenchRow;
     }
@@ -80,14 +92,6 @@ public class Workbenchrowimage implements Serializable, SpecifyBean {
         this.attachToTableName = attachToTableName;
     }
 
-    public byte[] getCardImageData() {
-        return cardImageData;
-    }
-
-    public void setCardImageData(byte[] cardImageData) {
-        this.cardImageData = cardImageData;
-    }
-
     public String getCardImageFullPath() {
         return cardImageFullPath;
     }
@@ -102,6 +106,14 @@ public class Workbenchrowimage implements Serializable, SpecifyBean {
 
     public void setImageOrder(Integer imageOrder) {
         this.imageOrder = imageOrder;
+    }
+    
+    public byte[] getCardImageData() {
+        return cardImageData;
+    }
+
+    public void setCardImageData(byte[] cardImageData) {
+        this.cardImageData = cardImageData;
     }
 
  
@@ -128,6 +140,6 @@ public class Workbenchrowimage implements Serializable, SpecifyBean {
     @Override
     public String toString() {
         return "se.nrm.specify.datamodel.Workbenchrowimage[ workbenchRowImageID=" + workbenchRowImageId + " ]";
-    }
+    } 
     
 }

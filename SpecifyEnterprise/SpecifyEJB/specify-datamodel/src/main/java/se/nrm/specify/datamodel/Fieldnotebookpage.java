@@ -19,6 +19,10 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -38,8 +42,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Fieldnotebookpage.findByDescription", query = "SELECT f FROM Fieldnotebookpage f WHERE f.description = :description"),
     @NamedQuery(name = "Fieldnotebookpage.findByPageNumber", query = "SELECT f FROM Fieldnotebookpage f WHERE f.pageNumber = :pageNumber"),
     @NamedQuery(name = "Fieldnotebookpage.findByScanDate", query = "SELECT f FROM Fieldnotebookpage f WHERE f.scanDate = :scanDate")})
-public class Fieldnotebookpage extends BaseEntity {  
-    
+public class Fieldnotebookpage extends BaseEntity {
+  
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -98,6 +102,13 @@ public class Fieldnotebookpage extends BaseEntity {
         this.scanDate = scanDate;
     }
 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (fieldNotebookPageId != null) ? fieldNotebookPageId.toString() : "0";
+    }
+    
     public Integer getFieldNotebookPageId() {
         return fieldNotebookPageId;
     }
@@ -123,16 +134,7 @@ public class Fieldnotebookpage extends BaseEntity {
     public void setPageNumber(String pageNumber) {
         this.pageNumber = pageNumber;
     }
-
-    public Date getScanDate() {
-        return scanDate;
-    }
-
-    public void setScanDate(Date scanDate) {
-        this.scanDate = scanDate;
-    }
-
-    @XmlTransient
+ 
     public Collection<Fieldnotebookpageattachment> getAttachments() {
         return attachments;
     }
@@ -150,6 +152,7 @@ public class Fieldnotebookpage extends BaseEntity {
         this.collectionObjects = collectionObjects;
     }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -158,6 +161,8 @@ public class Fieldnotebookpage extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @XmlTransient
+    @NotNull(message="Discipline must be specified.")
     public Discipline getDiscipline() {
         return discipline;
     }
@@ -166,6 +171,7 @@ public class Fieldnotebookpage extends BaseEntity {
         this.discipline = discipline;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -174,6 +180,7 @@ public class Fieldnotebookpage extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
 
+    @XmlTransient
     public Fieldnotebookpageset getPageSet() {
         return pageSet;
     }
@@ -182,9 +189,30 @@ public class Fieldnotebookpage extends BaseEntity {
         this.pageSet = pageSet;
     }
 
- 
+    @NotNull(message="Scandate must be specified.")
+    public Date getScanDate() {
+        return scanDate;
+    }
+
+    public void setScanDate(Date scanDate) {
+        this.scanDate = scanDate;
+    }
  
 
+    /**
+     * Parent pointer
+     * 
+     * @param u
+     * @param parent 
+     */
+    public void afterUnmarshal(Unmarshaller u, Object parent) {  
+        if(parent instanceof Fieldnotebookpageset) {
+            this.pageSet = (Fieldnotebookpageset)parent;   
+        } else if(parent instanceof Discipline) {
+            this.discipline = (Discipline)parent;
+        }
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;
@@ -209,5 +237,6 @@ public class Fieldnotebookpage extends BaseEntity {
     public String toString() {
         return "Fieldnotebookpage[ fieldNotebookPageID=" + fieldNotebookPageId + " ]";
     }
-    
+ 
+ 
 }

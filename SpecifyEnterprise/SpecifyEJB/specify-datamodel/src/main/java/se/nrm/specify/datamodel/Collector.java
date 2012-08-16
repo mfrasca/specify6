@@ -12,11 +12,15 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID; 
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlTransient; 
 
 /**
  *
@@ -34,8 +38,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Collector.findByVersion", query = "SELECT c FROM Collector c WHERE c.version = :version"),
     @NamedQuery(name = "Collector.findByIsPrimary", query = "SELECT c FROM Collector c WHERE c.isPrimary = :isPrimary"),
     @NamedQuery(name = "Collector.findByOrderNumber", query = "SELECT c FROM Collector c WHERE c.orderNumber = :orderNumber")})
-public class Collector extends BaseEntity {  
-    
+public class Collector extends BaseEntity {
+  
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -93,6 +97,13 @@ public class Collector extends BaseEntity {
         this.isPrimary = isPrimary;
         this.orderNumber = orderNumber;
     }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (collectorId != null) ? collectorId.toString() : "0";
+    }
 
     public Integer getCollectorId() {
         return collectorId;
@@ -128,6 +139,7 @@ public class Collector extends BaseEntity {
         this.remarks = remarks;
     }
 
+    @NotNull(message="Agent must be specified.")
     public Agent getAgent() {
         return agent;
     }
@@ -136,6 +148,7 @@ public class Collector extends BaseEntity {
         this.agent = agent;
     }
 
+    @NotNull(message="CollectingEvent must be specified-")
     @XmlTransient
     public Collectingevent getCollectingEvent() {
         return collectingEvent;
@@ -145,6 +158,7 @@ public class Collector extends BaseEntity {
         this.collectingEvent = collectingEvent;
     }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -161,6 +175,7 @@ public class Collector extends BaseEntity {
         this.division = division;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -170,7 +185,18 @@ public class Collector extends BaseEntity {
     }
 
     
-
+    /**
+     * Parent pointer
+     * 
+     * @param u
+     * @param parent 
+     */
+    public void afterUnmarshal(Unmarshaller u, Object parent) {  
+         
+        if(parent instanceof Collectingevent) {
+            this.collectingEvent = (Collectingevent)parent;   
+        }
+    }
     
 
     @Override
@@ -197,5 +223,5 @@ public class Collector extends BaseEntity {
     public String toString() {
         return "Collector[ collectorID=" + collectorId + " ]";
     }
-    
+ 
 }

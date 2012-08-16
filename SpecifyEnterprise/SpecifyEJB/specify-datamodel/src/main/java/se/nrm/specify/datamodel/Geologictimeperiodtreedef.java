@@ -15,9 +15,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table; 
+import javax.persistence.Table;  ;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -36,8 +38,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Geologictimeperiodtreedef.findByVersion", query = "SELECT g FROM Geologictimeperiodtreedef g WHERE g.version = :version"),
     @NamedQuery(name = "Geologictimeperiodtreedef.findByFullNameDirection", query = "SELECT g FROM Geologictimeperiodtreedef g WHERE g.fullNameDirection = :fullNameDirection"),
     @NamedQuery(name = "Geologictimeperiodtreedef.findByName", query = "SELECT g FROM Geologictimeperiodtreedef g WHERE g.name = :name")})
-public class Geologictimeperiodtreedef extends BaseEntity {  
-    
+public class Geologictimeperiodtreedef extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -50,8 +52,7 @@ public class Geologictimeperiodtreedef extends BaseEntity {
     @Column(name = "FullNameDirection")
     private Integer fullNameDirection;
     
-    @Basic(optional = false)
-//    @NotNull
+    @Basic(optional = false) 
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
@@ -91,6 +92,13 @@ public class Geologictimeperiodtreedef extends BaseEntity {
         this.name = name;
     }
 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (geologicTimePeriodTreeDefId != null) ? geologicTimePeriodTreeDefId.toString() : "0";
+    }
+    
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -124,6 +132,7 @@ public class Geologictimeperiodtreedef extends BaseEntity {
         this.fullNameDirection = fullNameDirection;
     }
 
+    @NotNull(message="Name must be specified.")
     public String getName() {
         return name;
     }
@@ -192,6 +201,5 @@ public class Geologictimeperiodtreedef extends BaseEntity {
     @Override
     public String toString() {
         return "Geologictimeperiodtreedef[ geologicTimePeriodTreeDefID=" + geologicTimePeriodTreeDefId + " ]";
-    }
-    
+    } 
 }

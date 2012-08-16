@@ -14,8 +14,12 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table; 
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -37,7 +41,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Spviewsetobj.findByLevel", query = "SELECT s FROM Spviewsetobj s WHERE s.level = :level"),
     @NamedQuery(name = "Spviewsetobj.findByMetaData", query = "SELECT s FROM Spviewsetobj s WHERE s.metaData = :metaData"),
     @NamedQuery(name = "Spviewsetobj.findByName", query = "SELECT s FROM Spviewsetobj s WHERE s.name = :name")})
-public class Spviewsetobj extends BaseEntity { 
+public class Spviewsetobj extends BaseEntity {
+ 
     
     private static final long serialVersionUID = 1L;
     
@@ -65,8 +70,7 @@ public class Spviewsetobj extends BaseEntity {
     @Column(name = "MetaData")
     private String metaData;
     
-    @Basic(optional = false)
-    @NotNull
+    @Basic(optional = false) 
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
@@ -99,6 +103,13 @@ public class Spviewsetobj extends BaseEntity {
         this.level = level;
         this.name = name;
     }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (spViewSetObjId != null) ? spViewSetObjId.toString() : "0";
+    }
 
     public Agent getCreatedByAgent() {
         return createdByAgent;
@@ -125,6 +136,7 @@ public class Spviewsetobj extends BaseEntity {
         this.spAppResourceDatas = spAppResourceDatas;
     }
 
+    @NotNull(message="SpAppResourcDir must be specified.")
     public Spappresourcedir getSpAppResourceDir() {
         return spAppResourceDir;
     }
@@ -175,6 +187,7 @@ public class Spviewsetobj extends BaseEntity {
         this.metaData = metaData;
     }
 
+    @NotNull(message="Name must be specified.")
     public String getName() {
         return name;
     }
@@ -208,5 +221,5 @@ public class Spviewsetobj extends BaseEntity {
     public String toString() {
         return "Spviewsetobj[ spViewSetObjID=" + spViewSetObjId + " ]";
     }
-    
+ 
 }

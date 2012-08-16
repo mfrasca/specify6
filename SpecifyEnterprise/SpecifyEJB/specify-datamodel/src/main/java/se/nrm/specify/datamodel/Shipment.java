@@ -17,6 +17,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -42,8 +44,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Shipment.findByWeight", query = "SELECT s FROM Shipment s WHERE s.weight = :weight"),
     @NamedQuery(name = "Shipment.findByYesNo1", query = "SELECT s FROM Shipment s WHERE s.yesNo1 = :yesNo1"),
     @NamedQuery(name = "Shipment.findByYesNo2", query = "SELECT s FROM Shipment s WHERE s.yesNo2 = :yesNo2")})
-public class Shipment extends BaseEntity {  
-    
+public class Shipment extends BaseEntity {
+   
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -71,10 +73,6 @@ public class Shipment extends BaseEntity {
     @Size(max = 65535)
     @Column(name = "Remarks")
     private String remarks;
-    
-    @Column(name = "ShipmentDate")
-    @Temporal(TemporalType.DATE)
-    private Date shipmentDate;
     
     @Size(max = 50)
     @Column(name = "ShipmentMethod")
@@ -105,6 +103,10 @@ public class Shipment extends BaseEntity {
     
     @Column(name = "YesNo2")
     private Boolean yesNo2;
+    
+    @Column(name = "ShipmentDate")
+    @Temporal(TemporalType.DATE)
+    private Date shipmentDate;
     
     @JoinColumn(name = "BorrowID", referencedColumnName = "BorrowID")
     @ManyToOne
@@ -159,6 +161,13 @@ public class Shipment extends BaseEntity {
         this.shipmentNumber = shipmentNumber;
     }
 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (shipmentId != null) ? shipmentId.toString() : "0";
+    }
+    
     public Borrow getBorrow() {
         return borrow;
     }
@@ -289,14 +298,6 @@ public class Shipment extends BaseEntity {
         this.remarks = remarks;
     }
 
-    public Date getShipmentDate() {
-        return shipmentDate;
-    }
-
-    public void setShipmentDate(Date shipmentDate) {
-        this.shipmentDate = shipmentDate;
-    }
-
     public String getShipmentMethod() {
         return shipmentMethod;
     }
@@ -305,6 +306,7 @@ public class Shipment extends BaseEntity {
         this.shipmentMethod = shipmentMethod;
     }
 
+    @NotNull(message="ShipmentNumber must be specified.")
     public String getShipmentNumber() {
         return shipmentNumber;
     }
@@ -353,7 +355,13 @@ public class Shipment extends BaseEntity {
         this.yesNo2 = yesNo2;
     }
 
-  
+    public Date getShipmentDate() {
+        return shipmentDate;
+    }
+
+    public void setShipmentDate(Date shipmentDate) {
+        this.shipmentDate = shipmentDate;
+    }
   
 
     @Override
@@ -380,5 +388,5 @@ public class Shipment extends BaseEntity {
     public String toString() {
         return "Shipment[ shipmentID=" + shipmentId + " ]";
     }
-    
+ 
 }

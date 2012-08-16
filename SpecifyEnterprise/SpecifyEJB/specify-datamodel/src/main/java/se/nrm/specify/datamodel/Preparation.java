@@ -20,8 +20,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.Unmarshaller; 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -51,7 +52,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Preparation.findByYesNo1", query = "SELECT p FROM Preparation p WHERE p.yesNo1 = :yesNo1"),
     @NamedQuery(name = "Preparation.findByYesNo2", query = "SELECT p FROM Preparation p WHERE p.yesNo2 = :yesNo2"),
     @NamedQuery(name = "Preparation.findByYesNo3", query = "SELECT p FROM Preparation p WHERE p.yesNo3 = :yesNo3")})
-public class Preparation extends BaseEntity { 
+public class Preparation extends BaseEntity {
+  
     
     private static final long serialVersionUID = 1L;
     
@@ -81,10 +83,6 @@ public class Preparation extends BaseEntity {
     @Column(name = "Number2")
     private Float number2;
     
-    @Column(name = "PreparedDate")
-    @Temporal(TemporalType.DATE)
-    private Date preparedDate;
-    
     @Column(name = "PreparedDatePrecision")
     private Short preparedDatePrecision;
     
@@ -92,6 +90,10 @@ public class Preparation extends BaseEntity {
     @Size(max = 65535)
     @Column(name = "Remarks")
     private String remarks;
+    
+    @Column(name = "PreparedDate")
+    @Temporal(TemporalType.DATE)
+    private Date preparedDate;
     
     @Size(max = 32)
     @Column(name = "SampleNumber")
@@ -141,7 +143,7 @@ public class Preparation extends BaseEntity {
     private Collectionobject collectionObject;
     
     @JoinColumn(name = "PrepTypeID", referencedColumnName = "PrepTypeID")
-    @ManyToOne(optional = false, cascade= CascadeType.ALL)
+    @ManyToOne(optional = false, cascade= {CascadeType.MERGE, CascadeType.REFRESH})
     private Preptype prepType;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
@@ -180,6 +182,13 @@ public class Preparation extends BaseEntity {
         this.collectionMemberId = collectionMemberId;
     }
  
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (preparationId != null) ? preparationId.toString() : "0";
+    }
+    
     public Integer getCountAmt() {
         return countAmt;
     }
@@ -210,14 +219,6 @@ public class Preparation extends BaseEntity {
 
     public void setNumber2(Float number2) {
         this.number2 = number2;
-    }
-
-    public Date getPreparedDate() {
-        return preparedDate;
-    }
-
-    public void setPreparedDate(Date preparedDate) {
-        this.preparedDate = preparedDate;
     }
 
     public Short getPreparedDatePrecision() {
@@ -308,6 +309,7 @@ public class Preparation extends BaseEntity {
         this.collectionMemberId = collectionMemberId;
     }
 
+    @NotNull(message="Collectionobject must be specified.")
     @XmlTransient
     public Collectionobject getCollectionObject() {
         return collectionObject;
@@ -333,6 +335,7 @@ public class Preparation extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
 
+    @NotNull(message="Pretype must be specified.")
     public Preptype getPrepType() {
         return prepType;
     }
@@ -399,8 +402,7 @@ public class Preparation extends BaseEntity {
     public void setLoanPreparations(Collection<Loanpreparation> loanPreparations) {
         this.loanPreparations = loanPreparations;
     }
-
-    @XmlTransient
+ 
     public Collection<Preparationattachment> getPreparationAttachments() {
         return preparationAttachments;
     }
@@ -418,9 +420,14 @@ public class Preparation extends BaseEntity {
         this.preparationAttrs = preparationAttrs;
     }
 
-    
- 
-   
+     
+    public Date getPreparedDate() {
+        return preparedDate;
+    }
+
+    public void setPreparedDate(Date preparedDate) {
+        this.preparedDate = preparedDate;
+    }
 
      
    
@@ -463,5 +470,6 @@ public class Preparation extends BaseEntity {
     public String toString() {
         return "Preparation[ preparationID=" + preparationId + " ]";
     }
-    
+
+ 
 }

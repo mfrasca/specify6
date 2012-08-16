@@ -16,9 +16,10 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-//import javax.validation.constraints.NotNull;
+import javax.persistence.TemporalType; 
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -39,8 +40,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Spexportschemamapping.findByMappingName", query = "SELECT s FROM Spexportschemamapping s WHERE s.mappingName = :mappingName"),
     @NamedQuery(name = "Spexportschemamapping.findByTimeStampExported", query = "SELECT s FROM Spexportschemamapping s WHERE s.timestampExported = :timeStampExported"),
     @NamedQuery(name = "Spexportschemamapping.findByCollectionMemberID", query = "SELECT s FROM Spexportschemamapping s WHERE s.collectionMemberId = :collectionMemberID")})
-public class Spexportschemamapping extends BaseEntity {  
-    
+public class Spexportschemamapping extends BaseEntity {
+  
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -58,12 +59,12 @@ public class Spexportschemamapping extends BaseEntity {
     @Column(name = "MappingName")
     private String mappingName;
     
+    @Column(name = "CollectionMemberID")
+    private Integer collectionMemberId;
+    
     @Column(name = "TimeStampExported")
     @Temporal(TemporalType.TIMESTAMP)
     private Date timestampExported;
-    
-    @Column(name = "CollectionMemberID")
-    private Integer collectionMemberId;
     
     @ManyToMany(mappedBy = "spExportSchemaMappings")
     private Collection<Spexportschema> spExportSchemas;
@@ -91,6 +92,12 @@ public class Spexportschemamapping extends BaseEntity {
         this.spExportSchemaMappingId = spExportSchemaMappingId; 
     }
 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (spExportSchemaMappingId  != null) ? spExportSchemaMappingId.toString() : "0";
+    }
   
     public String getDescription() {
         return description;
@@ -124,6 +131,7 @@ public class Spexportschemamapping extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @XmlTransient
     public Collection<Spexportschemaitemmapping> getMappings() {
         return mappings;
     }
@@ -148,6 +156,7 @@ public class Spexportschemamapping extends BaseEntity {
         this.spExportSchemaMappingId = spExportSchemaMappingId;
     }
 
+    @XmlTransient
     public Collection<Spexportschema> getSpExportSchemas() {
         return spExportSchemas;
     }
@@ -163,8 +172,7 @@ public class Spexportschemamapping extends BaseEntity {
     public void setTimestampExported(Date timestampExported) {
         this.timestampExported = timestampExported;
     }
- 
-   
+  
 
     @Override
     public int hashCode() {
@@ -189,6 +197,5 @@ public class Spexportschemamapping extends BaseEntity {
     @Override
     public String toString() {
         return "Spexportschemamapping[ spExportSchemaMappingID=" + spExportSchemaMappingId + " ]";
-    }
-    
+    } 
 }

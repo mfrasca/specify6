@@ -12,8 +12,10 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
-//import javax.validation.constraints.NotNull;
+import javax.persistence.Table;  
+import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -29,8 +31,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Spappresourcedata.findByTimestampCreated", query = "SELECT s FROM Spappresourcedata s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Spappresourcedata.findByTimestampModified", query = "SELECT s FROM Spappresourcedata s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Spappresourcedata.findByVersion", query = "SELECT s FROM Spappresourcedata s WHERE s.version = :version")})
-public class Spappresourcedata extends BaseEntity {  
-    
+public class Spappresourcedata extends BaseEntity {
+  
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -39,7 +41,7 @@ public class Spappresourcedata extends BaseEntity {
 //    @NotNull
     @Column(name = "SpAppResourceDataID")
     private Integer spAppResourceDataId;
-     
+    
     @Lob
     @Column(name = "data")
     private byte[] data;
@@ -70,6 +72,13 @@ public class Spappresourcedata extends BaseEntity {
     public Spappresourcedata(Integer spAppResourceDataId, Date timestampCreated) {
         super(timestampCreated);
         this.spAppResourceDataId = spAppResourceDataId; 
+    }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (spAppResourceDataId != null) ? spAppResourceDataId.toString() : "0";
     }
 
     public Agent getCreatedByAgent() {
@@ -112,7 +121,6 @@ public class Spappresourcedata extends BaseEntity {
         this.spViewSetObj = spViewSetObj;
     }
 
-    
     public byte[] getData() {
         return data;
     }
@@ -120,8 +128,6 @@ public class Spappresourcedata extends BaseEntity {
     public void setData(byte[] data) {
         this.data = data;
     }
-
-  
 
     @Override
     public int hashCode() {
@@ -146,6 +152,5 @@ public class Spappresourcedata extends BaseEntity {
     @Override
     public String toString() {
         return "Spappresourcedata[ spAppResourceDataID=" + spAppResourceDataId + " ]";
-    }
-    
+    } 
 }

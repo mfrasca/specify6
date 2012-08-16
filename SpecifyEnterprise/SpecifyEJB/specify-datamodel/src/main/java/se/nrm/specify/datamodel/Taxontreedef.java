@@ -5,6 +5,9 @@ import java.util.Date;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -24,8 +27,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Taxontreedef.findByFullNameDirection", query = "SELECT t FROM Taxontreedef t WHERE t.fullNameDirection = :fullNameDirection"),
     @NamedQuery(name = "Taxontreedef.findByName", query = "SELECT t FROM Taxontreedef t WHERE t.name = :name"),
     @NamedQuery(name = "Taxontreedef.findByRemarks", query = "SELECT t FROM Taxontreedef t WHERE t.remarks = :remarks")})
-public class Taxontreedef extends BaseEntity {  
-    
+public class Taxontreedef extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -38,8 +41,7 @@ public class Taxontreedef extends BaseEntity {
     @Column(name = "FullNameDirection")
     private Integer fullNameDirection;
     
-    @Basic(optional = false)
-    @NotNull
+    @Basic(optional = false) 
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
@@ -77,7 +79,15 @@ public class Taxontreedef extends BaseEntity {
         this.taxonTreeDefId = taxonTreeDefId; 
         this.name = name;
     }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (taxonTreeDefId != null) ? taxonTreeDefId.toString() : "0";
+    }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -95,6 +105,7 @@ public class Taxontreedef extends BaseEntity {
         this.discipline = discipline;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -138,6 +149,7 @@ public class Taxontreedef extends BaseEntity {
         this.fullNameDirection = fullNameDirection;
     }
 
+    @NotNull(message="Name must be specified.")
     public String getName() {
         return name;
     }
@@ -181,5 +193,5 @@ public class Taxontreedef extends BaseEntity {
     public String toString() {
         return "Taxontreedef[ taxonTreeDefID=" + taxonTreeDefId + " ]";
     }
-    
+ 
 }

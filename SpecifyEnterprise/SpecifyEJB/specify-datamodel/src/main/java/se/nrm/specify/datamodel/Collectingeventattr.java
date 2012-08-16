@@ -2,6 +2,7 @@ package se.nrm.specify.datamodel;
  
 import java.util.Date;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,9 +12,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -32,8 +35,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Collectingeventattr.findByCollectionMemberID", query = "SELECT c FROM Collectingeventattr c WHERE c.collectionMemberId = :collectionMemberID"),
     @NamedQuery(name = "Collectingeventattr.findByDoubleValue", query = "SELECT c FROM Collectingeventattr c WHERE c.dblValue = :doubleValue"),
     @NamedQuery(name = "Collectingeventattr.findByStrValue", query = "SELECT c FROM Collectingeventattr c WHERE c.strValue = :strValue")})
-public class Collectingeventattr extends BaseEntity { 
-    
+public class Collectingeventattr extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -61,7 +64,7 @@ public class Collectingeventattr extends BaseEntity {
     private Attributedef definition;
     
     @JoinColumn(name = "CollectingEventID", referencedColumnName = "CollectingEventID")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade= CascadeType.ALL)
     private Collectingevent collectingEvent;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
@@ -83,6 +86,13 @@ public class Collectingeventattr extends BaseEntity {
         super(timestampCreated);
         this.attrId = attrId; 
         this.collectionMemberId = collectionMemberId;
+    }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (attrId != null) ? attrId.toString() : "0";
     }
 
     public Integer getAttrId() {
@@ -119,6 +129,7 @@ public class Collectingeventattr extends BaseEntity {
         this.strValue = strValue;
     }
 
+    @NotNull(message="Collectingevent must be specified.")
     public Collectingevent getCollectingEvent() {
         return collectingEvent;
     }
@@ -135,6 +146,7 @@ public class Collectingeventattr extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @NotNull(message="Definition must be specified.")
     public Attributedef getDefinition() {
         return definition;
     }
@@ -176,6 +188,5 @@ public class Collectingeventattr extends BaseEntity {
     @Override
     public String toString() {
         return "Collectingeventattr[ attrID=" + attrId + " ]";
-    }
-    
+    } 
 }

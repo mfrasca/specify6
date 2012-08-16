@@ -2,9 +2,13 @@ package se.nrm.specify.datamodel;
  
 import java.util.Collection;
 import java.util.Date;
-import javax.persistence.*;
+import javax.persistence.*; 
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -25,7 +29,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Addressofrecord.findByCountry", query = "SELECT a FROM Addressofrecord a WHERE a.country = :country"),
     @NamedQuery(name = "Addressofrecord.findByPostalCode", query = "SELECT a FROM Addressofrecord a WHERE a.postalCode = :postalCode"),
     @NamedQuery(name = "Addressofrecord.findByState", query = "SELECT a FROM Addressofrecord a WHERE a.state = :state")})
-public class Addressofrecord extends BaseEntity {  
+public class Addressofrecord extends BaseEntity {
+ 
     
     private static final long serialVersionUID = 1L;
     
@@ -109,6 +114,13 @@ public class Addressofrecord extends BaseEntity {
         super(timestampCreated);
         this.addressOfRecordId = addressOfRecordId; 
     }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (addressOfRecordId != null) ? addressOfRecordId.toString() : "0";
+    }
 
     public Integer getAddressOfRecordId() {
         return addressOfRecordId;
@@ -117,9 +129,7 @@ public class Addressofrecord extends BaseEntity {
     public void setAddressOfRecordId(Integer addressOfRecordId) {
         this.addressOfRecordId = addressOfRecordId;
     }
-
  
-    
     public String getAddress() {
         return address;
     }
@@ -177,7 +187,7 @@ public class Addressofrecord extends BaseEntity {
     }
 
  
-
+    @XmlTransient
     public Collection<Accession> getAccessions() {
         return accessions;
     }
@@ -186,14 +196,16 @@ public class Addressofrecord extends BaseEntity {
         this.accessions = accessions;
     }
 
+    @XmlIDREF
     public Agent getAgent() {
         return agent;
     }
-
+ 
     public void setAgent(Agent agent) {
         this.agent = agent;
     }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -202,6 +214,7 @@ public class Addressofrecord extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -210,6 +223,7 @@ public class Addressofrecord extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
 
+    @XmlTransient
     public Collection<Borrow> getBorrows() {
         return borrows;
     }
@@ -218,6 +232,7 @@ public class Addressofrecord extends BaseEntity {
         this.borrows = borrows;
     }
 
+    @XmlTransient
     public Collection<Exchangein> getExchangeIns() {
         return exchangeIns;
     }
@@ -226,6 +241,7 @@ public class Addressofrecord extends BaseEntity {
         this.exchangeIns = exchangeIns;
     }
 
+    @XmlTransient
     public Collection<Exchangeout> getExchangeOuts() {
         return exchangeOuts;
     }
@@ -234,6 +250,7 @@ public class Addressofrecord extends BaseEntity {
         this.exchangeOuts = exchangeOuts;
     }
 
+    @XmlTransient
     public Collection<Gift> getGifts() {
         return gifts;
     }
@@ -242,6 +259,7 @@ public class Addressofrecord extends BaseEntity {
         this.gifts = gifts;
     }
 
+    @XmlTransient
     public Collection<Loan> getLoans() {
         return loans;
     }
@@ -250,6 +268,7 @@ public class Addressofrecord extends BaseEntity {
         this.loans = loans;
     }
 
+    @XmlTransient
     public Collection<Repositoryagreement> getRepositoryAgreements() {
         return repositoryAgreements;
     }
@@ -284,5 +303,6 @@ public class Addressofrecord extends BaseEntity {
     public String toString() {
         return "se.nrm.specify.datamodel.Addressofrecord[ addressOfRecordId=" + addressOfRecordId + " ]";
     }
+ 
     
 }

@@ -15,9 +15,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table; 
-//import javax.validation.constraints.NotNull;
+import javax.persistence.Table;  
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -35,7 +37,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Collectionreltype.findByTimestampModified", query = "SELECT c FROM Collectionreltype c WHERE c.timestampModified = :timestampModified"),
     @NamedQuery(name = "Collectionreltype.findByVersion", query = "SELECT c FROM Collectionreltype c WHERE c.version = :version"),
     @NamedQuery(name = "Collectionreltype.findByName", query = "SELECT c FROM Collectionreltype c WHERE c.name = :name")})
-public class Collectionreltype extends BaseEntity { 
+public class Collectionreltype extends BaseEntity {
+    
     
     private static final long serialVersionUID = 1L;
     
@@ -83,9 +86,16 @@ public class Collectionreltype extends BaseEntity {
 
     public Collectionreltype(Integer collectionRelTypeID, Date timestampCreated) {
         super(timestampCreated);
-        this.collectionRelTypeId = collectionRelTypeId; 
+        this.collectionRelTypeId = collectionRelTypeID; 
     }
 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (collectionRelTypeId != null) ? collectionRelTypeId.toString() : "0";
+    }
+    
     public Integer getCollectionRelTypeId() {
         return collectionRelTypeId;
     }
@@ -94,6 +104,7 @@ public class Collectionreltype extends BaseEntity {
         this.collectionRelTypeId = collectionRelTypeId;
     }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -110,6 +121,7 @@ public class Collectionreltype extends BaseEntity {
         this.leftSideCollection = leftSideCollection;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -180,5 +192,5 @@ public class Collectionreltype extends BaseEntity {
     public String toString() {
         return "Collectionreltype[ collectionRelTypeId=" + collectionRelTypeId + " ]";
     }
-    
+ 
 }

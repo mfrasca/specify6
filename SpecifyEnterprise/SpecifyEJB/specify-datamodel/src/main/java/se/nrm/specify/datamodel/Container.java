@@ -13,9 +13,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table; 
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -37,8 +40,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Container.findByName", query = "SELECT c FROM Container c WHERE c.name = :name"),
     @NamedQuery(name = "Container.findByNumber", query = "SELECT c FROM Container c WHERE c.number = :number"),
     @NamedQuery(name = "Container.findByType", query = "SELECT c FROM Container c WHERE c.type = :type")})
-public class Container extends BaseEntity {  
-    
+public class Container extends BaseEntity {
+   
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -105,7 +108,12 @@ public class Container extends BaseEntity {
         this.collectionMemberId = collectionMemberId;
     }
 
- 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (containerId != null) ? containerId.toString() : "0";
+    }
 
     public String getDescription() {
         return description;
@@ -139,6 +147,7 @@ public class Container extends BaseEntity {
         this.type = type;
     }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -147,6 +156,7 @@ public class Container extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -171,7 +181,7 @@ public class Container extends BaseEntity {
         this.storage = storage;
     }
 
- 
+    @XmlTransient
     public Collection<Container> getChildren() {
         return children;
     }
@@ -188,6 +198,7 @@ public class Container extends BaseEntity {
         this.collectionMemberId = collectionMemberId;
     }
 
+    @XmlTransient
     public Collection<Collectionobject> getCollectionObjectKids() {
         return collectionObjectKids;
     }
@@ -196,6 +207,7 @@ public class Container extends BaseEntity {
         this.collectionObjectKids = collectionObjectKids;
     }
 
+    @XmlTransient
     public Collection<Collectionobject> getCollectionObjects() {
         return collectionObjects;
     }
@@ -236,6 +248,5 @@ public class Container extends BaseEntity {
     @Override
     public String toString() {
         return "Container[ containerID=" + containerId + " ]";
-    }
-    
+    } 
 }

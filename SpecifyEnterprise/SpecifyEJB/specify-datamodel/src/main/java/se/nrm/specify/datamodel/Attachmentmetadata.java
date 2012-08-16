@@ -11,9 +11,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -31,7 +34,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Attachmentmetadata.findByVersion", query = "SELECT a FROM Attachmentmetadata a WHERE a.version = :version"),
     @NamedQuery(name = "Attachmentmetadata.findByName", query = "SELECT a FROM Attachmentmetadata a WHERE a.name = :name"),
     @NamedQuery(name = "Attachmentmetadata.findByValue", query = "SELECT a FROM Attachmentmetadata a WHERE a.value = :value")})
-public class Attachmentmetadata extends BaseEntity { 
+public class Attachmentmetadata extends BaseEntity {
+ 
     
     private static final long serialVersionUID = 1L;
     
@@ -42,14 +46,12 @@ public class Attachmentmetadata extends BaseEntity {
     @Column(name = "AttachmentMetadataID")
     private Integer attachmentMetadataID;
      
-    @Basic(optional = false)
-    @NotNull
+    @Basic(optional = false) 
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
     
-    @Basic(optional = false)
-    @NotNull
+    @Basic(optional = false) 
     @Size(min = 1, max = 128)
     @Column(name = "Value")
     private String value;
@@ -79,6 +81,13 @@ public class Attachmentmetadata extends BaseEntity {
         this.name = name;
         this.value = value;
     }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (getIdentityString() != null) ? getIdentityString().toString() : "0";
+    }
 
     public Integer getAttachmentMetadataID() {
         return attachmentMetadataID;
@@ -88,6 +97,7 @@ public class Attachmentmetadata extends BaseEntity {
         this.attachmentMetadataID = attachmentMetadataID;
     } 
     
+    @NotNull(message="Name must be specified.")
     public String getName() {
         return name;
     }
@@ -96,6 +106,7 @@ public class Attachmentmetadata extends BaseEntity {
         this.name = name;
     }
 
+    @NotNull(message="Value must be specified.")
     public String getValue() {
         return value;
     }
@@ -112,6 +123,7 @@ public class Attachmentmetadata extends BaseEntity {
         this.attachment = attachment;
     }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -120,6 +132,7 @@ public class Attachmentmetadata extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -154,5 +167,6 @@ public class Attachmentmetadata extends BaseEntity {
     public String toString() {
         return "Attachmentmetadata[ attachmentMetadataID=" + attachmentMetadataID + " ]";
     }
+ 
     
 }

@@ -16,9 +16,11 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-//import javax.validation.constraints.NotNull;
+import javax.persistence.TemporalType; 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -43,7 +45,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Collectingtrip.findByStartDate", query = "SELECT c FROM Collectingtrip c WHERE c.startDate = :startDate"),
     @NamedQuery(name = "Collectingtrip.findByStartDateVerbatim", query = "SELECT c FROM Collectingtrip c WHERE c.startDateVerbatim = :startDateVerbatim"),
     @NamedQuery(name = "Collectingtrip.findByStartTime", query = "SELECT c FROM Collectingtrip c WHERE c.startTime = :startTime")})
-public class Collectingtrip extends BaseEntity {  
+public class Collectingtrip extends BaseEntity {
+
+
     
     private static final long serialVersionUID = 1L;
     
@@ -57,10 +61,6 @@ public class Collectingtrip extends BaseEntity {
     @Size(max = 64)
     @Column(name = "CollectingTripName")
     private String collectingTripName;
-    
-    @Column(name = "EndDate")
-    @Temporal(TemporalType.DATE)
-    private Date endDate;
     
     @Size(max = 50)
     @Column(name = "EndDateVerbatim")
@@ -78,9 +78,48 @@ public class Collectingtrip extends BaseEntity {
     @Column(name = "Sponsor")
     private String sponsor;
     
+        
+    @Column(name = "EndDate")
+    @Temporal(TemporalType.DATE)
+    private Date endDate;
+    
     @Column(name = "StartDate")
     @Temporal(TemporalType.DATE)
     private Date startDate;
+    
+    @Column(name = "EndDatePrecision")
+    private Short endDatePrecision;
+    
+    @Column(name = "Number1")
+    private Integer number1;
+    
+    @Column(name = "Number2")
+    private Integer number2;
+    
+    @Column(name = "StartDatePrecision")
+    private Short startDatePrecision;
+    
+    @Size(max = 255)
+    @Column(name = "Text1")
+    private String text1;
+    
+    @Size(max = 128)
+    @Column(name = "Text2")
+    private String text2;
+    
+    @Size(max = 64)
+    @Column(name = "Text3")
+    private String text3;
+    
+    @Size(max = 64)
+    @Column(name = "Text4")
+    private String text4;
+    
+    @Column(name = "YesNo1")
+    private Boolean yesNo1;
+    
+    @Column(name = "YesNo2")
+    private Boolean yesNo2;
     
     @Size(max = 50)
     @Column(name = "StartDateVerbatim")
@@ -116,7 +155,12 @@ public class Collectingtrip extends BaseEntity {
         this.collectingTripId = collectingTripId; 
     }
 
- 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (collectingTripId != null) ? collectingTripId.toString() : "0";
+    }
 
     public String getCollectingTripName() {
         return collectingTripName;
@@ -124,14 +168,6 @@ public class Collectingtrip extends BaseEntity {
 
     public void setCollectingTripName(String collectingTripName) {
         this.collectingTripName = collectingTripName;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
     }
 
     public String getEndDateVerbatim() {
@@ -150,6 +186,102 @@ public class Collectingtrip extends BaseEntity {
         this.endTime = endTime;
     }
 
+        public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Short getEndDatePrecision() {
+        return endDatePrecision;
+    }
+
+    public void setEndDatePrecision(Short endDatePrecision) {
+        this.endDatePrecision = endDatePrecision;
+    }
+
+    public Integer getNumber1() {
+        return number1;
+    }
+
+    public void setNumber1(Integer number1) {
+        this.number1 = number1;
+    }
+
+    public Integer getNumber2() {
+        return number2;
+    }
+
+    public void setNumber2(Integer number2) {
+        this.number2 = number2;
+    }
+
+    public Short getStartDatePrecision() {
+        return startDatePrecision;
+    }
+
+    public void setStartDatePrecision(Short startDatePrecision) {
+        this.startDatePrecision = startDatePrecision;
+    }
+
+    public String getText1() {
+        return text1;
+    }
+
+    public void setText1(String text1) {
+        this.text1 = text1;
+    }
+
+    public String getText2() {
+        return text2;
+    }
+
+    public void setText2(String text2) {
+        this.text2 = text2;
+    }
+
+    public String getText3() {
+        return text3;
+    }
+
+    public void setText3(String text3) {
+        this.text3 = text3;
+    }
+
+    public String getText4() {
+        return text4;
+    }
+
+    public void setText4(String text4) {
+        this.text4 = text4;
+    }
+
+    public Boolean getYesNo1() {
+        return yesNo1;
+    }
+
+    public void setYesNo1(Boolean yesNo1) {
+        this.yesNo1 = yesNo1;
+    }
+
+    public Boolean getYesNo2() {
+        return yesNo2;
+    }
+
+    public void setYesNo2(Boolean yesNo2) {
+        this.yesNo2 = yesNo2;
+    }
+    
     public String getRemarks() {
         return remarks;
     }
@@ -164,14 +296,6 @@ public class Collectingtrip extends BaseEntity {
 
     public void setSponsor(String sponsor) {
         this.sponsor = sponsor;
-    }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
     }
 
     public String getStartDateVerbatim() {
@@ -215,6 +339,7 @@ public class Collectingtrip extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @NotNull(message="Discipline must be specified.")
     public Discipline getDiscipline() {
         return discipline;
     }
@@ -257,5 +382,5 @@ public class Collectingtrip extends BaseEntity {
     public String toString() {
         return "Collectingtrip[ collectingTripID=" + collectingTripId + " ]";
     }
-    
+ 
 }

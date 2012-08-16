@@ -14,9 +14,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table; 
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -41,8 +43,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Spappresource.findByMimeType", query = "SELECT s FROM Spappresource s WHERE s.mimeType = :mimeType"),
     @NamedQuery(name = "Spappresource.findByName", query = "SELECT s FROM Spappresource s WHERE s.name = :name"),
     @NamedQuery(name = "Spappresource.findByOwnerPermissionLevel", query = "SELECT s FROM Spappresource s WHERE s.ownerPermissionLevel = :ownerPermissionLevel")})
-public class Spappresource extends BaseEntity {  
-    
+public class Spappresource extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -75,8 +77,7 @@ public class Spappresource extends BaseEntity {
     @Column(name = "MimeType")
     private String mimeType;
     
-    @Basic(optional = false)
-    @NotNull
+    @Basic(optional = false) 
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
@@ -123,6 +124,13 @@ public class Spappresource extends BaseEntity {
         this.level = level;
         this.name = name;
     }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (spAppResourceId != null) ? spAppResourceId.toString() : "0";
+    }
 
     public Agent getCreatedByAgent() {
         return createdByAgent;
@@ -157,6 +165,7 @@ public class Spappresource extends BaseEntity {
         this.spAppResourceDatas = spAppResourceDatas;
     }
 
+    @NotNull(message="SpAppResourceDir must be specified.")
     public Spappresourcedir getSpAppResourceDir() {
         return spAppResourceDir;
     }
@@ -182,6 +191,7 @@ public class Spappresource extends BaseEntity {
         this.spReports = spReports;
     }
 
+    @NotNull(message="SpecifyUser must be specified.")
     public Specifyuser getSpecifyUser() {
         return specifyUser;
     }
@@ -240,6 +250,7 @@ public class Spappresource extends BaseEntity {
         this.mimeType = mimeType;
     }
 
+    @NotNull(message="Name must be specified.")
     public String getName() {
         return name;
     }
@@ -283,5 +294,6 @@ public class Spappresource extends BaseEntity {
     public String toString() {
         return "Spappresource[ spAppResourceID=" + spAppResourceId + " ]";
     }
-    
+
+ 
 }

@@ -5,6 +5,9 @@ import java.util.Date;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -31,7 +34,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Taxontreedefitem.findByTextAfter", query = "SELECT t FROM Taxontreedefitem t WHERE t.textAfter = :textAfter"),
     @NamedQuery(name = "Taxontreedefitem.findByTextBefore", query = "SELECT t FROM Taxontreedefitem t WHERE t.textBefore = :textBefore"),
     @NamedQuery(name = "Taxontreedefitem.findByTitle", query = "SELECT t FROM Taxontreedefitem t WHERE t.title = :title")})
-public class Taxontreedefitem extends BaseEntity {  
+public class Taxontreedefitem extends BaseEntity {
+     
     
     private static final long serialVersionUID = 1L;
     
@@ -56,8 +60,7 @@ public class Taxontreedefitem extends BaseEntity {
     @Column(name = "IsInFullName")
     private Boolean isInFullName;
     
-    @Basic(optional = false)
-    @NotNull
+    @Basic(optional = false) 
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
@@ -119,6 +122,13 @@ public class Taxontreedefitem extends BaseEntity {
         this.name = name;
         this.rankId = rankId;
     }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (taxonTreeDefItemId != null) ? taxonTreeDefItemId.toString() : "0";
+    }
 
     @XmlTransient
     public Collection<Taxontreedefitem> getChildren() {
@@ -129,6 +139,7 @@ public class Taxontreedefitem extends BaseEntity {
         this.children = children;
     }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -137,6 +148,7 @@ public class Taxontreedefitem extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -169,6 +181,7 @@ public class Taxontreedefitem extends BaseEntity {
         this.taxonTreeDefItemId = taxonTreeDefItemId;
     }
 
+    @NotNull(message="TreeDef must be specified.")
     public Taxontreedef getTreeDef() {
         return treeDef;
     }
@@ -219,6 +232,7 @@ public class Taxontreedefitem extends BaseEntity {
         this.isInFullName = isInFullName;
     }
 
+    @NotNull(message="Name must be specified.")
     public String getName() {
         return name;
     }
@@ -284,6 +298,5 @@ public class Taxontreedefitem extends BaseEntity {
     @Override
     public String toString() {
         return "Taxontreedefitem[ taxonTreeDefItemID=" + taxonTreeDefItemId + " ]";
-    }
-    
+    } 
 }

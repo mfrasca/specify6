@@ -15,9 +15,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table; 
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -42,8 +44,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Geologictimeperiodtreedefitem.findByTextAfter", query = "SELECT g FROM Geologictimeperiodtreedefitem g WHERE g.textAfter = :textAfter"),
     @NamedQuery(name = "Geologictimeperiodtreedefitem.findByTextBefore", query = "SELECT g FROM Geologictimeperiodtreedefitem g WHERE g.textBefore = :textBefore"),
     @NamedQuery(name = "Geologictimeperiodtreedefitem.findByTitle", query = "SELECT g FROM Geologictimeperiodtreedefitem g WHERE g.title = :title")})
-public class Geologictimeperiodtreedefitem extends BaseEntity {  
-    
+public class Geologictimeperiodtreedefitem extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -125,6 +127,13 @@ public class Geologictimeperiodtreedefitem extends BaseEntity {
         this.geologicTimePeriodTreeDefItemId = geologicTimePeriodTreeDefItemId; 
         this.name = name;
         this.rankId = rankId;
+    }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (geologicTimePeriodTreeDefItemId != null) ? geologicTimePeriodTreeDefItemId.toString() : "0";
     }
 
     public Integer getGeologicTimePeriodTreeDefItemId() {
@@ -244,6 +253,7 @@ public class Geologictimeperiodtreedefitem extends BaseEntity {
         this.parent = parent;
     }
 
+    @NotNull(message="TreeDef must be specified.")
     public Geologictimeperiodtreedef getTreeDef() {
         return treeDef;
     }
@@ -286,5 +296,6 @@ public class Geologictimeperiodtreedefitem extends BaseEntity {
     public String toString() {
         return "Geologictimeperiodtreedefitem[ geologicTimePeriodTreeDefItemID=" + geologicTimePeriodTreeDefItemId + " ]";
     }
+ 
     
 }

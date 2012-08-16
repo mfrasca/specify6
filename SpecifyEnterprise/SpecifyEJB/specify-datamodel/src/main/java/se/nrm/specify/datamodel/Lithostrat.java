@@ -14,9 +14,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table; 
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -44,8 +46,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Lithostrat.findByRankID", query = "SELECT l FROM Lithostrat l WHERE l.rankId = :rankID"),
     @NamedQuery(name = "Lithostrat.findByYesNo1", query = "SELECT l FROM Lithostrat l WHERE l.yesNo1 = :yesNo1"),
     @NamedQuery(name = "Lithostrat.findByYesNo2", query = "SELECT l FROM Lithostrat l WHERE l.yesNo2 = :yesNo2")})
-public class Lithostrat extends BaseEntity {  
-    
+public class Lithostrat extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -69,8 +71,7 @@ public class Lithostrat extends BaseEntity {
     @Column(name = "IsAccepted")
     private Boolean isAccepted;
     
-    @Basic(optional = false)
-    @NotNull
+    @Basic(optional = false) 
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
@@ -158,7 +159,13 @@ public class Lithostrat extends BaseEntity {
         this.name = name;
         this.rankId = rankId;
     }
-
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (lithoStratId != null) ? lithoStratId.toString() : "0";
+    }
     public int getRankId() {
         return rankId;
     }
@@ -200,6 +207,7 @@ public class Lithostrat extends BaseEntity {
         this.isAccepted = isAccepted;
     }
 
+    @NotNull(message="Name must be specified.")
     public String getName() {
         return name;
     }
@@ -306,6 +314,7 @@ public class Lithostrat extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @NotNull(message="Definition must be specified.")
     public Lithostrattreedef getDefinition() {
         return definition;
     }
@@ -314,6 +323,7 @@ public class Lithostrat extends BaseEntity {
         this.definition = definition;
     }
 
+    @NotNull(message="DefinitionItem must be specified.")
     public Lithostrattreedefitem getDefinitionItem() {
         return definitionItem;
     }
@@ -382,5 +392,6 @@ public class Lithostrat extends BaseEntity {
     public String toString() {
         return "Lithostrat[ lithoStratID=" + lithoStratId + " ]";
     }
+ 
     
 }

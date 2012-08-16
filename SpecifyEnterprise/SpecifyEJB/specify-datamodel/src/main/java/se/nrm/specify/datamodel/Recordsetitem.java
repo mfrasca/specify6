@@ -13,6 +13,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -57,9 +59,13 @@ public class Recordsetitem implements Serializable, SpecifyBean {
         this.recordSetItemId = recordSetItemId;
         this.recordId = recordId;
     }
-
+    
+    @XmlID
+    @XmlAttribute(name = "id") 
+    public String getIdentityString() {
+        return (recordSetItemId != null) ? recordSetItemId.toString() : "0";
+    }
  
-
     public int getRecordId() {
         return recordId;
     }
@@ -68,6 +74,7 @@ public class Recordsetitem implements Serializable, SpecifyBean {
         this.recordId = recordId;
     }
 
+    @NotNull(message="Recordset must be specified.")
     public Recordset getRecordSet() {
         return recordSet;
     }

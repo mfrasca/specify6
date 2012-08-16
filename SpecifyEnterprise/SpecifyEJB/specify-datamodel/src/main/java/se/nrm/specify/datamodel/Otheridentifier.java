@@ -12,9 +12,11 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -33,8 +35,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Otheridentifier.findByCollectionMemberID", query = "SELECT o FROM Otheridentifier o WHERE o.collectionMemberId = :collectionMemberID"),
     @NamedQuery(name = "Otheridentifier.findByIdentifier", query = "SELECT o FROM Otheridentifier o WHERE o.identifier = :identifier"),
     @NamedQuery(name = "Otheridentifier.findByInstitution", query = "SELECT o FROM Otheridentifier o WHERE o.institution = :institution")})
-public class Otheridentifier extends BaseEntity {  
-    
+public class Otheridentifier extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -49,8 +51,7 @@ public class Otheridentifier extends BaseEntity {
     @Column(name = "CollectionMemberID")
     private int collectionMemberId;
     
-    @Basic(optional = false)
-    @NotNull
+    @Basic(optional = false) 
     @Size(min = 1, max = 64)
     @Column(name = "Identifier")
     private String identifier;
@@ -90,6 +91,13 @@ public class Otheridentifier extends BaseEntity {
         this.identifier = identifier;
     }
 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (otherIdentifierId != null) ? otherIdentifierId.toString() : "0";
+    }
+    
     public int getCollectionMemberId() {
         return collectionMemberId;
     }
@@ -98,6 +106,7 @@ public class Otheridentifier extends BaseEntity {
         this.collectionMemberId = collectionMemberId;
     }
 
+    @NotNull(message="Collectionobject must be specified.")
     public Collectionobject getCollectionObject() {
         return collectionObject;
     }
@@ -131,7 +140,7 @@ public class Otheridentifier extends BaseEntity {
     }
 
     
-
+    @NotNull(message="Identifier must be specified.")
     public String getIdentifier() {
         return identifier;
     }
@@ -181,5 +190,6 @@ public class Otheridentifier extends BaseEntity {
     public String toString() {
         return "Otheridentifier[ otherIdentifierID=" + otherIdentifierId + " ]";
     }
+ 
     
 }

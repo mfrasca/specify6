@@ -14,9 +14,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table; 
-//import javax.validation.constraints.NotNull;
+import javax.persistence.Table;  
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -34,8 +36,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Datatype.findByTimestampModified", query = "SELECT d FROM Datatype d WHERE d.timestampModified = :timestampModified"),
     @NamedQuery(name = "Datatype.findByVersion", query = "SELECT d FROM Datatype d WHERE d.version = :version"),
     @NamedQuery(name = "Datatype.findByName", query = "SELECT d FROM Datatype d WHERE d.name = :name")})
-public class Datatype extends BaseEntity {  
-    
+public class Datatype extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -73,6 +75,14 @@ public class Datatype extends BaseEntity {
         setTimestampCreated(timestampCreated); 
     }
 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (dataTypeId != null) ? dataTypeId.toString() : "0";
+    }
+    
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -89,6 +99,7 @@ public class Datatype extends BaseEntity {
         this.dataTypeId = dataTypeId;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -143,5 +154,5 @@ public class Datatype extends BaseEntity {
     public String toString() {
         return "Datatype[ dataTypeId=" + dataTypeId + " ]";
     }
-    
+ 
 }

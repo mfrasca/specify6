@@ -20,6 +20,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -48,8 +50,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Gift.findBySrcTaxonomy", query = "SELECT g FROM Gift g WHERE g.srcTaxonomy = :srcTaxonomy"),
     @NamedQuery(name = "Gift.findByYesNo1", query = "SELECT g FROM Gift g WHERE g.yesNo1 = :yesNo1"),
     @NamedQuery(name = "Gift.findByYesNo2", query = "SELECT g FROM Gift g WHERE g.yesNo2 = :yesNo2")})
-public class Gift extends BaseEntity {  
-    
+public class Gift extends BaseEntity {
+  
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -58,17 +60,8 @@ public class Gift extends BaseEntity {
 //    @NotNull
     @Column(name = "GiftID")
     private Integer giftId;
-     
-    @Column(name = "DateReceived")
-    @Temporal(TemporalType.DATE)
-    private Date dateReceived;
     
-    @Column(name = "GiftDate")
-    @Temporal(TemporalType.DATE)
-    private Date giftDate;
-    
-    @Basic(optional = false)
-    @NotNull
+    @Basic(optional = false) 
     @Size(min = 1, max = 50)
     @Column(name = "GiftNumber")
     private String giftNumber;
@@ -90,6 +83,14 @@ public class Gift extends BaseEntity {
     @Size(max = 255)
     @Column(name = "ReceivedComments")
     private String receivedComments;
+    
+    @Column(name = "DateReceived")
+    @Temporal(TemporalType.DATE)
+    private Date dateReceived;
+    
+    @Column(name = "GiftDate")
+    @Temporal(TemporalType.DATE)
+    private Date giftDate;
     
     @Lob
     @Size(max = 65535)
@@ -167,6 +168,13 @@ public class Gift extends BaseEntity {
         this.giftNumber = giftNumber;
     }
 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (giftId != null) ? giftId.toString() : "0";
+    }
+    
     public Addressofrecord getAddressOfRecord() {
         return addressOfRecord;
     }
@@ -183,24 +191,7 @@ public class Gift extends BaseEntity {
         this.giftId = giftId;
     }
 
- 
- 
-    public Date getDateReceived() {
-        return dateReceived;
-    }
-
-    public void setDateReceived(Date dateReceived) {
-        this.dateReceived = dateReceived;
-    }
-
-    public Date getGiftDate() {
-        return giftDate;
-    }
-
-    public void setGiftDate(Date giftDate) {
-        this.giftDate = giftDate;
-    }
-
+    @NotNull(message="GiftNumber must be specified.")
     public String getGiftNumber() {
         return giftNumber;
     }
@@ -321,6 +312,7 @@ public class Gift extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @NotNull(message="Discipline must be specified.")
     public Discipline getDiscipline() {
         return discipline;
     }
@@ -371,8 +363,22 @@ public class Gift extends BaseEntity {
     public void setShipments(Collection<Shipment> shipments) {
         this.shipments = shipments;
     }
- 
-    
+
+    public Date getDateReceived() {
+        return dateReceived;
+    }
+
+    public void setDateReceived(Date dateReceived) {
+        this.dateReceived = dateReceived;
+    }
+
+    public Date getGiftDate() {
+        return giftDate;
+    }
+
+    public void setGiftDate(Date giftDate) {
+        this.giftDate = giftDate;
+    }
  
 
     @Override
@@ -399,5 +405,5 @@ public class Gift extends BaseEntity {
     public String toString() {
         return "Gift[ giftID=" + giftId + " ]";
     }
-    
+ 
 }

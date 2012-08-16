@@ -15,8 +15,12 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table; 
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -44,8 +48,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Picklist.findBySortType", query = "SELECT p FROM Picklist p WHERE p.sortType = :sortType"),
     @NamedQuery(name = "Picklist.findByTableName", query = "SELECT p FROM Picklist p WHERE p.tableName = :tableName"),
     @NamedQuery(name = "Picklist.findByType", query = "SELECT p FROM Picklist p WHERE p.type = :type")})
-public class Picklist extends BaseEntity {  
-    
+public class Picklist extends BaseEntity {
+     
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -76,8 +80,7 @@ public class Picklist extends BaseEntity {
     @Column(name = "IsSystem")
     private boolean isSystem;
     
-    @Basic(optional = false)
-    @NotNull
+    @Basic(optional = false) 
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
@@ -134,6 +137,12 @@ public class Picklist extends BaseEntity {
         this.type = type;
     }
 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (pickListId != null) ? pickListId.toString() : "0";
+    }
  
     public String getFieldName() {
         return fieldName;
@@ -175,6 +184,7 @@ public class Picklist extends BaseEntity {
         this.isSystem = isSystem;
     }
 
+    @NotNull(message="Name must be specified.")
     public String getName() {
         return name;
     }
@@ -223,10 +233,11 @@ public class Picklist extends BaseEntity {
         this.type = type;
     }
 
+    @NotNull(message="Collection must be specified.")
     public se.nrm.specify.datamodel.Collection getCollection() {
         return collection;
     }
-
+ 
     public void setCollection(se.nrm.specify.datamodel.Collection collection) {
         this.collection = collection;
     }
@@ -290,5 +301,5 @@ public class Picklist extends BaseEntity {
     public String toString() {
         return "Picklist[ pickListID=" + pickListId + " ]";
     }
-    
+ 
 }

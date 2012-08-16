@@ -20,6 +20,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement; 
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -53,8 +55,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Loan.findBySrcTaxonomy", query = "SELECT l FROM Loan l WHERE l.srcTaxonomy = :srcTaxonomy"),
     @NamedQuery(name = "Loan.findByYesNo1", query = "SELECT l FROM Loan l WHERE l.yesNo1 = :yesNo1"),
     @NamedQuery(name = "Loan.findByYesNo2", query = "SELECT l FROM Loan l WHERE l.yesNo2 = :yesNo2")})
-public class Loan extends BaseEntity {  
-    
+public class Loan extends BaseEntity {
+  
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -63,7 +65,13 @@ public class Loan extends BaseEntity {
 //    @NotNull
     @Column(name = "LoanID")
     private Integer loanId;
- 
+    
+    @Column(name = "IsClosed")
+    private Boolean isClosed;
+    
+    @Column(name = "IsFinancialResponsibility")
+    private Boolean isFinancialResponsibility;
+    
     @Column(name = "CurrentDueDate")
     @Temporal(TemporalType.DATE)
     private Date currentDueDate;
@@ -76,18 +84,19 @@ public class Loan extends BaseEntity {
     @Temporal(TemporalType.DATE)
     private Date dateReceived;
     
-    @Column(name = "IsClosed")
-    private Boolean isClosed;
-    
-    @Column(name = "IsFinancialResponsibility")
-    private Boolean isFinancialResponsibility;
-    
     @Column(name = "LoanDate")
     @Temporal(TemporalType.DATE)
     private Date loanDate;
     
-    @Basic(optional = false)
-    @NotNull
+    @Column(name = "OriginalDueDate")
+    @Temporal(TemporalType.DATE)
+    private Date originalDueDate;
+    
+    @Column(name = "OverdueNotiSetDate")
+    @Temporal(TemporalType.DATE)
+    private Date overdueNotiSentDate;
+    
+    @Basic(optional = false) 
     @Size(min = 1, max = 50)
     @Column(name = "LoanNumber")
     private String loanNumber;
@@ -98,14 +107,6 @@ public class Loan extends BaseEntity {
     
     @Column(name = "Number2")
     private Float number2;
-    
-    @Column(name = "OriginalDueDate")
-    @Temporal(TemporalType.DATE)
-    private Date originalDueDate;
-    
-    @Column(name = "OverdueNotiSetDate")
-    @Temporal(TemporalType.DATE)
-    private Date overdueNotiSentDate;
     
     @Size(max = 64)
     @Column(name = "PurposeOfLoan")
@@ -193,6 +194,13 @@ public class Loan extends BaseEntity {
         this.loanNumber = loanNumber;
     }
 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (loanId != null) ? loanId.toString() : "0";
+    }
+    
     public Integer getLoanId() {
         return loanId;
     }
@@ -202,36 +210,11 @@ public class Loan extends BaseEntity {
     }
 
     public Date getOverdueNotiSentDate() {
-        return overdueNotiSentDate;
+        return overdueNotiSentDate; 
     }
 
     public void setOverdueNotiSentDate(Date overdueNotiSentDate) {
         this.overdueNotiSentDate = overdueNotiSentDate;
-    }
- 
- 
-    public Date getCurrentDueDate() {
-        return currentDueDate;
-    }
-
-    public void setCurrentDueDate(Date currentDueDate) {
-        this.currentDueDate = currentDueDate;
-    }
-
-    public Date getDateClosed() {
-        return dateClosed;
-    }
-
-    public void setDateClosed(Date dateClosed) {
-        this.dateClosed = dateClosed;
-    }
-
-    public Date getDateReceived() {
-        return dateReceived;
-    }
-
-    public void setDateReceived(Date dateReceived) {
-        this.dateReceived = dateReceived;
     }
 
     public Boolean getIsClosed() {
@@ -250,14 +233,7 @@ public class Loan extends BaseEntity {
         this.isFinancialResponsibility = isFinancialResponsibility;
     }
 
-    public Date getLoanDate() {
-        return loanDate;
-    }
-
-    public void setLoanDate(Date loanDate) {
-        this.loanDate = loanDate;
-    }
-
+    @NotNull(message="LoanNumber must be specified.")
     public String getLoanNumber() {
         return loanNumber;
     }
@@ -280,14 +256,6 @@ public class Loan extends BaseEntity {
 
     public void setNumber2(Float number2) {
         this.number2 = number2;
-    }
-
-    public Date getOriginalDueDate() {
-        return originalDueDate;
-    }
-
-    public void setOriginalDueDate(Date originalDueDate) {
-        this.originalDueDate = originalDueDate;
     }
 
  
@@ -389,6 +357,7 @@ public class Loan extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @NotNull(message="Discipline must be specified.")
     public Discipline getDiscipline() {
         return discipline;
     }
@@ -449,7 +418,46 @@ public class Loan extends BaseEntity {
         this.shipments = shipments;
     }
   
+        public Date getCurrentDueDate() {
+        return currentDueDate;
+    }
 
+    public void setCurrentDueDate(Date currentDueDate) {
+        this.currentDueDate = currentDueDate;
+    }
+
+    public Date getDateClosed() {
+        return dateClosed;
+    }
+
+    public void setDateClosed(Date dateClosed) {
+        this.dateClosed = dateClosed;
+    }
+
+    public Date getDateReceived() {
+        return dateReceived;
+    }
+
+    public void setDateReceived(Date dateReceived) {
+        this.dateReceived = dateReceived;
+    }
+
+    public Date getLoanDate() {
+        return loanDate;
+    }
+
+    public void setLoanDate(Date loanDate) {
+        this.loanDate = loanDate;
+    }
+
+    public Date getOriginalDueDate() {
+        return originalDueDate;
+    }
+
+    public void setOriginalDueDate(Date originalDueDate) {
+        this.originalDueDate = originalDueDate;
+    } 
+    
     @Override
     public int hashCode() {
         int hash = 0;
@@ -473,6 +481,5 @@ public class Loan extends BaseEntity {
     @Override
     public String toString() {
         return "Loan[ loanID=" + loanId + " ]";
-    }
-    
+    } 
 }

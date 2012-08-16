@@ -11,9 +11,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
-//import javax.validation.constraints.NotNull;
+import javax.persistence.Table;  
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -32,8 +33,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Spversion.findByAppName", query = "SELECT s FROM Spversion s WHERE s.appName = :appName"),
     @NamedQuery(name = "Spversion.findByAppVersion", query = "SELECT s FROM Spversion s WHERE s.appVersion = :appVersion"),
     @NamedQuery(name = "Spversion.findBySchemaVersion", query = "SELECT s FROM Spversion s WHERE s.schemaVersion = :schemaVersion")})
-public class Spversion extends BaseEntity {  
-    
+public class Spversion extends BaseEntity {
+  
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -55,6 +56,13 @@ public class Spversion extends BaseEntity {
     @Column(name = "SchemaVersion")
     private String schemaVersion;
     
+    @Column(name = "IsDBClosed")
+    private Boolean isDBClosed;
+    
+    @Size(max = 32)
+    @Column(name = "DbClosedBy")
+    private String dbClosedBy;
+    
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
     private Agent createdByAgent;
@@ -73,6 +81,13 @@ public class Spversion extends BaseEntity {
     public Spversion(Integer spVersionId, Date timestampCreated) {
         super(timestampCreated);
         this.spVersionId = spVersionId; 
+    }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (spVersionId != null) ? spVersionId.toString() : "0";
     }
 
     public Agent getCreatedByAgent() {
@@ -125,6 +140,21 @@ public class Spversion extends BaseEntity {
         this.schemaVersion = schemaVersion;
     }
 
+    public Boolean getIsDBClosed() {
+        return isDBClosed;
+    }
+
+    public void setIsDBClosed(Boolean isDBClosed) {
+        this.isDBClosed = isDBClosed;
+    }
+
+    public String getDbClosedBy() {
+        return dbClosedBy;
+    }
+
+    public void setDbClosedBy(String dbClosedBy) {
+        this.dbClosedBy = dbClosedBy;
+    }
    
     @Override
     public int hashCode() {
@@ -149,6 +179,5 @@ public class Spversion extends BaseEntity {
     @Override
     public String toString() {
         return "Spversion[ spVersionID=" + spVersionId + " ]";
-    }
-    
+    } 
 }

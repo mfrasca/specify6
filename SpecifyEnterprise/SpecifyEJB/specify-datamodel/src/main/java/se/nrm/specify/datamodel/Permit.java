@@ -20,6 +20,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -46,8 +48,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Permit.findByType", query = "SELECT p FROM Permit p WHERE p.type = :type"),
     @NamedQuery(name = "Permit.findByYesNo1", query = "SELECT p FROM Permit p WHERE p.yesNo1 = :yesNo1"),
     @NamedQuery(name = "Permit.findByYesNo2", query = "SELECT p FROM Permit p WHERE p.yesNo2 = :yesNo2")})
-public class Permit extends BaseEntity {  
-    
+public class Permit extends BaseEntity {
+  
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -56,14 +58,6 @@ public class Permit extends BaseEntity {
 //    @NotNull
     @Column(name = "PermitID")
     private Integer permitId;
-     
-    @Column(name = "EndDate")
-    @Temporal(TemporalType.DATE)
-    private Date endDate;
-    
-    @Column(name = "IssuedDate")
-    @Temporal(TemporalType.DATE)
-    private Date issuedDate;
     
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "Number1")
@@ -72,8 +66,7 @@ public class Permit extends BaseEntity {
     @Column(name = "Number2")
     private Float number2;
     
-    @Basic(optional = false)
-    @NotNull
+    @Basic(optional = false) 
     @Size(min = 1, max = 50)
     @Column(name = "PermitNumber")
     private String permitNumber;
@@ -82,6 +75,14 @@ public class Permit extends BaseEntity {
     @Size(max = 65535)
     @Column(name = "Remarks")
     private String remarks;
+    
+    @Column(name = "EndDate")
+    @Temporal(TemporalType.DATE)
+    private Date endDate;
+    
+    @Column(name = "IssuedDate")
+    @Temporal(TemporalType.DATE)
+    private Date issuedDate;
     
     @Column(name = "RenewalDate")
     @Temporal(TemporalType.DATE)
@@ -131,7 +132,7 @@ public class Permit extends BaseEntity {
     @ManyToOne
     private Agent modifiedByAgent;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "permit")
+    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, mappedBy = "permit", orphanRemoval=true)
     private Collection<Accessionauthorization> accessionAuthorizations;
 
     public Permit() {
@@ -147,22 +148,11 @@ public class Permit extends BaseEntity {
         this.permitNumber = permitNumber;
     }
 
- 
- 
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
-
-    public Date getIssuedDate() {
-        return issuedDate;
-    }
-
-    public void setIssuedDate(Date issuedDate) {
-        this.issuedDate = issuedDate;
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (permitId != null) ? permitId.toString() : "0";
     }
 
     public Float getNumber1() {
@@ -181,6 +171,7 @@ public class Permit extends BaseEntity {
         this.number2 = number2;
     }
 
+    @NotNull(message="PermitNumber must be specified.")
     public String getPermitNumber() {
         return permitNumber;
     }
@@ -195,22 +186,6 @@ public class Permit extends BaseEntity {
 
     public void setRemarks(String remarks) {
         this.remarks = remarks;
-    }
-
-    public Date getRenewalDate() {
-        return renewalDate;
-    }
-
-    public void setRenewalDate(Date renewalDate) {
-        this.renewalDate = renewalDate;
-    }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
     }
 
     public String getText1() {
@@ -251,6 +226,38 @@ public class Permit extends BaseEntity {
 
     public void setYesNo2(Boolean yesNo2) {
         this.yesNo2 = yesNo2;
+    }
+    
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public Date getIssuedDate() {
+        return issuedDate;
+    }
+
+    public void setIssuedDate(Date issuedDate) {
+        this.issuedDate = issuedDate;
+    }
+
+    public Date getRenewalDate() {
+        return renewalDate;
+    }
+
+    public void setRenewalDate(Date renewalDate) {
+        this.renewalDate = renewalDate;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
     }
 
     @XmlTransient
@@ -336,6 +343,5 @@ public class Permit extends BaseEntity {
     @Override
     public String toString() {
         return "Permit[ permitID=" + permitId + " ]";
-    }
-    
+    } 
 }

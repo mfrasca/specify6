@@ -19,6 +19,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -47,8 +49,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Project.findByStartDate", query = "SELECT p FROM Project p WHERE p.startDate = :startDate"),
     @NamedQuery(name = "Project.findByYesNo1", query = "SELECT p FROM Project p WHERE p.yesNo1 = :yesNo1"),
     @NamedQuery(name = "Project.findByYesNo2", query = "SELECT p FROM Project p WHERE p.yesNo2 = :yesNo2")})
-public class Project extends BaseEntity { 
-    
+public class Project extends BaseEntity {
+ 
+
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -62,10 +65,6 @@ public class Project extends BaseEntity {
     @NotNull
     @Column(name = "CollectionMemberID")
     private int collectionMemberId;
-    
-    @Column(name = "EndDate")
-    @Temporal(TemporalType.DATE)
-    private Date endDate;
     
     @Size(max = 64)
     @Column(name = "GrantAgency")
@@ -99,10 +98,6 @@ public class Project extends BaseEntity {
     @Column(name = "Remarks")
     private String remarks;
     
-    @Column(name = "StartDate")
-    @Temporal(TemporalType.DATE)
-    private Date startDate;
-    
     @Lob
     @Size(max = 65535)
     @Column(name = "Text1")
@@ -123,6 +118,15 @@ public class Project extends BaseEntity {
     
     @Column(name = "YesNo2")
     private Boolean yesNo2;
+    
+    @Column(name = "EndDate")
+    @Temporal(TemporalType.DATE)
+    private Date endDate;
+        
+    @Column(name = "StartDate")
+    @Temporal(TemporalType.DATE)
+    private Date startDate;
+    
     
     @ManyToMany(mappedBy = "projects")
     private Collection<Collectionobject> collectionObjects;
@@ -152,6 +156,13 @@ public class Project extends BaseEntity {
         this.collectionMemberId = collectionMemberId;
     }
 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (projectId != null) ? projectId.toString() : "0";
+    }
+    
     public Agent getAgent() {
         return agent;
     }
@@ -198,16 +209,6 @@ public class Project extends BaseEntity {
 
     public void setProjectName(String projectName) {
         this.projectName = projectName;
-    }
-
-    
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
     }
 
     public String getGrantAgency() {
@@ -268,14 +269,6 @@ public class Project extends BaseEntity {
         this.remarks = remarks;
     }
 
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
     public String getText1() {
         return text1;
     }
@@ -325,7 +318,21 @@ public class Project extends BaseEntity {
         this.collectionObjects = collectionObjects;
     }
  
-    
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
 
     @Override
     public int hashCode() {
@@ -350,6 +357,5 @@ public class Project extends BaseEntity {
     @Override
     public String toString() {
         return "Project[ projectID=" + projectId + " ]";
-    }
-    
+    } 
 }

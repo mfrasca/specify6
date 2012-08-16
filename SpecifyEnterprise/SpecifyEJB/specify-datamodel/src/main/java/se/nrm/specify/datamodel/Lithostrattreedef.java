@@ -15,9 +15,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table; 
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -36,8 +38,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Lithostrattreedef.findByVersion", query = "SELECT l FROM Lithostrattreedef l WHERE l.version = :version"),
     @NamedQuery(name = "Lithostrattreedef.findByFullNameDirection", query = "SELECT l FROM Lithostrattreedef l WHERE l.fullNameDirection = :fullNameDirection"),
     @NamedQuery(name = "Lithostrattreedef.findByName", query = "SELECT l FROM Lithostrattreedef l WHERE l.name = :name")})
-public class Lithostrattreedef extends BaseEntity { 
-    
+public class Lithostrattreedef extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -50,8 +52,7 @@ public class Lithostrattreedef extends BaseEntity {
     @Column(name = "FullNameDirection")
     private Integer fullNameDirection;
     
-    @Basic(optional = false)
-    @NotNull
+    @Basic(optional = false) 
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
@@ -90,6 +91,13 @@ public class Lithostrattreedef extends BaseEntity {
         this.lithoStratTreeDefId = lithoStratTreeDefId; 
         this.name = name;
     }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (lithoStratTreeDefId != null) ? lithoStratTreeDefId.toString() : "0";
+    }
 
     public Agent getCreatedByAgent() {
         return createdByAgent;
@@ -125,6 +133,7 @@ public class Lithostrattreedef extends BaseEntity {
         this.fullNameDirection = fullNameDirection;
     }
 
+    @NotNull(message="Name must be specified.")
     public String getName() {
         return name;
     }
@@ -193,5 +202,6 @@ public class Lithostrattreedef extends BaseEntity {
     public String toString() {
         return "Lithostrattreedef[ lithoStratTreeDefID=" + lithoStratTreeDefId + " ]";
     }
-    
+
+ 
 }

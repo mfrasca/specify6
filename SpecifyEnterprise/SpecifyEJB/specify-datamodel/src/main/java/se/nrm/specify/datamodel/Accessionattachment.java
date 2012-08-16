@@ -1,9 +1,15 @@
 package se.nrm.specify.datamodel;
 
 import java.util.Date;
-import javax.persistence.*;
+import javax.persistence.*; 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -19,8 +25,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Accessionattachment.findByTimestampModified", query = "SELECT a FROM Accessionattachment a WHERE a.timestampModified = :timestampModified"),
     @NamedQuery(name = "Accessionattachment.findByVersion", query = "SELECT a FROM Accessionattachment a WHERE a.version = :version"),
     @NamedQuery(name = "Accessionattachment.findByOrdinal", query = "SELECT a FROM Accessionattachment a WHERE a.ordinal = :ordinal")})
-public class Accessionattachment extends BaseEntity { 
-    
+public class Accessionattachment extends BaseEntity {
+ 
+
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -29,7 +36,7 @@ public class Accessionattachment extends BaseEntity {
 //    @NotNull
     @Column(name = "AccessionAttachmentID")
     private Integer accessionAttachmentId;
-     
+    
     @Column(name = "Ordinal")
     private Integer ordinal;
     
@@ -63,9 +70,16 @@ public class Accessionattachment extends BaseEntity {
 
     public Accessionattachment(Integer accessionAttachmentId, Date timestampCreated) {
         super(timestampCreated);
-        this.accessionAttachmentId = accessionAttachmentId; 
+        this.accessionAttachmentId = accessionAttachmentId;
     }
 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (accessionAttachmentId != null) ? accessionAttachmentId.toString() : "0";
+    }
+    
     public Integer getAccessionAttachmentId() {
         return accessionAttachmentId;
     }
@@ -74,8 +88,6 @@ public class Accessionattachment extends BaseEntity {
         this.accessionAttachmentId = accessionAttachmentId;
     }
 
-  
-    
     public Integer getOrdinal() {
         return ordinal;
     }
@@ -92,6 +104,8 @@ public class Accessionattachment extends BaseEntity {
         this.remarks = remarks;
     }
 
+    @XmlTransient
+    @NotNull(message="Accession must be specified.")
     public Accession getAccession() {
         return accession;
     }
@@ -100,6 +114,7 @@ public class Accessionattachment extends BaseEntity {
         this.accession = accession;
     }
 
+    @NotNull(message="Attachment must be specified.")
     public Attachment getAttachment() {
         return attachment;
     }
@@ -108,6 +123,7 @@ public class Accessionattachment extends BaseEntity {
         this.attachment = attachment;
     }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -116,6 +132,7 @@ public class Accessionattachment extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -123,10 +140,18 @@ public class Accessionattachment extends BaseEntity {
     public void setModifiedByAgent(Agent modifiedByAgent) {
         this.modifiedByAgent = modifiedByAgent;
     }
-
- 
-
- 
+    
+    /**
+     * Parent pointer
+     * 
+     * @param u
+     * @param parent 
+     */
+    public void afterUnmarshal(Unmarshaller u, Object parent) {  
+        if(parent instanceof Accession) {
+            this.accession = (Accession)parent;   
+        }
+    }
 
     @Override
     public int hashCode() {
@@ -152,5 +177,5 @@ public class Accessionattachment extends BaseEntity {
     public String toString() {
         return "Accessionattachment[ accessionAttachmentId=" + accessionAttachmentId + " ]";
     }
-    
+ 
 }

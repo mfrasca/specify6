@@ -12,9 +12,12 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
-//import javax.validation.constraints.NotNull;
+import javax.persistence.Table;  
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -31,8 +34,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Agentattachment.findByTimestampModified", query = "SELECT a FROM Agentattachment a WHERE a.timestampModified = :timestampModified"),
     @NamedQuery(name = "Agentattachment.findByVersion", query = "SELECT a FROM Agentattachment a WHERE a.version = :version"),
     @NamedQuery(name = "Agentattachment.findByOrdinal", query = "SELECT a FROM Agentattachment a WHERE a.ordinal = :ordinal")})
-public class Agentattachment extends BaseEntity { 
-    
+public class Agentattachment extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -77,7 +80,15 @@ public class Agentattachment extends BaseEntity {
         super(timestampCreated);
         this.agentAttachmentId = agentAttachmentId; 
     }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (agentAttachmentId != null) ? agentAttachmentId.toString() : "0";
+    }
 
+    @NotNull(message="Agent must be specified.") 
     public Agent getAgent() {
         return agent;
     }
@@ -94,6 +105,7 @@ public class Agentattachment extends BaseEntity {
         this.agentAttachmentId = agentAttachmentId;
     }
 
+    @NotNull(message="Attachment must be specified.")
     public Attachment getAttachment() {
         return attachment;
     }
@@ -102,6 +114,7 @@ public class Agentattachment extends BaseEntity {
         this.attachment = attachment;
     }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -110,6 +123,7 @@ public class Agentattachment extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -161,5 +175,6 @@ public class Agentattachment extends BaseEntity {
     public String toString() {
         return "se.nrm.specify.datamodel.Agentattachment[ agentAttachmentID=" + agentAttachmentId + " ]";
     }
+ 
     
 }

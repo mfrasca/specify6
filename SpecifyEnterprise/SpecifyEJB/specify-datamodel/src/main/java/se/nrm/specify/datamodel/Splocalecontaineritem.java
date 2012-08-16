@@ -14,8 +14,12 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table; 
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -41,8 +45,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Splocalecontaineritem.findByType", query = "SELECT s FROM Splocalecontaineritem s WHERE s.type = :type"),
     @NamedQuery(name = "Splocalecontaineritem.findByIsRequired", query = "SELECT s FROM Splocalecontaineritem s WHERE s.isRequired = :isRequired"),
     @NamedQuery(name = "Splocalecontaineritem.findByWebLinkName", query = "SELECT s FROM Splocalecontaineritem s WHERE s.webLinkName = :webLinkName")})
-public class Splocalecontaineritem extends BaseEntity {  
-    
+public class Splocalecontaineritem extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -69,11 +73,11 @@ public class Splocalecontaineritem extends BaseEntity {
     @Column(name = "IsUIFormatter")
     private Boolean isUIFormatter;
     
-    @Basic(optional = false)
-    @NotNull
+    @Basic(optional = false) 
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
+    
     @Size(max = 64)
     @Column(name = "PickListName")
     private String pickListName;
@@ -124,6 +128,13 @@ public class Splocalecontaineritem extends BaseEntity {
         this.isSystem = isSystem;
         this.name = name;
     }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (spLocaleContainerItemId != null) ? spLocaleContainerItemId.toString() : "0";
+    }
  
     public String getFormat() {
         return format;
@@ -157,6 +168,7 @@ public class Splocalecontaineritem extends BaseEntity {
         this.isUIFormatter = isUIFormatter;
     }
 
+    @NotNull(message="Name must be specified.")
     public String getName() {
         return name;
     }
@@ -197,6 +209,7 @@ public class Splocalecontaineritem extends BaseEntity {
         this.webLinkName = webLinkName;
     }
 
+    @NotNull(message="Container must be specified.")
     public Splocalecontainer getContainer() {
         return container;
     }
@@ -282,5 +295,6 @@ public class Splocalecontaineritem extends BaseEntity {
     public String toString() {
         return "Splocalecontaineritem[ spLocaleContainerItemID=" + spLocaleContainerItemId + " ]";
     }
+ 
     
 }

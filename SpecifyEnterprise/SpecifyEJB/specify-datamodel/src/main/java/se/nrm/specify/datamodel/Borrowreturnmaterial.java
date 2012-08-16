@@ -17,6 +17,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -35,7 +37,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Borrowreturnmaterial.findByCollectionMemberID", query = "SELECT b FROM Borrowreturnmaterial b WHERE b.collectionMemberId = :collectionMemberID"),
     @NamedQuery(name = "Borrowreturnmaterial.findByQuantity", query = "SELECT b FROM Borrowreturnmaterial b WHERE b.quantity = :quantity"),
     @NamedQuery(name = "Borrowreturnmaterial.findByReturnedDate", query = "SELECT b FROM Borrowreturnmaterial b WHERE b.returnedDate = :returnedDate")})
-public class Borrowreturnmaterial extends BaseEntity { 
+public class Borrowreturnmaterial extends BaseEntity {
+ 
+
     
     private static final long serialVersionUID = 1L;
     
@@ -91,6 +95,13 @@ public class Borrowreturnmaterial extends BaseEntity {
         this.borrowReturnMaterialId = borrowReturnMaterialId; 
         this.collectionMemberId = collectionMemberId;
     }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (borrowReturnMaterialId != null) ? borrowReturnMaterialId.toString() : "0";
+    }
 
     public Agent getAgent() {
         return agent;
@@ -100,6 +111,7 @@ public class Borrowreturnmaterial extends BaseEntity {
         this.agent = agent;
     }
 
+    @NotNull(message="BorrowMaterial must be specified.")
     public Borrowmaterial getBorrowMaterial() {
         return borrowMaterial;
     }
@@ -140,7 +152,14 @@ public class Borrowreturnmaterial extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
  
+    public Date getReturnedDate() {
+        return returnedDate;
+    }
 
+    public void setReturnedDate(Date returnedDate) {
+        this.returnedDate = returnedDate;
+    }
+    
     public Short getQuantity() {
         return quantity;
     }
@@ -155,14 +174,6 @@ public class Borrowreturnmaterial extends BaseEntity {
 
     public void setRemarks(String remarks) {
         this.remarks = remarks;
-    }
-
-    public Date getReturnedDate() {
-        return returnedDate;
-    }
-
-    public void setReturnedDate(Date returnedDate) {
-        this.returnedDate = returnedDate;
     }
 
  
@@ -190,6 +201,6 @@ public class Borrowreturnmaterial extends BaseEntity {
     @Override
     public String toString() {
         return "Borrowreturnmaterial[ borrowReturnMaterialId=" + borrowReturnMaterialId + " ]";
-    }
-    
+    } 
+  
 }

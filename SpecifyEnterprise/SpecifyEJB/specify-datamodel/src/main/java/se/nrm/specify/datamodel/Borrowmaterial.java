@@ -15,9 +15,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table; 
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -40,7 +42,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Borrowmaterial.findByQuantity", query = "SELECT b FROM Borrowmaterial b WHERE b.quantity = :quantity"),
     @NamedQuery(name = "Borrowmaterial.findByQuantityResolved", query = "SELECT b FROM Borrowmaterial b WHERE b.quantityResolved = :quantityResolved"),
     @NamedQuery(name = "Borrowmaterial.findByQuantityReturned", query = "SELECT b FROM Borrowmaterial b WHERE b.quantityReturned = :quantityReturned")})
-public class Borrowmaterial extends BaseEntity { 
+public class Borrowmaterial extends BaseEntity {
+ 
     
     private static final long serialVersionUID = 1L;
     
@@ -65,8 +68,7 @@ public class Borrowmaterial extends BaseEntity {
     @Column(name = "InComments")
     private String inComments;
     
-    @Basic(optional = false)
-    @NotNull
+    @Basic(optional = false) 
     @Size(min = 1, max = 50)
     @Column(name = "MaterialNumber")
     private String materialNumber;
@@ -113,6 +115,13 @@ public class Borrowmaterial extends BaseEntity {
         this.collectionMemberId = collectionMemberId;
         this.materialNumber = materialNumber;
     }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (borrowMaterialId != null) ? borrowMaterialId.toString() : "0";
+    }
 
     public Integer getBorrowMaterialId() {
         return borrowMaterialId;
@@ -148,6 +157,7 @@ public class Borrowmaterial extends BaseEntity {
         this.inComments = inComments;
     }
 
+    @NotNull(message="MaterialNumber must be specified.")
     public String getMaterialNumber() {
         return materialNumber;
     }
@@ -188,6 +198,7 @@ public class Borrowmaterial extends BaseEntity {
         this.quantityReturned = quantityReturned;
     }
 
+    @NotNull(message="Borrow must be specified.")
     public Borrow getBorrow() {
         return borrow;
     }
@@ -247,5 +258,5 @@ public class Borrowmaterial extends BaseEntity {
     public String toString() {
         return "Borrowmaterial[ borrowMaterialId=" + borrowMaterialId + " ]";
     }
-    
+ 
 }

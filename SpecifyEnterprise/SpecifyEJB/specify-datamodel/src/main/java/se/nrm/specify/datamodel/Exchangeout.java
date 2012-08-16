@@ -16,9 +16,11 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-//import javax.validation.constraints.NotNull;
+import javax.persistence.TemporalType; 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -44,8 +46,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Exchangeout.findBySrcTaxonomy", query = "SELECT e FROM Exchangeout e WHERE e.srcTaxonomy = :srcTaxonomy"),
     @NamedQuery(name = "Exchangeout.findByYesNo1", query = "SELECT e FROM Exchangeout e WHERE e.yesNo1 = :yesNo1"),
     @NamedQuery(name = "Exchangeout.findByYesNo2", query = "SELECT e FROM Exchangeout e WHERE e.yesNo2 = :yesNo2")})
-public class Exchangeout extends BaseEntity {  
-    
+public class Exchangeout extends BaseEntity {
+  
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -58,10 +60,6 @@ public class Exchangeout extends BaseEntity {
     @Size(max = 120)
     @Column(name = "DescriptionOfMaterial")
     private String descriptionOfMaterial;
-    
-    @Column(name = "ExchangeDate")
-    @Temporal(TemporalType.DATE)
-    private Date exchangeDate;
     
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "Number1")
@@ -102,6 +100,10 @@ public class Exchangeout extends BaseEntity {
     @Column(name = "YesNo2")
     private Boolean yesNo2;
     
+    @Column(name = "ExchangeDate")
+    @Temporal(TemporalType.DATE)
+    private Date exchangeDate;
+    
     @OneToMany(mappedBy = "exchangeOut")
     private Collection<Shipment> shipments;
     
@@ -136,11 +138,18 @@ public class Exchangeout extends BaseEntity {
         this.exchangeOutId = exchangeOutId;
     }
 
-    public Exchangeout(Integer exchangeOutID, Date timestampCreated) {
+    public Exchangeout(Integer exchangeOutId, Date timestampCreated) {
         super(timestampCreated);
         this.exchangeOutId = exchangeOutId; 
     }
 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (exchangeOutId != null) ? exchangeOutId.toString() : "0";
+    }
+    
     public Integer getExchangeOutId() {
         return exchangeOutId;
     }
@@ -156,14 +165,6 @@ public class Exchangeout extends BaseEntity {
 
     public void setDescriptionOfMaterial(String descriptionOfMaterial) {
         this.descriptionOfMaterial = descriptionOfMaterial;
-    }
-
-    public Date getExchangeDate() {
-        return exchangeDate;
-    }
-
-    public void setExchangeDate(Date exchangeDate) {
-        this.exchangeDate = exchangeDate;
     }
 
     public Float getNumber1() {
@@ -264,6 +265,7 @@ public class Exchangeout extends BaseEntity {
         this.addressOfRecord = addressOfRecord;
     }
 
+    @NotNull(message="AgentCatalogedBy must be specified.")
     public Agent getAgentCatalogedBy() {
         return agentCatalogedBy;
     }
@@ -272,6 +274,7 @@ public class Exchangeout extends BaseEntity {
         this.agentCatalogedBy = agentCatalogedBy;
     }
 
+    @NotNull(message="AgentSentTo must be specified.")
     public Agent getAgentSentTo() {
         return agentSentTo;
     }
@@ -288,6 +291,7 @@ public class Exchangeout extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @NotNull(message="Division must be specified.")
     public Division getDivision() {
         return division;
     }
@@ -304,7 +308,13 @@ public class Exchangeout extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
 
- 
+    public Date getExchangeDate() {
+        return exchangeDate;
+    }
+
+    public void setExchangeDate(Date exchangeDate) {
+        this.exchangeDate = exchangeDate;
+    }
 
     @Override
     public int hashCode() {
@@ -330,5 +340,5 @@ public class Exchangeout extends BaseEntity {
     public String toString() {
         return "Exchangeout[ exchangeOutID=" + exchangeOutId + " ]";
     }
-    
+ 
 }

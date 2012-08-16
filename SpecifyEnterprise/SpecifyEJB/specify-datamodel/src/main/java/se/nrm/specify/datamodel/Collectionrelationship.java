@@ -11,9 +11,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
-//import javax.validation.constraints.NotNull;
+import javax.persistence.Table;  
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -31,8 +34,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Collectionrelationship.findByVersion", query = "SELECT c FROM Collectionrelationship c WHERE c.version = :version"),
     @NamedQuery(name = "Collectionrelationship.findByText1", query = "SELECT c FROM Collectionrelationship c WHERE c.text1 = :text1"),
     @NamedQuery(name = "Collectionrelationship.findByText2", query = "SELECT c FROM Collectionrelationship c WHERE c.text2 = :text2")})
-public class Collectionrelationship extends BaseEntity {  
-    
+public class Collectionrelationship extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -82,7 +85,12 @@ public class Collectionrelationship extends BaseEntity {
         this.collectionRelationshipId = collectionRelationshipId; 
     }
 
- 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (collectionRelationshipId != null) ? collectionRelationshipId.toString() : "0";
+    }
  
     public String getText1() {
         return text1;
@@ -116,6 +124,7 @@ public class Collectionrelationship extends BaseEntity {
         this.collectionRelationshipId = collectionRelationshipId;
     }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -124,6 +133,7 @@ public class Collectionrelationship extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @NotNull(message="LeftSide must be specified.")
     public Collectionobject getLeftSide() {
         return leftSide;
     }
@@ -132,6 +142,7 @@ public class Collectionrelationship extends BaseEntity {
         this.leftSide = leftSide;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -140,6 +151,7 @@ public class Collectionrelationship extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
 
+    @NotNull(message="RightSide must be specified.")
     public Collectionobject getRightSide() {
         return rightSide;
     }
@@ -174,5 +186,6 @@ public class Collectionrelationship extends BaseEntity {
     public String toString() {
         return "Collectionrelationship[ collectionRelationshipId=" + collectionRelationshipId + " ]";
     }
-    
+
+  
 }

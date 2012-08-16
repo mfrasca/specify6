@@ -12,6 +12,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -78,9 +80,13 @@ public class Latlonpolygonpnt implements Serializable, SpecifyBean {
         this.ordinal = ordinal;
         this.latLonPolygon = latLonPolygon;
     }
-
  
-
+    @XmlID
+    @XmlAttribute(name = "id") 
+    public String getIdentityString() {
+        return (latLonPolygonPntId != null) ? latLonPolygonPntId.toString() : "0";
+    }
+    
     public Integer getElevation() {
         return elevation;
     }

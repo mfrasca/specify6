@@ -20,6 +20,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -48,7 +51,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Repositoryagreement.findByText3", query = "SELECT r FROM Repositoryagreement r WHERE r.text3 = :text3"),
     @NamedQuery(name = "Repositoryagreement.findByYesNo1", query = "SELECT r FROM Repositoryagreement r WHERE r.yesNo1 = :yesNo1"),
     @NamedQuery(name = "Repositoryagreement.findByYesNo2", query = "SELECT r FROM Repositoryagreement r WHERE r.yesNo2 = :yesNo2")})
-public class Repositoryagreement extends BaseEntity { 
+public class Repositoryagreement extends BaseEntity {
+    
     
     private static final long serialVersionUID = 1L;
     
@@ -58,14 +62,6 @@ public class Repositoryagreement extends BaseEntity {
 //    @NotNull
     @Column(name = "RepositoryAgreementID")
     private Integer repositoryAgreementId;
-     
-    @Column(name = "DateReceived")
-    @Temporal(TemporalType.DATE)
-    private Date dateReceived;
-    
-    @Column(name = "EndDate")
-    @Temporal(TemporalType.DATE)
-    private Date endDate;
     
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "Number1")
@@ -79,15 +75,22 @@ public class Repositoryagreement extends BaseEntity {
     @Column(name = "Remarks")
     private String remarks;
     
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 60)
-    @Column(name = "RepositoryAgreementNumber")
-    private String repositoryAgreementNumber;
+    @Column(name = "DateReceived")
+    @Temporal(TemporalType.DATE)
+    private Date dateReceived;
+    
+    @Column(name = "EndDate")
+    @Temporal(TemporalType.DATE)
+    private Date endDate;
     
     @Column(name = "StartDate")
     @Temporal(TemporalType.DATE)
     private Date startDate;
+    
+    @Basic(optional = false) 
+    @Size(min = 1, max = 60)
+    @Column(name = "RepositoryAgreementNumber")
+    private String repositoryAgreementNumber;
     
     @Size(max = 32)
     @Column(name = "Status")
@@ -155,6 +158,13 @@ public class Repositoryagreement extends BaseEntity {
         this.repositoryAgreementId = repositoryAgreementId; 
         this.repositoryAgreementNumber = repositoryAgreementNumber;
     }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (repositoryAgreementId != null) ? repositoryAgreementId.toString() : "0";
+    }
 
     @XmlTransient
     public Collection<Accession> getAccessions() {
@@ -173,6 +183,7 @@ public class Repositoryagreement extends BaseEntity {
         this.addressOfRecord = addressOfRecord;
     }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -181,6 +192,8 @@ public class Repositoryagreement extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    
+    @NotNull(message="Division must be specified.")
     public Division getDivision() {
         return division;
     }
@@ -189,6 +202,7 @@ public class Repositoryagreement extends BaseEntity {
         this.division = division;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -205,7 +219,7 @@ public class Repositoryagreement extends BaseEntity {
         this.originator = originator;
     }
 
-    @XmlTransient
+//    @XmlTransient
     public Collection<Accessionagent> getRepositoryAgreementAgents() {
         return repositoryAgreementAgents;
     }
@@ -222,8 +236,7 @@ public class Repositoryagreement extends BaseEntity {
     public void setRepositoryAgreementAttachments(Collection<Repositoryagreementattachment> repositoryAgreementAttachments) {
         this.repositoryAgreementAttachments = repositoryAgreementAttachments;
     }
-
-    @XmlTransient
+ 
     public Collection<Accessionauthorization> getRepositoryAgreementAuthorizations() {
         return repositoryAgreementAuthorizations;
     }
@@ -238,23 +251,6 @@ public class Repositoryagreement extends BaseEntity {
 
     public void setRepositoryAgreementId(Integer repositoryAgreementId) {
         this.repositoryAgreementId = repositoryAgreementId;
-    }
-
-   
-    public Date getDateReceived() {
-        return dateReceived;
-    }
-
-    public void setDateReceived(Date dateReceived) {
-        this.dateReceived = dateReceived;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
     }
 
     public Float getNumber1() {
@@ -281,20 +277,13 @@ public class Repositoryagreement extends BaseEntity {
         this.remarks = remarks;
     }
 
+    @NotNull(message="repositoryAgreementNumber must be specified.")
     public String getRepositoryAgreementNumber() {
         return repositoryAgreementNumber;
     }
 
     public void setRepositoryAgreementNumber(String repositoryAgreementNumber) {
         this.repositoryAgreementNumber = repositoryAgreementNumber;
-    }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
     }
 
     public String getStatus() {
@@ -346,7 +335,29 @@ public class Repositoryagreement extends BaseEntity {
     }
 
      
-     
+    public Date getDateReceived() {
+        return dateReceived;
+    }
+
+    public void setDateReceived(Date dateReceived) {
+        this.dateReceived = dateReceived;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
 
     @Override
     public int hashCode() {
@@ -371,6 +382,6 @@ public class Repositoryagreement extends BaseEntity {
     @Override
     public String toString() {
         return "Repositoryagreement[ repositoryAgreementID=" + repositoryAgreementId + " ]";
-    }
+    } 
     
 }

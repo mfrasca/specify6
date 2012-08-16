@@ -14,11 +14,16 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.Table; 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlTransient; 
 
 /**
  *
@@ -54,8 +59,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Collection.findByWebPortalURI", query = "SELECT c FROM Collection c WHERE c.webPortalURI = :webPortalURI"),
     @NamedQuery(name = "Collection.findByWebSiteURI", query = "SELECT c FROM Collection c WHERE c.webSiteURI = :webSiteURI")})
 public class Collection extends BaseEntity {
-
+  
     private static final long serialVersionUID = 1L;
+    
     @Id
     @Basic(optional = false)
     @NotNull
@@ -63,19 +69,19 @@ public class Collection extends BaseEntity {
     private Integer userGroupScopeId;
     
     @Basic(optional = false)
-//    @NotNull
+    @NotNull(message="CatalogFormatNumName must be specified.")
     @Size(min = 1, max = 64)
     @Column(name = "CatalogFormatNumName")
     private String catalogNumFormatName;
     
-    @Size(max = 50)
+    @Size(max = 50) 
     @Column(name = "Code")
     private String code;
     
     @Column(name = "collectionId")
     private Integer collectionId;
     
-    @Size(max = 50)
+    @Size(max = 50) 
     @Column(name = "CollectionName")
     private String collectionName;
     
@@ -104,7 +110,7 @@ public class Collection extends BaseEntity {
     private String institutionType;
     
     @Basic(optional = false)
-    @NotNull
+    @NotNull(message="IsEmbeddedCollectingEvent must be specified.")
     @Column(name = "IsEmbeddedCollectingEvent")
     private boolean isEmbeddedCollectingEvent;
     
@@ -169,6 +175,10 @@ public class Collection extends BaseEntity {
     @ManyToOne(optional = false)
     private Discipline discipline;
     
+    @JoinColumn(name = "InstitutionNetworkID", referencedColumnName = "UserGroupScopeId")
+    @ManyToOne
+    private Institution institution;
+    
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
     private Agent createdByAgent;
@@ -189,7 +199,7 @@ public class Collection extends BaseEntity {
     @OneToMany(mappedBy = "collContentContact")
     private java.util.Collection<Agent> contentContacts;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "collection")
+    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, mappedBy = "collection")
     private java.util.Collection<Collectionobject> collectionobjects;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "collection")
@@ -211,7 +221,14 @@ public class Collection extends BaseEntity {
         this.catalogNumFormatName = catalogNumFormatName;
         this.isEmbeddedCollectingEvent = isEmbeddedCollectingEvent;
     }
-
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (collectionId != null) ? collectionId.toString() : "0";
+    }
+  
     public Integer getUserGroupScopeId() {
         return userGroupScopeId;
     }
@@ -227,9 +244,7 @@ public class Collection extends BaseEntity {
     public void setCatalogNumFormatName(String catalogNumFormatName) {
         this.catalogNumFormatName = catalogNumFormatName;
     }
-
  
-
     public String getCode() {
         return code;
     }
@@ -245,7 +260,7 @@ public class Collection extends BaseEntity {
     public void setCollectionId(Integer collectionId) {
         this.collectionId = collectionId;
     }
-
+ 
     public String getCollectionName() {
         return collectionName;
     }
@@ -453,7 +468,7 @@ public class Collection extends BaseEntity {
         this.technicalContacts = technicalContacts;
     }
  
-
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -462,6 +477,7 @@ public class Collection extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @NotNull(message="Discipline must be specified.")
     public Discipline getDiscipline() {
         return discipline;
     }
@@ -470,6 +486,7 @@ public class Collection extends BaseEntity {
         this.discipline = discipline;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -478,7 +495,8 @@ public class Collection extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
 
-    @XmlTransient
+     
+    @XmlTransient 
     public java.util.Collection<Collectionobject> getCollectionobjects() {
         return collectionobjects;
     }
@@ -514,7 +532,14 @@ public class Collection extends BaseEntity {
         this.sptasksemaphores = sptasksemaphores;
     }
 
- 
+    @XmlIDREF
+    public Institution getInstitution() {
+        return institution;
+    }
+
+    public void setInstitution(Institution institution) {
+        this.institution = institution;
+    }
  
 
     @Override
@@ -541,5 +566,5 @@ public class Collection extends BaseEntity {
     @Override
     public String toString() {
         return "Collection[ userGroupScopeId=" + userGroupScopeId + " ]";
-    }
+    } 
 }

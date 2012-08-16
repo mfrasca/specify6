@@ -15,7 +15,12 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table; 
 //import javax.validation.constraints.NotNull;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -64,8 +69,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Localitydetail.findByYesNo1", query = "SELECT l FROM Localitydetail l WHERE l.yesNo1 = :yesNo1"),
     @NamedQuery(name = "Localitydetail.findByYesNo2", query = "SELECT l FROM Localitydetail l WHERE l.yesNo2 = :yesNo2"),
     @NamedQuery(name = "Localitydetail.findByMgrsZone", query = "SELECT l FROM Localitydetail l WHERE l.mgrsZone = :mgrsZone")})
-public class Localitydetail extends BaseEntity { 
-    
+public class Localitydetail extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -231,7 +236,12 @@ public class Localitydetail extends BaseEntity {
         this.localityDetailId = localityDetailId; 
     }
 
-    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (localityDetailId != null) ? localityDetailId.toString() : "0";
+    }
  
     public String getBaseMeridian() {
         return baseMeridian;
@@ -579,5 +589,5 @@ public class Localitydetail extends BaseEntity {
     public String toString() {
         return "Localitydetail[ localityDetailID=" + localityDetailId + " ]";
     }
-    
+ 
 }

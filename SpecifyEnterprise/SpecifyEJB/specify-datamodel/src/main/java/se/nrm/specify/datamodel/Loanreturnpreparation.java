@@ -16,7 +16,10 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 //import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -35,7 +38,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Loanreturnpreparation.findByQuantityResolved", query = "SELECT l FROM Loanreturnpreparation l WHERE l.quantityResolved = :quantityResolved"),
     @NamedQuery(name = "Loanreturnpreparation.findByQuantityReturned", query = "SELECT l FROM Loanreturnpreparation l WHERE l.quantityReturned = :quantityReturned"),
     @NamedQuery(name = "Loanreturnpreparation.findByReturnedDate", query = "SELECT l FROM Loanreturnpreparation l WHERE l.returnedDate = :returnedDate")})
-public class Loanreturnpreparation extends BaseEntity {  
+public class Loanreturnpreparation extends BaseEntity {
+ 
     
     private static final long serialVersionUID = 1L;
     
@@ -52,14 +56,14 @@ public class Loanreturnpreparation extends BaseEntity {
     @Column(name = "QuantityReturned")
     private Integer quantityReturned;
     
+    @Column(name = "ReturnedDate")
+    @Temporal(TemporalType.DATE)
+    private Date returnedDate;
+    
     @Lob
     @Size(max = 65535)
     @Column(name = "Remarks")
     private String remarks;
-    
-    @Column(name = "ReturnedDate")
-    @Temporal(TemporalType.DATE)
-    private Date returnedDate;
     
     @JoinColumn(name = "DeaccessionPreparationID", referencedColumnName = "DeaccessionPreparationID")
     @ManyToOne
@@ -96,6 +100,13 @@ public class Loanreturnpreparation extends BaseEntity {
         super(timestampCreated);
         this.loanReturnPreparationId = loanReturnPreparationId; 
     }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (loanReturnPreparationId != null) ? loanReturnPreparationId.toString() : "0";
+    }
  
     public Integer getQuantityResolved() {
         return quantityResolved;
@@ -119,14 +130,6 @@ public class Loanreturnpreparation extends BaseEntity {
 
     public void setRemarks(String remarks) {
         this.remarks = remarks;
-    }
-
-    public Date getReturnedDate() {
-        return returnedDate;
-    }
-
-    public void setReturnedDate(Date returnedDate) {
-        this.returnedDate = returnedDate;
     }
 
     public Agent getCreatedByAgent() {
@@ -153,6 +156,7 @@ public class Loanreturnpreparation extends BaseEntity {
         this.discipline = discipline;
     }
 
+    @NotNull(message="LoanPreparation must be specified.")
     public Loanpreparation getLoanPreparation() {
         return loanPreparation;
     }
@@ -185,7 +189,13 @@ public class Loanreturnpreparation extends BaseEntity {
         this.receivedBy = receivedBy;
     }
 
-     
+    public Date getReturnedDate() {
+        return returnedDate;
+    }
+
+    public void setReturnedDate(Date returnedDate) {
+        this.returnedDate = returnedDate;
+    }
 
     @Override
     public int hashCode() {
@@ -210,6 +220,5 @@ public class Loanreturnpreparation extends BaseEntity {
     @Override
     public String toString() {
         return "Loanreturnpreparation[ loanReturnPreparationID=" + loanReturnPreparationId + " ]";
-    }
-    
+    } 
 }

@@ -13,9 +13,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table; 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.persistence.Table;  
+import javax.validation.constraints.NotNull; 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -32,15 +33,14 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Spauditlog.findByTimestampCreated", query = "SELECT s FROM Spauditlog s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Spauditlog.findByTimestampModified", query = "SELECT s FROM Spauditlog s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Spauditlog.findByVersion", query = "SELECT s FROM Spauditlog s WHERE s.version = :version"),
-    @NamedQuery(name = "Spauditlog.findByAction", query = "SELECT s FROM Spauditlog s WHERE s.action = :action"),
-    @NamedQuery(name = "Spauditlog.findByDescription", query = "SELECT s FROM Spauditlog s WHERE s.description = :description"),
+    @NamedQuery(name = "Spauditlog.findByAction", query = "SELECT s FROM Spauditlog s WHERE s.action = :action"), 
     @NamedQuery(name = "Spauditlog.findByRecordId", query = "SELECT s FROM Spauditlog s WHERE s.recordId = :recordId"),
     @NamedQuery(name = "Spauditlog.findByTableNum", query = "SELECT s FROM Spauditlog s WHERE s.tableNum = :tableNum"),
     @NamedQuery(name = "Spauditlog.findByParentRecordId", query = "SELECT s FROM Spauditlog s WHERE s.parentRecordId = :parentRecordId"),
     @NamedQuery(name = "Spauditlog.findByParentTableNum", query = "SELECT s FROM Spauditlog s WHERE s.parentTableNum = :parentTableNum"),
     @NamedQuery(name = "Spauditlog.findByRecordVersion", query = "SELECT s FROM Spauditlog s WHERE s.recordVersion = :recordVersion")})
-public class Spauditlog extends BaseEntity {  
-    
+public class Spauditlog extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -54,13 +54,7 @@ public class Spauditlog extends BaseEntity {
     @NotNull
     @Column(name = "Action")
     private int action;
-    
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 64)
-    @Column(name = "Description")
-    private String description;
-    
+      
     @Column(name = "RecordId")
     private Integer recordId;
     
@@ -96,12 +90,18 @@ public class Spauditlog extends BaseEntity {
         this.spAuditLogId = spAuditLogId;
     }
 
-    public Spauditlog(Integer spAuditLogId, Date timestampCreated, int action, String description, int tableNum) {
+    public Spauditlog(Integer spAuditLogId, Date timestampCreated, int action, int tableNum) {
         super(timestampCreated);
         this.spAuditLogId = spAuditLogId; 
-        this.action = action;
-        this.description = description;
+        this.action = action; 
         this.tableNum = tableNum;
+    }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (spAuditLogId != null) ? spAuditLogId.toString() : "0";
     }
 
     public Agent getCreatedByAgent() {
@@ -145,15 +145,7 @@ public class Spauditlog extends BaseEntity {
     public void setAction(int action) {
         this.action = action;
     }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
+  
     public Integer getRecordId() {
         return recordId;
     }
@@ -220,5 +212,6 @@ public class Spauditlog extends BaseEntity {
     public String toString() {
         return "Spauditlog[ spAuditLogID=" + spAuditLogId + " ]";
     }
+ 
     
 }

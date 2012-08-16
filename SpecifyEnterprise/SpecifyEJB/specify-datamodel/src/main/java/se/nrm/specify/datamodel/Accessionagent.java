@@ -1,9 +1,14 @@
 package se.nrm.specify.datamodel;
- 
+
+import com.sun.xml.bind.CycleRecoverable;
 import java.util.Date;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -21,8 +26,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Accessionagent.findByTimestampModified", query = "SELECT a FROM Accessionagent a WHERE a.timestampModified = :timestampModified"),
     @NamedQuery(name = "Accessionagent.findByVersion", query = "SELECT a FROM Accessionagent a WHERE a.version = :version"),
     @NamedQuery(name = "Accessionagent.findByRole", query = "SELECT a FROM Accessionagent a WHERE a.role = :role")})
-public class Accessionagent extends BaseEntity { 
-    
+public class Accessionagent extends BaseEntity implements CycleRecoverable {
+ 
+
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -31,14 +37,13 @@ public class Accessionagent extends BaseEntity {
 //    @NotNull
     @Column(name = "AccessionAgentID")
     private Integer accessionAgentId;
-      
+    
     @Lob
     @Size(max = 65535)
     @Column(name = "Remarks")
     private String remarks;
     
-    @Basic(optional = false)
-    @NotNull(message="Role must be specified.")
+    @Basic(optional = false) 
     @Size(min = 1, max = 50)
     @Column(name = "Role")
     private String role;
@@ -52,11 +57,11 @@ public class Accessionagent extends BaseEntity {
     private Agent modifiedByAgent;
     
     @JoinColumn(name = "RepositoryAgreementID", referencedColumnName = "RepositoryAgreementID")
-    @ManyToOne
+    @ManyToOne(cascade={CascadeType.MERGE, CascadeType.PERSIST})
     private Repositoryagreement repositoryAgreement;
     
     @JoinColumn(name = "AccessionID", referencedColumnName = "AccessionID")
-    @ManyToOne
+    @ManyToOne(cascade={CascadeType.MERGE, CascadeType.PERSIST})
     private Accession accession;
     
     @JoinColumn(name = "AgentID", referencedColumnName = "AgentID")
@@ -72,10 +77,27 @@ public class Accessionagent extends BaseEntity {
 
     public Accessionagent(Integer accessionAgentId, Date timestampCreated, String role) {
         super(timestampCreated);
-        this.accessionAgentId = accessionAgentId;  
+        this.accessionAgentId = accessionAgentId;
         this.role = role;
     }
 
+ 
+
+    @Override
+    public Accessionagent onCycleDetected(Context context) {
+        // Context provides access to the Marshaller being used:
+        System.out.println("JAXB Marshaller is: " + context.getMarshaller() + " -- " + this.getClass().getSimpleName());
+
+        return new Accessionagent(accessionAgentId);
+    }
+
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (accessionAgentId != null) ? accessionAgentId.toString() : "0";
+    }
+ 
     @XmlTransient
     public Accession getAccession() {
         return accession;
@@ -93,6 +115,7 @@ public class Accessionagent extends BaseEntity {
         this.accessionAgentId = accessionAgentId;
     }
 
+    @NotNull(message="Agent must be specified.")
     public Agent getAgent() {
         return agent;
     }
@@ -101,6 +124,7 @@ public class Accessionagent extends BaseEntity {
         this.agent = agent;
     }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -109,6 +133,7 @@ public class Accessionagent extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -117,6 +142,7 @@ public class Accessionagent extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
 
+    @XmlTransient
     public Repositoryagreement getRepositoryAgreement() {
         return repositoryAgreement;
     }
@@ -125,8 +151,6 @@ public class Accessionagent extends BaseEntity {
         this.repositoryAgreement = repositoryAgreement;
     }
 
-    
- 
     public String getRemarks() {
         return remarks;
     }
@@ -135,6 +159,7 @@ public class Accessionagent extends BaseEntity {
         this.remarks = remarks;
     }
 
+    @NotNull(message = "Role must be specified.")
     public String getRole() {
         return role;
     }
@@ -143,7 +168,19 @@ public class Accessionagent extends BaseEntity {
         this.role = role;
     }
 
- 
+    /**
+     * Parent pointer
+     * 
+     * @param u
+     * @param parent 
+     */
+    public void afterUnmarshal(Unmarshaller u, Object parent) {
+        if (parent instanceof Accession) {
+            this.accession = (Accession) parent;
+        } else if (parent instanceof Repositoryagreement) {
+            this.repositoryAgreement = (Repositoryagreement) parent;
+        }
+    }
 
     @Override
     public int hashCode() {
@@ -169,5 +206,5 @@ public class Accessionagent extends BaseEntity {
     public String toString() {
         return "Accessionagent[ accessionAgentId=" + accessionAgentId + " ]";
     }
-    
+ 
 }

@@ -16,8 +16,12 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table; 
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -39,8 +43,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Spprincipal.findByName", query = "SELECT s FROM Spprincipal s WHERE s.name = :name"),
     @NamedQuery(name = "Spprincipal.findByPriority", query = "SELECT s FROM Spprincipal s WHERE s.priority = :priority"),
     @NamedQuery(name = "Spprincipal.findByUserGroupScopeID", query = "SELECT s FROM Spprincipal s WHERE s.scope = :scope")})
-public class Spprincipal extends BaseEntity {  
-    
+public class Spprincipal extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -50,8 +54,7 @@ public class Spprincipal extends BaseEntity {
     @Column(name = "SpPrincipalID")
     private Integer userGroupId;
      
-    @Basic(optional = false)
-    @NotNull
+    @Basic(optional = false) 
     @Size(min = 1, max = 255)
     @Column(name = "GroupSubClass")
     private String groupSubClass;
@@ -60,8 +63,7 @@ public class Spprincipal extends BaseEntity {
     @Column(name = "groupType")
     private String groupType;
     
-    @Basic(optional = false)
-    @NotNull
+    @Basic(optional = false) 
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
@@ -117,8 +119,14 @@ public class Spprincipal extends BaseEntity {
         this.priority = priority;
     }
 
-    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (userGroupId != null) ? userGroupId.toString() : "0";
+    }
  
+    @NotNull(message="GroupSubClass must be specified.")
     public String getGroupSubClass() {
         return groupSubClass;
     }
@@ -135,6 +143,7 @@ public class Spprincipal extends BaseEntity {
         this.groupType = groupType;
     }
 
+    @NotNull(message="Name must be specified.")
     public String getName() {
         return name;
     }
@@ -263,5 +272,5 @@ public class Spprincipal extends BaseEntity {
     public String toString() {
         return "Spprincipal[ spPrincipalID=" + userGroupId + " ]";
     }
-    
+ 
 }

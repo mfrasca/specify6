@@ -15,9 +15,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table; 
-//import javax.validation.constraints.NotNull;
+import javax.persistence.Table;  
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -36,8 +41,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Workbenchtemplate.findByVersion", query = "SELECT w FROM Workbenchtemplate w WHERE w.version = :version"),
     @NamedQuery(name = "Workbenchtemplate.findByName", query = "SELECT w FROM Workbenchtemplate w WHERE w.name = :name"),
     @NamedQuery(name = "Workbenchtemplate.findBySrcFilePath", query = "SELECT w FROM Workbenchtemplate w WHERE w.srcFilePath = :srcFilePath")})
-public class Workbenchtemplate extends BaseEntity {  
-    
+public class Workbenchtemplate extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -93,6 +98,14 @@ public class Workbenchtemplate extends BaseEntity {
         this.workbenchTemplateId = workbenchTemplateId; 
     }
 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (workbenchTemplateId != null) ? workbenchTemplateId.toString() : "0";
+    }
+    
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -101,6 +114,7 @@ public class Workbenchtemplate extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -109,6 +123,8 @@ public class Workbenchtemplate extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
 
+    
+    @NotNull(message="SpecifyUser must be specified.")
     public Specifyuser getSpecifyUser() {
         return specifyUser;
     }
@@ -210,5 +226,5 @@ public class Workbenchtemplate extends BaseEntity {
     public String toString() {
         return "Workbenchtemplate[ workbenchTemplateID=" + workbenchTemplateId + " ]";
     }
-    
+ 
 }

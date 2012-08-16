@@ -11,9 +11,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -32,8 +34,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Preparationattr.findByCollectionMemberID", query = "SELECT p FROM Preparationattr p WHERE p.collectionMemberId = :collectionMemberID"),
     @NamedQuery(name = "Preparationattr.findByDoubleValue", query = "SELECT p FROM Preparationattr p WHERE p.dblValue = :doubleValue"),
     @NamedQuery(name = "Preparationattr.findByStrValue", query = "SELECT p FROM Preparationattr p WHERE p.strValue = :strValue")})
-public class Preparationattr extends BaseEntity {  
-    
+public class Preparationattr extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -85,6 +87,12 @@ public class Preparationattr extends BaseEntity {
         this.collectionMemberId = collectionMemberId;
     }
 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (attrId != null) ? attrId.toString() : "0";
+    }
     
     public String getStrValue() {
         return strValue;
@@ -126,6 +134,7 @@ public class Preparationattr extends BaseEntity {
         this.dblValue = dblValue;
     }
 
+    @NotNull(message="Definition must be specified.")
     public Attributedef getDefinition() {
         return definition;
     }
@@ -142,6 +151,7 @@ public class Preparationattr extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
 
+    @NotNull(message="Preparation must be specified.")
     public Preparation getPreparation() {
         return preparation;
     }
@@ -176,5 +186,5 @@ public class Preparationattr extends BaseEntity {
     public String toString() {
         return "Preparationattr[ attrID=" + attrId + " ]";
     }
-    
+ 
 }

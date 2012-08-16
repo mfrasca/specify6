@@ -13,7 +13,12 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table; 
 //import javax.validation.constraints.NotNull;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -31,9 +36,10 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Spexportschemaitemmapping.findByTimestampModified", query = "SELECT s FROM Spexportschemaitemmapping s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Spexportschemaitemmapping.findByVersion", query = "SELECT s FROM Spexportschemaitemmapping s WHERE s.version = :version"),
     @NamedQuery(name = "Spexportschemaitemmapping.findByRemarks", query = "SELECT s FROM Spexportschemaitemmapping s WHERE s.remarks = :remarks")})
-public class Spexportschemaitemmapping extends BaseEntity { 
-    
+public class Spexportschemaitemmapping extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -80,6 +86,13 @@ public class Spexportschemaitemmapping extends BaseEntity {
         this.spExportSchemaItemMappingId = spExportSchemaItemMappingId; 
     }
 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (spExportSchemaItemMappingId != null) ? spExportSchemaItemMappingId.toString() : "0";
+    }
+    
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -88,6 +101,7 @@ public class Spexportschemaitemmapping extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @NotNull(message="ExportSchemaItem must be specified.")
     public Spexportschemaitem getExportSchemaItem() {
         return exportSchemaItem;
     }
@@ -162,5 +176,6 @@ public class Spexportschemaitemmapping extends BaseEntity {
     public String toString() {
         return "Spexportschemaitemmapping[ spExportSchemaItemMappingID=" + spExportSchemaItemMappingId + " ]";
     }
-    
+
+ 
 }

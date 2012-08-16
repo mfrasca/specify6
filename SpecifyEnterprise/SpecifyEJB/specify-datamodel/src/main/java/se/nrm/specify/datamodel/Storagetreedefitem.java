@@ -15,9 +15,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table; 
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -42,8 +44,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Storagetreedefitem.findByTextAfter", query = "SELECT s FROM Storagetreedefitem s WHERE s.textAfter = :textAfter"),
     @NamedQuery(name = "Storagetreedefitem.findByTextBefore", query = "SELECT s FROM Storagetreedefitem s WHERE s.textBefore = :textBefore"),
     @NamedQuery(name = "Storagetreedefitem.findByTitle", query = "SELECT s FROM Storagetreedefitem s WHERE s.title = :title")})
-public class Storagetreedefitem extends BaseEntity {  
-    
+public class Storagetreedefitem extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -63,8 +65,7 @@ public class Storagetreedefitem extends BaseEntity {
     @Column(name = "IsInFullName")
     private Boolean isInFullName;
     
-    @Basic(optional = false)
-    @NotNull
+    @Basic(optional = false) 
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
@@ -127,7 +128,13 @@ public class Storagetreedefitem extends BaseEntity {
         this.rankId = rankId;
     }
 
-     
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (storageTreeDefItemId != null) ? storageTreeDefItemId.toString() : "0";
+    }
+    
     public String getFullNameSeparator() {
         return fullNameSeparator;
     }
@@ -152,6 +159,7 @@ public class Storagetreedefitem extends BaseEntity {
         this.isInFullName = isInFullName;
     }
 
+    @NotNull(message="Name must be specified.")
     public String getName() {
         return name;
     }
@@ -242,6 +250,7 @@ public class Storagetreedefitem extends BaseEntity {
         this.storageTreeDefItemId = storageTreeDefItemId;
     }
 
+    @NotNull(message="TreeDef must be specified.")
     public Storagetreedef getTreeDef() {
         return treeDef;
     }
@@ -285,5 +294,6 @@ public class Storagetreedefitem extends BaseEntity {
     public String toString() {
         return "Storagetreedefitem[ storageTreeDefItemID=" + storageTreeDefItemId + " ]";
     }
-    
+
+  
 }

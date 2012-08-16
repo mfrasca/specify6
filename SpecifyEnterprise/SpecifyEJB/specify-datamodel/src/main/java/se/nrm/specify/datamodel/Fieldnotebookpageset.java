@@ -16,9 +16,13 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-//import javax.validation.constraints.NotNull;
+import javax.persistence.TemporalType; 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -40,8 +44,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Fieldnotebookpageset.findByMethod", query = "SELECT f FROM Fieldnotebookpageset f WHERE f.method = :method"),
     @NamedQuery(name = "Fieldnotebookpageset.findByOrderNumber", query = "SELECT f FROM Fieldnotebookpageset f WHERE f.orderNumber = :orderNumber"),
     @NamedQuery(name = "Fieldnotebookpageset.findByStartDate", query = "SELECT f FROM Fieldnotebookpageset f WHERE f.startDate = :startDate")})
-public class Fieldnotebookpageset extends BaseEntity {  
-    
+public class Fieldnotebookpageset extends BaseEntity {
+  
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -55,16 +59,16 @@ public class Fieldnotebookpageset extends BaseEntity {
     @Column(name = "Description")
     private String description;
     
-    @Column(name = "EndDate") 
-    @Temporal(TemporalType.DATE)
-    private Date endDate;
-    
     @Size(max = 64)
     @Column(name = "Method")
     private String method;
     
     @Column(name = "OrderNumber")
     private Short orderNumber;
+    
+    @Column(name = "EndDate")
+    @Temporal(TemporalType.DATE)
+    private Date endDate;
     
     @Column(name = "StartDate")
     @Temporal(TemporalType.DATE)
@@ -107,6 +111,13 @@ public class Fieldnotebookpageset extends BaseEntity {
         super(timestampCreated);
         this.fieldNotebookPageSetId = fieldNotebookPageSetId; 
     }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (fieldNotebookPageSetId != null) ? fieldNotebookPageSetId.toString() : "0";
+    }
 
     public Integer getFieldNotebookPageSetId() {
         return fieldNotebookPageSetId;
@@ -126,14 +137,6 @@ public class Fieldnotebookpageset extends BaseEntity {
         this.description = description;
     }
 
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
-
     public String getMethod() {
         return method;
     }
@@ -149,16 +152,7 @@ public class Fieldnotebookpageset extends BaseEntity {
     public void setOrderNumber(Short orderNumber) {
         this.orderNumber = orderNumber;
     }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    @XmlTransient
+ 
     public Collection<Fieldnotebookpagesetattachment> getAttachments() {
         return attachments;
     }
@@ -167,6 +161,7 @@ public class Fieldnotebookpageset extends BaseEntity {
         this.attachments = attachments;
     }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -175,6 +170,7 @@ public class Fieldnotebookpageset extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @NotNull(message="Discipline must be specified.")
     public Discipline getDiscipline() {
         return discipline;
     }
@@ -183,6 +179,7 @@ public class Fieldnotebookpageset extends BaseEntity {
         this.discipline = discipline;
     }
 
+    @XmlTransient
     public Fieldnotebook getFieldNotebook() {
         return fieldNotebook;
     }
@@ -191,6 +188,7 @@ public class Fieldnotebookpageset extends BaseEntity {
         this.fieldNotebook = fieldNotebook;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -198,8 +196,7 @@ public class Fieldnotebookpageset extends BaseEntity {
     public void setModifiedByAgent(Agent modifiedByAgent) {
         this.modifiedByAgent = modifiedByAgent;
     }
-
-    @XmlTransient
+ 
     public Collection<Fieldnotebookpage> getPages() {
         return pages;
     }
@@ -218,7 +215,34 @@ public class Fieldnotebookpageset extends BaseEntity {
 
  
      
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
  
+    
+    /**
+     * Parent pointer
+     * 
+     * @param u
+     * @param parent 
+     */
+    public void afterUnmarshal(Unmarshaller u, Object parent) {  
+        if(parent instanceof Fieldnotebook) {
+            this.fieldNotebook = (Fieldnotebook)parent;   
+        }
+    }
 
     @Override
     public int hashCode() {
@@ -244,5 +268,5 @@ public class Fieldnotebookpageset extends BaseEntity {
     public String toString() {
         return "Fieldnotebookpageset[ fieldNotebookPageSetID=" + fieldNotebookPageSetId + " ]";
     }
-    
+ 
 }

@@ -1,5 +1,6 @@
 package se.nrm.specify.datamodel;
  
+import com.sun.xml.bind.CycleRecoverable;
 import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Date;
@@ -19,11 +20,14 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.TemporalType;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlTransient; 
 
 /**
  *
@@ -48,8 +52,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Specifyuser.findByName", query = "SELECT s FROM Specifyuser s WHERE s.name = :name"),
     @NamedQuery(name = "Specifyuser.findByPassword", query = "SELECT s FROM Specifyuser s WHERE s.password = :password"),
     @NamedQuery(name = "Specifyuser.findByUserType", query = "SELECT s FROM Specifyuser s WHERE s.userType = :userType")})
-public class Specifyuser extends BaseEntity {  
-    
+public class Specifyuser extends BaseEntity implements CycleRecoverable {
+  
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -85,12 +89,7 @@ public class Specifyuser extends BaseEntity {
     @Column(name = "LoginDisciplineName")
     private String loginDisciplineName;
     
-    @Column(name = "LoginOutTime")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date loginOutTime;
-    
-    @Basic(optional = false)
-    @NotNull
+    @Basic(optional = false) 
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
@@ -102,6 +101,10 @@ public class Specifyuser extends BaseEntity {
     @Size(max = 32)
     @Column(name = "UserType")
     private String userType;
+    
+    @Column(name = "LoginOutTime")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date loginOutTime;
     
     @JoinTable(name = "specifyuser_spprincipal", joinColumns = {
         @JoinColumn(name = "SpecifyUserID", referencedColumnName = "SpecifyUserID")}, inverseJoinColumns = {
@@ -173,7 +176,33 @@ public class Specifyuser extends BaseEntity {
         this.isLoggedInReport = isLoggedInReport;
         this.name = name;
     }
+ 
+    
+    @Override
+    public Specifyuser onCycleDetected(Context context) {
+       // Context provides access to the Marshaller being used:
+       System.out.println("JAXB Marshaller is: " + context.getMarshaller() + " -- " + this.getClass().getSimpleName());
+        
+       Specifyuser su = new Specifyuser(specifyUserId);  
+       su.setName(name);
+       
+       return su;
+   }
 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (specifyUserId != null) ? specifyUserId.toString() : "0";
+    }
+    
+    public Integer getSpecifyUserId() {
+        return specifyUserId;
+    }
+
+    public void setSpecifyUserId(Integer specifyUserId) {
+        this.specifyUserId = specifyUserId;
+    }
  
     public BigInteger getAccumMinLoggedIn() {
         return accumMinLoggedIn;
@@ -215,15 +244,8 @@ public class Specifyuser extends BaseEntity {
     public void setLoginDisciplineName(String loginDisciplineName) {
         this.loginDisciplineName = loginDisciplineName;
     }
-
-    public Date getLoginOutTime() {
-        return loginOutTime;
-    }
-
-    public void setLoginOutTime(Date loginOutTime) {
-        this.loginOutTime = loginOutTime;
-    }
-
+  
+    @NotNull(message="Name must be specified.")
     public String getName() {
         return name;
     }
@@ -231,13 +253,22 @@ public class Specifyuser extends BaseEntity {
     public void setName(String name) {
         this.name = name;
     }
-
+ 
+    @NotNull(message="Password must be specified.")
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
+    }
+    
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getUserType() {
@@ -246,6 +277,24 @@ public class Specifyuser extends BaseEntity {
 
     public void setUserType(String userType) {
         this.userType = userType;
+    }
+    
+    @XmlIDREF
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
+    }
+
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    @XmlIDREF
+    public Agent getModifiedByAgent() {
+        return modifiedByAgent;
+    }
+
+    public void setModifiedByAgent(Agent modifiedByAgent) {
+        this.modifiedByAgent = modifiedByAgent;
     }
 
     @XmlTransient
@@ -275,6 +324,7 @@ public class Specifyuser extends BaseEntity {
         this.collectingevents = collectingevents;
     }
 
+    @XmlTransient
     public Collection<Collectionobject> getCollectionobjects() {
         return collectionobjects;
     }
@@ -282,22 +332,7 @@ public class Specifyuser extends BaseEntity {
     public void setCollectionobjects(Collection<Collectionobject> collectionobjects) {
         this.collectionobjects = collectionobjects;
     }
-
-    public Agent getCreatedByAgent() {
-        return createdByAgent;
-    }
-
-    public void setCreatedByAgent(Agent createdByAgent) {
-        this.createdByAgent = createdByAgent;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
+  
 
     @XmlTransient
     public Collection<Locality> getLocalities() {
@@ -307,15 +342,7 @@ public class Specifyuser extends BaseEntity {
     public void setLocalities(Collection<Locality> localities) {
         this.localities = localities;
     }
-
-    public Agent getModifiedByAgent() {
-        return modifiedByAgent;
-    }
-
-    public void setModifiedByAgent(Agent modifiedByAgent) {
-        this.modifiedByAgent = modifiedByAgent;
-    }
-
+     
     @XmlTransient
     public Collection<Recordset> getRecordsets() {
         return recordsets;
@@ -361,13 +388,7 @@ public class Specifyuser extends BaseEntity {
         this.spQuerys = spQuerys;
     }
 
-    public Integer getSpecifyUserId() {
-        return specifyUserId;
-    }
-
-    public void setSpecifyUserId(Integer specifyUserId) {
-        this.specifyUserId = specifyUserId;
-    }
+    
 
     @XmlTransient
     public Collection<Spreport> getSpreports() {
@@ -414,7 +435,13 @@ public class Specifyuser extends BaseEntity {
         this.workbenches = workbenches;
     }
 
-   
+    public Date getLoginOutTime() {
+        return loginOutTime;
+    }
+
+    public void setLoginOutTime(Date loginOutTime) {
+        this.loginOutTime = loginOutTime;
+    }
 
     @Override
     public int hashCode() {
@@ -440,5 +467,5 @@ public class Specifyuser extends BaseEntity {
     public String toString() {
         return "Specifyuser[ specifyUserID=" + specifyUserId + " ]";
     }
-    
+ 
 }

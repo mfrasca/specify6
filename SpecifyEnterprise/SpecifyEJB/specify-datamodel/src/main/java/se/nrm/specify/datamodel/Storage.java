@@ -19,6 +19,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -47,8 +49,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Storage.findByText1", query = "SELECT s FROM Storage s WHERE s.text1 = :text1"),
     @NamedQuery(name = "Storage.findByText2", query = "SELECT s FROM Storage s WHERE s.text2 = :text2"),
     @NamedQuery(name = "Storage.findByTimestampVersion", query = "SELECT s FROM Storage s WHERE s.timestampVersion = :timestampVersion")})
-public class Storage extends BaseEntity {  
-    
+public class Storage extends BaseEntity {
+  
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -72,11 +74,14 @@ public class Storage extends BaseEntity {
     @Column(name = "IsAccepted")
     private Boolean isAccepted;
     
-    @Basic(optional = false)
-    @NotNull
+    @Basic(optional = false) 
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
+    
+    @Column(name = "TimestampVersion")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date timestampVersion;
     
     @Column(name = "NodeNumber")
     private Integer nodeNumber;
@@ -104,10 +109,6 @@ public class Storage extends BaseEntity {
     @Size(max = 32)
     @Column(name = "Text2")
     private String text2;
-    
-    @Column(name = "TimestampVersion")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date timestampVersion;
     
     @OneToMany(mappedBy = "storage")
     private Collection<Preparation> preparations;
@@ -158,7 +159,13 @@ public class Storage extends BaseEntity {
         this.name = name;
         this.rankId = rankId;
     }
-
+     
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (storageId != null) ? storageId.toString() : "0";
+    }
     @XmlTransient
     public Collection<Storage> getAcceptedChildren() {
         return acceptedChildren;
@@ -202,6 +209,7 @@ public class Storage extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @NotNull(message="Definition must be specified.")
     public Storagetreedef getDefinition() {
         return definition;
     }
@@ -210,6 +218,7 @@ public class Storage extends BaseEntity {
         this.definition = definition;
     }
 
+    @NotNull(message="DefinitionItem must be specified.")
     public Storagetreedefitem getDefinitionItem() {
         return definitionItem;
     }
@@ -293,6 +302,7 @@ public class Storage extends BaseEntity {
         this.isAccepted = isAccepted;
     }
 
+    @NotNull(message="Name must be specified.")
     public String getName() {
         return name;
     }
@@ -349,7 +359,7 @@ public class Storage extends BaseEntity {
     public void setText2(String text2) {
         this.text2 = text2;
     }
-
+    
     public Date getTimestampVersion() {
         return timestampVersion;
     }
@@ -383,6 +393,6 @@ public class Storage extends BaseEntity {
     @Override
     public String toString() {
         return "Storage[ storageId=" + storageId + " ]";
-    }
-    
+    } 
+ 
 }

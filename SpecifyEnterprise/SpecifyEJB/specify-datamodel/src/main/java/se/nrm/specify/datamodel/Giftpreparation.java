@@ -13,8 +13,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table; 
-//import javax.validation.constraints.NotNull;
+//import javax.validation.constraints.NotNull; 
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -32,8 +34,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Giftpreparation.findByVersion", query = "SELECT g FROM Giftpreparation g WHERE g.version = :version"),
     @NamedQuery(name = "Giftpreparation.findByDescriptionOfMaterial", query = "SELECT g FROM Giftpreparation g WHERE g.descriptionOfMaterial = :descriptionOfMaterial"),
     @NamedQuery(name = "Giftpreparation.findByQuantity", query = "SELECT g FROM Giftpreparation g WHERE g.quantity = :quantity")})
-public class Giftpreparation extends BaseEntity {  
-    
+public class Giftpreparation extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -97,6 +99,13 @@ public class Giftpreparation extends BaseEntity {
         this.giftPreparationId = giftPreparationId; 
     }
 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (giftPreparationId != null) ? giftPreparationId.toString() : "0";
+    }
+    
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -211,5 +220,5 @@ public class Giftpreparation extends BaseEntity {
     public String toString() {
         return "Giftpreparation[ giftPreparationID=" + giftPreparationId + " ]";
     }
-    
+ 
 }

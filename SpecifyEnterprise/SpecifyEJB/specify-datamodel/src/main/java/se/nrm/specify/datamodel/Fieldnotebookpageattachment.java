@@ -12,10 +12,16 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
-//import javax.validation.constraints.NotNull;
+import javax.persistence.Table;  
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import org.eclipse.persistence.oxm.annotations.XmlTransformation;
 
 /**
  *
@@ -31,8 +37,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Fieldnotebookpageattachment.findByTimestampModified", query = "SELECT f FROM Fieldnotebookpageattachment f WHERE f.timestampModified = :timestampModified"),
     @NamedQuery(name = "Fieldnotebookpageattachment.findByVersion", query = "SELECT f FROM Fieldnotebookpageattachment f WHERE f.version = :version"),
     @NamedQuery(name = "Fieldnotebookpageattachment.findByOrdinal", query = "SELECT f FROM Fieldnotebookpageattachment f WHERE f.ordinal = :ordinal")})
-public class Fieldnotebookpageattachment extends BaseEntity { 
-    
+public class Fieldnotebookpageattachment extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -77,6 +83,13 @@ public class Fieldnotebookpageattachment extends BaseEntity {
         super(timestampCreated);
         this.fieldNotebookPageAttachmentId = fieldNotebookPageAttachmentId; 
     }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (fieldNotebookPageAttachmentId != null) ? fieldNotebookPageAttachmentId.toString() : "0";
+    }
 
     public Integer getFieldNotebookPageAttachmentId() {
         return fieldNotebookPageAttachmentId;
@@ -102,6 +115,7 @@ public class Fieldnotebookpageattachment extends BaseEntity {
         this.remarks = remarks;
     }
 
+    @NotNull(message="Attachment must be specified.")
     public Attachment getAttachment() {
         return attachment;
     }
@@ -110,6 +124,7 @@ public class Fieldnotebookpageattachment extends BaseEntity {
         this.attachment = attachment;
     }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -118,6 +133,8 @@ public class Fieldnotebookpageattachment extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @XmlTransient
+    @NotNull(message="FieldNotebookPage must be specified.")
     public Fieldnotebookpage getFieldNotebookPage() {
         return fieldNotebookPage;
     }
@@ -126,6 +143,7 @@ public class Fieldnotebookpageattachment extends BaseEntity {
         this.fieldNotebookPage = fieldNotebookPage;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -134,7 +152,20 @@ public class Fieldnotebookpageattachment extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
 
- 
+     /**
+     * Parent pointer
+     * 
+     * @param u
+     * @param parent 
+     */
+    public void afterUnmarshal(Unmarshaller u, Object parent) {  
+        if(parent instanceof Fieldnotebookpage) {
+            this.fieldNotebookPage = (Fieldnotebookpage)parent;   
+        }
+    }
+    
+    
+    
     @Override
     public int hashCode() {
         int hash = 0;
@@ -159,5 +190,6 @@ public class Fieldnotebookpageattachment extends BaseEntity {
     public String toString() {
         return "Fieldnotebookpageattachment[ fieldNotebookPageAttachmentId=" + fieldNotebookPageAttachmentId + " ]";
     }
+ 
     
 }

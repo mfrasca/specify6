@@ -11,9 +11,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -31,8 +33,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Localitynamealias.findByVersion", query = "SELECT l FROM Localitynamealias l WHERE l.version = :version"),
     @NamedQuery(name = "Localitynamealias.findByName", query = "SELECT l FROM Localitynamealias l WHERE l.name = :name"),
     @NamedQuery(name = "Localitynamealias.findBySource", query = "SELECT l FROM Localitynamealias l WHERE l.source = :source")})
-public class Localitynamealias extends BaseEntity {  
-    
+public class Localitynamealias extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -42,8 +44,7 @@ public class Localitynamealias extends BaseEntity {
     @Column(name = "LocalityNameAliasID")
     private Integer localityNameAliasId;
      
-    @Basic(optional = false)
-    @NotNull
+    @Basic(optional = false) 
     @Size(min = 1, max = 255)
     @Column(name = "Name")
     private String name;
@@ -84,7 +85,14 @@ public class Localitynamealias extends BaseEntity {
         this.source = source;
     }
  
- 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (localityNameAliasId != null) ? localityNameAliasId.toString() : "0";
+    }
+    
+    @NotNull(message="Name must be specified.")
     public String getName() {
         return name;
     }
@@ -109,6 +117,7 @@ public class Localitynamealias extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @NotNull(message="Discipline must be specified.")
     public Discipline getDiscipline() {
         return discipline;
     }
@@ -117,6 +126,7 @@ public class Localitynamealias extends BaseEntity {
         this.discipline = discipline;
     }
 
+    @NotNull(message="Locality must be specified.")
     public Locality getLocality() {
         return locality;
     }
@@ -166,5 +176,5 @@ public class Localitynamealias extends BaseEntity {
     public String toString() {
         return "Localitynamealias[ localityNameAliasID=" + localityNameAliasId + " ]";
     }
-    
+ 
 }

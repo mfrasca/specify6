@@ -14,9 +14,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table; 
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -35,8 +38,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Preptype.findByVersion", query = "SELECT p FROM Preptype p WHERE p.version = :version"),
     @NamedQuery(name = "Preptype.findByIsLoanable", query = "SELECT p FROM Preptype p WHERE p.isLoanable = :isLoanable"),
     @NamedQuery(name = "Preptype.findByName", query = "SELECT p FROM Preptype p WHERE p.name = :name")})
-public class Preptype extends BaseEntity { 
-    
+public class Preptype extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -51,8 +54,7 @@ public class Preptype extends BaseEntity {
     @Column(name = "IsLoanable")
     private boolean isLoanable;
     
-    @Basic(optional = false)
-    @NotNull
+    @Basic(optional = false) 
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
@@ -69,7 +71,7 @@ public class Preptype extends BaseEntity {
     @ManyToOne
     private Agent modifiedByAgent;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "prepType")
+    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, mappedBy = "prepType")
     private Collection<Preparation> preparations;
     
     @OneToMany(mappedBy = "prepType")
@@ -88,7 +90,16 @@ public class Preptype extends BaseEntity {
         this.isLoanable = isLoanable;
         this.name = name;
     }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (prepTypeId != null) ? prepTypeId.toString() : "0";
+    }
 
+    @XmlIDREF
+    @NotNull(message="Collection must be specified.")
     public se.nrm.specify.datamodel.Collection getCollection() {
         return collection;
     }
@@ -97,6 +108,7 @@ public class Preptype extends BaseEntity {
         this.collection = collection;
     }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -105,6 +117,7 @@ public class Preptype extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -130,6 +143,7 @@ public class Preptype extends BaseEntity {
         this.isLoanable = isLoanable;
     }
 
+    @NotNull(message="Name must be specified.")
     public String getName() {
         return name;
     }
@@ -184,5 +198,5 @@ public class Preptype extends BaseEntity {
     public String toString() {
         return "Preptype[ prepTypeID=" + prepTypeId + " ]";
     }
-    
+ 
 }

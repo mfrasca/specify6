@@ -19,6 +19,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -43,8 +45,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Inforequest.findByLastname", query = "SELECT i FROM Inforequest i WHERE i.lastName = :lastname"),
     @NamedQuery(name = "Inforequest.findByReplyDate", query = "SELECT i FROM Inforequest i WHERE i.replyDate = :replyDate"),
     @NamedQuery(name = "Inforequest.findByRequestDate", query = "SELECT i FROM Inforequest i WHERE i.requestDate = :requestDate")})
-public class Inforequest extends BaseEntity { 
-    
+public class Inforequest extends BaseEntity {
+  
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -121,6 +123,12 @@ public class Inforequest extends BaseEntity {
         this.collectionMemberId = collectionMemberId;
     }
 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (infoRequestID != null) ? infoRequestID.toString() : "0";
+    }
     public Integer getInfoRequestID() {
         return infoRequestID;
     }
@@ -163,22 +171,6 @@ public class Inforequest extends BaseEntity {
 
     public void setRemarks(String remarks) {
         this.remarks = remarks;
-    }
-
-    public Date getReplyDate() {
-        return replyDate;
-    }
-
-    public void setReplyDate(Date replyDate) {
-        this.replyDate = replyDate;
-    }
-
-    public Date getRequestDate() {
-        return requestDate;
-    }
-
-    public void setRequestDate(Date requestDate) {
-        this.requestDate = requestDate;
     }
 
     @XmlTransient
@@ -232,6 +224,22 @@ public class Inforequest extends BaseEntity {
         this.lastName = lastName;
     }
 
+    public Date getReplyDate() {
+        return replyDate;
+    }
+
+    public void setReplyDate(Date replyDate) {
+        this.replyDate = replyDate;
+    }
+
+    public Date getRequestDate() {
+        return requestDate;
+    }
+
+    public void setRequestDate(Date requestDate) {
+        this.requestDate = requestDate;
+    }
+    
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -265,6 +273,5 @@ public class Inforequest extends BaseEntity {
     @Override
     public String toString() {
         return "Inforequest[ infoRequestID=" + infoRequestID + " ]";
-    }
-    
+    } 
 }

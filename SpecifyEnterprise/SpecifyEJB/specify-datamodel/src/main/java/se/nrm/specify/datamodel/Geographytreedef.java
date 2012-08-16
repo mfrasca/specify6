@@ -15,9 +15,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table; 
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -36,8 +39,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Geographytreedef.findByVersion", query = "SELECT g FROM Geographytreedef g WHERE g.version = :version"),
     @NamedQuery(name = "Geographytreedef.findByFullNameDirection", query = "SELECT g FROM Geographytreedef g WHERE g.fullNameDirection = :fullNameDirection"),
     @NamedQuery(name = "Geographytreedef.findByName", query = "SELECT g FROM Geographytreedef g WHERE g.name = :name")})
-public class Geographytreedef extends BaseEntity { 
-    
+public class Geographytreedef extends BaseEntity {
+  
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -50,8 +53,7 @@ public class Geographytreedef extends BaseEntity {
     @Column(name = "FullNameDirection")
     private Integer fullNameDirection;
     
-    @Basic(optional = false)
-    @NotNull
+    @Basic(optional = false) 
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
@@ -91,6 +93,14 @@ public class Geographytreedef extends BaseEntity {
         this.name = name;
     }
 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (geographyTreeDefId != null) ? geographyTreeDefId.toString() : "0";
+    }
+    
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -107,6 +117,7 @@ public class Geographytreedef extends BaseEntity {
         this.geographyTreeDefId = geographyTreeDefId;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -114,9 +125,7 @@ public class Geographytreedef extends BaseEntity {
     public void setModifiedByAgent(Agent modifiedByAgent) {
         this.modifiedByAgent = modifiedByAgent;
     }
-
  
-    
     public Integer getFullNameDirection() {
         return fullNameDirection;
     }
@@ -125,6 +134,7 @@ public class Geographytreedef extends BaseEntity {
         this.fullNameDirection = fullNameDirection;
     }
 
+    @NotNull(message="Name must be specified.")
     public String getName() {
         return name;
     }
@@ -195,5 +205,6 @@ public class Geographytreedef extends BaseEntity {
     public String toString() {
         return "Geographytreedef[ geographyTreeDefID=" + geographyTreeDefId + " ]";
     }
+ 
     
 }

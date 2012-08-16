@@ -1,5 +1,6 @@
 package se.nrm.specify.datamodel;
  
+import com.sun.xml.bind.CycleRecoverable;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -12,10 +13,13 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table;  
+import javax.persistence.Table;   
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.validation.constraints.Size; 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlRootElement; 
 
 /**
  *
@@ -31,8 +35,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Author.findByTimestampModified", query = "SELECT a FROM Author a WHERE a.timestampModified = :timestampModified"),
     @NamedQuery(name = "Author.findByVersion", query = "SELECT a FROM Author a WHERE a.version = :version"),
     @NamedQuery(name = "Author.findByOrderNumber", query = "SELECT a FROM Author a WHERE a.orderNumber = :orderNumber")})
-public class Author extends BaseEntity { 
-    
+public class Author extends BaseEntity implements CycleRecoverable {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -64,7 +68,7 @@ public class Author extends BaseEntity {
     @ManyToOne
     private Agent modifiedByAgent;
     
-    @JoinColumn(name = "AgentID", referencedColumnName = "AgentID")
+    @JoinColumn(name = "AgentID", referencedColumnName = "AgentID", unique=true)
     @ManyToOne(optional = false)
     private Agent agent;
 
@@ -80,7 +84,23 @@ public class Author extends BaseEntity {
         this.authorId = authorId; 
         this.orderNumber = orderNumber;
     }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (authorId != null) ? authorId.toString() : "0";
+    }
+ 
+    @Override
+    public Author onCycleDetected(Context context) {
+       // Context provides access to the Marshaller being used:
+       System.out.println("JAXB Marshaller is: " + context.getMarshaller()  + " -- " + this.getClass().getSimpleName());
+        
+       return new Author(authorId);    
+   }
 
+    @NotNull(message="Agent must be specified.")
     public Agent getAgent() {
         return agent;
     }
@@ -97,6 +117,7 @@ public class Author extends BaseEntity {
         this.authorId = authorId;
     }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -105,6 +126,7 @@ public class Author extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -112,7 +134,8 @@ public class Author extends BaseEntity {
     public void setModifiedByAgent(Agent modifiedByAgent) {
         this.modifiedByAgent = modifiedByAgent;
     }
-
+ 
+    @NotNull(message="Referencework must be specified.")
     public Referencework getReferenceWork() {
         return referenceWork;
     }
@@ -137,9 +160,7 @@ public class Author extends BaseEntity {
 
     public void setRemarks(String remarks) {
         this.remarks = remarks;
-    }
-
-  
+    } 
 
     @Override
     public int hashCode() {
@@ -165,5 +186,7 @@ public class Author extends BaseEntity {
     public String toString() {
         return "Author[ authorID=" + authorId + " ]";
     }
+
+   
     
 }

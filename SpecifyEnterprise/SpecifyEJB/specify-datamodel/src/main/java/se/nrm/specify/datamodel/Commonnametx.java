@@ -14,9 +14,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table; 
-//import javax.validation.constraints.NotNull;
+import javax.persistence.Table;  
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -38,7 +42,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Commonnametx.findByLanguage", query = "SELECT c FROM Commonnametx c WHERE c.language = :language"),
     @NamedQuery(name = "Commonnametx.findByName", query = "SELECT c FROM Commonnametx c WHERE c.name = :name"),
     @NamedQuery(name = "Commonnametx.findByVariant", query = "SELECT c FROM Commonnametx c WHERE c.variant = :variant")})
-public class Commonnametx extends BaseEntity { 
+public class Commonnametx extends BaseEntity {
+   
         
     private static final long serialVersionUID = 1L;
     @Id
@@ -95,6 +100,13 @@ public class Commonnametx extends BaseEntity {
 //        this.timestampCreated = timestampCreated;
         setTimestampCreated(timestampCreated);
     }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (commonNameTxId != null) ?  commonNameTxId.toString() : "0";
+    }
 
     @XmlTransient
     public Collection<Commonnametxcitation> getCitations() {
@@ -113,6 +125,7 @@ public class Commonnametx extends BaseEntity {
         this.commonNameTxId = commonNameTxId;
     }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -121,6 +134,7 @@ public class Commonnametx extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -129,6 +143,8 @@ public class Commonnametx extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
 
+    @XmlTransient
+    @NotNull(message="Taxon must be specified.")
     public Taxon getTaxon() {
         return taxon;
     }
@@ -181,7 +197,17 @@ public class Commonnametx extends BaseEntity {
 
  
 
- 
+     /**
+     * Parent pointer
+     * 
+     * @param u
+     * @param parent 
+     */
+    public void afterUnmarshal(Unmarshaller u, Object parent) {  
+        if(parent instanceof Taxon) {
+            this.taxon = (Taxon)parent;   
+        }
+    }
  
 
     @Override
@@ -208,5 +234,6 @@ public class Commonnametx extends BaseEntity {
     public String toString() {
         return "Commonnametx[ commonNameTxId=" + commonNameTxId + " ]";
     }
+ 
     
 }

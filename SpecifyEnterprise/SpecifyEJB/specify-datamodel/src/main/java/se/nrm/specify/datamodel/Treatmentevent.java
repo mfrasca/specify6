@@ -2,7 +2,11 @@ package se.nrm.specify.datamodel;
  
 import java.util.Date;
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -30,6 +34,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Treatmentevent.findByTreatmentNumber", query = "SELECT t FROM Treatmentevent t WHERE t.treatmentNumber = :treatmentNumber"),
     @NamedQuery(name = "Treatmentevent.findByType", query = "SELECT t FROM Treatmentevent t WHERE t.type = :type")})
 public class Treatmentevent extends BaseEntity {  
+   
     
     private static final long serialVersionUID = 1L;
     
@@ -39,34 +44,6 @@ public class Treatmentevent extends BaseEntity {
 //    @NotNull
     @Column(name = "TreatmentEventID")
     private Integer treatmentEventId;
-     
-    @Column(name = "DateBoxed")
-    @Temporal(TemporalType.DATE)
-    private Date dateBoxed;
-    
-    @Column(name = "DateCleaned")
-    @Temporal(TemporalType.DATE)
-    private Date dateCleaned;
-    
-    @Column(name = "DateCompleted")
-    @Temporal(TemporalType.DATE)
-    private Date dateCompleted;
-    
-    @Column(name = "DateReceived")
-    @Temporal(TemporalType.DATE)
-    private Date dateReceived;
-    
-    @Column(name = "DateToIsolation")
-    @Temporal(TemporalType.DATE)
-    private Date dateToIsolation;
-    
-    @Column(name = "DateTreatmentEnded")
-    @Temporal(TemporalType.DATE)
-    private Date dateTreatmentEnded;
-    
-    @Column(name = "DateTreatmentStarted")
-    @Temporal(TemporalType.DATE)
-    private Date dateTreatmentStarted;
     
     @Size(max = 50)
     @Column(name = "FieldNumber")
@@ -88,6 +65,35 @@ public class Treatmentevent extends BaseEntity {
     @Size(max = 32)
     @Column(name = "Type")
     private String type;
+    
+    
+    @Column(name =     "DateBoxed")
+    @Temporal(TemporalType.DATE)
+    private Date dateBoxed;
+    
+    @Column(name =     "DateCleaned")
+    @Temporal(TemporalType.DATE)
+    private Date dateCleaned;
+    
+    @Column(name =     "DateCompleted")
+    @Temporal(TemporalType.DATE)
+    private Date dateCompleted;
+    
+    @Column(name =     "DateReceived")
+    @Temporal(TemporalType.DATE)
+    private Date dateReceived;
+    
+    @Column(name =     "DateToIsolation")
+    @Temporal(TemporalType.DATE)
+    private Date dateToIsolation;
+    
+    @Column(name =     "DateTreatmentEnded")
+    @Temporal(TemporalType.DATE)
+    private Date dateTreatmentEnded;
+    
+    @Column(name = "DateTreatmentStarted")
+    @Temporal(TemporalType.DATE)
+    private Date dateTreatmentStarted;
     
     @JoinColumn(name = "DivisionID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne
@@ -121,8 +127,89 @@ public class Treatmentevent extends BaseEntity {
         this.treatmentEventId = treatmentEventId; 
     }
 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (treatmentEventId != null) ? treatmentEventId.toString() : "0";
+    }
+
+    public String getFieldNumber() {
+        return fieldNumber;
+    }
+
+    public void setFieldNumber(String fieldNumber) {
+        this.fieldNumber = fieldNumber;
+    }
  
- 
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
+    public String getTreatmentNumber() {
+        return treatmentNumber;
+    }
+
+    public void setTreatmentNumber(String treatmentNumber) {
+        this.treatmentNumber = treatmentNumber;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    @XmlIDREF
+    public Accession getAccession() {
+        return accession;
+    }
+
+    public void setAccession(Accession accession) {
+        this.accession = accession;
+    }
+
+    @XmlIDREF
+    public Collectionobject getCollectionObject() {
+        return collectionObject;
+    }
+
+    public void setCollectionObject(Collectionobject collectionObject) {
+        this.collectionObject = collectionObject;
+    }
+
+    @XmlIDREF
+    public Agent getCreatedByAgent() {
+        return createdByAgent;
+    }
+
+    public void setCreatedByAgent(Agent createdByAgent) {
+        this.createdByAgent = createdByAgent;
+    }
+
+    @XmlIDREF
+    public Division getDivision() {
+        return division;
+    }
+
+    public void setDivision(Division division) {
+        this.division = division;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+    
     public Date getDateBoxed() {
         return dateBoxed;
     }
@@ -179,78 +266,7 @@ public class Treatmentevent extends BaseEntity {
         this.dateTreatmentStarted = dateTreatmentStarted;
     }
 
-    public String getFieldNumber() {
-        return fieldNumber;
-    }
-
-    public void setFieldNumber(String fieldNumber) {
-        this.fieldNumber = fieldNumber;
-    }
- 
-    public String getRemarks() {
-        return remarks;
-    }
-
-    public void setRemarks(String remarks) {
-        this.remarks = remarks;
-    }
-
-    public String getTreatmentNumber() {
-        return treatmentNumber;
-    }
-
-    public void setTreatmentNumber(String treatmentNumber) {
-        this.treatmentNumber = treatmentNumber;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public Accession getAccession() {
-        return accession;
-    }
-
-    public void setAccession(Accession accession) {
-        this.accession = accession;
-    }
-
-    public Collectionobject getCollectionObject() {
-        return collectionObject;
-    }
-
-    public void setCollectionObject(Collectionobject collectionObject) {
-        this.collectionObject = collectionObject;
-    }
-
-    public Agent getCreatedByAgent() {
-        return createdByAgent;
-    }
-
-    public void setCreatedByAgent(Agent createdByAgent) {
-        this.createdByAgent = createdByAgent;
-    }
-
-    public Division getDivision() {
-        return division;
-    }
-
-    public void setDivision(Division division) {
-        this.division = division;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -292,5 +308,7 @@ public class Treatmentevent extends BaseEntity {
     public String toString() {
         return "Treatmentevent[ treatmentEventID=" + treatmentEventId + " ]";
     }
+ 
+    
     
 }

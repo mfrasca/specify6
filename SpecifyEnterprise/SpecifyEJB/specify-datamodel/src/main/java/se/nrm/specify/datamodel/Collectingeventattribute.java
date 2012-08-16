@@ -14,11 +14,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table; 
-//import javax.validation.constraints.NotNull;
+import javax.persistence.Table;  
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlRootElement; 
 
 /**
  *
@@ -65,7 +66,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Collectingeventattribute.findByYesNo3", query = "SELECT c FROM Collectingeventattribute c WHERE c.yesNo3 = :yesNo3"),
     @NamedQuery(name = "Collectingeventattribute.findByYesNo4", query = "SELECT c FROM Collectingeventattribute c WHERE c.yesNo4 = :yesNo4"),
     @NamedQuery(name = "Collectingeventattribute.findByYesNo5", query = "SELECT c FROM Collectingeventattribute c WHERE c.yesNo5 = :yesNo5")})
-public class Collectingeventattribute extends BaseEntity { // implements Serializable {
+public class Collectingeventattribute extends BaseEntity {
+ 
+// implements Serializable {
     
     private static final long serialVersionUID = 1L;
     
@@ -238,7 +241,20 @@ public class Collectingeventattribute extends BaseEntity { // implements Seriali
         this.collectingEventAttributeId = collectingEventAttributeId; 
     }
 
- 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (collectingEventAttributeId != null) ? collectingEventAttributeId.toString() : "0";
+    }
+
+    public Integer getCollectingEventAttributeId() {
+        return collectingEventAttributeId;
+    }
+
+    public void setCollectingEventAttributeId(Integer collectingEventAttributeId) {
+        this.collectingEventAttributeId = collectingEventAttributeId;
+    }
     
     public Float getNumber1() {
         return number1;
@@ -528,14 +544,9 @@ public class Collectingeventattribute extends BaseEntity { // implements Seriali
         this.yesNo5 = yesNo5;
     }
 
-    public Integer getCollectingEventAttributeId() {
-        return collectingEventAttributeId;
-    }
 
-    public void setCollectingEventAttributeId(Integer collectingEventAttributeId) {
-        this.collectingEventAttributeId = collectingEventAttributeId;
-    }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -544,6 +555,7 @@ public class Collectingeventattribute extends BaseEntity { // implements Seriali
         this.createdByAgent = createdByAgent;
     }
 
+    @XmlIDREF
     public Discipline getDiscipline() {
         return discipline;
     }
@@ -560,6 +572,7 @@ public class Collectingeventattribute extends BaseEntity { // implements Seriali
         this.hostTaxon = hostTaxon;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -568,7 +581,7 @@ public class Collectingeventattribute extends BaseEntity { // implements Seriali
         this.modifiedByAgent = modifiedByAgent;
     }
 
-    @XmlTransient
+    @XmlIDREF
     public Collection<Collectingevent> getCollectingEvents() {
         return collectingEvents;
     }
@@ -605,5 +618,6 @@ public class Collectingeventattribute extends BaseEntity { // implements Seriali
     public String toString() {
         return "Collectingeventattribute[ collectingEventAttributeId=" + collectingEventAttributeId + " ]";
     }
+ 
     
 }

@@ -11,9 +11,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -30,8 +33,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Attachmenttag.findByTimestampModified", query = "SELECT a FROM Attachmenttag a WHERE a.timestampModified = :timestampModified"),
     @NamedQuery(name = "Attachmenttag.findByVersion", query = "SELECT a FROM Attachmenttag a WHERE a.version = :version"),
     @NamedQuery(name = "Attachmenttag.findByTag", query = "SELECT a FROM Attachmenttag a WHERE a.tag = :tag")})
-public class Attachmenttag extends BaseEntity {  
-    
+public class Attachmenttag extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -41,8 +44,7 @@ public class Attachmenttag extends BaseEntity {
     @Column(name = "AttachmentTagID")
     private Integer attachmentTagID;
      
-    @Basic(optional = false)
-    @NotNull
+    @Basic(optional = false) 
     @Size(min = 1, max = 64)
     @Column(name = "Tag")
     private String tag;
@@ -71,6 +73,13 @@ public class Attachmenttag extends BaseEntity {
         this.attachmentTagID = attachmentTagID; 
         this.tag = tag;
     }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (attachmentTagID != null) ? attachmentTagID.toString() : "0";
+    }
 
     public Integer getAttachmentTagID() {
         return attachmentTagID;
@@ -80,6 +89,7 @@ public class Attachmenttag extends BaseEntity {
         this.attachmentTagID = attachmentTagID;
     } 
 
+    @NotNull(message="Tag must be specified.")
     public String getTag() {
         return tag;
     }
@@ -88,6 +98,7 @@ public class Attachmenttag extends BaseEntity {
         this.tag = tag;
     }
 
+    @NotNull(message="Attachment must be specified.")
     public Attachment getAttachment() {
         return attachment;
     }
@@ -96,6 +107,7 @@ public class Attachmenttag extends BaseEntity {
         this.attachment = attachment;
     }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -104,6 +116,7 @@ public class Attachmenttag extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -137,5 +150,6 @@ public class Attachmenttag extends BaseEntity {
     public String toString() {
         return "Attachmenttag[ attachmentTagID=" + attachmentTagID + " ]";
     }
-    
+ 
+ 
 }

@@ -20,6 +20,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -60,7 +63,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Dnasequencingrun.findByYesNo1", query = "SELECT d FROM Dnasequencingrun d WHERE d.yesNo1 = :yesNo1"),
     @NamedQuery(name = "Dnasequencingrun.findByYesNo2", query = "SELECT d FROM Dnasequencingrun d WHERE d.yesNo2 = :yesNo2"),
     @NamedQuery(name = "Dnasequencingrun.findByYesNo3", query = "SELECT d FROM Dnasequencingrun d WHERE d.yesNo3 = :yesNo3")})
-public class Dnasequencingrun extends BaseEntity { 
+public class Dnasequencingrun extends BaseEntity {
     
     private static final long serialVersionUID = 1L;
     
@@ -75,6 +78,15 @@ public class Dnasequencingrun extends BaseEntity {
     @NotNull
     @Column(name = "CollectionMemberID")
     private int collectionMemberId;
+    
+    @Column(name = "RunDate")
+    @Temporal(TemporalType.DATE)
+    private Date runDate;
+    
+    @Lob
+    @Size(max = 65535)
+    @Column(name = "GeneSequence")
+    private String geneSequence;
     
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "Number1")
@@ -116,10 +128,6 @@ public class Dnasequencingrun extends BaseEntity {
     @Size(max = 65535)
     @Column(name = "Remarks")
     private String remarks;
-    
-    @Column(name = "RunDate")
-    @Temporal(TemporalType.DATE)
-    private Date runDate;
     
     @Size(max = 32)
     @Column(name = "ScoreFileName")
@@ -164,12 +172,13 @@ public class Dnasequencingrun extends BaseEntity {
     
     @Column(name = "YesNo3")
     private Boolean yesNo3;
-    
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "dnaSequencingRun")
-    private Collection<Dnasequenceattachment> attachments;
-    
+     
+//    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "sequencingRun")
     private Collection<Dnasequencingruncitation> citations;
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "dnasequencingrun")
+    private Collection<Dnasequencerunattachment> dnasequencerunattachments;
     
     @JoinColumn(name = "RunByAgentID", referencedColumnName = "AgentID")
     @ManyToOne 
@@ -204,6 +213,14 @@ public class Dnasequencingrun extends BaseEntity {
         this.collectionMemberId = collectionMemberId;
     }
 
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (dnaSequencingRunId != null) ? dnaSequencingRunId.toString() : "0";
+    }
+    
     public int getCollectionMemberId() {
         return collectionMemberId;
     }
@@ -304,7 +321,21 @@ public class Dnasequencingrun extends BaseEntity {
     }
 
     
- 
+    public Date getRunDate() {
+        return runDate;
+    }
+
+    public void setRunDate(Date runDate) {
+        this.runDate = runDate;
+    }
+
+    public String getGeneSequence() {
+        return geneSequence;
+    }
+
+    public void setGeneSequence(String geneSequence) {
+        this.geneSequence = geneSequence;
+    }
 
     public String getReadDirection() {
         return readDirection;
@@ -320,14 +351,6 @@ public class Dnasequencingrun extends BaseEntity {
 
     public void setRemarks(String remarks) {
         this.remarks = remarks;
-    }
-
-    public Date getRunDate() {
-        return runDate;
-    }
-
-    public void setRunDate(Date runDate) {
-        this.runDate = runDate;
     }
 
     public String getScoreFileName() {
@@ -418,15 +441,7 @@ public class Dnasequencingrun extends BaseEntity {
     public void setYesNo3(Boolean yesNo3) {
         this.yesNo3 = yesNo3;
     }
-
-    @XmlTransient
-    public Collection<Dnasequenceattachment> getAttachments() {
-        return attachments;
-    }
-
-    public void setAttachments(Collection<Dnasequenceattachment> attachments) {
-        this.attachments = attachments;
-    }
+ 
 
     @XmlTransient
     public Collection<Dnasequencingruncitation> getCitations() {
@@ -437,6 +452,17 @@ public class Dnasequencingrun extends BaseEntity {
         this.citations = citations;
     }
 
+    @XmlTransient
+    public Collection<Dnasequencerunattachment> getDnasequencerunattachments() {
+        return dnasequencerunattachments;
+    }
+
+    public void setDnasequencerunattachments(Collection<Dnasequencerunattachment> dnasequencerunattachments) {
+        this.dnasequencerunattachments = dnasequencerunattachments;
+    }
+    
+    
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -445,6 +471,7 @@ public class Dnasequencingrun extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @NotNull(message="Dnasequence must be specified.")
     public Dnasequence getDnaSequence() {
         return dnaSequence;
     }
@@ -453,6 +480,7 @@ public class Dnasequencingrun extends BaseEntity {
         this.dnaSequence = dnaSequence;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -504,5 +532,10 @@ public class Dnasequencingrun extends BaseEntity {
     public String toString() {
         return "Dnasequencingrun[ dNASequencingRunID=" + dnaSequencingRunId + " ]";
     }
-    
+ 
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+ 
 }

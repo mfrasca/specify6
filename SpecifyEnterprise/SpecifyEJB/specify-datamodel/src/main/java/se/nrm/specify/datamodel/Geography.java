@@ -21,6 +21,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient; 
 
@@ -59,7 +62,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Geography.findByText2", query = "SELECT g FROM Geography g WHERE g.text2 = :text2"),
     @NamedQuery(name = "Geography.findByTimestampVersion", query = "SELECT g FROM Geography g WHERE g.timestampVersion = :timestampVersion")})
 public class Geography extends BaseEntity {
-
+ 
+     
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -78,6 +82,10 @@ public class Geography extends BaseEntity {
     
     @Column(name = "CentroidLon")
     private BigDecimal centroidLon;
+    
+    @Column(name = "TimestampVersion")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date timestampVersion;
     
     @Size(max = 128)
     @Column(name = "CommonName")
@@ -108,8 +116,7 @@ public class Geography extends BaseEntity {
     
     @Column(name = "IsCurrent")
     private Boolean isCurrent;
-    
-    @NotNull
+     
     @Basic(optional = false) 
     @Size(min = 1, max = 64)
     @Column(name = "Name")
@@ -141,10 +148,6 @@ public class Geography extends BaseEntity {
     @Size(max = 32)
     @Column(name = "Text2")
     private String text2;
-    
-    @Column(name = "TimestampVersion")
-    @Temporal(TemporalType.TIMESTAMP) 
-    private Date timestampVersion;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "geography")
     private Collection<Agentgeography> agentgeographys;
@@ -194,6 +197,13 @@ public class Geography extends BaseEntity {
         this.geographyId = geographyId;
         this.name = name;
         this.rankId = rankId;
+    }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (geographyId != null) ? geographyId.toString() : "0";
     }
 
     public Integer getGeographyId() {
@@ -300,6 +310,7 @@ public class Geography extends BaseEntity {
         this.isCurrent = isCurrent;
     }
 
+    @NotNull(message="Name must be specified.")
     public String getName() {
         return name;
     }
@@ -357,14 +368,6 @@ public class Geography extends BaseEntity {
         this.text2 = text2;
     }
 
-    public Date getTimestampVersion() {
-        return timestampVersion;
-    }
-
-    public void setTimestampVersion(Date timestampVersion) {
-        this.timestampVersion = timestampVersion;
-    }
-
     @XmlTransient
     public Collection<Agentgeography> getAgentgeographys() {
         return agentgeographys;
@@ -373,9 +376,7 @@ public class Geography extends BaseEntity {
     public void setAgentgeographys(Collection<Agentgeography> agentgeographys) {
         this.agentgeographys = agentgeographys;
     }
-
  
-
     @XmlTransient
     public Collection<Geography> getAcceptedChildren() {
         return acceptedChildren;
@@ -385,6 +386,7 @@ public class Geography extends BaseEntity {
         this.acceptedChildren = acceptedChildren;
     }
 
+    @NotNull(message="Definition must be specified.")
     public Geographytreedef getDefinition() {
         return definition;
     }
@@ -393,6 +395,7 @@ public class Geography extends BaseEntity {
         this.definition = definition;
     }
 
+    @NotNull(message="DefinationItem must be specified.")
     public Geographytreedefitem getDefinitionItem() {
         return definitionItem;
     }
@@ -401,6 +404,7 @@ public class Geography extends BaseEntity {
         this.definitionItem = definitionItem;
     }
 
+    @XmlIDREF
     public Geography getParent() {
         return parent;
     }
@@ -442,6 +446,14 @@ public class Geography extends BaseEntity {
 
     public void setModifiedByAgent(Agent modifiedByAgent) {
         this.modifiedByAgent = modifiedByAgent;
+    }
+    
+    public Date getTimestampVersion() {
+        return timestampVersion;
+    }
+
+    public void setTimestampVersion(Date timestampVersion) {
+        this.timestampVersion = timestampVersion;
     }
 
     @XmlTransient
@@ -502,4 +514,5 @@ public class Geography extends BaseEntity {
     public String toString() {
         return "Geography[ geographyID=" + geographyId + " ]";
     }
+ 
 }

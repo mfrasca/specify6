@@ -1,5 +1,5 @@
 package se.nrm.specify.datamodel;
- 
+
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -15,7 +15,12 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table; 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -32,8 +37,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Borrowagent.findByVersion", query = "SELECT b FROM Borrowagent b WHERE b.version = :version"),
     @NamedQuery(name = "Borrowagent.findByCollectionMemberID", query = "SELECT b FROM Borrowagent b WHERE b.collectionMemberId = :collectionMemberID"),
     @NamedQuery(name = "Borrowagent.findByRole", query = "SELECT b FROM Borrowagent b WHERE b.role = :role")})
-public class Borrowagent extends BaseEntity { 
-    
+public class Borrowagent extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -42,7 +47,7 @@ public class Borrowagent extends BaseEntity {
 //    @NotNull
     @Column(name = "BorrowAgentID")
     private Integer borrowAgentId;
-     
+    
     @Basic(optional = false)
     @NotNull
     @Column(name = "CollectionMemberID")
@@ -53,8 +58,7 @@ public class Borrowagent extends BaseEntity {
     @Column(name = "Remarks")
     private String remarks;
     
-    @Basic(optional = false)
-    @NotNull
+    @Basic(optional = false) 
     @Size(min = 1, max = 32)
     @Column(name = "Role")
     private String role;
@@ -84,11 +88,19 @@ public class Borrowagent extends BaseEntity {
 
     public Borrowagent(Integer borrowAgentId, Date timestampCreated, int collectionMemberId, String role) {
         super(timestampCreated);
-        this.borrowAgentId = borrowAgentId; 
+        this.borrowAgentId = borrowAgentId;
         this.collectionMemberId = collectionMemberId;
         this.role = role;
     }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (borrowAgentId != null) ? borrowAgentId.toString() : "0";
+    }
 
+    @NotNull(message="Agent must be specified.")
     public Agent getAgent() {
         return agent;
     }
@@ -97,6 +109,8 @@ public class Borrowagent extends BaseEntity {
         this.agent = agent;
     }
 
+    @NotNull(message="Borrow must be specified.")
+    @XmlTransient
     public Borrow getBorrow() {
         return borrow;
     }
@@ -120,7 +134,8 @@ public class Borrowagent extends BaseEntity {
     public void setCollectionMemberId(int collectionMemberId) {
         this.collectionMemberId = collectionMemberId;
     }
-
+ 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -129,6 +144,7 @@ public class Borrowagent extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -137,7 +153,6 @@ public class Borrowagent extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
 
- 
     public String getRemarks() {
         return remarks;
     }
@@ -146,6 +161,7 @@ public class Borrowagent extends BaseEntity {
         this.remarks = remarks;
     }
 
+    @NotNull(message="Role must be specified.")
     public String getRole() {
         return role;
     }
@@ -154,7 +170,17 @@ public class Borrowagent extends BaseEntity {
         this.role = role;
     }
 
-  
+    /**
+     * Parent pointer
+     * 
+     * @param u
+     * @param parent 
+     */
+    public void afterUnmarshal(Unmarshaller u, Object parent) {
+        if (parent instanceof Borrow) {
+            this.borrow = (Borrow) parent;
+        }
+    }
 
     @Override
     public int hashCode() {
@@ -179,6 +205,6 @@ public class Borrowagent extends BaseEntity {
     @Override
     public String toString() {
         return "Borrowagent[ borrowAgentId=" + borrowAgentId + " ]";
-    }
-    
+    } 
+ 
 }

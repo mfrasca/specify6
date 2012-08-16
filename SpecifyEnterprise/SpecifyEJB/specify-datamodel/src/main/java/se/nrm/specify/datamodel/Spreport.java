@@ -12,9 +12,11 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -33,8 +35,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Spreport.findByName", query = "SELECT s FROM Spreport s WHERE s.name = :name"),
     @NamedQuery(name = "Spreport.findByRepeatCount", query = "SELECT s FROM Spreport s WHERE s.repeatCount = :repeatCount"),
     @NamedQuery(name = "Spreport.findByRepeatField", query = "SELECT s FROM Spreport s WHERE s.repeatField = :repeatField")})
-public class Spreport extends BaseEntity { 
-    
+public class Spreport extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -99,6 +101,13 @@ public class Spreport extends BaseEntity {
         this.name = name;
     }
 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (spReportId != null) ? spReportId.toString() : "0";
+    }
+    
     public Integer getSpReportId() {
         return spReportId;
     }
@@ -139,6 +148,7 @@ public class Spreport extends BaseEntity {
         this.repeatField = repeatField;
     }
 
+    @NotNull(message="AppResource must be specified.")
     public Spappresource getAppResource() {
         return appResource;
     }
@@ -171,6 +181,7 @@ public class Spreport extends BaseEntity {
         this.query = query;
     }
 
+    @NotNull(message="SpecifyUser must be specified.")
     public Specifyuser getSpecifyUser() {
         return specifyUser;
     }
@@ -213,5 +224,5 @@ public class Spreport extends BaseEntity {
     public String toString() {
         return "Spreport[ spReportId=" + spReportId + " ]";
     }
-    
+ 
 }

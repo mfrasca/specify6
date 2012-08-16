@@ -15,9 +15,11 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-//import javax.validation.constraints.NotNull;
+import javax.persistence.TemporalType; 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -45,8 +47,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Geocoorddetail.findByProtocol", query = "SELECT g FROM Geocoorddetail g WHERE g.protocol = :protocol"),
     @NamedQuery(name = "Geocoorddetail.findBySource", query = "SELECT g FROM Geocoorddetail g WHERE g.source = :source"),
     @NamedQuery(name = "Geocoorddetail.findByValidation", query = "SELECT g FROM Geocoorddetail g WHERE g.validation = :validation")})
-public class Geocoorddetail extends BaseEntity {  
-    
+public class Geocoorddetail extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -60,10 +62,6 @@ public class Geocoorddetail extends BaseEntity {
     @Column(name = "GeoRefAccuracyUnits")
     private String geoRefAccuracyUnits;
     
-    @Column(name = "GeoRefDetDate")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date geoRefDetDate;
-    
     @Size(max = 100)
     @Column(name = "GeoRefDetRef")
     private String geoRefDetRef;
@@ -72,6 +70,20 @@ public class Geocoorddetail extends BaseEntity {
     @Size(max = 65535)
     @Column(name = "GeoRefRemarks")
     private String geoRefRemarks;
+    
+    @Column(name = "GeoRefDetDate")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date geoRefDetDate;
+    
+    @Lob
+    @Size(max = 65535)
+    @Column(name = "UncertaintyPolygon")
+    private String uncertaintyPolygon;
+    
+    @Lob
+    @Size(max = 65535)
+    @Column(name = "ErrorPolygon")
+    private String errorPolygon;
     
     @Size(max = 50)
     @Column(name = "GeoRefVerificationStatus")
@@ -136,7 +148,12 @@ public class Geocoorddetail extends BaseEntity {
         this.geoCoordDetailId = geoCoordDetailId; 
     }
 
- 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (geoCoordDetailId != null) ? geoCoordDetailId.toString() : "0";
+    }
 
     public String getGeoRefAccuracyUnits() {
         return geoRefAccuracyUnits;
@@ -144,14 +161,6 @@ public class Geocoorddetail extends BaseEntity {
 
     public void setGeoRefAccuracyUnits(String geoRefAccuracyUnits) {
         this.geoRefAccuracyUnits = geoRefAccuracyUnits;
-    }
-
-    public Date getGeoRefDetDate() {
-        return geoRefDetDate;
-    }
-
-    public void setGeoRefDetDate(Date geoRefDetDate) {
-        this.geoRefDetDate = geoRefDetDate;
     }
 
     public String getGeoRefDetRef() {
@@ -241,6 +250,30 @@ public class Geocoorddetail extends BaseEntity {
     public void setValidation(String validation) {
         this.validation = validation;
     }
+    
+    public Date getGeoRefDetDate() {
+        return geoRefDetDate;
+    }
+
+    public void setGeoRefDetDate(Date geoRefDetDate) {
+        this.geoRefDetDate = geoRefDetDate;
+    }
+
+    public String getUncertaintyPolygon() {
+        return uncertaintyPolygon;
+    }
+
+    public void setUncertaintyPolygon(String uncertaintyPolygon) {
+        this.uncertaintyPolygon = uncertaintyPolygon;
+    }
+
+    public String getErrorPolygon() {
+        return errorPolygon;
+    }
+
+    public void setErrorPolygon(String errorPolygon) {
+        this.errorPolygon = errorPolygon;
+    }
 
     public Agent getCreatedByAgent() {
         return createdByAgent;
@@ -306,6 +339,5 @@ public class Geocoorddetail extends BaseEntity {
     @Override
     public String toString() {
         return "Geocoorddetail[ geoCoordDetailID=" + geoCoordDetailId + " ]";
-    }
-    
+    } 
 }

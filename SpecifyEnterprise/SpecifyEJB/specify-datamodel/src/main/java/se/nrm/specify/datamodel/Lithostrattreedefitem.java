@@ -15,9 +15,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table; 
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -42,8 +44,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Lithostrattreedefitem.findByTextAfter", query = "SELECT l FROM Lithostrattreedefitem l WHERE l.textAfter = :textAfter"),
     @NamedQuery(name = "Lithostrattreedefitem.findByTextBefore", query = "SELECT l FROM Lithostrattreedefitem l WHERE l.textBefore = :textBefore"),
     @NamedQuery(name = "Lithostrattreedefitem.findByTitle", query = "SELECT l FROM Lithostrattreedefitem l WHERE l.title = :title")})
-public class Lithostrattreedefitem extends BaseEntity {  
-    
+public class Lithostrattreedefitem extends BaseEntity {
+     
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -63,8 +65,7 @@ public class Lithostrattreedefitem extends BaseEntity {
     @Column(name = "IsInFullName")
     private Boolean isInFullName;
     
-    @Basic(optional = false)
-    @NotNull
+    @Basic(optional = false) 
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
@@ -126,6 +127,13 @@ public class Lithostrattreedefitem extends BaseEntity {
         this.name = name;
         this.rankId = rankId;
     }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (lithoStratTreeDefItemId != null) ? lithoStratTreeDefItemId.toString() : "0";
+    }
 
     public Integer getLithoStratTreeDefItemId() {
         return lithoStratTreeDefItemId;
@@ -167,6 +175,7 @@ public class Lithostrattreedefitem extends BaseEntity {
         this.isInFullName = isInFullName;
     }
 
+    @NotNull(message="Name must be specified.")
     public String getName() {
         return name;
     }
@@ -240,6 +249,7 @@ public class Lithostrattreedefitem extends BaseEntity {
         this.parent = parent;
     }
 
+    @NotNull(message="TreeDef must be specified.")
     public Lithostrattreedef getTreeDef() {
         return treeDef;
     }
@@ -285,5 +295,4 @@ public class Lithostrattreedefitem extends BaseEntity {
     public String toString() {
         return "Lithostrattreedefitem[ lithoStratTreeDefItemID=" + lithoStratTreeDefItemId + " ]";
     }
-    
 }
