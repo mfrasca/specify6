@@ -19,19 +19,22 @@ import javax.xml.bind.annotation.XmlAttribute;
 public abstract class BaseEntity implements Serializable, SpecifyBean {
 
     private static final long serialVersionUID = 1L;
+    
     @XmlAttribute
     @Version
     @Column(name = "Version") 
     Integer version;
+    
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "TimestampCreated")
     @Temporal(TemporalType.TIMESTAMP)
     Date timestampCreated;
+    
     @Column(name = "TimestampModified")
     @Temporal(TemporalType.TIMESTAMP)
     Date timestampModified;
-
+     
     public BaseEntity() {
     }
 
@@ -39,6 +42,8 @@ public abstract class BaseEntity implements Serializable, SpecifyBean {
         this.timestampCreated = timestampCreated;
     }
 
+    public abstract String getIdentityString();
+ 
     public Integer getVersion() {
         return version;
     }

@@ -12,9 +12,11 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -31,8 +33,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Giftagent.findByTimestampModified", query = "SELECT g FROM Giftagent g WHERE g.timestampModified = :timestampModified"),
     @NamedQuery(name = "Giftagent.findByVersion", query = "SELECT g FROM Giftagent g WHERE g.version = :version"),
     @NamedQuery(name = "Giftagent.findByRole", query = "SELECT g FROM Giftagent g WHERE g.role = :role")})
-public class Giftagent extends BaseEntity {  
-    
+public class Giftagent extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -86,7 +88,12 @@ public class Giftagent extends BaseEntity {
         this.role = role;
     }
 
-  
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (giftAgentId != null) ? giftAgentId.toString() : "0";
+    }
 
     public String getRemarks() {
         return remarks;
@@ -104,6 +111,7 @@ public class Giftagent extends BaseEntity {
         this.role = role;
     }
 
+    @NotNull(message="Agent must be specified.")
     public Agent getAgent() {
         return agent;
     }
@@ -128,6 +136,7 @@ public class Giftagent extends BaseEntity {
         this.discipline = discipline;
     }
 
+    @NotNull(message="Gift must be specified.")
     public Gift getGift() {
         return gift;
     }
@@ -178,5 +187,5 @@ public class Giftagent extends BaseEntity {
     public String toString() {
         return "Giftagent[ giftAgentID=" + giftAgentId + " ]";
     }
-    
+ 
 }

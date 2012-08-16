@@ -14,9 +14,11 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-//import javax.validation.constraints.NotNull;
+import javax.persistence.TemporalType; 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -41,7 +43,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Exchangein.findBySrcTaxonomy", query = "SELECT e FROM Exchangein e WHERE e.srcTaxonomy = :srcTaxonomy"),
     @NamedQuery(name = "Exchangein.findByYesNo1", query = "SELECT e FROM Exchangein e WHERE e.yesNo1 = :yesNo1"),
     @NamedQuery(name = "Exchangein.findByYesNo2", query = "SELECT e FROM Exchangein e WHERE e.yesNo2 = :yesNo2")})
-public class Exchangein extends BaseEntity { 
+public class Exchangein extends BaseEntity {
     
     private static final long serialVersionUID = 1L;
     
@@ -55,10 +57,6 @@ public class Exchangein extends BaseEntity {
     @Size(max = 120)
     @Column(name = "DescriptionOfMaterial")
     private String descriptionOfMaterial;
-    
-    @Column(name = "ExchangeDate")
-    @Temporal(TemporalType.DATE)
-    private Date exchangeDate;
     
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "Number1")
@@ -82,6 +80,10 @@ public class Exchangein extends BaseEntity {
     @Size(max = 32)
     @Column(name = "SrcTaxonomy")
     private String srcTaxonomy;
+    
+    @Column(name = "ExchangeDate")
+    @Temporal(TemporalType.DATE)
+    private Date exchangeDate;
     
     @Lob
     @Size(max = 65535)
@@ -135,6 +137,12 @@ public class Exchangein extends BaseEntity {
         this.exchangeInId = exchangeInId; 
     }
 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (exchangeInId != null) ? exchangeInId.toString() : "0";
+    }
     public Integer getExchangeInId() {
         return exchangeInId;
     }
@@ -151,14 +159,6 @@ public class Exchangein extends BaseEntity {
 
     public void setDescriptionOfMaterial(String descriptionOfMaterial) {
         this.descriptionOfMaterial = descriptionOfMaterial;
-    }
-
-    public Date getExchangeDate() {
-        return exchangeDate;
-    }
-
-    public void setExchangeDate(Date exchangeDate) {
-        this.exchangeDate = exchangeDate;
     }
 
     public Float getNumber1() {
@@ -233,6 +233,14 @@ public class Exchangein extends BaseEntity {
         this.yesNo1 = yesNo1;
     }
 
+    public Date getExchangeDate() {
+        return exchangeDate;
+    }
+
+    public void setExchangeDate(Date exchangeDate) {
+        this.exchangeDate = exchangeDate;
+    }
+    
     public Boolean getYesNo2() {
         return yesNo2;
     }
@@ -249,6 +257,7 @@ public class Exchangein extends BaseEntity {
         this.addressOfRecord = addressOfRecord;
     }
 
+    @NotNull(message="AgentCatalogedBy must be specified.")
     public Agent getAgentCatalogedBy() {
         return agentCatalogedBy;
     }
@@ -257,6 +266,7 @@ public class Exchangein extends BaseEntity {
         this.agentCatalogedBy = agentCatalogedBy;
     }
 
+    @NotNull(message="AgentReceivedFrom must be specified.")
     public Agent getAgentReceivedFrom() {
         return agentReceivedFrom;
     }
@@ -273,6 +283,7 @@ public class Exchangein extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @NotNull(message="Division must be specified.")
     public Division getDivision() {
         return division;
     }
@@ -313,6 +324,5 @@ public class Exchangein extends BaseEntity {
     @Override
     public String toString() {
         return "Exchangein[ exchangeInID=" + exchangeInId + " ]";
-    }
-    
+    } 
 }

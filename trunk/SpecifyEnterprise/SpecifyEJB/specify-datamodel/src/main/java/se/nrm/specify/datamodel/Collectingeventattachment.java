@@ -13,9 +13,16 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table; 
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -32,7 +39,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Collectingeventattachment.findByVersion", query = "SELECT c FROM Collectingeventattachment c WHERE c.version = :version"),
     @NamedQuery(name = "Collectingeventattachment.findByCollectionMemberID", query = "SELECT c FROM Collectingeventattachment c WHERE c.collectionMemberId = :collectionMemberID"),
     @NamedQuery(name = "Collectingeventattachment.findByOrdinal", query = "SELECT c FROM Collectingeventattachment c WHERE c.ordinal = :ordinal")})
-public class Collectingeventattachment extends BaseEntity {  
+public class Collectingeventattachment extends BaseEntity {
     
     private static final long serialVersionUID = 1L;
     
@@ -87,11 +94,19 @@ public class Collectingeventattachment extends BaseEntity {
         this.collectionMemberId = collectionMemberId;
         this.ordinal = ordinal;
     }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (collectingEventAttachmentId != null) ? collectingEventAttachmentId.toString() : "0";
+    }
 
     public Integer getCollectingEventAttachmentId() {
         return collectingEventAttachmentId;
     }
-
+ 
+    
     public void setCollectingEventAttachmentId(Integer collectingEventAttachmentId) {
         this.collectingEventAttachmentId = collectingEventAttachmentId;
     }
@@ -121,7 +136,8 @@ public class Collectingeventattachment extends BaseEntity {
     public void setRemarks(String remarks) {
         this.remarks = remarks;
     }
-
+ 
+    @NotNull(message="Attachment must be specified.")
     public Attachment getAttachment() {
         return attachment;
     }
@@ -130,6 +146,8 @@ public class Collectingeventattachment extends BaseEntity {
         this.attachment = attachment;
     }
 
+    @XmlTransient
+    @NotNull(message="Collectingevent must be specified.")
     public Collectingevent getCollectingEvent() {
         return collectingEvent;
     }
@@ -138,6 +156,7 @@ public class Collectingeventattachment extends BaseEntity {
         this.collectingEvent = collectingEvent;
     }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -146,6 +165,7 @@ public class Collectingeventattachment extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -154,6 +174,19 @@ public class Collectingeventattachment extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
 
+    
+    
+    /**
+     * Parent pointer
+     * 
+     * @param u
+     * @param parent 
+     */
+    public void afterUnmarshal(Unmarshaller u, Object parent) {  
+        if(parent instanceof Collectingevent) {
+            this.collectingEvent = (Collectingevent)parent;   
+        }
+    }
  
     @Override
     public int hashCode() {
@@ -178,6 +211,5 @@ public class Collectingeventattachment extends BaseEntity {
     @Override
     public String toString() {
         return "Collectingeventattachment[ collectingEventAttachmentID=" + collectingEventAttachmentId + " ]";
-    }
-    
+    } 
 }

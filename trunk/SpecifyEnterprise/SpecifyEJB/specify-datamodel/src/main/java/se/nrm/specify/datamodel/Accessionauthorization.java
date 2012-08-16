@@ -1,9 +1,14 @@
 package se.nrm.specify.datamodel;
  
 import java.util.Date;
-import javax.persistence.*;
+import javax.persistence.*; 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -18,8 +23,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Accessionauthorization.findByTimestampCreated", query = "SELECT a FROM Accessionauthorization a WHERE a.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Accessionauthorization.findByTimestampModified", query = "SELECT a FROM Accessionauthorization a WHERE a.timestampModified = :timestampModified"),
     @NamedQuery(name = "Accessionauthorization.findByVersion", query = "SELECT a FROM Accessionauthorization a WHERE a.version = :version")})
-public class Accessionauthorization extends BaseEntity { 
-    
+public class Accessionauthorization extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -53,6 +58,7 @@ public class Accessionauthorization extends BaseEntity {
     @JoinColumn(name = "AccessionID", referencedColumnName = "AccessionID")
     @ManyToOne
     private Accession accession;
+     
 
     public Accessionauthorization() {
     }
@@ -64,6 +70,13 @@ public class Accessionauthorization extends BaseEntity {
     public Accessionauthorization(Integer accessionAuthorizationId, Date timestampCreated) {
         super(timestampCreated);
         this.accessionAuthorizationId = accessionAuthorizationId; 
+    }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (accessionAuthorizationId != null) ? accessionAuthorizationId.toString() : "0";
     }
 
     public Integer getAccessionAuthorizationId() {
@@ -84,6 +97,7 @@ public class Accessionauthorization extends BaseEntity {
         this.remarks = remarks;
     }
 
+    @XmlTransient
     public Accession getAccession() {
         return accession;
     }
@@ -108,6 +122,7 @@ public class Accessionauthorization extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
 
+    @NotNull(message="Permit must be specified.")
     public Permit getPermit() {
         return permit;
     }
@@ -116,6 +131,7 @@ public class Accessionauthorization extends BaseEntity {
         this.permit = permit;
     }
 
+    @XmlTransient
     public Repositoryagreement getRepositoryAgreement() {
         return repositoryAgreement;
     }
@@ -123,8 +139,20 @@ public class Accessionauthorization extends BaseEntity {
     public void setRepositoryAgreement(Repositoryagreement repositoryAgreement) {
         this.repositoryAgreement = repositoryAgreement;
     }
-
-    
+     
+    /**
+     * Parent pointer
+     * 
+     * @param u
+     * @param parent 
+     */
+    public void afterUnmarshal(Unmarshaller u, Object parent) {  
+        if(parent instanceof Accession) {
+            this.accession = (Accession)parent;    
+        } else if(parent instanceof Repositoryagreement) {
+            this.repositoryAgreement = (Repositoryagreement)parent; 
+        }
+    }
      
 
     @Override
@@ -151,5 +179,5 @@ public class Accessionauthorization extends BaseEntity {
     public String toString() {
         return "Accessionauthorization[ accessionAuthorizationID=" + accessionAuthorizationId + " ]";
     }
-    
+ 
 }

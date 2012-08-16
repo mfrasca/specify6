@@ -14,9 +14,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table; 
-//import javax.validation.constraints.NotNull;
+import javax.persistence.Table;  
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -38,8 +40,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Journal.findByJournalAbbreviation", query = "SELECT j FROM Journal j WHERE j.journalAbbreviation = :journalAbbreviation"),
     @NamedQuery(name = "Journal.findByJournalName", query = "SELECT j FROM Journal j WHERE j.journalName = :journalName"),
     @NamedQuery(name = "Journal.findByText1", query = "SELECT j FROM Journal j WHERE j.text1 = :text1")})
-public class Journal extends BaseEntity {  
-    
+public class Journal extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -96,7 +98,15 @@ public class Journal extends BaseEntity {
         super(timestampCreated);
         this.journalId = journalId; 
     }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (journalId != null) ? journalId.toString() : "0";
+    }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -113,6 +123,7 @@ public class Journal extends BaseEntity {
         this.journalId = journalId;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -204,5 +215,5 @@ public class Journal extends BaseEntity {
     public String toString() {
         return "Journal[ journalID=" + journalId + " ]";
     }
-    
+ 
 }

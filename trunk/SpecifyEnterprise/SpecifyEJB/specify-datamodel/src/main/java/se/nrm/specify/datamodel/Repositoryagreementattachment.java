@@ -14,7 +14,12 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table; 
 //import javax.validation.constraints.NotNull;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -31,7 +36,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Repositoryagreementattachment.findByTimestampModified", query = "SELECT r FROM Repositoryagreementattachment r WHERE r.timestampModified = :timestampModified"),
     @NamedQuery(name = "Repositoryagreementattachment.findByVersion", query = "SELECT r FROM Repositoryagreementattachment r WHERE r.version = :version"),
     @NamedQuery(name = "Repositoryagreementattachment.findByOrdinal", query = "SELECT r FROM Repositoryagreementattachment r WHERE r.ordinal = :ordinal")})
-public class Repositoryagreementattachment extends BaseEntity {  
+public class Repositoryagreementattachment extends BaseEntity {
     
     private static final long serialVersionUID = 1L;
     
@@ -77,7 +82,15 @@ public class Repositoryagreementattachment extends BaseEntity {
         super(timestampCreated);
         this.repositoryAgreementAttachmentId = repositoryAgreementAttachmentId; 
     }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (repositoryAgreementAttachmentId != null) ? repositoryAgreementAttachmentId.toString() : "0";
+    }
 
+    @NotNull(message="Attachment must be specified.")
     public Attachment getAttachment() {
         return attachment;
     }
@@ -103,7 +116,7 @@ public class Repositoryagreementattachment extends BaseEntity {
     }
 
  
-
+    @NotNull(message="RepositoryAgreement must be specified.")
     public Repositoryagreement getRepositoryAgreement() {
         return repositoryAgreement;
     }
@@ -163,5 +176,5 @@ public class Repositoryagreementattachment extends BaseEntity {
     public String toString() {
         return "Repositoryagreementattachment[ repositoryAgreementAttachmentID=" + repositoryAgreementAttachmentId + " ]";
     }
-    
+  
 }

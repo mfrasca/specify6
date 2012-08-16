@@ -20,6 +20,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -48,7 +50,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Attachment.findByTitle", query = "SELECT a FROM Attachment a WHERE a.title = :title"),
     @NamedQuery(name = "Attachment.findByVisibility", query = "SELECT a FROM Attachment a WHERE a.visibility = :visibility"),
     @NamedQuery(name = "Attachment.findByAttachmentImageAttributeID", query = "SELECT a FROM Attachment a WHERE a.attachmentImageAttribute = :attachmentImageAttributeID")})
-public class Attachment extends BaseEntity {  
+public class Attachment extends BaseEntity {
+  
     
     private static final long serialVersionUID = 1L;
     
@@ -75,13 +78,13 @@ public class Attachment extends BaseEntity {
     @Column(name = "Credit")
     private String credit;
     
-    @Size(max = 64)
-    @Column(name = "DateImaged")
-    private String dateImaged;
-    
     @Column(name = "FileCreatedDate")
     @Temporal(TemporalType.DATE)
     private Date fileCreatedDate;
+    
+    @Size(max = 64)
+    @Column(name = "DateImaged")
+    private String dateImaged;
     
     @Size(max = 64)
     @Column(name = "License")
@@ -163,6 +166,9 @@ public class Attachment extends BaseEntity {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "attachment")
     private Collection<Collectingeventattachment> collectingEventAttachments;
     
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "attachment")
+    private Collection<Dnasequencerunattachment> dnasequencerunattachments;
+    
     @JoinColumn(name = "VisibilitySetByID", referencedColumnName = "SpecifyUserID")
     @ManyToOne
     private Specifyuser visibilitySetBy;
@@ -190,7 +196,13 @@ public class Attachment extends BaseEntity {
         this.attachmentId = attachmentId; 
         this.origFilename = origFilename;
     }
-
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (attachmentId != null) ? attachmentId.toString() : "0";
+    }
     public Integer getAttachmentID() {
         return attachmentId;
     }
@@ -244,14 +256,6 @@ public class Attachment extends BaseEntity {
 
     public void setDateImaged(String dateImaged) {
         this.dateImaged = dateImaged;
-    }
-
-    public Date getFileCreatedDate() {
-        return fileCreatedDate;
-    }
-
-    public void setFileCreatedDate(Date fileCreatedDate) {
-        this.fileCreatedDate = fileCreatedDate;
     }
 
     public String getLicense() {
@@ -310,14 +314,16 @@ public class Attachment extends BaseEntity {
         this.attachmentImageAttribute = attachmentImageAttribute;
     }
 
- 
+    @XmlTransient
+    public Collection<Dnasequencerunattachment> getDnasequencerunattachments() {
+        return dnasequencerunattachments;
+    }
 
-   
- 
- 
+    public void setDnasequencerunattachments(Collection<Dnasequencerunattachment> dnasequencerunattachments) {
+        this.dnasequencerunattachments = dnasequencerunattachments;
+    }
 
   
- 
     @XmlTransient
     public Collection<Accessionattachment> getAccessionAttachments() {
         return accessionAttachments;
@@ -373,7 +379,13 @@ public class Attachment extends BaseEntity {
     }
 
  
- 
+    public Date getFileCreatedDate() {
+        return fileCreatedDate;
+    }
+
+    public void setFileCreatedDate(Date fileCreatedDate) {
+        this.fileCreatedDate = fileCreatedDate;
+    }
 
     public Agent getCreatedByAgent() {
         return createdByAgent;
@@ -534,5 +546,29 @@ public class Attachment extends BaseEntity {
     public String toString() {
         return "Attachment[ attachmentId=" + attachmentId + " ]";
     }
-    
+
+    public Date getTimestampCreated() {
+        return timestampCreated;
+    }
+
+    public void setTimestampCreated(Date timestampCreated) {
+        this.timestampCreated = timestampCreated;
+    }
+
+    public Date getTimestampModified() {
+        return timestampModified;
+    }
+
+    public void setTimestampModified(Date timestampModified) {
+        this.timestampModified = timestampModified;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+ 
 }

@@ -14,7 +14,12 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table; 
 //import javax.validation.constraints.NotNull;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -30,8 +35,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Localitycitation.findByTimestampCreated", query = "SELECT l FROM Localitycitation l WHERE l.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Localitycitation.findByTimestampModified", query = "SELECT l FROM Localitycitation l WHERE l.timestampModified = :timestampModified"),
     @NamedQuery(name = "Localitycitation.findByVersion", query = "SELECT l FROM Localitycitation l WHERE l.version = :version")})
-public class Localitycitation extends BaseEntity { 
-    
+public class Localitycitation extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -77,6 +82,13 @@ public class Localitycitation extends BaseEntity {
         super(timestampCreated);
         this.localityCitationId = localityCitationId; 
     }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (localityCitationId != null) ? localityCitationId.toString() : "0";
+    }
 
     public Agent getCreatedByAgent() {
         return createdByAgent;
@@ -94,6 +106,7 @@ public class Localitycitation extends BaseEntity {
         this.discipline = discipline;
     }
 
+    @NotNull(message="Locality must be specified.")
     public Locality getLocality() {
         return locality;
     }
@@ -118,6 +131,7 @@ public class Localitycitation extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
 
+    @NotNull(message="Reference must be specified.")
     public Referencework getReferenceWork() {
         return referenceWork;
     }
@@ -162,5 +176,6 @@ public class Localitycitation extends BaseEntity {
     public String toString() {
         return "Localitycitation[ localityCitationID=" + localityCitationId + " ]";
     }
+ 
     
 }

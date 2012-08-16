@@ -12,8 +12,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table; 
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -32,8 +36,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Picklistitem.findByOrdinal", query = "SELECT p FROM Picklistitem p WHERE p.ordinal = :ordinal"),
     @NamedQuery(name = "Picklistitem.findByTitle", query = "SELECT p FROM Picklistitem p WHERE p.title = :title"),
     @NamedQuery(name = "Picklistitem.findByValue", query = "SELECT p FROM Picklistitem p WHERE p.value = :value")})
-public class Picklistitem extends BaseEntity {  
-    
+public class Picklistitem extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -46,8 +50,7 @@ public class Picklistitem extends BaseEntity {
     @Column(name = "Ordinal") 
     private Integer ordinal;
     
-    @Basic(optional = false)
-    @NotNull
+    @Basic(optional = false) 
     @Size(min = 1, max = 64)
     @Column(name = "Title")
     private String title;
@@ -81,7 +84,13 @@ public class Picklistitem extends BaseEntity {
         this.title = title;
     }
 
-     
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (pickListItemId != null) ? pickListItemId.toString() : "0";
+    }
+    
     public Integer getOrdinal() {
         return ordinal;
     }
@@ -90,6 +99,7 @@ public class Picklistitem extends BaseEntity {
         this.ordinal = ordinal;
     }
 
+    @NotNull(message="Title must be specified.")
     public String getTitle() {
         return title;
     }
@@ -122,6 +132,7 @@ public class Picklistitem extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
 
+    @NotNull(message="PickLiat must be specified.")
     public Picklist getPickList() {
         return pickList;
     }
@@ -164,5 +175,6 @@ public class Picklistitem extends BaseEntity {
     public String toString() {
         return "Picklistitem[ pickListItemID=" + pickListItemId + " ]";
     }
-    
+
+ 
 }

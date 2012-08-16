@@ -9,9 +9,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
-//import javax.validation.constraints.NotNull;
+import javax.persistence.Table;  
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -38,8 +39,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Morphbankview.findByViewName", query = "SELECT m FROM Morphbankview m WHERE m.viewName = :viewName"),
     @NamedQuery(name = "Morphbankview.findByCreatedByAgentID", query = "SELECT m FROM Morphbankview m WHERE m.createdByAgent = :createdByAgentID"),
     @NamedQuery(name = "Morphbankview.findByModifiedByAgentID", query = "SELECT m FROM Morphbankview m WHERE m.modifiedByAgent = :modifiedByAgentID")})
-public class Morphbankview extends BaseEntity { 
-    
+public class Morphbankview extends BaseEntity {
+   
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -100,6 +101,13 @@ public class Morphbankview extends BaseEntity {
     public Morphbankview(Integer morphBankViewId, Date timestampCreated) {
         super(timestampCreated);
         this.morphBankViewId = morphBankViewId; 
+    }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (morphBankViewId != null) ? morphBankViewId.toString() : "0";
     }
 
     public Integer getCreatedByAgent() {
@@ -226,5 +234,5 @@ public class Morphbankview extends BaseEntity {
     public String toString() {
         return "Morphbankview[ morphBankViewID=" + morphBankViewId + " ]";
     }
-    
+ 
 }

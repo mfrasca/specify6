@@ -1,5 +1,5 @@
 package se.nrm.specify.datamodel;
- 
+  
 import java.util.Collection;
 import java.util.Date; 
 import javax.persistence.Basic;
@@ -21,9 +21,12 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size; 
-import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.eclipse.persistence.oxm.annotations.XmlInverseReference;
 
 /**
  *
@@ -55,7 +58,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Agent.findByTitle", query = "SELECT a FROM Agent a WHERE a.title = :title"),
     @NamedQuery(name = "Agent.findBySpecifyuserid", query = "SELECT a FROM Agent a WHERE a.specifyUser.specifyUserId = :specifyUserID"),
     @NamedQuery(name = "Agent.findByDateType", query = "SELECT a FROM Agent a WHERE a.dateType = :dateType")})
-public class Agent extends BaseEntity { 
+public class Agent extends BaseEntity {
+  
+//implements CycleRecoverable { 
     
     private static final long serialVersionUID = 1L;
     
@@ -70,21 +75,21 @@ public class Agent extends BaseEntity {
     @Column(name = "Abbreviation")
     private String abbreviation;
     
+    @Column(name = "DateOfBirth")
+    @Temporal(TemporalType.DATE)
+    private Date dateOfBirth;
+    
+    @Column(name = "DateOfDeath")
+    @Temporal(TemporalType.DATE)
+    private Date dateOfDeath;
+    
     @NotNull
     @Basic(optional = false) 
     @Column(name = "AgentType")
     private short agentType;
     
-    @Column(name = "DateOfBirth")
-    @Temporal(TemporalType.DATE)
-    private Date dateOfBirth;
-    
     @Column(name = "DateOfBirthPrecision")
     private Short dateOfBirthPrecision;
-    
-    @Column(name = "DateOfDeath")
-    @Temporal(TemporalType.DATE)
-    private Date dateOfDeath;
     
     @Column(name = "DateOfDeathPrecision")
     private Short dateOfDeathPrecision;
@@ -181,7 +186,7 @@ public class Agent extends BaseEntity {
     @OneToMany(mappedBy = "modifiedByAgent")
     private Collection<Agentgeography> agentGeographies2;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "agent")  
+    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval=true, mappedBy = "agent")  
     private Collection<Agentgeography> agentGeographies;
     
     @OneToMany(mappedBy = "createdByAgent")
@@ -279,6 +284,12 @@ public class Agent extends BaseEntity {
     
     @OneToMany(mappedBy = "modifiedByAgent")
     private Collection<Collectingtrip> collectingtrips1;
+    
+    @OneToMany(mappedBy = "createdByAgent")
+    private Collection<Dnasequencerunattachment> dnasequencerunattachments;
+    
+    @OneToMany(mappedBy = "modifiedByAgent")
+    private Collection<Dnasequencerunattachment> dnasequencerunattachments1;
     
     @OneToMany(mappedBy = "createdByAgent")
     private Collection<Project> projects;
@@ -400,7 +411,7 @@ public class Agent extends BaseEntity {
     @OneToMany(mappedBy = "modifiedByAgent")
     private Collection<Gift> gifts1;
     
-    @OneToMany(mappedBy = "createdByAgent")
+    @OneToMany(mappedBy = "createdByAgent", cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, orphanRemoval=true)
     private Collection<Agentvariant> agentvariants;
     
     @OneToMany(mappedBy = "modifiedByAgent")
@@ -527,7 +538,7 @@ public class Agent extends BaseEntity {
     @OneToMany(mappedBy = "modifiedByAgent")
     private Collection<Determinationcitation> determinationcitations1;
     
-    @OneToMany(mappedBy = "createdByAgent")
+    @OneToMany(mappedBy = "createdByAgent", cascade={CascadeType.MERGE, CascadeType.PERSIST})
     private Collection<Specifyuser> specifyusers;
     
     @OneToMany(mappedBy = "modifiedByAgent")
@@ -551,7 +562,7 @@ public class Agent extends BaseEntity {
     @OneToMany(mappedBy = "modifiedByAgent")
     private Collection<Collectionrelationship> collectionrelationships1;
     
-    @OneToMany(mappedBy = "createdByAgent")
+    @OneToMany(mappedBy = "createdByAgent", cascade= CascadeType.ALL)
     private Collection<Collectionobjectattr> collectionobjectattrs;
     
     @OneToMany(mappedBy = "modifiedByAgent")
@@ -797,8 +808,8 @@ public class Agent extends BaseEntity {
     @OneToMany(mappedBy = "modifiedByAgent")
     private Collection<Lithostrat> lithostrats1;
     
-    @JoinColumn(name = "DivisionID", referencedColumnName = "UserGroupScopeId")
-    @ManyToOne 
+    @JoinColumn(name = "DivisionID", referencedColumnName = "UserGroupScopeId") 
+    @ManyToOne(optional=false)
     private Division division;
     
     @JoinColumn(name = "InstitutionTCID", referencedColumnName = "UserGroupScopeId")
@@ -923,13 +934,13 @@ public class Agent extends BaseEntity {
     @OneToMany(mappedBy = "modifiedByAgent")
     private Collection<Splocalecontainer> splocalecontainers1;
     
-    @OneToMany(mappedBy = "cataloger")
+    @OneToMany(mappedBy = "cataloger", cascade= CascadeType.ALL)
     private Collection<Collectionobject> collectionobjects;
     
-    @OneToMany(mappedBy = "modifiedByAgent")
+    @OneToMany(mappedBy = "modifiedByAgent", cascade= CascadeType.ALL)
     private Collection<Collectionobject> collectionobjects1;
     
-    @OneToMany(mappedBy = "createdByAgent")
+    @OneToMany(mappedBy = "createdByAgent", cascade= CascadeType.ALL)
     private Collection<Collectionobject> collectionobjects2;
     
     @OneToMany(mappedBy = "createdByAgent")
@@ -1111,7 +1122,7 @@ public class Agent extends BaseEntity {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "createdByAgent") 
     private Collection<Address> addresses1;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "agent")  
+    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, mappedBy = "agent", orphanRemoval=true)  
     private Collection<Address> addresses;   
      
     @OneToMany(mappedBy = "createdByAgent")
@@ -1126,7 +1137,7 @@ public class Agent extends BaseEntity {
     @OneToMany(mappedBy = "modifiedByAgent")
     private Collection<Agentspecialty> agentspecialties1;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "agent") 
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval=true, mappedBy = "agent") 
     private Collection<Agentspecialty> agentSpecialties;
     
     @OneToMany(mappedBy = "createdByAgent")
@@ -1172,6 +1183,22 @@ public class Agent extends BaseEntity {
         this.agentId = agentId; 
         this.agentType = agentType;
     }
+    
+//    @Override
+//    public Agent onCycleDetected(Context context) {
+//       // Context provides access to the Marshaller being used:
+//       System.out.println("JAXB Marshaller is: " + context.getMarshaller()  + " -- " + this.getClass().getSimpleName());
+//        
+//       return new Agent(agentId);   
+//    }
+ 
+
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (agentId != null) ? agentId.toString() : "0";
+    }
 
     public Integer getAgentId() {
         return agentId;
@@ -1180,9 +1207,7 @@ public class Agent extends BaseEntity {
     public void setAgentId(Integer agentId) {
         this.agentId = agentId;
     }
-
  
-    
     public String getAbbreviation() {
         return abbreviation;
     }
@@ -1199,14 +1224,7 @@ public class Agent extends BaseEntity {
         this.agentType = agentType;
     }
 
-    public Date getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public void setDateOfBirth(Date dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
+    @XmlTransient
     public Short getDateOfBirthPrecision() {
         return dateOfBirthPrecision;
     }
@@ -1215,14 +1233,7 @@ public class Agent extends BaseEntity {
         this.dateOfBirthPrecision = dateOfBirthPrecision;
     }
 
-    public Date getDateOfDeath() {
-        return dateOfDeath;
-    }
-
-    public void setDateOfDeath(Date dateOfDeath) {
-        this.dateOfDeath = dateOfDeath;
-    }
-
+    @XmlTransient
     public Short getDateOfDeathPrecision() {
         return dateOfDeathPrecision;
     }
@@ -1263,6 +1274,7 @@ public class Agent extends BaseEntity {
         this.initials = initials;
     }
 
+    @XmlTransient
     public String getInterests() {
         return interests;
     }
@@ -1326,10 +1338,8 @@ public class Agent extends BaseEntity {
     public void setUrl(String url) {
         this.url = url;
     }
-
-     
-
-    @XmlTransient
+ 
+    @XmlInverseReference(mappedBy="agent")
     public Collection<Agentgeography> getAgentGeographies() {
         return agentGeographies;
     }
@@ -1337,10 +1347,7 @@ public class Agent extends BaseEntity {
     public void setAgentGeographies(Collection<Agentgeography> agentGeographies) {
         this.agentGeographies = agentGeographies;
     }
-
-  
  
-
     @XmlTransient
     public Collection<Agentattachment> getAgentAttachments() {
         return agentAttachments;
@@ -1349,9 +1356,7 @@ public class Agent extends BaseEntity {
     public void setAgentAttachments(Collection<Agentattachment> agentAttachments) {
         this.agentAttachments = agentAttachments;
     }
-
-  
-
+ 
     @XmlTransient
     public Collection<Agentvariant> getVariants() {
         return variants;
@@ -1360,12 +1365,7 @@ public class Agent extends BaseEntity {
     public void setVariants(Collection<Agentvariant> variants) {
         this.variants = variants;
     }
-
-   
-  
-
-   
-
+ 
     @XmlTransient
     public Collection<Groupperson> getGroups() {
         return groups;
@@ -1375,6 +1375,8 @@ public class Agent extends BaseEntity {
         this.groups = groups;
     }
   
+    
+    @NotNull(message="Division must be specified.") 
     public Division getDivision() {
         return division;
     }
@@ -1383,6 +1385,7 @@ public class Agent extends BaseEntity {
         this.division = division;
     }
 
+    @XmlIDREF
     public Institution getInstContentContact() {
         return instContentContact;
     }
@@ -1391,6 +1394,7 @@ public class Agent extends BaseEntity {
         this.instContentContact = instContentContact;
     }
 
+    @XmlIDREF
     public Institution getInstTechContact() {
         return instTechContact;
     }
@@ -1407,12 +1411,8 @@ public class Agent extends BaseEntity {
     public void setOrgMembers(Collection<Agent> orgMembers) {
         this.orgMembers = orgMembers;
     }
-
- 
-
- 
-
-    @XmlTransient
+  
+    @XmlIDREF
     public Agent getOrganization() {  
         return organization;
     }
@@ -1423,7 +1423,7 @@ public class Agent extends BaseEntity {
 
  
  
-    @XmlTransient
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -1432,7 +1432,7 @@ public class Agent extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
-    @XmlTransient
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -1441,6 +1441,7 @@ public class Agent extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
 
+    @XmlIDREF
     public Specifyuser getSpecifyUser() {
         return specifyUser;
     }
@@ -1449,10 +1450,8 @@ public class Agent extends BaseEntity {
         this.specifyUser = specifyUser;
     }
 
- 
-
- 
-
+  
+    @XmlTransient
     public se.nrm.specify.datamodel.Collection getCollContentContact() {
         return collContentContact;
     }
@@ -1461,6 +1460,7 @@ public class Agent extends BaseEntity {
         this.collContentContact = collContentContact;
     }
 
+    @XmlTransient
     public se.nrm.specify.datamodel.Collection getCollTechContact() {
         return collTechContact;
     }
@@ -1478,8 +1478,7 @@ public class Agent extends BaseEntity {
     public void setCollectors(Collection<Collector> collectors) {
         this.collectors = collectors;
     }
-
-    @XmlElement
+ 
     public Collection<Address> getAddresses() {
         return addresses;
     }
@@ -1632,8 +1631,7 @@ public class Agent extends BaseEntity {
     public void setAgentAttachments2(Collection<Agentattachment> agentAttachments2) {
         this.agentAttachments2 = agentAttachments2;
     }
-
-    @XmlTransient
+ 
     public Collection<Agentgeography> getAgentGeographies1() {
         return agentGeographies1;
     }
@@ -1641,8 +1639,7 @@ public class Agent extends BaseEntity {
     public void setAgentGeographies1(Collection<Agentgeography> agentGeographies1) {
         this.agentGeographies1 = agentGeographies1;
     }
-
-    @XmlTransient
+ 
     public Collection<Agentgeography> getAgentGeographies2() {
         return agentGeographies2;
     }
@@ -1651,7 +1648,7 @@ public class Agent extends BaseEntity {
         this.agentGeographies2 = agentGeographies2;
     }
 
-    @XmlTransient
+    @XmlInverseReference(mappedBy="agent")  
     public Collection<Agentspecialty> getAgentSpecialties() {
         return agentSpecialties;
     }
@@ -1695,8 +1692,8 @@ public class Agent extends BaseEntity {
     public void setAgentspecialties1(Collection<Agentspecialty> agentspecialties1) {
         this.agentspecialties1 = agentspecialties1;
     }
-
-    @XmlTransient
+ 
+    @XmlInverseReference(mappedBy="agent")  
     public Collection<Agentvariant> getAgentvariants() {
         return agentvariants;
     }
@@ -4369,12 +4366,41 @@ public class Agent extends BaseEntity {
     public void setWorkbenchtemplates1(Collection<Workbenchtemplate> workbenchtemplates1) {
         this.workbenchtemplates1 = workbenchtemplates1;
     }
+    
+    @XmlTransient
+    public Collection<Dnasequencerunattachment> getDnasequencerunattachments() {
+        return dnasequencerunattachments;
+    }
 
-  
-   
+    public void setDnasequencerunattachments(Collection<Dnasequencerunattachment> dnasequencerunattachments) {
+        this.dnasequencerunattachments = dnasequencerunattachments;
+    }
 
-   
- 
+    @XmlTransient
+    public Collection<Dnasequencerunattachment> getDnasequencerunattachments1() {
+        return dnasequencerunattachments1;
+    }
+
+    public void setDnasequencerunattachments1(Collection<Dnasequencerunattachment> dnasequencerunattachments1) {
+        this.dnasequencerunattachments1 = dnasequencerunattachments1;
+    }
+     
+
+    public Date getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(Date dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public Date getDateOfDeath() {
+        return dateOfDeath;
+    }
+
+    public void setDateOfDeath(Date dateOfDeath) {
+        this.dateOfDeath = dateOfDeath;
+    }
 
     @Override
     public int hashCode() {
@@ -4400,5 +4426,5 @@ public class Agent extends BaseEntity {
     public String toString() {
         return "Agent[ agentId=" + agentId + " ]";
     }
-    
+ 
 }

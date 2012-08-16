@@ -13,9 +13,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table; 
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -43,8 +45,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Paleocontext.findByYesNo1", query = "SELECT p FROM Paleocontext p WHERE p.yesNo1 = :yesNo1"),
     @NamedQuery(name = "Paleocontext.findByYesNo2", query = "SELECT p FROM Paleocontext p WHERE p.yesNo2 = :yesNo2"),
     @NamedQuery(name = "Paleocontext.findByRemarks", query = "SELECT p FROM Paleocontext p WHERE p.remarks = :remarks")})
-public class Paleocontext extends BaseEntity {  
-    
+public class Paleocontext extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -136,7 +138,12 @@ public class Paleocontext extends BaseEntity {
         this.collectionMemberId = collectionMemberId;
     }
 
-     
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (paleoContextId != null) ? paleoContextId.toString() : "0";
+    }
 
     public Float getBottomDistance() {
         return bottomDistance;
@@ -319,5 +326,5 @@ public class Paleocontext extends BaseEntity {
     public String toString() {
         return "Paleocontext[ paleoContextID=" + paleoContextId + " ]";
     }
-    
+ 
 }

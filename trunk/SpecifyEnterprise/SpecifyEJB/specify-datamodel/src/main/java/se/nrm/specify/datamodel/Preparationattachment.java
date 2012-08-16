@@ -12,10 +12,14 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -32,8 +36,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Preparationattachment.findByVersion", query = "SELECT p FROM Preparationattachment p WHERE p.version = :version"),
     @NamedQuery(name = "Preparationattachment.findByCollectionMemberID", query = "SELECT p FROM Preparationattachment p WHERE p.collectionMemberId = :collectionMemberID"),
     @NamedQuery(name = "Preparationattachment.findByOrdinal", query = "SELECT p FROM Preparationattachment p WHERE p.ordinal = :ordinal")})
-public class Preparationattachment extends BaseEntity {  
-    
+public class Preparationattachment extends BaseEntity {
+     
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -79,13 +83,19 @@ public class Preparationattachment extends BaseEntity {
         this.preparationAttachmentId = preparationAttachmentId;
     }
 
-    public Preparationattachment(Integer preparationAttachmentID, Date timestampCreated, int collectionMemberId) {
+    public Preparationattachment(Integer preparationAttachmentId, Date timestampCreated, int collectionMemberId) {
         super(timestampCreated);
         this.preparationAttachmentId = preparationAttachmentId; 
         this.collectionMemberId = collectionMemberId;
     }
  
- 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (preparationAttachmentId != null) ? preparationAttachmentId.toString() : "0";
+    }
+    
     public Integer getOrdinal() {
         return ordinal;
     }
@@ -102,6 +112,7 @@ public class Preparationattachment extends BaseEntity {
         this.remarks = remarks;
     }
 
+    @NotNull(message="Attachment must be specified.")
     public Attachment getAttachment() {
         return attachment;
     }
@@ -134,6 +145,8 @@ public class Preparationattachment extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
 
+    @XmlTransient
+    @NotNull(message="Preparation must be specified.")
     public Preparation getPreparation() {
         return preparation;
     }
@@ -148,6 +161,19 @@ public class Preparationattachment extends BaseEntity {
 
     public void setPreparationAttachmentId(Integer preparationAttachmentId) {
         this.preparationAttachmentId = preparationAttachmentId;
+    }
+    
+    /**
+     * Parent pointer
+     * 
+     * @param u
+     * @param parent 
+     */
+    public void afterUnmarshal(Unmarshaller u, Object parent) {
+        
+        if(parent instanceof Preparation) {
+            this.preparation = (Preparation)parent;
+        } 
     }
 
   
@@ -175,5 +201,6 @@ public class Preparationattachment extends BaseEntity {
     public String toString() {
         return "Preparationattachment[ preparationAttachmentID=" + preparationAttachmentId + " ]";
     }
+ 
     
 }

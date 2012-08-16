@@ -14,9 +14,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table; 
-//import javax.validation.constraints.NotNull;
+import javax.persistence.Table;  
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -36,8 +39,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Attributedef.findByDataType", query = "SELECT a FROM Attributedef a WHERE a.dataType = :dataType"),
     @NamedQuery(name = "Attributedef.findByFieldName", query = "SELECT a FROM Attributedef a WHERE a.fieldName = :fieldName"),
     @NamedQuery(name = "Attributedef.findByTableType", query = "SELECT a FROM Attributedef a WHERE a.tableType = :tableType")})
-public class Attributedef extends BaseEntity { 
-    
+public class Attributedef extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -93,6 +96,13 @@ public class Attributedef extends BaseEntity {
         super(timestampCreated);
         this.attributeDefId = attributeDefId; 
     }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (attributeDefId != null) ? attributeDefId.toString() : "0";
+    }
 
     public Integer getAttributeDefId() {
         return attributeDefId;
@@ -120,6 +130,7 @@ public class Attributedef extends BaseEntity {
         this.collectionObjectAttrs = collectionObjectAttrs;
     }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -128,6 +139,7 @@ public class Attributedef extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @NotNull(message="Discipline must be specified.")
     public Discipline getDiscipline() {
         return discipline;
     }
@@ -136,6 +148,7 @@ public class Attributedef extends BaseEntity {
         this.discipline = discipline;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -216,5 +229,5 @@ public class Attributedef extends BaseEntity {
     public String toString() {
         return "Attributedef[ attributeDefId=" + attributeDefId + " ]";
     }
-    
+ 
 }

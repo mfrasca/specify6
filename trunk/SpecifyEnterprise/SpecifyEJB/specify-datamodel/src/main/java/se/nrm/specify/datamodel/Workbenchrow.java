@@ -3,7 +3,10 @@ package se.nrm.specify.datamodel;
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -27,6 +30,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Workbenchrow.findByRecordID", query = "SELECT w FROM Workbenchrow w WHERE w.recordId = :recordID")})
 public class Workbenchrow implements Serializable, SpecifyBean {
     
+     
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -40,10 +44,6 @@ public class Workbenchrow implements Serializable, SpecifyBean {
     @Size(max = 65535)
     @Column(name = "BioGeomancerResults")
     private String bioGeomancerResults;
-    
-    @Lob
-    @Column(name = "CardImageData")
-    private byte[] cardImageData;
     
     @Size(max = 255)
     @Column(name = "CardImageFullPath")
@@ -74,6 +74,13 @@ public class Workbenchrow implements Serializable, SpecifyBean {
     @Column(name = "RecordID")
     private Integer recordId;
     
+    @Lob
+    @Column(name = "CardImageData")
+    private byte[] cardImageData;
+    
+    @Column(name = "SGRStatus")
+    private Short sGRStatus;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "workbenchRow")
     private Collection<Workbenchrowimage> workbenchRowImages;
     
@@ -91,6 +98,11 @@ public class Workbenchrow implements Serializable, SpecifyBean {
         this.workbenchRowId = workbenchRowId;
     }
  
+    @XmlID
+    @XmlAttribute(name = "id") 
+    public String getIdentityString() {
+        return (workbenchRowId != null) ? workbenchRowId.toString() : "0";
+    }
 
     public String getBioGeomancerResults() {
         return bioGeomancerResults;
@@ -98,14 +110,6 @@ public class Workbenchrow implements Serializable, SpecifyBean {
 
     public void setBioGeomancerResults(String bioGeomancerResults) {
         this.bioGeomancerResults = bioGeomancerResults;
-    }
-
-    public byte[] getCardImageData() {
-        return cardImageData;
-    }
-
-    public void setCardImageData(byte[] cardImageData) {
-        this.cardImageData = cardImageData;
     }
 
     public String getCardImageFullPath() {
@@ -172,6 +176,7 @@ public class Workbenchrow implements Serializable, SpecifyBean {
         this.recordId = recordId;
     }
 
+    @NotNull(message="Workbench must be specified.")
     public Workbench getWorkbench() {
         return workbench;
     }
@@ -232,6 +237,22 @@ public class Workbenchrow implements Serializable, SpecifyBean {
     @Override
     public String toString() {
         return "se.nrm.specify.datamodel.Workbenchrow[ workbenchRowID=" + workbenchRowId + " ]";
+    }
+
+    public byte[] getCardImageData() {
+        return cardImageData;
+    }
+
+    public void setCardImageData(byte[] cardImageData) {
+        this.cardImageData = cardImageData;
+    }
+
+    public Short getSGRStatus() {
+        return sGRStatus;
+    }
+
+    public void setSGRStatus(Short sGRStatus) {
+        this.sGRStatus = sGRStatus;
     }
     
 }

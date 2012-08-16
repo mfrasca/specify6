@@ -10,9 +10,11 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -36,8 +38,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Exchangeoutprep.findByExchangeOutID", query = "SELECT e FROM Exchangeoutprep e WHERE e.exchangeOut = :exchangeOutID"),
     @NamedQuery(name = "Exchangeoutprep.findByModifiedByAgentID", query = "SELECT e FROM Exchangeoutprep e WHERE e.modifiedByAgent = :modifiedByAgentID"),
     @NamedQuery(name = "Exchangeoutprep.findByDisciplineID", query = "SELECT e FROM Exchangeoutprep e WHERE e.discipline = :disciplineID")})
-public class Exchangeoutprep extends BaseEntity {  
-    
+public class Exchangeoutprep extends BaseEntity {
+   
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -84,8 +86,7 @@ public class Exchangeoutprep extends BaseEntity {
     @Column(name = "ModifiedByAgentID")
     private Integer modifiedByAgent;
     
-    @Basic(optional = false)
-    @NotNull
+    @Basic(optional = false) 
     @Column(name = "DisciplineID")
     private int discipline;
 
@@ -102,6 +103,13 @@ public class Exchangeoutprep extends BaseEntity {
         this.discipline = discipline;
     }
 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (exchangeOutPrepId != null) ? exchangeOutPrepId.toString() : "0";
+    }
+    
     public Integer getExchangeOutPrepId() {
         return exchangeOutPrepId;
     }
@@ -168,6 +176,7 @@ public class Exchangeoutprep extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @NotNull(message="Discipline must be specified.")
     public int getDiscipline() {
         return discipline;
     }
@@ -226,5 +235,5 @@ public class Exchangeoutprep extends BaseEntity {
     public String toString() {
         return "Exchangeoutprep[ exchangeOutPrepID=" + exchangeOutPrepId + " ]";
     }
-    
+ 
 }

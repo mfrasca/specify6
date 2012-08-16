@@ -2,7 +2,10 @@ package se.nrm.specify.datamodel;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -54,6 +57,11 @@ public class Workbenchdataitem implements Serializable, SpecifyBean {
         this.workbenchDataItemId = workbenchDataItemId;
     }
  
+    @XmlID
+    @XmlAttribute(name = "id") 
+    public String getIdentityString() {
+        return (workbenchDataItemId!= null) ? workbenchDataItemId.toString() : "0";
+    }
 
     public String getCellData() {
         return cellData;
@@ -87,6 +95,7 @@ public class Workbenchdataitem implements Serializable, SpecifyBean {
         this.workbenchDataItemId = workbenchDataItemId;
     }
 
+    @NotNull(message="WorkbenchRow must be specified.")
     public Workbenchrow getWorkbenchRow() {
         return workbenchRow;
     }
@@ -95,6 +104,7 @@ public class Workbenchdataitem implements Serializable, SpecifyBean {
         this.workbenchRow = workbenchRow;
     }
 
+    @NotNull(message="WorkbenchTemplateMappingItem must be specified.")
     public Workbenchtemplatemappingitem getWorkbenchTemplateMappingItem() {
         return workbenchTemplateMappingItem;
     }

@@ -12,9 +12,11 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
-//import javax.validation.constraints.NotNull;
+import javax.persistence.Table;  
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -26,21 +28,21 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Dnasequenceattachment.findAll", query = "SELECT d FROM Dnasequenceattachment d"),
-    @NamedQuery(name = "Dnasequenceattachment.findByDnaSequencingRunAttachmentId", query = "SELECT d FROM Dnasequenceattachment d WHERE d.dnaSequencingRunAttachmentId = :dnaSequencingRunAttachmentId"),
+    @NamedQuery(name = "Dnasequenceattachment.findByDnaSequencingAttachmentId", query = "SELECT d FROM Dnasequenceattachment d WHERE d.dnaSequenceAttachmentId = :dnaSequenceAttachmentId"),
     @NamedQuery(name = "Dnasequenceattachment.findByTimestampCreated", query = "SELECT d FROM Dnasequenceattachment d WHERE d.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Dnasequenceattachment.findByTimestampModified", query = "SELECT d FROM Dnasequenceattachment d WHERE d.timestampModified = :timestampModified"),
     @NamedQuery(name = "Dnasequenceattachment.findByVersion", query = "SELECT d FROM Dnasequenceattachment d WHERE d.version = :version"),
     @NamedQuery(name = "Dnasequenceattachment.findByOrdinal", query = "SELECT d FROM Dnasequenceattachment d WHERE d.ordinal = :ordinal")})
-public class Dnasequenceattachment extends BaseEntity { 
-    
+public class Dnasequenceattachment extends BaseEntity {
+      
     private static final long serialVersionUID = 1L;
-    
+     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-//    @NotNull
-    @Column(name = "DnaSequencingRunAttachmentId")
-    private Integer dnaSequencingRunAttachmentId;
+    @NotNull
+    @Column(name = "DnaSequenceAttachmentId")
+    private Integer dnaSequenceAttachmentId;
      
     @Column(name = "Ordinal")
     private Integer ordinal;
@@ -54,9 +56,9 @@ public class Dnasequenceattachment extends BaseEntity {
     @ManyToOne(optional = false)
     private Attachment attachment;
     
-    @JoinColumn(name = "DnaSequencingRunID", referencedColumnName = "DNASequencingRunID")
+    @JoinColumn(name = "DnaSequenceID", referencedColumnName = "DnaSequenceID")
     @ManyToOne(optional = false)
-    private Dnasequencingrun dnaSequencingRun;
+    private Dnasequence dnasequence;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
@@ -65,27 +67,36 @@ public class Dnasequenceattachment extends BaseEntity {
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
     private Agent modifiedByAgent;
-
+ 
     public Dnasequenceattachment() {
     }
 
-    public Dnasequenceattachment(Integer dnaSequencingRunAttachmentId) {
-        this.dnaSequencingRunAttachmentId = dnaSequencingRunAttachmentId;
+    public Dnasequenceattachment(Integer dnaSequenceAttachmentId) {
+        this.dnaSequenceAttachmentId = dnaSequenceAttachmentId;
     }
 
-    public Dnasequenceattachment(Integer dnaSequencingRunAttachmentId, Date timestampCreated) {
-        super(timestampCreated);
-        this.dnaSequencingRunAttachmentId = dnaSequencingRunAttachmentId; 
+    public Dnasequenceattachment(Integer dnaSequenceAttachmentId, Date timestampCreated) {
+        this.dnaSequenceAttachmentId = dnaSequenceAttachmentId;
+        this.timestampCreated = timestampCreated;
+    }
+ 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (dnaSequenceAttachmentId != null) ? dnaSequenceAttachmentId.toString() : "0";
     }
 
-    public Integer getDnaSequencingRunAttachmentId() {
-        return dnaSequencingRunAttachmentId;
+    public Integer getDnaSequenceAttachmentId() {
+        return dnaSequenceAttachmentId;
     }
 
-    public void setDnaSequencingRunAttachmentId(Integer dnaSequencingRunAttachmentId) {
-        this.dnaSequencingRunAttachmentId = dnaSequencingRunAttachmentId;
-    } 
+    public void setDnaSequenceAttachmentId(Integer dnaSequenceAttachmentId) {
+        this.dnaSequenceAttachmentId = dnaSequenceAttachmentId;
+    }
 
+ 
+ 
     public Integer getOrdinal() {
         return ordinal;
     }
@@ -102,6 +113,7 @@ public class Dnasequenceattachment extends BaseEntity {
         this.remarks = remarks;
     }
 
+    @NotNull(message="Attachment must be specified.")
     public Attachment getAttachment() {
         return attachment;
     }
@@ -117,14 +129,7 @@ public class Dnasequenceattachment extends BaseEntity {
     public void setCreatedByAgent(Agent createdByAgent) {
         this.createdByAgent = createdByAgent;
     }
-
-    public Dnasequencingrun getDnaSequencingRun() {
-        return dnaSequencingRun;
-    }
-
-    public void setDnaSequencingRun(Dnasequencingrun dnaSequencingRun) {
-        this.dnaSequencingRun = dnaSequencingRun;
-    }
+ 
 
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
@@ -135,11 +140,20 @@ public class Dnasequenceattachment extends BaseEntity {
     }
 
  
+ 
+    @NotNull(message="Dnasequence must be specified.")
+    public Dnasequence getDnasequence() {
+        return dnasequence;
+    }
+
+    public void setDnasequence(Dnasequence dnasequence) {
+        this.dnasequence = dnasequence;
+    }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (dnaSequencingRunAttachmentId != null ? dnaSequencingRunAttachmentId.hashCode() : 0);
+        hash += (dnaSequenceAttachmentId != null ? dnaSequenceAttachmentId.hashCode() : 0);
         return hash;
     }
 
@@ -150,7 +164,7 @@ public class Dnasequenceattachment extends BaseEntity {
             return false;
         }
         Dnasequenceattachment other = (Dnasequenceattachment) object;
-        if ((this.dnaSequencingRunAttachmentId == null && other.dnaSequencingRunAttachmentId != null) || (this.dnaSequencingRunAttachmentId != null && !this.dnaSequencingRunAttachmentId.equals(other.dnaSequencingRunAttachmentId))) {
+        if ((this.dnaSequenceAttachmentId == null && other.dnaSequenceAttachmentId != null) || (this.dnaSequenceAttachmentId != null && !this.dnaSequenceAttachmentId.equals(other.dnaSequenceAttachmentId))) {
             return false;
         }
         return true;
@@ -158,7 +172,7 @@ public class Dnasequenceattachment extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Dnasequenceattachment[ dnaSequencingRunAttachmentId=" + dnaSequencingRunAttachmentId + " ]";
+        return "se.nrm.specify.datamodel.Dnasequenceattachment[ dnaSequenceAttachmentId=" + dnaSequenceAttachmentId + " ]";
     }
     
 }

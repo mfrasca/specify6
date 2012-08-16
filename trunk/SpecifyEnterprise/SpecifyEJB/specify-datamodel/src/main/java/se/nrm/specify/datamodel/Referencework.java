@@ -15,11 +15,16 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table; 
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlTransient; 
 
 /**
  *
@@ -49,8 +54,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Referencework.findByWorkDate", query = "SELECT r FROM Referencework r WHERE r.workDate = :workDate"),
     @NamedQuery(name = "Referencework.findByYesNo1", query = "SELECT r FROM Referencework r WHERE r.yesNo1 = :yesNo1"),
     @NamedQuery(name = "Referencework.findByYesNo2", query = "SELECT r FROM Referencework r WHERE r.yesNo2 = :yesNo2")})
-public class Referencework extends BaseEntity { 
-    
+public class Referencework extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -192,7 +197,14 @@ public class Referencework extends BaseEntity {
         this.referenceWorkId = referenceWorkId; 
         this.referenceWorkType = referenceWorkType;
     }
-
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (referenceWorkId != null) ? referenceWorkId.toString() : "0";
+    }
+ 
  
     public String getGuid() {
         return guid;
@@ -345,8 +357,10 @@ public class Referencework extends BaseEntity {
     public void setYesNo2(Boolean yesNo2) {
         this.yesNo2 = yesNo2;
     }
-
-    @XmlTransient
+ 
+    @XmlElementWrapper(name="authors")
+    @XmlElement(name="author") 
+    @XmlIDREF 
     public Collection<Author> getAuthors() {
         return authors;
     }
@@ -373,6 +387,7 @@ public class Referencework extends BaseEntity {
         this.commonnametxcitations = commonnametxcitations;
     }
 
+    @XmlIDREF
     public Referencework getContainedRFParent() {
         return containedRFParent;
     }
@@ -390,6 +405,7 @@ public class Referencework extends BaseEntity {
         this.containedReferenceWorks = containedReferenceWorks;
     }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -442,6 +458,7 @@ public class Referencework extends BaseEntity {
         this.localityCitations = localityCitations;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -494,5 +511,5 @@ public class Referencework extends BaseEntity {
     public String toString() {
         return "Referencework[ referenceWorkID=" + referenceWorkId + " ]";
     }
-    
+ 
 }

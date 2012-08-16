@@ -15,8 +15,12 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table; 
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -36,8 +40,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Spappresourcedir.findByDisciplineType", query = "SELECT s FROM Spappresourcedir s WHERE s.disciplineType = :disciplineType"),
     @NamedQuery(name = "Spappresourcedir.findByIsPersonal", query = "SELECT s FROM Spappresourcedir s WHERE s.isPersonal = :isPersonal"),
     @NamedQuery(name = "Spappresourcedir.findByUserType", query = "SELECT s FROM Spappresourcedir s WHERE s.userType = :userType")})
-public class Spappresourcedir extends BaseEntity {  
-    
+public class Spappresourcedir extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -99,7 +103,13 @@ public class Spappresourcedir extends BaseEntity {
         this.isPersonal = isPersonal;
     }
  
- 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (spAppResourceDirId != null) ? spAppResourceDirId.toString() : "0";
+    }
+    
     public String getDisciplineType() {
         return disciplineType;
     }
@@ -217,5 +227,5 @@ public class Spappresourcedir extends BaseEntity {
     public String toString() {
         return "Spappresourcedir[ spAppResourceDirID=" + spAppResourceDirId + " ]";
     }
-    
+ 
 }

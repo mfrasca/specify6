@@ -1,5 +1,5 @@
 package se.nrm.specify.datamodel;
-  
+
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -14,7 +14,12 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table; 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -34,8 +39,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Agentvariant.findByName", query = "SELECT a FROM Agentvariant a WHERE a.name = :name"),
     @NamedQuery(name = "Agentvariant.findByVarType", query = "SELECT a FROM Agentvariant a WHERE a.varType = :varType"),
     @NamedQuery(name = "Agentvariant.findByVariant", query = "SELECT a FROM Agentvariant a WHERE a.variant = :variant")})
-public class Agentvariant extends BaseEntity { 
-    
+public class Agentvariant extends BaseEntity {
+
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -44,7 +49,7 @@ public class Agentvariant extends BaseEntity {
 //    @NotNull
     @Column(name = "AgentVariantID")
     private Integer agentVariantId;
-     
+    
     @Size(max = 2)
     @Column(name = "Country")
     private String country;
@@ -86,11 +91,17 @@ public class Agentvariant extends BaseEntity {
     }
 
     public Agentvariant(Integer agentVariantId, Date timestampCreated, short varType) {
-        this.agentVariantId = agentVariantId; 
+        this.agentVariantId = agentVariantId;
         this.varType = varType;
     }
 
- 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (agentVariantId != null) ? agentVariantId.toString() : "0";
+    }
+
     public String getCountry() {
         return country;
     }
@@ -131,6 +142,8 @@ public class Agentvariant extends BaseEntity {
         this.variant = variant;
     }
 
+    @XmlIDREF
+    @NotNull(message="Agent must be specified.")
     public Agent getAgent() {
         return agent;
     }
@@ -147,6 +160,7 @@ public class Agentvariant extends BaseEntity {
         this.agentVariantId = agentVariantId;
     }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -155,6 +169,7 @@ public class Agentvariant extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -162,8 +177,18 @@ public class Agentvariant extends BaseEntity {
     public void setModifiedByAgent(Agent modifiedByAgent) {
         this.modifiedByAgent = modifiedByAgent;
     }
- 
- 
+
+    /**
+     * Parent pointer
+     * 
+     * @param u
+     * @param parent 
+     */
+    public void afterUnmarshal(Unmarshaller u, Object parent) {
+        if (parent instanceof Agent) {
+            this.agent = (Agent) parent;
+        }
+    }
 
     @Override
     public int hashCode() {
@@ -189,5 +214,4 @@ public class Agentvariant extends BaseEntity {
     public String toString() {
         return "Agentvariant[ agentVariantId=" + agentVariantId + " ]";
     }
-    
 }

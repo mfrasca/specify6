@@ -4,6 +4,9 @@ import java.util.Date;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -26,8 +29,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Workbenchrowexportedrelationship.findByModifiedByAgentID", query = "SELECT w FROM Workbenchrowexportedrelationship w WHERE w.modifiedByAgent = :modifiedByAgentID"),
     @NamedQuery(name = "Workbenchrowexportedrelationship.findByWorkbenchRowID", query = "SELECT w FROM Workbenchrowexportedrelationship w WHERE w.workbenchRow = :workbenchRowID"),
     @NamedQuery(name = "Workbenchrowexportedrelationship.findByCreatedByAgentID", query = "SELECT w FROM Workbenchrowexportedrelationship w WHERE w.createdByAgent = :createdByAgentID")})
-public class Workbenchrowexportedrelationship extends BaseEntity { 
-    
+public class Workbenchrowexportedrelationship extends BaseEntity {
+   
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -54,8 +57,7 @@ public class Workbenchrowexportedrelationship extends BaseEntity {
     @Column(name = "ModifiedByAgentID")
     private Integer modifiedByAgent;
     
-    @Basic(optional = false)
-    @NotNull
+    @Basic(optional = false) 
     @Column(name = "WorkbenchRowID")
     private int workbenchRow;
     
@@ -75,7 +77,12 @@ public class Workbenchrowexportedrelationship extends BaseEntity {
         this.workbenchRow = workbenchRow;
     }
 
- 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (workbenchRowExportedRelationshipId != null) ? workbenchRowExportedRelationshipId.toString() : "0";
+    }
 
     public String getRelationshipName() {
         return relationshipName;
@@ -100,7 +107,7 @@ public class Workbenchrowexportedrelationship extends BaseEntity {
     public void setTableName(String tableName) {
         this.tableName = tableName;
     }
-
+ 
     public Integer getCreatedByAgent() {
         return createdByAgent;
     }
@@ -108,7 +115,7 @@ public class Workbenchrowexportedrelationship extends BaseEntity {
     public void setCreatedByAgent(Integer createdByAgent) {
         this.createdByAgent = createdByAgent;
     }
-
+     
     public Integer getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -125,6 +132,7 @@ public class Workbenchrowexportedrelationship extends BaseEntity {
         this.recordId = recordId;
     }
 
+    @NotNull(message="WorkbenchRow must be specified.")
     public int getWorkbenchRow() {
         return workbenchRow;
     }
@@ -166,5 +174,5 @@ public class Workbenchrowexportedrelationship extends BaseEntity {
     public String toString() {
         return "Workbenchrowexportedrelationship[ workbenchRowExportedRelationshipID=" + workbenchRowExportedRelationshipId + " ]";
     }
-    
+ 
 }

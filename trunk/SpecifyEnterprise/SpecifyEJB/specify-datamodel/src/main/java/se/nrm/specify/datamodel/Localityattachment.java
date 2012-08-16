@@ -12,9 +12,11 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
-//import javax.validation.constraints.NotNull;
+import javax.persistence.Table;  
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -31,8 +33,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Localityattachment.findByTimestampModified", query = "SELECT l FROM Localityattachment l WHERE l.timestampModified = :timestampModified"),
     @NamedQuery(name = "Localityattachment.findByVersion", query = "SELECT l FROM Localityattachment l WHERE l.version = :version"),
     @NamedQuery(name = "Localityattachment.findByOrdinal", query = "SELECT l FROM Localityattachment l WHERE l.ordinal = :ordinal")})
-public class Localityattachment extends BaseEntity {  
-    
+public class Localityattachment extends BaseEntity {
+   
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -79,7 +81,12 @@ public class Localityattachment extends BaseEntity {
         setTimestampCreated(timestampCreated);
     }
 
-    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (localityAttachmentId != null) ? localityAttachmentId.toString() : "0";
+    }
   
     public Integer getOrdinal() {
         return ordinal;
@@ -97,6 +104,7 @@ public class Localityattachment extends BaseEntity {
         this.remarks = remarks;
     }
 
+    @NotNull(message="Attachment must be specified.")
     public Attachment getAttachment() {
         return attachment;
     }
@@ -113,6 +121,7 @@ public class Localityattachment extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @NotNull(message="Locality must be specified.")
     public Locality getLocality() {
         return locality;
     }
@@ -162,5 +171,5 @@ public class Localityattachment extends BaseEntity {
     public String toString() {
         return "Localityattachment[ localityAttachmentID=" + localityAttachmentId + " ]";
     }
-    
+ 
 }

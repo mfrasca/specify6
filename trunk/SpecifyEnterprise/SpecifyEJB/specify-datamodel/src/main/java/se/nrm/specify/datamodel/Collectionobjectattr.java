@@ -11,10 +11,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -32,8 +37,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Collectionobjectattr.findByCollectionMemberID", query = "SELECT c FROM Collectionobjectattr c WHERE c.collectionMemberId = :collectionMemberID"),
     @NamedQuery(name = "Collectionobjectattr.findByDoubleValue", query = "SELECT c FROM Collectionobjectattr c WHERE c.dblValue = :doubleValue"),
     @NamedQuery(name = "Collectionobjectattr.findByStrValue", query = "SELECT c FROM Collectionobjectattr c WHERE c.strValue = :strValue")})
-public class Collectionobjectattr extends BaseEntity {  
-    
+public class Collectionobjectattr extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -84,6 +89,13 @@ public class Collectionobjectattr extends BaseEntity {
         this.attrId = attrId; 
         this.collectionMemberId = collectionMemberId;
     }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (attrId != null) ? attrId.toString() : "0";
+    }
 
     public Integer getAttrId() {
         return attrId;
@@ -119,6 +131,8 @@ public class Collectionobjectattr extends BaseEntity {
         this.strValue = strValue;
     }
 
+    @XmlTransient
+    @NotNull(message="Collectionobject must be specified.")
     public Collectionobject getCollectionObject() {
         return collectionObject;
     }
@@ -127,6 +141,7 @@ public class Collectionobjectattr extends BaseEntity {
         this.collectionObject = collectionObject;
     }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -135,6 +150,7 @@ public class Collectionobjectattr extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @NotNull(message="Difinition must be specified.")
     public Attributedef getDefinition() {
         return definition;
     }
@@ -143,6 +159,7 @@ public class Collectionobjectattr extends BaseEntity {
         this.definition = definition;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -152,7 +169,18 @@ public class Collectionobjectattr extends BaseEntity {
     }
 
  
-
+    /**
+     * Parent pointer
+     * 
+     * @param u
+     * @param parent 
+     */
+    public void afterUnmarshal(Unmarshaller u, Object parent) {  
+        if(parent instanceof Collectionobject) {
+            this.collectionObject = (Collectionobject)parent;   
+        }
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;
@@ -177,5 +205,5 @@ public class Collectionobjectattr extends BaseEntity {
     public String toString() {
         return "Collectionobjectattr[ attrID=" + attrId + " ]";
     }
-    
+ 
 }

@@ -16,8 +16,12 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table; 
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -38,8 +42,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Loanpreparation.findByQuantity", query = "SELECT l FROM Loanpreparation l WHERE l.quantity = :quantity"),
     @NamedQuery(name = "Loanpreparation.findByQuantityResolved", query = "SELECT l FROM Loanpreparation l WHERE l.quantityResolved = :quantityResolved"),
     @NamedQuery(name = "Loanpreparation.findByQuantityReturned", query = "SELECT l FROM Loanpreparation l WHERE l.quantityReturned = :quantityReturned")})
-public class Loanpreparation extends BaseEntity {  
-    
+public class Loanpreparation extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -117,6 +121,13 @@ public class Loanpreparation extends BaseEntity {
         super(timestampCreated);
         this.loanPreparationId = loanPreparationId; 
         this.isResolved = isResolved;
+    }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (loanPreparationId != null) ? loanPreparationId.toString() : "0";
     }
  
     public String getDescriptionOfMaterial() {
@@ -210,6 +221,7 @@ public class Loanpreparation extends BaseEntity {
         this.discipline = discipline;
     }
 
+    @NotNull(message="Loan must be specified.")
     public Loan getLoan() {
         return loan;
     }
@@ -268,5 +280,5 @@ public class Loanpreparation extends BaseEntity {
     public String toString() {
         return "Loanpreparation[ loanPreparationID=" + loanPreparationId + " ]";
     }
-    
+ 
 }

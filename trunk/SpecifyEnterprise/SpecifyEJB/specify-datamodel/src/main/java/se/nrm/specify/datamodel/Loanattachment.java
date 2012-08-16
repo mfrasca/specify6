@@ -12,9 +12,11 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
-//import javax.validation.constraints.NotNull;
+import javax.persistence.Table;  
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -31,8 +33,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Loanattachment.findByTimestampModified", query = "SELECT l FROM Loanattachment l WHERE l.timestampModified = :timestampModified"),
     @NamedQuery(name = "Loanattachment.findByVersion", query = "SELECT l FROM Loanattachment l WHERE l.version = :version"),
     @NamedQuery(name = "Loanattachment.findByOrdinal", query = "SELECT l FROM Loanattachment l WHERE l.ordinal = :ordinal")})
-public class Loanattachment extends BaseEntity { 
-    
+public class Loanattachment extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -78,6 +80,14 @@ public class Loanattachment extends BaseEntity {
         this.loanAttachmentId = loanAttachmentId; 
     }
 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (loanAttachmentId != null) ? loanAttachmentId.toString() : "0";
+    }
+    
+    @NotNull(message="Attachment must be specified.")
     public Attachment getAttachment() {
         return attachment;
     }
@@ -94,6 +104,7 @@ public class Loanattachment extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @NotNull(message="Loan must be specified.")
     public Loan getLoan() {
         return loan;
     }
@@ -160,6 +171,5 @@ public class Loanattachment extends BaseEntity {
     @Override
     public String toString() {
         return "Loanattachment[ loanAttachmentID=" + loanAttachmentId + " ]";
-    }
-    
+    } 
 }

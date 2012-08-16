@@ -17,9 +17,11 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-//import javax.validation.constraints.NotNull;
+import javax.persistence.TemporalType; 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -46,8 +48,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Conservevent.findByYesNo1", query = "SELECT c FROM Conservevent c WHERE c.yesNo1 = :yesNo1"),
     @NamedQuery(name = "Conservevent.findByYesNo2", query = "SELECT c FROM Conservevent c WHERE c.yesNo2 = :yesNo2"),
     @NamedQuery(name = "Conservevent.findByTreatmentCompDate", query = "SELECT c FROM Conservevent c WHERE c.treatmentCompDate = :treatmentCompDate")})
-public class Conservevent extends BaseEntity {  
-    
+public class Conservevent extends BaseEntity {
+  
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -72,22 +74,10 @@ public class Conservevent extends BaseEntity {
     @Column(name = "CompletedComments")
     private String completedComments;
     
-    @Column(name = "CompletedDate")
-    @Temporal(TemporalType.DATE)
-    private Date completedDate;
-    
     @Lob
     @Size(max = 65535)
     @Column(name = "ConditionReport")
     private String conditionReport;
-    
-    @Column(name = "CuratorApprovalDate")
-    @Temporal(TemporalType.DATE)
-    private Date curatorApprovalDate;
-    
-    @Column(name = "ExamDate")
-    @Temporal(TemporalType.DATE)
-    private Date examDate;
     
     @Lob
     @Size(max = 65535)
@@ -98,6 +88,22 @@ public class Conservevent extends BaseEntity {
     @Size(max = 65535)
     @Column(name = "Remarks")
     private String remarks;
+    
+    @Column(name = "CompletedDate")
+    @Temporal(TemporalType.DATE)
+    private Date completedDate;
+    
+    @Column(name = "CuratorApprovalDate")
+    @Temporal(TemporalType.DATE)
+    private Date curatorApprovalDate;
+    
+    @Column(name = "ExamDate")
+    @Temporal(TemporalType.DATE)
+    private Date examDate;
+    
+    @Column(name = "TreatmentCompDate")
+    @Temporal(TemporalType.DATE)
+    private Date treatmentCompDate;
     
     @Size(max = 64)
     @Column(name = "Text1")
@@ -118,10 +124,6 @@ public class Conservevent extends BaseEntity {
     
     @Column(name = "YesNo2")
     private Boolean yesNo2;
-    
-    @Column(name = "TreatmentCompDate")
-    @Temporal(TemporalType.DATE)
-    private Date treatmentCompDate;
     
     @Lob
     @Size(max = 65535)
@@ -167,6 +169,13 @@ public class Conservevent extends BaseEntity {
         this.conservEventId = conservEventId; 
     }
  
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (conservEventId != null) ? conservEventId.toString() : "0";
+    }
+    
     public String getAdvTestingExam() {
         return advTestingExam;
     }
@@ -191,36 +200,12 @@ public class Conservevent extends BaseEntity {
         this.completedComments = completedComments;
     }
 
-    public Date getCompletedDate() {
-        return completedDate;
-    }
-
-    public void setCompletedDate(Date completedDate) {
-        this.completedDate = completedDate;
-    }
-
     public String getConditionReport() {
         return conditionReport;
     }
 
     public void setConditionReport(String conditionReport) {
         this.conditionReport = conditionReport;
-    }
-
-    public Date getCuratorApprovalDate() {
-        return curatorApprovalDate;
-    }
-
-    public void setCuratorApprovalDate(Date curatorApprovalDate) {
-        this.curatorApprovalDate = curatorApprovalDate;
-    }
-
-    public Date getExamDate() {
-        return examDate;
-    }
-
-    public void setExamDate(Date examDate) {
-        this.examDate = examDate;
     }
 
     public String getPhotoDocs() {
@@ -287,14 +272,6 @@ public class Conservevent extends BaseEntity {
         this.yesNo2 = yesNo2;
     }
 
-    public Date getTreatmentCompDate() {
-        return treatmentCompDate;
-    }
-
-    public void setTreatmentCompDate(Date treatmentCompDate) {
-        this.treatmentCompDate = treatmentCompDate;
-    }
-
     public String getTreatmentReport() {
         return treatmentReport;
     }
@@ -303,6 +280,7 @@ public class Conservevent extends BaseEntity {
         this.treatmentReport = treatmentReport;
     }
 
+    @NotNull(message="ConservDescription must be specified.")
     public Conservdescription getConservDescription() {
         return conservDescription;
     }
@@ -368,7 +346,37 @@ public class Conservevent extends BaseEntity {
         this.treatedByAgent = treatedByAgent;
     }
 
- 
+     public Date getCompletedDate() {
+        return completedDate;
+    }
+
+    public void setCompletedDate(Date completedDate) {
+        this.completedDate = completedDate;
+    }
+
+    public Date getCuratorApprovalDate() {
+        return curatorApprovalDate;
+    }
+
+    public void setCuratorApprovalDate(Date curatorApprovalDate) {
+        this.curatorApprovalDate = curatorApprovalDate;
+    }
+
+    public Date getExamDate() {
+        return examDate;
+    }
+
+    public void setExamDate(Date examDate) {
+        this.examDate = examDate;
+    }
+
+    public Date getTreatmentCompDate() {
+        return treatmentCompDate;
+    }
+
+    public void setTreatmentCompDate(Date treatmentCompDate) {
+        this.treatmentCompDate = treatmentCompDate;
+    }
 
     @Override
     public int hashCode() {
@@ -393,6 +401,5 @@ public class Conservevent extends BaseEntity {
     @Override
     public String toString() {
         return "Conservevent[ conservEventID=" + conservEventId + " ]";
-    }
-    
+    } 
 }

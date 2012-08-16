@@ -12,8 +12,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table; 
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -32,8 +36,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Spauditlogfield.findByFieldName", query = "SELECT s FROM Spauditlogfield s WHERE s.fieldName = :fieldName"),
     @NamedQuery(name = "Spauditlogfield.findByNewValue", query = "SELECT s FROM Spauditlogfield s WHERE s.newValue = :newValue"),
     @NamedQuery(name = "Spauditlogfield.findByOldValue", query = "SELECT s FROM Spauditlogfield s WHERE s.oldValue = :oldValue")})
-public class Spauditlogfield extends BaseEntity { 
-    
+public class Spauditlogfield extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -43,20 +47,17 @@ public class Spauditlogfield extends BaseEntity {
     @Column(name = "SpAuditLogFieldID")
     private Integer spAuditLogFieldId;
      
-    @Basic(optional = false)
-    @NotNull
+    @Basic(optional = false) 
     @Size(min = 1, max = 32)
     @Column(name = "FieldName")
     private String fieldName;
     
-    @Basic(optional = false)
-    @NotNull
+    @Basic(optional = false) 
     @Size(min = 1, max = 64)
     @Column(name = "NewValue")
     private String newValue;
     
-    @Basic(optional = false)
-    @NotNull
+    @Basic(optional = false) 
     @Size(min = 1, max = 64)
     @Column(name = "OldValue")
     private String oldValue;
@@ -88,8 +89,14 @@ public class Spauditlogfield extends BaseEntity {
         this.oldValue = oldValue;
     }
 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (spAuditLogFieldId != null) ? spAuditLogFieldId.toString() : "0";
+    }
  
- 
+    @NotNull(message="FieldName must be specified.")
     public String getFieldName() {
         return fieldName;
     }
@@ -98,6 +105,7 @@ public class Spauditlogfield extends BaseEntity {
         this.fieldName = fieldName;
     }
 
+    @NotNull(message="NewValue must be specified.")
     public String getNewValue() {
         return newValue;
     }
@@ -106,6 +114,7 @@ public class Spauditlogfield extends BaseEntity {
         this.newValue = newValue;
     }
 
+    @NotNull(message="OldValue must be specified.")
     public String getOldValue() {
         return oldValue;
     }
@@ -172,5 +181,6 @@ public class Spauditlogfield extends BaseEntity {
     public String toString() {
         return "Spauditlogfield[ spAuditLogFieldID=" + spAuditLogFieldId + " ]";
     }
+
     
 }

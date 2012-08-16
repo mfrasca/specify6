@@ -1,9 +1,14 @@
 package se.nrm.specify.datamodel;
  
+import com.sun.xml.bind.CycleRecoverable;
 import java.util.Collection; 
 import java.util.Date;
-import javax.persistence.*;
+import javax.persistence.*; 
 import javax.validation.constraints.Size;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
  
@@ -43,7 +48,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Address.findByStartDate", query = "SELECT a FROM Address a WHERE a.startDate = :startDate"),
     @NamedQuery(name = "Address.findByState", query = "SELECT a FROM Address a WHERE a.state = :state"),
     @NamedQuery(name = "Address.findByTypeOfAddr", query = "SELECT a FROM Address a WHERE a.typeOfAddr = :typeOfAddr")})
-public class Address extends BaseEntity { 
+public class Address extends BaseEntity implements CycleRecoverable {
+  
+
     
     private static final long serialVersionUID = 1L;
     
@@ -82,10 +89,6 @@ public class Address extends BaseEntity {
     @Column(name = "Country") 
     private String country;
     
-    @Column(name = "EndDate")
-    @Temporal(TemporalType.DATE) 
-    private Date endDate;
-    
     // @Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$", message="Invalid phone/fax format, should be as xxx-xxx-xxxx")//if the field contains phone or fax number consider using this annotation to enforce field validation
     @Size(max = 50)
     @Column(name = "Fax") 
@@ -96,6 +99,14 @@ public class Address extends BaseEntity {
     
     @Column(name = "IsPrimary") 
     private Boolean isPrimary;
+    
+    @Column(name = "EndDate")
+    @Temporal(TemporalType.DATE)
+    private Date endDate;
+    
+    @Column(name = "StartDate")
+    @Temporal(TemporalType.DATE)
+    private Date startDate;
     
     @Column(name = "IsShipping") 
     private Boolean isShipping;
@@ -128,10 +139,6 @@ public class Address extends BaseEntity {
     @Column(name = "RoomOrBuilding") 
     private String roomOrBuilding;
     
-    @Column(name = "StartDate")
-    @Temporal(TemporalType.DATE)  
-    private Date startDate;
-    
     @Size(max = 64)
     @Column(name = "State") 
     private String state;
@@ -147,19 +154,17 @@ public class Address extends BaseEntity {
     private Collection<Institution> institutions;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
-    @ManyToOne 
-    @XmlTransient 
+    @ManyToOne  
     private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne 
-    @XmlTransient 
     private Agent modifiedByAgent;
     
     @JoinColumn(name = "AgentID", referencedColumnName = "AgentID")
     @ManyToOne 
     private Agent agent;
-
+    
     public Address() {
         super();
     }
@@ -173,7 +178,23 @@ public class Address extends BaseEntity {
         super(timestampCreated);
         this.addressId = addressId; 
     }
+   
+ 
+    @Override
+    public Address onCycleDetected(Context context) {
+       // Context provides access to the Marshaller being used:
+       System.out.println("JAXB Marshaller is: " + context.getMarshaller()  + " -- " + this.getClass().getSimpleName());
+        
+       return new Address(addressId);   
+   }
 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (addressId != null) ? addressId.toString() : "0";
+    }
+    
     public Integer getAddressId() {
         return addressId;
     }
@@ -237,14 +258,6 @@ public class Address extends BaseEntity {
 
     public void setCountry(String country) {
         this.country = country;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
     }
 
     public String getFax() {
@@ -335,14 +348,6 @@ public class Address extends BaseEntity {
         this.roomOrBuilding = roomOrBuilding;
     }
 
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
     public String getState() {
         return state;
     }
@@ -376,8 +381,8 @@ public class Address extends BaseEntity {
     public void setInstitutions(Collection<Institution> institutions) {
         this.institutions = institutions;
     }
-
-    @XmlTransient
+ 
+    @XmlIDREF
     public Agent getAgent() {
         return agent;
     }
@@ -386,7 +391,23 @@ public class Address extends BaseEntity {
         this.agent = agent;
     }
 
-    @XmlTransient
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    @XmlIDREF 
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -395,7 +416,7 @@ public class Address extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
-    @XmlTransient
+    @XmlIDREF 
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -403,9 +424,21 @@ public class Address extends BaseEntity {
     public void setModifiedByAgent(Agent modifiedByAgent) {
         this.modifiedByAgent = modifiedByAgent;
     }
-
- 
-
+  
+    
+    /**
+     * Parent pointer
+     * 
+     * @param u
+     * @param parent 
+     */
+    public void afterUnmarshal(Unmarshaller u, Object parent) {  
+        
+        if(parent instanceof Agent) {
+            this.agent = (Agent)parent;   
+        }
+    }
+  
     @Override
     public int hashCode() {
         int hash = 0;
@@ -429,5 +462,6 @@ public class Address extends BaseEntity {
     @Override
     public String toString() {
         return "Address[ addressId=" + addressId + " ], version = " + version + " address = " + address + ", " + city + ", " + country;
-    } 
+    }
+ 
 }

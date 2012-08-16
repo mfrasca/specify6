@@ -1,43 +1,41 @@
 package se.nrm.specify.datamodel;
- 
+  
+import com.sun.xml.bind.CycleRecoverable;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlElement;
+import javax.validation.constraints.Size; 
+import javax.xml.bind.annotation.XmlAttribute;  
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlTransient;   
 
 /**
  *
  * @author idali
  */
 @Entity
-@Table(name = "accession")
+@Table(name = "accession") 
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Accession.findAll", query = "SELECT a FROM Accession a"),
     @NamedQuery(name = "Accession.findByAccessionID", query = "SELECT a FROM Accession a WHERE a.accessionId = :accessionID"),
     @NamedQuery(name = "Accession.findByTimestampCreated", query = "SELECT a FROM Accession a WHERE a.timestampCreated = :timestampCreated"),
-    @NamedQuery(name = "Accession.findByTimestampModified", query = "SELECT a FROM Accession a WHERE a.timestampModified = :timestampModified"),
-    @NamedQuery(name = "Accession.findByVersion", query = "SELECT a FROM Accession a WHERE a.version = :version"),
+    @NamedQuery(name = "Accession.findByTimestampModified", query = "SELECT a FROM Accession a WHERE a.timestampModified = :timestampModified"), 
     @NamedQuery(name = "Accession.findByAccessionCondition", query = "SELECT a FROM Accession a WHERE a.accessionCondition = :accessionCondition"),
     @NamedQuery(name = "Accession.findByAccessionNumber", query = "SELECT a FROM Accession a WHERE a.accessionNumber = :accessionNumber"),
     @NamedQuery(name = "Accession.findByDateAccessioned", query = "SELECT a FROM Accession a WHERE a.dateAccessioned = :dateAccessioned"),
     @NamedQuery(name = "Accession.findByDateAcknowledged", query = "SELECT a FROM Accession a WHERE a.dateAcknowledged = :dateAcknowledged"),
-    @NamedQuery(name = "Accession.findByDateReceived", query = "SELECT a FROM Accession a WHERE a.dateReceived = :dateReceived"),
-    @NamedQuery(name = "Accession.findByNumber1", query = "SELECT a FROM Accession a WHERE a.number1 = :number1"),
-    @NamedQuery(name = "Accession.findByNumber2", query = "SELECT a FROM Accession a WHERE a.number2 = :number2"),
+    @NamedQuery(name = "Accession.findByDateReceived", query = "SELECT a FROM Accession a WHERE a.dateReceived = :dateReceived"), 
     @NamedQuery(name = "Accession.findByStatus", query = "SELECT a FROM Accession a WHERE a.status = :status"),
     @NamedQuery(name = "Accession.findByTotalValue", query = "SELECT a FROM Accession a WHERE a.totalValue = :totalValue"),
     @NamedQuery(name = "Accession.findByType", query = "SELECT a FROM Accession a WHERE a.type = :type"),
-    @NamedQuery(name = "Accession.findByVerbatimDate", query = "SELECT a FROM Accession a WHERE a.verbatimDate = :verbatimDate"),
-    @NamedQuery(name = "Accession.findByYesNo1", query = "SELECT a FROM Accession a WHERE a.yesNo1 = :yesNo1"),
-    @NamedQuery(name = "Accession.findByYesNo2", query = "SELECT a FROM Accession a WHERE a.yesNo2 = :yesNo2")})
-public class Accession extends BaseEntity {  
-    
+    @NamedQuery(name = "Accession.findByVerbatimDate", query = "SELECT a FROM Accession a WHERE a.verbatimDate = :verbatimDate")}) 
+public class Accession extends BaseEntity implements CycleRecoverable {
+  
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -117,17 +115,17 @@ public class Accession extends BaseEntity {
     @Column(name = "YesNo2")
     private Boolean yesNo2;
     
-    @OneToMany(mappedBy = "accession")
+    @OneToMany(mappedBy = "accession" )
     private Collection<Treatmentevent> treatmentEvents;
     
-    @OneToMany(mappedBy = "accession")
+    @OneToMany(mappedBy = "accession", cascade={CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval=true)
     private Collection<Appraisal> appraisals;
     
-    @OneToMany(mappedBy = "accession", cascade= CascadeType.ALL)
+    @OneToMany(mappedBy = "accession", cascade= {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval=true)
     private Collection<Accessionagent> accessionAgents;
     
     @JoinColumn(name = "AddressOfRecordID", referencedColumnName = "AddressOfRecordID")
-    @ManyToOne
+    @ManyToOne 
     private Addressofrecord addressOfRecord;
     
     @JoinColumn(name = "DivisionID", referencedColumnName = "UserGroupScopeId")
@@ -146,7 +144,7 @@ public class Accession extends BaseEntity {
     @ManyToOne
     private Repositoryagreement repositoryAgreement;
     
-    @OneToMany(mappedBy = "accession")
+    @OneToMany(mappedBy = "accession", cascade={CascadeType.PERSIST, CascadeType.MERGE })
     private Collection<Collectionobject> collectionObjects;
     
     @OneToMany(mappedBy = "accession")
@@ -155,22 +153,42 @@ public class Accession extends BaseEntity {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "accession")
     private Collection<Accessionattachment> accessionAttachments;
     
-    @OneToMany(mappedBy = "accession")
+    @OneToMany(mappedBy = "accession", cascade={CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval=true)
     private Collection<Accessionauthorization> accessionAuthorizations;
 
-    public Accession() {
+    public Accession() { 
     }
 
     public Accession(Integer accessionId) {
-        this.accessionId = accessionId;
+        this.accessionId = accessionId; 
     }
 
     public Accession(Integer accessionId, Date timestampCreated, String accessionNumber) {
         super(timestampCreated);
         this.accessionId = accessionId; 
-        this.accessionNumber = accessionNumber;
+        this.accessionNumber = accessionNumber; 
     }
+    
+ 
 
+    @Override
+    public Accession onCycleDetected(Context context) {
+       // Context provides access to the Marshaller being used:
+       System.out.println("JAXB Marshaller is: " + context.getMarshaller()  + " -- " + this.getClass().getSimpleName());
+        
+       Accession a = new Accession(accessionId);  
+       a.setAccessionNumber(accessionNumber); 
+       
+       return a;
+   }
+
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (accessionId != null) ? accessionId.toString() : "0";
+    }
+    
     public Integer getAccessionId() {
         return accessionId;
     }
@@ -178,7 +196,6 @@ public class Accession extends BaseEntity {
     public void setAccessionId(Integer accessionId) {
         this.accessionId = accessionId;
     }
-
  
 
     public String getAccessionCondition() {
@@ -195,30 +212,6 @@ public class Accession extends BaseEntity {
 
     public void setAccessionNumber(String accessionNumber) {
         this.accessionNumber = accessionNumber;
-    }
-
-    public Date getDateAccessioned() {
-        return dateAccessioned;
-    }
-
-    public void setDateAccessioned(Date dateAccessioned) {
-        this.dateAccessioned = dateAccessioned;
-    }
-
-    public Date getDateAcknowledged() {
-        return dateAcknowledged;
-    }
-
-    public void setDateAcknowledged(Date dateAcknowledged) {
-        this.dateAcknowledged = dateAcknowledged;
-    }
-
-    public Date getDateReceived() {
-        return dateReceived;
-    }
-
-    public void setDateReceived(Date dateReceived) {
-        this.dateReceived = dateReceived;
     }
 
     public Float getNumber1() {
@@ -316,10 +309,7 @@ public class Accession extends BaseEntity {
     public void setYesNo2(Boolean yesNo2) {
         this.yesNo2 = yesNo2;
     }
-
- 
-//    @XmlTransient
-    @XmlElement
+   
     public Collection<Accessionagent> getAccessionAgents() {
         return accessionAgents;
     }
@@ -345,6 +335,30 @@ public class Accession extends BaseEntity {
         this.appraisals = appraisals;
     }
 
+        public Date getDateAccessioned() {
+        return dateAccessioned;
+    }
+
+    public void setDateAccessioned(Date dateAccessioned) {
+        this.dateAccessioned = dateAccessioned;
+    }
+
+    public Date getDateAcknowledged() {
+        return dateAcknowledged;
+    }
+
+    public void setDateAcknowledged(Date dateAcknowledged) {
+        this.dateAcknowledged = dateAcknowledged;
+    }
+
+    public Date getDateReceived() {
+        return dateReceived;
+    }
+
+    public void setDateReceived(Date dateReceived) {
+        this.dateReceived = dateReceived;
+    }
+     
     @XmlTransient
     public Collection<Collectionobject> getCollectionObjects() {
         return collectionObjects;
@@ -363,6 +377,7 @@ public class Accession extends BaseEntity {
         this.treatmentEvents = treatmentEvents;
     }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -370,7 +385,8 @@ public class Accession extends BaseEntity {
     public void setCreatedByAgent(Agent createdByAgent) {
         this.createdByAgent = createdByAgent;
     }
-
+ 
+    @NotNull(message="Division must be specified.")
     public Division getDivision() {
         return division;
     }
@@ -379,6 +395,7 @@ public class Accession extends BaseEntity {
         this.division = division;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -394,8 +411,7 @@ public class Accession extends BaseEntity {
     public void setRepositoryAgreement(Repositoryagreement repositoryAgreement) {
         this.repositoryAgreement = repositoryAgreement;
     }
-
-    @XmlTransient
+ 
     public Collection<Deaccession> getDeaccessions() {
         return deaccessions;
     }
@@ -403,8 +419,7 @@ public class Accession extends BaseEntity {
     public void setDeaccessions(Collection<Deaccession> deaccessions) {
         this.deaccessions = deaccessions;
     } 
-
-    @XmlTransient
+ 
     public Collection<Accessionattachment> getAccessionAttachments() {
         return accessionAttachments;
     }
@@ -413,7 +428,6 @@ public class Accession extends BaseEntity {
         this.accessionAttachments = accessionAttachments;
     }
 
-    @XmlTransient
     public Collection<Accessionauthorization> getAccessionAuthorizations() {
         return accessionAuthorizations;
     }
@@ -421,7 +435,6 @@ public class Accession extends BaseEntity {
     public void setAccessionAuthorizations(Collection<Accessionauthorization> accessionAuthorizations) {
         this.accessionAuthorizations = accessionAuthorizations;
     }
-
  
  
     @Override
@@ -449,4 +462,5 @@ public class Accession extends BaseEntity {
         return "Accession[ accessionId=" + accessionId + " ]";
     }
     
+     
 }

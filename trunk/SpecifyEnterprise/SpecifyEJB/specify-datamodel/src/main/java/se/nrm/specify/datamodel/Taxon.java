@@ -5,6 +5,11 @@ import java.util.Date;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import org.eclipse.persistence.annotations.Index;
@@ -62,42 +67,53 @@ import org.eclipse.persistence.annotations.Index;
     @NamedQuery(name = "Taxon.findByUsfwsCode", query = "SELECT t FROM Taxon t WHERE t.usfwsCode = :usfwsCode"),
     @NamedQuery(name = "Taxon.findByVisibility", query = "SELECT t FROM Taxon t WHERE t.visibility = :visibility")})
 public class Taxon extends BaseEntity {
-
+  
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "TaxonID")
     private Integer taxonId;
+    
     @Size(max = 128)
     @Column(name = "Author")
     private String author;
+    
     @Size(max = 32)
     @Column(name = "CitesStatus")
     private String citesStatus;
+    
     @Size(max = 32)
     @Column(name = "COLStatus")
     private String colStatus;
+    
     @Size(max = 128)
     @Column(name = "CommonName")
     private String commonName;
+    
     @Size(max = 32)
     @Column(name = "CultivarName")
     private String cultivarName;
+    
     @Size(max = 64)
     @Column(name = "EnvironmentalProtectionStatus")
     private String environmentalProtectionStatus;
+    
     @Size(max = 64)
     @Column(name = "EsaStatus")
     private String esaStatus;
+    
     @Index
     @Size(max = 255)
     @Column(name = "FullName")
     private String fullName;
+    
     @Size(max = 20)
     @Column(name = "GroupNumber")
     private String groupNumber;
+    
     
     @Size(max = 128)
     @Column(name = "GUID")
@@ -105,118 +121,157 @@ public class Taxon extends BaseEntity {
     
     @Column(name = "HighestChildNodeNumber")
     private Integer highestChildNodeNumber;
+    
     @Column(name = "IsAccepted")
     private Boolean isAccepted;
+    
     @Column(name = "IsHybrid")
     private Boolean isHybrid;
+    
     @Size(max = 16)
     @Column(name = "IsisNumber")
     private String isisNumber;
+    
     @Size(max = 64)
     @Column(name = "LabelFormat")
     private String labelFormat;
-    @Basic(optional = false)
-    @NotNull
+    
+    @Basic(optional = false) 
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
+    
     @Size(max = 8)
     @Column(name = "NcbiTaxonNumber")
     private String ncbiTaxonNumber;
+    
     @Column(name = "NodeNumber")
     private Integer nodeNumber;
+    
     @Column(name = "Number1")
     private Integer number1;
+    
     @Column(name = "Number2")
     private Integer number2;
+    
     @Basic(optional = false)
     @NotNull
     @Column(name = "RankID")
     private int rankId;
+    
     @Lob
     @Size(max = 65535)
     @Column(name = "Remarks")
     private String remarks;
+    
     @Size(max = 64)
     @Column(name = "Source")
     private String source;
+    
     @Size(max = 50)
     @Column(name = "TaxonomicSerialNumber")
     private String taxonomicSerialNumber;
+    
     @Size(max = 32)
     @Column(name = "Text1")
     private String text1;
+    
     @Size(max = 32)
     @Column(name = "Text2")
     private String text2;
+    
     @Size(max = 50)
     @Column(name = "UnitInd1")
     private String unitInd1;
+    
     @Size(max = 50)
     @Column(name = "UnitInd2")
     private String unitInd2;
+    
     @Size(max = 50)
     @Column(name = "UnitInd3")
     private String unitInd3;
     @Size(max = 50)
     @Column(name = "UnitInd4")
     private String unitInd4;
+    
     @Size(max = 50)
     @Column(name = "UnitName1")
     private String unitName1;
+    
     @Size(max = 50)
     @Column(name = "UnitName2")
     private String unitName2;
+    
     @Size(max = 50)
     @Column(name = "UnitName3")
     private String unitName3;
+    
     @Size(max = 50)
     @Column(name = "UnitName4")
     private String unitName4;
+    
     @Size(max = 16)
     @Column(name = "UsfwsCode")
     private String usfwsCode;
+    
     @Column(name = "Visibility")
     private Short visibility;
+    
     @JoinColumn(name = "TaxonTreeDefID", referencedColumnName = "TaxonTreeDefID")
     @ManyToOne(optional = false)
     private Taxontreedef definition;
+    
     @OneToMany(mappedBy = "parent")
     private Collection<Taxon> children;
+    
     @JoinColumn(name = "ParentID", referencedColumnName = "TaxonID")
     @ManyToOne
     private Taxon parent;
+    
     @JoinColumn(name = "TaxonTreeDefItemID", referencedColumnName = "TaxonTreeDefItemID")
     @ManyToOne(optional = false)
     private Taxontreedefitem definitionItem;
+    
     @JoinColumn(name = "VisibilitySetByID", referencedColumnName = "SpecifyUserID")
     @ManyToOne
     private Specifyuser visibilitySetBy;
+    
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
     private Agent createdByAgent;
+    
     @OneToMany(mappedBy = "hybridParent2")
     private Collection<Taxon> hybridChildren2;
+    
     @JoinColumn(name = "HybridParent2ID", referencedColumnName = "TaxonID")
     @ManyToOne
     private Taxon hybridParent2;
+    
     @OneToMany(mappedBy = "hybridParent1")
     private Collection<Taxon> hybridChildren1;
+    
     @JoinColumn(name = "HybridParent1ID", referencedColumnName = "TaxonID")
     @ManyToOne
     private Taxon hybridParent1;
+    
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
     private Agent modifiedByAgent;
+    
     @OneToMany(mappedBy = "acceptedTaxon")
     private Collection<Taxon> acceptedChildren;
+    
     @JoinColumn(name = "AcceptedID", referencedColumnName = "TaxonID")
     @ManyToOne
     private Taxon acceptedTaxon;
+    
     @OneToMany(mappedBy = "hostTaxon")
     private Collection<Collectingeventattribute> collectingEventAttributes;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "taxon")
     private Collection<Commonnametx> commonNames;
+    
     
     @OneToMany(mappedBy = "preferredTaxon")
     private Collection<Determination> determinations1;
@@ -229,6 +284,8 @@ public class Taxon extends BaseEntity {
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "taxon")
     private Collection<Taxonattachment> taxonAttachments;
+    
+ 
 
     public Taxon() {
     }
@@ -243,13 +300,19 @@ public class Taxon extends BaseEntity {
         this.name = name;
         this.rankId = rankId;
     }
-
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (taxonId != null) ? taxonId.toString() : "0";
+    }
     public Taxon(Integer taxonId, String fullName) {
         this.taxonId = taxonId;
         this.fullName = fullName;
     }
 
-    @XmlTransient
+    @XmlIDREF
     public Collection<Taxon> getAcceptedChildren() {
         return acceptedChildren;
     }
@@ -258,6 +321,7 @@ public class Taxon extends BaseEntity {
         this.acceptedChildren = acceptedChildren;
     }
 
+    @XmlIDREF
     public Taxon getAcceptedTaxon() {
         return acceptedTaxon;
     }
@@ -266,7 +330,9 @@ public class Taxon extends BaseEntity {
         this.acceptedTaxon = acceptedTaxon;
     }
 
-    @XmlTransient
+    @XmlElementWrapper(name="children")
+    @XmlElement(name="child") 
+    @XmlIDREF
     public Collection<Taxon> getChildren() {
         return children;
     }
@@ -291,8 +357,7 @@ public class Taxon extends BaseEntity {
     public void setCollectingEventAttributes(Collection<Collectingeventattribute> collectingEventAttributes) {
         this.collectingEventAttributes = collectingEventAttributes;
     }
-
-    @XmlTransient
+ 
     public Collection<Commonnametx> getCommonNames() {
         return commonNames;
     }
@@ -301,6 +366,7 @@ public class Taxon extends BaseEntity {
         this.commonNames = commonNames;
     }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -309,6 +375,8 @@ public class Taxon extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @XmlIDREF
+    @NotNull(message="Definition must be specified.")
     public Taxontreedef getDefinition() {
         return definition;
     }
@@ -317,6 +385,8 @@ public class Taxon extends BaseEntity {
         this.definition = definition;
     }
 
+    @XmlIDREF
+    @NotNull(message="DefinitionItem must be specified.")
     public Taxontreedefitem getDefinitionItem() {
         return definitionItem;
     }
@@ -361,6 +431,7 @@ public class Taxon extends BaseEntity {
         this.hybridChildren2 = hybridChildren2;
     }
 
+    @XmlIDREF
     public Taxon getHybridParent1() {
         return hybridParent1;
     }
@@ -369,6 +440,7 @@ public class Taxon extends BaseEntity {
         this.hybridParent1 = hybridParent1;
     }
 
+    @XmlIDREF
     public Taxon getHybridParent2() {
         return hybridParent2;
     }
@@ -377,6 +449,7 @@ public class Taxon extends BaseEntity {
         this.hybridParent2 = hybridParent2;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -385,6 +458,7 @@ public class Taxon extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
 
+    @XmlIDREF
     public Taxon getParent() {
         return parent;
     }
@@ -400,8 +474,7 @@ public class Taxon extends BaseEntity {
     public void setRankId(int rankId) {
         this.rankId = rankId;
     }
-
-    @XmlTransient
+ 
     public Collection<Taxonattachment> getTaxonAttachments() {
         return taxonAttachments;
     }
@@ -409,8 +482,7 @@ public class Taxon extends BaseEntity {
     public void setTaxonAttachments(Collection<Taxonattachment> taxonAttachments) {
         this.taxonAttachments = taxonAttachments;
     }
-
-    @XmlTransient
+  
     public Collection<Taxoncitation> getTaxonCitations() {
         return taxonCitations;
     }
@@ -547,6 +619,7 @@ public class Taxon extends BaseEntity {
         this.labelFormat = labelFormat;
     }
 
+    @NotNull(message="Name must be specified.")
     public String getName() {
         return name;
     }
@@ -707,6 +780,7 @@ public class Taxon extends BaseEntity {
         this.visibility = visibility;
     }
 
+    
     @XmlTransient
     public int getNumDetermination() {
         return determinations.size();
@@ -734,6 +808,7 @@ public class Taxon extends BaseEntity {
         }
         return new Taxon();
     }
+     
 
     @Override
     public int hashCode() {
@@ -759,4 +834,5 @@ public class Taxon extends BaseEntity {
     public String toString() {
         return "Taxon[ taxonId=" + taxonId + " ]";
     }
+ 
 }

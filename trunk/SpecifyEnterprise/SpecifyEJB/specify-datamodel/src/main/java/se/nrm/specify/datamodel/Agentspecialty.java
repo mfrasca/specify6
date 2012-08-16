@@ -11,10 +11,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -31,7 +36,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Agentspecialty.findByVersion", query = "SELECT a FROM Agentspecialty a WHERE a.version = :version"),
     @NamedQuery(name = "Agentspecialty.findByOrderNumber", query = "SELECT a FROM Agentspecialty a WHERE a.orderNumber = :orderNumber"),
     @NamedQuery(name = "Agentspecialty.findBySpecialtyName", query = "SELECT a FROM Agentspecialty a WHERE a.specialtyName = :specialtyName")})
-public class Agentspecialty extends BaseEntity { 
+public class Agentspecialty extends BaseEntity {
+ 
     
     private static final long serialVersionUID = 1L;
     
@@ -79,6 +85,12 @@ public class Agentspecialty extends BaseEntity {
         this.specialtyName = specialtyName;
     }
  
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (agentSpecialtyId  != null) ? agentSpecialtyId.toString() : "0";
+    }
     
     public int getOrderNumber() {
         return orderNumber;
@@ -96,6 +108,8 @@ public class Agentspecialty extends BaseEntity {
         this.specialtyName = specialtyName;
     }
 
+    @NotNull(message="Agent must be specified.")
+    @XmlIDREF
     public Agent getAgent() {
         return agent;
     }
@@ -129,6 +143,17 @@ public class Agentspecialty extends BaseEntity {
     }
 
  
+    /**
+     * Parent pointer
+     * 
+     * @param u
+     * @param parent 
+     */
+    public void afterUnmarshal(Unmarshaller u, Object parent) {
+        if (parent instanceof Agent) {
+            this.agent = (Agent) parent;
+        }
+    }
 
     @Override
     public int hashCode() {
@@ -154,5 +179,5 @@ public class Agentspecialty extends BaseEntity {
     public String toString() {
         return "se.nrm.specify.datamodel.Agentspecialty[ agentSpecialtyID=" + agentSpecialtyId + " ]";
     }
-    
+ 
 }

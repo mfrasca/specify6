@@ -15,9 +15,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table; 
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -35,69 +39,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Collectionobjectattribute.findByTimestampModified", query = "SELECT c FROM Collectionobjectattribute c WHERE c.timestampModified = :timestampModified"),
     @NamedQuery(name = "Collectionobjectattribute.findByVersion", query = "SELECT c FROM Collectionobjectattribute c WHERE c.version = :version"),
     @NamedQuery(name = "Collectionobjectattribute.findByCollectionMemberID", query = "SELECT c FROM Collectionobjectattribute c WHERE c.collectionMemberId = :collectionMemberID"),
-    @NamedQuery(name = "Collectionobjectattribute.findByNumber1", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number1 = :number1"),
-    @NamedQuery(name = "Collectionobjectattribute.findByNumber10", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number10 = :number10"),
-    @NamedQuery(name = "Collectionobjectattribute.findByNumber11", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number11 = :number11"),
-    @NamedQuery(name = "Collectionobjectattribute.findByNumber12", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number12 = :number12"),
-    @NamedQuery(name = "Collectionobjectattribute.findByNumber13", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number13 = :number13"),
-    @NamedQuery(name = "Collectionobjectattribute.findByNumber14", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number14 = :number14"),
-    @NamedQuery(name = "Collectionobjectattribute.findByNumber15", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number15 = :number15"),
-    @NamedQuery(name = "Collectionobjectattribute.findByNumber16", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number16 = :number16"),
-    @NamedQuery(name = "Collectionobjectattribute.findByNumber17", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number17 = :number17"),
-    @NamedQuery(name = "Collectionobjectattribute.findByNumber18", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number18 = :number18"),
-    @NamedQuery(name = "Collectionobjectattribute.findByNumber19", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number19 = :number19"),
-    @NamedQuery(name = "Collectionobjectattribute.findByNumber2", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number2 = :number2"),
-    @NamedQuery(name = "Collectionobjectattribute.findByNumber20", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number20 = :number20"),
-    @NamedQuery(name = "Collectionobjectattribute.findByNumber21", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number21 = :number21"),
-    @NamedQuery(name = "Collectionobjectattribute.findByNumber22", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number22 = :number22"),
-    @NamedQuery(name = "Collectionobjectattribute.findByNumber23", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number23 = :number23"),
-    @NamedQuery(name = "Collectionobjectattribute.findByNumber24", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number24 = :number24"),
-    @NamedQuery(name = "Collectionobjectattribute.findByNumber25", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number25 = :number25"),
-    @NamedQuery(name = "Collectionobjectattribute.findByNumber26", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number26 = :number26"),
-    @NamedQuery(name = "Collectionobjectattribute.findByNumber27", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number27 = :number27"),
-    @NamedQuery(name = "Collectionobjectattribute.findByNumber28", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number28 = :number28"),
-    @NamedQuery(name = "Collectionobjectattribute.findByNumber29", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number29 = :number29"),
-    @NamedQuery(name = "Collectionobjectattribute.findByNumber3", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number3 = :number3"),
-    @NamedQuery(name = "Collectionobjectattribute.findByNumber30", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number30 = :number30"),
-    @NamedQuery(name = "Collectionobjectattribute.findByNumber31", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number31 = :number31"),
-    @NamedQuery(name = "Collectionobjectattribute.findByNumber32", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number32 = :number32"),
-    @NamedQuery(name = "Collectionobjectattribute.findByNumber33", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number33 = :number33"),
-    @NamedQuery(name = "Collectionobjectattribute.findByNumber34", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number34 = :number34"),
-    @NamedQuery(name = "Collectionobjectattribute.findByNumber35", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number35 = :number35"),
-    @NamedQuery(name = "Collectionobjectattribute.findByNumber36", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number36 = :number36"),
-    @NamedQuery(name = "Collectionobjectattribute.findByNumber37", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number37 = :number37"),
-    @NamedQuery(name = "Collectionobjectattribute.findByNumber38", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number38 = :number38"),
-    @NamedQuery(name = "Collectionobjectattribute.findByNumber39", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number39 = :number39"),
-    @NamedQuery(name = "Collectionobjectattribute.findByNumber4", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number4 = :number4"),
-    @NamedQuery(name = "Collectionobjectattribute.findByNumber40", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number40 = :number40"),
-    @NamedQuery(name = "Collectionobjectattribute.findByNumber41", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number41 = :number41"),
-    @NamedQuery(name = "Collectionobjectattribute.findByNumber42", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number42 = :number42"),
-    @NamedQuery(name = "Collectionobjectattribute.findByNumber5", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number5 = :number5"),
-    @NamedQuery(name = "Collectionobjectattribute.findByNumber6", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number6 = :number6"),
-    @NamedQuery(name = "Collectionobjectattribute.findByNumber7", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number7 = :number7"),
-    @NamedQuery(name = "Collectionobjectattribute.findByNumber8", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number8 = :number8"),
-    @NamedQuery(name = "Collectionobjectattribute.findByNumber9", query = "SELECT c FROM Collectionobjectattribute c WHERE c.number9 = :number9"),
-    @NamedQuery(name = "Collectionobjectattribute.findByText10", query = "SELECT c FROM Collectionobjectattribute c WHERE c.text10 = :text10"),
-    @NamedQuery(name = "Collectionobjectattribute.findByText11", query = "SELECT c FROM Collectionobjectattribute c WHERE c.text11 = :text11"),
-    @NamedQuery(name = "Collectionobjectattribute.findByText12", query = "SELECT c FROM Collectionobjectattribute c WHERE c.text12 = :text12"),
-    @NamedQuery(name = "Collectionobjectattribute.findByText13", query = "SELECT c FROM Collectionobjectattribute c WHERE c.text13 = :text13"),
-    @NamedQuery(name = "Collectionobjectattribute.findByText14", query = "SELECT c FROM Collectionobjectattribute c WHERE c.text14 = :text14"),
-    @NamedQuery(name = "Collectionobjectattribute.findByText15", query = "SELECT c FROM Collectionobjectattribute c WHERE c.text15 = :text15"),
-    @NamedQuery(name = "Collectionobjectattribute.findByText4", query = "SELECT c FROM Collectionobjectattribute c WHERE c.text4 = :text4"),
-    @NamedQuery(name = "Collectionobjectattribute.findByText5", query = "SELECT c FROM Collectionobjectattribute c WHERE c.text5 = :text5"),
-    @NamedQuery(name = "Collectionobjectattribute.findByText6", query = "SELECT c FROM Collectionobjectattribute c WHERE c.text6 = :text6"),
-    @NamedQuery(name = "Collectionobjectattribute.findByText7", query = "SELECT c FROM Collectionobjectattribute c WHERE c.text7 = :text7"),
-    @NamedQuery(name = "Collectionobjectattribute.findByText8", query = "SELECT c FROM Collectionobjectattribute c WHERE c.text8 = :text8"),
-    @NamedQuery(name = "Collectionobjectattribute.findByText9", query = "SELECT c FROM Collectionobjectattribute c WHERE c.text9 = :text9"),
-    @NamedQuery(name = "Collectionobjectattribute.findByYesNo1", query = "SELECT c FROM Collectionobjectattribute c WHERE c.yesNo1 = :yesNo1"),
-    @NamedQuery(name = "Collectionobjectattribute.findByYesNo2", query = "SELECT c FROM Collectionobjectattribute c WHERE c.yesNo2 = :yesNo2"),
-    @NamedQuery(name = "Collectionobjectattribute.findByYesNo3", query = "SELECT c FROM Collectionobjectattribute c WHERE c.yesNo3 = :yesNo3"),
-    @NamedQuery(name = "Collectionobjectattribute.findByYesNo4", query = "SELECT c FROM Collectionobjectattribute c WHERE c.yesNo4 = :yesNo4"),
-    @NamedQuery(name = "Collectionobjectattribute.findByYesNo5", query = "SELECT c FROM Collectionobjectattribute c WHERE c.yesNo5 = :yesNo5"),
-    @NamedQuery(name = "Collectionobjectattribute.findByYesNo6", query = "SELECT c FROM Collectionobjectattribute c WHERE c.yesNo6 = :yesNo6"),
     @NamedQuery(name = "Collectionobjectattribute.findByYesNo7", query = "SELECT c FROM Collectionobjectattribute c WHERE c.yesNo7 = :yesNo7")})
-public class Collectionobjectattribute extends BaseEntity {  
-    
+public class Collectionobjectattribute extends BaseEntity {
+     
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -350,6 +294,13 @@ public class Collectionobjectattribute extends BaseEntity {
         super(timestampCreated);
         this.collectionObjectAttributeId = collectionObjectAttributeId; 
         this.collectionMemberId = collectionMemberId;
+    }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (collectionObjectAttributeId != null) ? collectionObjectAttributeId.toString() : "0";
     }
 
     public int getCollectionMemberId() {
@@ -899,6 +850,7 @@ public class Collectionobjectattribute extends BaseEntity {
         this.collectionObjects = collectionObjects;
     }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -907,6 +859,7 @@ public class Collectionobjectattribute extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -941,5 +894,5 @@ public class Collectionobjectattribute extends BaseEntity {
     public String toString() {
         return "Collectionobjectattribute[ collectionObjectAttributeId=" + collectionObjectAttributeId + " ]";
     }
-    
+  
 }

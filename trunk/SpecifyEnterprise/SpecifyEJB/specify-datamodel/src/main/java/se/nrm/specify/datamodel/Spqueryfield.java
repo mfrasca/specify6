@@ -15,9 +15,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table; 
-//import javax.validation.constraints.NotNull;
-//import javax.validation.constraints.Size;
+import javax.persistence.Table;  
+import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -50,8 +52,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Spqueryfield.findBySortType", query = "SELECT s FROM Spqueryfield s WHERE s.sortType = :sortType"),
     @NamedQuery(name = "Spqueryfield.findByStartValue", query = "SELECT s FROM Spqueryfield s WHERE s.startValue = :startValue"),
     @NamedQuery(name = "Spqueryfield.findByAllowNulls", query = "SELECT s FROM Spqueryfield s WHERE s.allowNulls = :allowNulls")})
-public class Spqueryfield extends BaseEntity {  
-    
+public class Spqueryfield extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -75,8 +77,7 @@ public class Spqueryfield extends BaseEntity {
     @Column(name = "EndValue")
     private String endValue;
     
-    @Basic(optional = false)
-//    @NotNull
+    @Basic(optional = false) 
 //    @Size(min = 1, max = 32)
     @Column(name = "FieldName")
     private String fieldName;
@@ -86,12 +87,12 @@ public class Spqueryfield extends BaseEntity {
     private String formatName;
     
     @Basic(optional = false)
-//    @NotNull
+    @NotNull
     @Column(name = "IsDisplay")
     private boolean isDisplay;
     
     @Basic(optional = false)
-//    @NotNull
+    @NotNull
     @Column(name = "IsNot")
     private boolean isNot;
     
@@ -105,35 +106,35 @@ public class Spqueryfield extends BaseEntity {
     private Short operEnd;
     
     @Basic(optional = false)
-//    @NotNull
+    @NotNull
     @Column(name = "OperStart")
     private short operStart;
     
     @Basic(optional = false)
-//    @NotNull
+    @NotNull
     @Column(name = "Position")
     private short position;
     
     @Basic(optional = false)
-//    @NotNull
+    @NotNull
     @Column(name = "SortType")
     private short sortType;
     
     @Basic(optional = false)
-//    @NotNull
+    @NotNull
 //    @Size(min = 1, max = 64)
     @Column(name = "StartValue")
     private String startValue;
     
     @Basic(optional = false)
-//    @NotNull
+    @NotNull
     @Lob
 //    @Size(min = 1, max = 65535)
     @Column(name = "StringId")
     private String stringId;
     
     @Basic(optional = false)
-//    @NotNull
+    @NotNull
     @Lob
 //    @Size(min = 1, max = 65535)
     @Column(name = "TableList")
@@ -143,13 +144,11 @@ public class Spqueryfield extends BaseEntity {
     private Boolean allowNulls;
     
     @JoinColumn(name = "SpQueryID", referencedColumnName = "SpQueryID")
-    @ManyToOne 
-    @XmlTransient
+    @ManyToOne  
     private Spquery query;
     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
-    @ManyToOne
-    @XmlTransient
+    @ManyToOne 
     private Agent createdByAgent;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
@@ -181,6 +180,13 @@ public class Spqueryfield extends BaseEntity {
         this.tableList = tableList;
     }
 
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (spQueryFieldId != null) ? spQueryFieldId.toString() : "0";
+    }
  
     public Boolean getAlwaysFilter() {
         return alwaysFilter;
@@ -214,6 +220,7 @@ public class Spqueryfield extends BaseEntity {
         this.endValue = endValue;
     }
 
+    @NotNull(message="FieldName must be specified.")
     public String getFieldName() {
         return fieldName;
     }
@@ -294,6 +301,7 @@ public class Spqueryfield extends BaseEntity {
         this.sortType = sortType;
     }
 
+    @NotNull(message="StartValue must be specified.")
     public String getStartValue() {
         return startValue;
     }
@@ -302,6 +310,7 @@ public class Spqueryfield extends BaseEntity {
         this.startValue = startValue;
     }
 
+    @NotNull(message="StringId must be specified.")
     public String getStringId() {
         return stringId;
     }
@@ -310,6 +319,7 @@ public class Spqueryfield extends BaseEntity {
         this.stringId = stringId;
     }
 
+    @NotNull(message="TableList must be specified.")
     public String getTableList() {
         return tableList;
     }
@@ -326,6 +336,7 @@ public class Spqueryfield extends BaseEntity {
         this.allowNulls = allowNulls;
     }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -343,6 +354,7 @@ public class Spqueryfield extends BaseEntity {
         this.mappings = mappings;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -393,5 +405,5 @@ public class Spqueryfield extends BaseEntity {
     public String toString() {
         return "Spqueryfield[ spQueryFieldID=" + spQueryFieldId + " ]";
     }
-    
+ 
 }

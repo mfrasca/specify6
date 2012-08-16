@@ -17,9 +17,12 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-//import javax.validation.constraints.NotNull;
+import javax.persistence.TemporalType; 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -40,8 +43,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Fieldnotebook.findByStorage", query = "SELECT f FROM Fieldnotebook f WHERE f.location = :storage"),
     @NamedQuery(name = "Fieldnotebook.findByName", query = "SELECT f FROM Fieldnotebook f WHERE f.name = :name"),
     @NamedQuery(name = "Fieldnotebook.findByStartDate", query = "SELECT f FROM Fieldnotebook f WHERE f.startDate = :startDate")})
-public class Fieldnotebook extends BaseEntity {  
-    
+public class Fieldnotebook extends BaseEntity {
+  
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -56,10 +59,6 @@ public class Fieldnotebook extends BaseEntity {
     @Column(name = "Description")
     private String description;
     
-    @Column(name = "EndDate")
-    @Temporal(TemporalType.DATE)
-    private Date endDate;
-    
     @Size(max = 64)
     @Column(name = "Storage")
     private String location;
@@ -67,6 +66,10 @@ public class Fieldnotebook extends BaseEntity {
     @Size(max = 32)
     @Column(name = "Name")
     private String name;
+    
+    @Column(name = "EndDate")
+    @Temporal(TemporalType.DATE)
+    private Date endDate;
     
     @Column(name = "StartDate")
     @Temporal(TemporalType.DATE)
@@ -110,6 +113,14 @@ public class Fieldnotebook extends BaseEntity {
         this.fieldNotebookId = fieldNotebookId; 
     }
 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (fieldNotebookId != null) ? fieldNotebookId.toString() : "0";
+    }
+    
+    @NotNull(message="Collection must be specified.")
     public se.nrm.specify.datamodel.Collection getCollection() {
         return collection;
     }
@@ -118,6 +129,7 @@ public class Fieldnotebook extends BaseEntity {
         this.collection = collection;
     }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -126,6 +138,7 @@ public class Fieldnotebook extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @XmlIDREF
     public Discipline getDiscipline() {
         return discipline;
     }
@@ -150,6 +163,7 @@ public class Fieldnotebook extends BaseEntity {
         this.location = location;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -160,21 +174,13 @@ public class Fieldnotebook extends BaseEntity {
  
     
     
-    
+    @NotNull(message="Discipline must be specified.")
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
     }
 
  
@@ -185,16 +191,7 @@ public class Fieldnotebook extends BaseEntity {
     public void setName(String name) {
         this.name = name;
     }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    @XmlTransient
+ 
     public Collection<Fieldnotebookattachment> getAttachments() {
         return attachments;
     }
@@ -202,8 +199,7 @@ public class Fieldnotebook extends BaseEntity {
     public void setAttachments(Collection<Fieldnotebookattachment> attachments) {
         this.attachments = attachments;
     }
-
-    @XmlTransient
+ 
     public Collection<Fieldnotebookpageset> getPageSets() {
         return pageSets;
     }
@@ -212,6 +208,7 @@ public class Fieldnotebook extends BaseEntity {
         this.pageSets = pageSets;
     }
 
+    @NotNull(message="OwnerAgent must be specified.")
     public Agent getOwnerAgent() {
         return ownerAgent;
     }
@@ -219,7 +216,22 @@ public class Fieldnotebook extends BaseEntity {
     public void setOwnerAgent(Agent ownerAgent) {
         this.ownerAgent = ownerAgent;
     }
+    
+    public Date getEndDate() {
+        return endDate;
+    }
 
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
   
 
     @Override
@@ -246,5 +258,5 @@ public class Fieldnotebook extends BaseEntity {
     public String toString() {
         return "Fieldnotebook[ fieldNotebookID=" + fieldNotebookId + " ]";
     }
-    
+ 
 }

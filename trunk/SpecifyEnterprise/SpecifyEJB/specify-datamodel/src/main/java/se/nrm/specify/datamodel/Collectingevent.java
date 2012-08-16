@@ -18,9 +18,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-//import javax.validation.constraints.NotNull;
+import javax.persistence.TemporalType;  
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -50,8 +53,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Collectingevent.findByStationFieldNumber", query = "SELECT c FROM Collectingevent c WHERE c.stationFieldNumber = :stationFieldNumber"),
     @NamedQuery(name = "Collectingevent.findByVerbatimDate", query = "SELECT c FROM Collectingevent c WHERE c.verbatimDate = :verbatimDate"),
     @NamedQuery(name = "Collectingevent.findByVisibility", query = "SELECT c FROM Collectingevent c WHERE c.visibility = :visibility")})
-public class Collectingevent extends BaseEntity {  
-    
+public class Collectingevent extends BaseEntity {
+  
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -60,10 +63,6 @@ public class Collectingevent extends BaseEntity {
 //    @NotNull
     @Column(name = "CollectingEventID")
     private Integer collectingEventId;
-     
-    @Column(name = "EndDate")
-    @Temporal(TemporalType.DATE)
-    private Date endDate;
     
     @Column(name = "EndDatePrecision")
     private Short endDatePrecision;
@@ -84,9 +83,16 @@ public class Collectingevent extends BaseEntity {
     @Column(name = "Remarks")
     private String remarks;
     
+    @Column(name = "EndDate")
+    @Temporal(TemporalType.DATE)
+    private Date endDate;
+    
     @Column(name = "StartDate")
     @Temporal(TemporalType.DATE)
     private Date startDate;
+    
+    @Column(name = "SGRStatus")
+    private Short sGRStatus;
     
     @Column(name = "StartDatePrecision")
     private Short startDatePrecision;
@@ -148,7 +154,7 @@ public class Collectingevent extends BaseEntity {
     @ManyToOne(optional = false)
     private Discipline discipline;
     
-    @OneToMany(mappedBy = "collectingEvent")
+    @OneToMany(mappedBy = "collectingEvent", cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})
     private Collection<Collectionobject> collectionObjects;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "collectingEvent")
@@ -169,14 +175,19 @@ public class Collectingevent extends BaseEntity {
         this.collectingEventId = collectingEventId; 
     }
 
- 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (collectingEventId != null) ? collectingEventId.toString() : "0";
+    }
     
-    public Date getEndDate() {
-        return endDate;
+    public Integer getCollectingEventId() {
+        return collectingEventId;
     }
 
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
+    public void setCollectingEventId(Integer collectingEventId) {
+        this.collectingEventId = collectingEventId;
     }
 
     public Short getEndDatePrecision() {
@@ -217,14 +228,6 @@ public class Collectingevent extends BaseEntity {
 
     public void setRemarks(String remarks) {
         this.remarks = remarks;
-    }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
     }
 
     public Short getStartDatePrecision() {
@@ -282,8 +285,31 @@ public class Collectingevent extends BaseEntity {
     public void setVisibility(Short visibility) {
         this.visibility = visibility;
     }
+    
+    public Date getEndDate() {
+        return endDate;
+    }
 
-    @XmlTransient
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Short getSGRStatus() {
+        return sGRStatus;
+    }
+
+    public void setSGRStatus(Short sGRStatus) {
+        this.sGRStatus = sGRStatus;
+    }
+ 
     public Collection<Collectingeventattachment> getCollectingEventAttachments() {
         return collectingEventAttachments;
     }
@@ -309,13 +335,7 @@ public class Collectingevent extends BaseEntity {
         this.collectingEventAttrs = collectingEventAttrs;
     }
 
-    public Integer getCollectingEventId() {
-        return collectingEventId;
-    }
 
-    public void setCollectingEventId(Integer collectingEventId) {
-        this.collectingEventId = collectingEventId;
-    }
 
     public Collectingtrip getCollectingTrip() {
         return collectingTrip;
@@ -341,7 +361,7 @@ public class Collectingevent extends BaseEntity {
     public void setCollector(Collector collector) {
         this.collector = collector;
     }
-
+ 
     @XmlTransient
     public Collection<Collector> getCollectors() {
         return collectors;
@@ -351,6 +371,7 @@ public class Collectingevent extends BaseEntity {
         this.collectors = collectors;
     }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -358,7 +379,8 @@ public class Collectingevent extends BaseEntity {
     public void setCreatedByAgent(Agent createdByAgent) {
         this.createdByAgent = createdByAgent;
     }
-
+ 
+    @NotNull(message="Discipline must be specified.")
     public Discipline getDiscipline() {
         return discipline;
     }
@@ -375,6 +397,7 @@ public class Collectingevent extends BaseEntity {
         this.locality = locality;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -383,7 +406,8 @@ public class Collectingevent extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
 
-    public Specifyuser getVisibilitySetBy() {
+    @XmlIDREF
+    public Specifyuser getVisibilitySetBy() { 
         return visibilitySetBy;
     }
 
@@ -392,9 +416,8 @@ public class Collectingevent extends BaseEntity {
     }
 
    
-
-    
  
+    
  
 
     @Override
@@ -420,6 +443,5 @@ public class Collectingevent extends BaseEntity {
     @Override
     public String toString() {
         return "Collectingevent[ collectingEventId=" + collectingEventId + " ]";
-    }
-    
+    } 
 }

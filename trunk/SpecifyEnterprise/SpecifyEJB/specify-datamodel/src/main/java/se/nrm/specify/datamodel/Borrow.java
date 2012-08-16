@@ -20,7 +20,10 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlRootElement; 
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
@@ -48,8 +51,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Borrow.findByReceivedDate", query = "SELECT b FROM Borrow b WHERE b.receivedDate = :receivedDate"),
     @NamedQuery(name = "Borrow.findByYesNo1", query = "SELECT b FROM Borrow b WHERE b.yesNo1 = :yesNo1"),
     @NamedQuery(name = "Borrow.findByYesNo2", query = "SELECT b FROM Borrow b WHERE b.yesNo2 = :yesNo2")})
-public class Borrow extends BaseEntity { 
-    
+public class Borrow extends BaseEntity {
+     
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -64,6 +67,14 @@ public class Borrow extends BaseEntity {
     @Column(name = "CollectionMemberID")
     private int collectionMemberId;
     
+    @Basic(optional = false) 
+    @Size(min = 1, max = 50)
+    @Column(name = "InvoiceNumber")
+    private String invoiceNumber;
+    
+    @Column(name = "IsClosed")
+    private Boolean isClosed;
+    
     @Column(name = "CurrentDueDate")
     @Temporal(TemporalType.DATE)
     private Date currentDueDate;
@@ -72,14 +83,13 @@ public class Borrow extends BaseEntity {
     @Temporal(TemporalType.DATE)
     private Date dateClosed;
     
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 50)
-    @Column(name = "InvoiceNumber")
-    private String invoiceNumber;
+    @Column(name = "OriginalDueDate")
+    @Temporal(TemporalType.DATE)
+    private Date originalDueDate;
     
-    @Column(name = "IsClosed")
-    private Boolean isClosed;
+    @Column(name = "ReceivedDate")
+    @Temporal(TemporalType.DATE)
+    private Date receivedDate;
     
     @Column(name = "IsFinancialResponsibility")
     private Boolean isFinancialResponsibility;
@@ -91,18 +101,11 @@ public class Borrow extends BaseEntity {
     @Column(name = "Number2")
     private Float number2;
     
-    @Column(name = "OriginalDueDate")
-    @Temporal(TemporalType.DATE)
-    private Date originalDueDate;
-    
-    @Column(name = "ReceivedDate")
-    @Temporal(TemporalType.DATE)
-    private Date receivedDate;
-    
     @Lob
     @Size(max = 65535)
     @Column(name = "Remarks")
     private String remarks;
+    
     @Lob
     @Size(max = 65535)
     @Column(name = "Text1")
@@ -122,7 +125,7 @@ public class Borrow extends BaseEntity {
     @OneToMany(mappedBy = "borrow")
     private Collection<Shipment> shipments;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "borrow")
+    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval=true, mappedBy = "borrow")
     private Collection<Borrowmaterial> borrowMaterials;
     
     @JoinColumn(name = "AddressOfRecordID", referencedColumnName = "AddressOfRecordID")
@@ -137,7 +140,7 @@ public class Borrow extends BaseEntity {
     @ManyToOne
     private Agent modifiedByAgent;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "borrow")
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "borrow", orphanRemoval=true)
     private Collection<Borrowagent> borrowAgents;
 
     public Borrow() {
@@ -153,7 +156,14 @@ public class Borrow extends BaseEntity {
         this.collectionMemberId = collectionMemberId;
         this.invoiceNumber = invoiceNumber;
     }
-
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (borrowId != null) ? borrowId.toString() : "0";
+    }
+  
     public Integer getBorrowId() {
         return borrowId;
     }
@@ -170,24 +180,7 @@ public class Borrow extends BaseEntity {
         this.collectionMemberId = collectionMemberId;
     }
 
-   
-
-    public Date getCurrentDueDate() {
-        return currentDueDate;
-    }
-
-    public void setCurrentDueDate(Date currentDueDate) {
-        this.currentDueDate = currentDueDate;
-    }
-
-    public Date getDateClosed() {
-        return dateClosed;
-    }
-
-    public void setDateClosed(Date dateClosed) {
-        this.dateClosed = dateClosed;
-    }
-
+    @NotNull(message="InvoiceNumber must be specified.")
     public String getInvoiceNumber() {
         return invoiceNumber;
     }
@@ -226,22 +219,6 @@ public class Borrow extends BaseEntity {
 
     public void setNumber2(Float number2) {
         this.number2 = number2;
-    }
-
-    public Date getOriginalDueDate() {
-        return originalDueDate;
-    }
-
-    public void setOriginalDueDate(Date originalDueDate) {
-        this.originalDueDate = originalDueDate;
-    }
-
-    public Date getReceivedDate() {
-        return receivedDate;
-    }
-
-    public void setReceivedDate(Date receivedDate) {
-        this.receivedDate = receivedDate;
     }
 
     public String getRemarks() {
@@ -292,6 +269,7 @@ public class Borrow extends BaseEntity {
         this.borrowAgents = borrowAgents;
     }
 
+    
     public Collection<Borrowmaterial> getBorrowMaterials() {
         return borrowMaterials;
     }
@@ -300,6 +278,7 @@ public class Borrow extends BaseEntity {
         this.borrowMaterials = borrowMaterials;
     }
 
+    @XmlTransient
     public Collection<Shipment> getShipments() {
         return shipments;
     }
@@ -308,7 +287,37 @@ public class Borrow extends BaseEntity {
         this.shipments = shipments;
     }
 
- 
+     public Date getCurrentDueDate() {
+        return currentDueDate;
+    }
+
+    public void setCurrentDueDate(Date currentDueDate) {
+        this.currentDueDate = currentDueDate;
+    }
+
+    public Date getDateClosed() {
+        return dateClosed;
+    }
+
+    public void setDateClosed(Date dateClosed) {
+        this.dateClosed = dateClosed;
+    }
+
+    public Date getOriginalDueDate() {
+        return originalDueDate;
+    }
+
+    public void setOriginalDueDate(Date originalDueDate) {
+        this.originalDueDate = originalDueDate;
+    }
+
+    public Date getReceivedDate() {
+        return receivedDate;
+    }
+
+    public void setReceivedDate(Date receivedDate) {
+        this.receivedDate = receivedDate;
+    }
 
     public Addressofrecord getAddressOfRecord() {
         return addressOfRecord;
@@ -318,6 +327,7 @@ public class Borrow extends BaseEntity {
         this.addressOfRecord = addressOfRecord;
     }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -326,6 +336,7 @@ public class Borrow extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -358,5 +369,7 @@ public class Borrow extends BaseEntity {
     public String toString() {
         return "Borrow[ borrowID=" + borrowId + " ]";
     }
+ 
+   
     
 }

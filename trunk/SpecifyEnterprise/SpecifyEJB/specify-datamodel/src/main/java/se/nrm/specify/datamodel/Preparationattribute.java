@@ -19,6 +19,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -73,7 +75,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Preparationattribute.findByYesNo2", query = "SELECT p FROM Preparationattribute p WHERE p.yesNo2 = :yesNo2"),
     @NamedQuery(name = "Preparationattribute.findByYesNo3", query = "SELECT p FROM Preparationattribute p WHERE p.yesNo3 = :yesNo3"),
     @NamedQuery(name = "Preparationattribute.findByYesNo4", query = "SELECT p FROM Preparationattribute p WHERE p.yesNo4 = :yesNo4")})
-public class Preparationattribute extends BaseEntity { 
+public class Preparationattribute extends BaseEntity {
+ 
+    
     
     private static final long serialVersionUID = 1L;
     
@@ -88,10 +92,6 @@ public class Preparationattribute extends BaseEntity {
     @NotNull
     @Column(name = "CollectionMemberID")
     private int collectionMemberId;
-    
-    @Column(name = "AttrDate")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date attrDate;
     
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "Number1")
@@ -120,6 +120,10 @@ public class Preparationattribute extends BaseEntity {
     
     @Column(name = "Number9")
     private Short number9;
+    
+    @Column(name = "AttrDate")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date attrDate;
     
     @Lob
     @Size(max = 65535)
@@ -269,6 +273,13 @@ public class Preparationattribute extends BaseEntity {
         this.collectionMemberId = collectionMemberId;
     }
 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (preparationAttributeId != null) ? preparationAttributeId.toString() : "0";
+    }
+    
     public int getCollectionMemberId() {
         return collectionMemberId;
     }
@@ -308,15 +319,6 @@ public class Preparationattribute extends BaseEntity {
 
     public void setPreparations(Collection<Preparation> preparations) {
         this.preparations = preparations;
-    }
-
-     
-    public Date getAttrDate() {
-        return attrDate;
-    }
-
-    public void setAttrDate(Date attrDate) {
-        this.attrDate = attrDate;
     }
 
     public Float getNumber1() {
@@ -641,7 +643,13 @@ public class Preparationattribute extends BaseEntity {
     
     
     
-    
+    public Date getAttrDate() {
+        return attrDate;
+    }
+
+    public void setAttrDate(Date attrDate) {
+        this.attrDate = attrDate;
+    }
     
  
     @Override
@@ -668,5 +676,5 @@ public class Preparationattribute extends BaseEntity {
     public String toString() {
         return "Preparationattribute[ preparationAttributeID=" + preparationAttributeId + " ]";
     }
-    
+ 
 }

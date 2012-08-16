@@ -12,9 +12,12 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
-//import javax.validation.constraints.NotNull;
+import javax.persistence.Table;  
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -34,8 +37,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Dnasequencingruncitation.findByNumber2", query = "SELECT d FROM Dnasequencingruncitation d WHERE d.number2 = :number2"),
     @NamedQuery(name = "Dnasequencingruncitation.findByYesNo1", query = "SELECT d FROM Dnasequencingruncitation d WHERE d.yesNo1 = :yesNo1"),
     @NamedQuery(name = "Dnasequencingruncitation.findByYesNo2", query = "SELECT d FROM Dnasequencingruncitation d WHERE d.yesNo2 = :yesNo2")})
-public class Dnasequencingruncitation extends BaseEntity {  
-    
+public class Dnasequencingruncitation extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -100,7 +103,15 @@ public class Dnasequencingruncitation extends BaseEntity {
         super(timestampCreated);
         this.dnaSequencingRunCitationId = dnaSequencingRunCitationId; 
     }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (dnaSequencingRunCitationId != null) ? dnaSequencingRunCitationId.toString() : "0";
+    }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -117,6 +128,7 @@ public class Dnasequencingruncitation extends BaseEntity {
         this.dnaSequencingRunCitationId = dnaSequencingRunCitationId;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -125,6 +137,7 @@ public class Dnasequencingruncitation extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
 
+    @NotNull(message="ReferenceWork must be specified.")
     public Referencework getReferenceWork() {
         return referenceWork;
     }
@@ -133,6 +146,7 @@ public class Dnasequencingruncitation extends BaseEntity {
         this.referenceWork = referenceWork;
     }
 
+    @NotNull(message="SequencingRun must be specified.")
     public Dnasequencingrun getSequencingRun() {
         return sequencingRun;
     }
@@ -224,5 +238,5 @@ public class Dnasequencingruncitation extends BaseEntity {
     public String toString() {
         return "Dnasequencingruncitation[ dnaSequencingRunCitationId=" + dnaSequencingRunCitationId + " ]";
     }
-    
+ 
 }

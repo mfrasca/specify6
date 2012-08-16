@@ -14,9 +14,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table; 
-//import javax.validation.constraints.NotNull;
+import javax.persistence.Table;  
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -50,8 +53,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Workbenchtemplatemappingitem.findByTableName", query = "SELECT w FROM Workbenchtemplatemappingitem w WHERE w.tableName = :tableName"),
     @NamedQuery(name = "Workbenchtemplatemappingitem.findByViewOrder", query = "SELECT w FROM Workbenchtemplatemappingitem w WHERE w.viewOrder = :viewOrder"),
     @NamedQuery(name = "Workbenchtemplatemappingitem.findByIsEditable", query = "SELECT w FROM Workbenchtemplatemappingitem w WHERE w.isEditable = :isEditable")})
-public class Workbenchtemplatemappingitem extends BaseEntity { 
-    
+public class Workbenchtemplatemappingitem extends BaseEntity {
+   
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -143,7 +146,14 @@ public class Workbenchtemplatemappingitem extends BaseEntity {
         super(timestampCreated);
         this.workbenchTemplateMappingItemId = workbenchTemplateMappingItemId; 
     }
-
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (workbenchTemplateMappingItemId != null) ? workbenchTemplateMappingItemId.toString() : "0";
+    }
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -152,6 +162,7 @@ public class Workbenchtemplatemappingitem extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -176,6 +187,7 @@ public class Workbenchtemplatemappingitem extends BaseEntity {
         this.srcTableId = srcTableId;
     }
 
+    @NotNull(message="WorkbenchTemplate must be specified.")
     public Workbenchtemplate getWorkbenchTemplate() {
         return workbenchTemplate;
     }
@@ -367,5 +379,5 @@ public class Workbenchtemplatemappingitem extends BaseEntity {
     public String toString() {
         return "Workbenchtemplatemappingitem[ workbenchTemplateMappingItemID=" + workbenchTemplateMappingItemId + " ]";
     }
-    
+ 
 }

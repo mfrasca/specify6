@@ -17,10 +17,13 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-//import javax.validation.constraints.NotNull;
+import javax.persistence.TemporalType; 
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlRootElement; 
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
@@ -43,8 +46,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Deaccession.findByType", query = "SELECT d FROM Deaccession d WHERE d.type = :type"),
     @NamedQuery(name = "Deaccession.findByYesNo1", query = "SELECT d FROM Deaccession d WHERE d.yesNo1 = :yesNo1"),
     @NamedQuery(name = "Deaccession.findByYesNo2", query = "SELECT d FROM Deaccession d WHERE d.yesNo2 = :yesNo2")})
-public class Deaccession extends BaseEntity {  
-    
+public class Deaccession extends BaseEntity {
+  
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -53,10 +56,6 @@ public class Deaccession extends BaseEntity {
 //    @NotNull
     @Column(name = "DeaccessionID")
     private Integer deaccessionId;
-     
-    @Column(name = "DeaccessionDate")
-    @Temporal(TemporalType.DATE)
-    private Date deaccessionDate; 
     
     @Size(max = 50)
     @Column(name = "DeaccessionNumber")
@@ -94,6 +93,10 @@ public class Deaccession extends BaseEntity {
     @Column(name = "YesNo2")
     private Boolean yesNo2;
     
+    @Column(name = "DeaccessionDate")
+    @Temporal(TemporalType.DATE)
+    private Date deaccessionDate;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "deaccession")
     private Collection<Deaccessionagent> deaccessionAgents;
     
@@ -124,14 +127,11 @@ public class Deaccession extends BaseEntity {
         this.deaccessionId = deaccessionId; 
     }
 
- 
- 
-    public Date getDeaccessionDate() {
-        return deaccessionDate;
-    }
-
-    public void setDeaccessionDate(Date deaccessionDate) {
-        this.deaccessionDate = deaccessionDate;
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (deaccessionId != null) ? deaccessionId.toString() : "0";
     }
 
     public String getDeaccessionNumber() {
@@ -207,7 +207,7 @@ public class Deaccession extends BaseEntity {
     }
 
  
-
+    @XmlTransient
     public Accession getAccession() {
         return accession;
     }
@@ -216,6 +216,7 @@ public class Deaccession extends BaseEntity {
         this.accession = accession;
     }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -232,6 +233,7 @@ public class Deaccession extends BaseEntity {
         this.deaccessionId = deaccessionId;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -256,8 +258,28 @@ public class Deaccession extends BaseEntity {
         this.deaccessionPreparations = deaccessionPreparations;
     }
  
+    public Date getDeaccessionDate() {
+        return deaccessionDate;
+    }
 
+    public void setDeaccessionDate(Date deaccessionDate) {
+        this.deaccessionDate = deaccessionDate;
+    }
  
+    
+    /**
+     * Parent pointer
+     * 
+     * @param u
+     * @param parent 
+     */
+    public void afterUnmarshal(Unmarshaller u, Object parent) {  
+        if(parent instanceof Accession) {
+            this.accession  = (Accession)parent;   
+        }
+    }
+    
+    
     @Override
     public int hashCode() {
         int hash = 0;
@@ -282,5 +304,6 @@ public class Deaccession extends BaseEntity {
     public String toString() {
         return "Deaccession[ deaccessionID=" + deaccessionId + " ]";
     }
-    
+
+ 
 }

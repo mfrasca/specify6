@@ -12,9 +12,11 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
-//import javax.validation.constraints.NotNull;
+import javax.persistence.Table;  
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -34,8 +36,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Commonnametxcitation.findByNumber2", query = "SELECT c FROM Commonnametxcitation c WHERE c.number2 = :number2"),
     @NamedQuery(name = "Commonnametxcitation.findByYesNo1", query = "SELECT c FROM Commonnametxcitation c WHERE c.yesNo1 = :yesNo1"),
     @NamedQuery(name = "Commonnametxcitation.findByYesNo2", query = "SELECT c FROM Commonnametxcitation c WHERE c.yesNo2 = :yesNo2")})
-public class Commonnametxcitation extends BaseEntity {  
-    
+public class Commonnametxcitation extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -101,6 +103,12 @@ public class Commonnametxcitation extends BaseEntity {
         this.commonNameTxCitationId = commonNameTxCitationId; 
     }
 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (commonNameTxCitationId != null) ? commonNameTxCitationId.toString() : "0";
+    }
  
     public Float getNumber1() {
         return number1;
@@ -158,6 +166,7 @@ public class Commonnametxcitation extends BaseEntity {
         this.yesNo2 = yesNo2;
     }
 
+    @NotNull(message="CommonNameTx must be specified.")
     public Commonnametx getCommonNameTx() {
         return commonNameTx;
     }
@@ -190,6 +199,7 @@ public class Commonnametxcitation extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
 
+    @NotNull(message="ReferenceWork must be specified.")
     public Referencework getReferenceWork() {
         return referenceWork;
     }
@@ -223,5 +233,6 @@ public class Commonnametxcitation extends BaseEntity {
     public String toString() {
         return "Commonnametxcitation[ commonNameTxCitationId=" + commonNameTxCitationId + " ]";
     }
-    
+
+ 
 }

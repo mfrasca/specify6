@@ -17,6 +17,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -52,8 +54,7 @@ public class Sppermission implements Serializable, SpecifyBean {
     @Column(name = "Name")
     private String name;
     
-    @Basic(optional = false)
-    @NotNull
+    @Basic(optional = false) 
     @Lob
     @Size(min = 1, max = 65535)
     @Column(name = "PermissionClass")
@@ -80,6 +81,12 @@ public class Sppermission implements Serializable, SpecifyBean {
         this.permissionClass = permissionClass;
     }
  
+    @XmlID
+    @XmlAttribute(name = "id") 
+    public String getIdentityString() {
+        return (permissionId != null) ? permissionId.toString() : "0";
+    }
+    
     public String getActions() {
         return actions;
     }
@@ -96,6 +103,7 @@ public class Sppermission implements Serializable, SpecifyBean {
         this.name = name;
     }
 
+    @NotNull(message="PermissionClass must be specified.")
     public String getPermissionClass() {
         return permissionClass;
     }

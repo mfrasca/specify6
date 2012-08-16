@@ -16,9 +16,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table; 
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -63,7 +66,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Locality.findByText2", query = "SELECT l FROM Locality l WHERE l.text2 = :text2"),
     @NamedQuery(name = "Locality.findByVerbatimElevation", query = "SELECT l FROM Locality l WHERE l.verbatimElevation = :verbatimElevation"),
     @NamedQuery(name = "Locality.findByVisibility", query = "SELECT l FROM Locality l WHERE l.visibility = :visibility")})
-public class Locality extends BaseEntity {  
+public class Locality extends BaseEntity {
+ 
+    
      
     private static final long serialVersionUID = 1L;
     
@@ -120,8 +125,7 @@ public class Locality extends BaseEntity {
     @Column(name = "Latitude2")
     private BigDecimal latitude2;
     
-    @Basic(optional = false)
-    @NotNull
+    @Basic(optional = false) 
     @Size(min = 1, max = 255)
     @Column(name = "LocalityName")
     private String localityName;
@@ -190,6 +194,9 @@ public class Locality extends BaseEntity {
     @Column(name = "Visibility")
     private Short visibility;
     
+    @Column(name = "SGRStatus")
+    private Short sGRStatus;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "locality")
     private Collection<Localitynamealias> localityNameAliass;
     
@@ -240,6 +247,13 @@ public class Locality extends BaseEntity {
         this.localityId = localityId; 
         this.localityName = localityName;
         this.srcLatLongUnit = srcLatLongUnit;
+    }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (localityId != null) ? localityId.toString() : "0";
     }
 
     public String getLat1text() {
@@ -365,6 +379,7 @@ public class Locality extends BaseEntity {
         this.latitude2 = latitude2;
     }
 
+    @NotNull(message="LocalityName must be specified.")
     public String getLocalityName() {
         return localityName;
     }
@@ -494,7 +509,7 @@ public class Locality extends BaseEntity {
     }
 
    
-
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -503,6 +518,7 @@ public class Locality extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @NotNull(message="Discipline must be specified.")
     public Discipline getDiscipline() {
         return discipline;
     }
@@ -519,6 +535,7 @@ public class Locality extends BaseEntity {
         this.geography = geography;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -527,6 +544,7 @@ public class Locality extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
 
+    @XmlIDREF
     public Specifyuser getVisibilitySetBy() {
         return visibilitySetBy;
     }
@@ -589,7 +607,13 @@ public class Locality extends BaseEntity {
         this.localityNameAliass = localityNameAliass;
     }
 
-    
+    public Short getSGRStatus() {
+        return sGRStatus;
+    }
+
+    public void setSGRStatus(Short sGRStatus) {
+        this.sGRStatus = sGRStatus;
+    }
    
 
     @Override
@@ -615,6 +639,5 @@ public class Locality extends BaseEntity {
     @Override
     public String toString() {
         return "Locality[ localityID=" + localityId + " ]";
-    }
-    
+    } 
 }

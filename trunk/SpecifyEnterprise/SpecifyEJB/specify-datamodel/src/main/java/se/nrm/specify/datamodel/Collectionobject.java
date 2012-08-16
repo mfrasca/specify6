@@ -1,5 +1,5 @@
 package se.nrm.specify.datamodel;
- 
+  
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Date;
@@ -23,8 +23,11 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement; 
 import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement; 
 import javax.xml.bind.annotation.XmlTransient; 
 
@@ -74,7 +77,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Collectionobject.findByYesNo4", query = "SELECT c FROM Collectionobject c WHERE c.yesNo4 = :yesNo4"),
     @NamedQuery(name = "Collectionobject.findByYesNo5", query = "SELECT c FROM Collectionobject c WHERE c.yesNo5 = :yesNo5"),
     @NamedQuery(name = "Collectionobject.findByYesNo6", query = "SELECT c FROM Collectionobject c WHERE c.yesNo6 = :yesNo6")})
-public class Collectionobject extends BaseEntity { 
+public class Collectionobject extends BaseEntity {
+  
+//implements CycleRecoverable { 
     
     private static final long serialVersionUID = 1L;
      
@@ -99,12 +104,8 @@ public class Collectionobject extends BaseEntity {
     private String availability;
     
     @Size(max = 32)
-    @Column(name = "CatalogNumber")
+    @Column(name = "CatalogNumber")  
     private String catalogNumber;
-    
-    @Column(name = "CatalogedDate")
-    @Temporal(TemporalType.DATE)
-    private Date catalogedDate;
     
     @Column(name = "CatalogedDatePrecision")
     private Short catalogedDatePrecision;
@@ -130,10 +131,6 @@ public class Collectionobject extends BaseEntity {
     @Size(max = 128)
     @Column(name = "GUID")
     private String guid;
-    
-    @Column(name = "InventoryDate")
-    @Temporal(TemporalType.DATE)
-    private Date inventoryDate;
     
     @Size(max = 50)
     @Column(name = "Modifier")
@@ -166,6 +163,22 @@ public class Collectionobject extends BaseEntity {
     @Size(max = 65535)
     @Column(name = "Remarks")
     private String remarks;
+    
+    @Column(name = "CatalogedDate")
+    @Temporal(TemporalType.DATE)
+    private Date catalogedDate;
+    
+    @Column(name = "InventoryDate")
+    @Temporal(TemporalType.DATE)
+    private Date inventoryDate;
+    
+    @Lob
+    @Size(max = 65535)
+    @Column(name = "OCR")
+    private String ocr;
+    
+    @Column(name = "SGRStatus")
+    private Short sGRStatus;
     
     @Size(max = 32)
     @Column(name = "Restrictions")
@@ -243,7 +256,7 @@ public class Collectionobject extends BaseEntity {
     private Collection<Collectionobjectattachment> collectionObjectAttachments;
     
     @JoinColumn(name = "AccessionID", referencedColumnName = "AccessionID")
-    @ManyToOne
+    @ManyToOne(cascade={CascadeType.MERGE, CascadeType.PERSIST})
     private Accession accession;
     
     @JoinColumn(name = "CatalogerID", referencedColumnName = "AgentID")
@@ -287,7 +300,7 @@ public class Collectionobject extends BaseEntity {
     private Appraisal appraisal;
     
     @JoinColumn(name = "CollectingEventID", referencedColumnName = "CollectingEventID")
-    @ManyToOne
+    @ManyToOne(cascade={CascadeType.MERGE, CascadeType.PERSIST})
     private Collectingevent collectingEvent;
     
     @JoinColumn(name = "ContainerID", referencedColumnName = "ContainerID")
@@ -312,6 +325,16 @@ public class Collectionobject extends BaseEntity {
         super(timestampCreated);
         this.collectionObjectId = collectionObjectId; 
         this.collectionMemberId = collectionMemberId;
+    }
+ 
+
+ 
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (collectionObjectId != null) ? collectionObjectId.toString() : "0";
     }
 
     public int getCollectionMemberId() {
@@ -361,10 +384,7 @@ public class Collectionobject extends BaseEntity {
     public void setCollectingEvent(Collectingevent collectingEvent) {
         this.collectingEvent = collectingEvent;
     }
-
  
- 
-
     public String getAltCatalogNumber() {
         return altCatalogNumber;
     }
@@ -387,14 +407,6 @@ public class Collectionobject extends BaseEntity {
 
     public void setCatalogNumber(String catalogNumber) {
         this.catalogNumber = catalogNumber;
-    }
- 
-    public Date getCatalogedDate() {
-        return catalogedDate;
-    }
-
-    public void setCatalogedDate(Date catalogedDate) {
-        this.catalogedDate = catalogedDate;
     }
 
     public Short getCatalogedDatePrecision() {
@@ -451,14 +463,6 @@ public class Collectionobject extends BaseEntity {
 
     public void setGuid(String guid) {
         this.guid = guid;
-    }
-
-    public Date getInventoryDate() {
-        return inventoryDate;
-    }
-
-    public void setInventoryDate(Date inventoryDate) {
-        this.inventoryDate = inventoryDate;
     }
 
     public String getModifier() {
@@ -678,7 +682,8 @@ public class Collectionobject extends BaseEntity {
     }
  
  
-    @XmlElement
+    @XmlElementWrapper(name="preparations")
+    @XmlElement(name="preparation") 
     public Collection<Preparation> getPreparations() {
         return preparations;
     }
@@ -688,9 +693,8 @@ public class Collectionobject extends BaseEntity {
     }
  
 
-//    @XmlElementWrapper(name="determinations")
-//    @XmlElement(name="determination")
-    @XmlElement 
+    @XmlElementWrapper(name="determinations")
+    @XmlElement(name="determination") 
     public Collection<Determination> getDeterminations() {
         return determinations;
     }
@@ -728,6 +732,7 @@ public class Collectionobject extends BaseEntity {
         this.containerOwner = containerOwner;
     }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -736,6 +741,7 @@ public class Collectionobject extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -752,6 +758,7 @@ public class Collectionobject extends BaseEntity {
         this.fieldNotebookPage = fieldNotebookPage;
     }
 
+    @NotNull(message="Collection must be specified.")
     public se.nrm.specify.datamodel.Collection getCollection() {
         return collection;
     }
@@ -759,10 +766,7 @@ public class Collectionobject extends BaseEntity {
     public void setCollection(se.nrm.specify.datamodel.Collection collection) {
         this.collection = collection;
     }
-
-  
-
-    @XmlTransient
+ 
     public Collection<Collectionobjectattachment> getCollectionObjectAttachments() {
         return collectionObjectAttachments;
     }
@@ -770,8 +774,7 @@ public class Collectionobject extends BaseEntity {
     public void setCollectionObjectAttachments(Collection<Collectionobjectattachment> collectionObjectAttachments) {
         this.collectionObjectAttachments = collectionObjectAttachments;
     }
-
-    
+ 
     public Collectionobjectattribute getCollectionObjectAttribute() {
         return collectionObjectAttribute;
     }
@@ -780,9 +783,7 @@ public class Collectionobject extends BaseEntity {
         this.collectionObjectAttribute = collectionObjectAttribute;
     }
 
-  
-
-    @XmlTransient
+   
     public Collection<Collectionobjectattr> getCollectionObjectAttrs() {
         return collectionObjectAttrs;
     }
@@ -790,8 +791,7 @@ public class Collectionobject extends BaseEntity {
     public void setCollectionObjectAttrs(Collection<Collectionobjectattr> collectionObjectAttrs) {
         this.collectionObjectAttrs = collectionObjectAttrs;
     }
-
-    @XmlTransient
+ 
     public Collection<Collectionobjectcitation> getCollectionObjectCitations() {
         return collectionObjectCitations;
     }
@@ -818,7 +818,37 @@ public class Collectionobject extends BaseEntity {
         this.exsiccataItems = exsiccataItems;
     }
 
- 
+    public Date getCatalogedDate() {
+        return catalogedDate;
+    }
+
+    public void setCatalogedDate(Date catalogedDate) {
+        this.catalogedDate = catalogedDate;
+    }
+
+    public Date getInventoryDate() {
+        return inventoryDate;
+    }
+
+    public void setInventoryDate(Date inventoryDate) {
+        this.inventoryDate = inventoryDate;
+    }
+
+    public String getOcr() {
+        return ocr;
+    }
+
+    public void setOcr(String ocr) {
+        this.ocr = ocr;
+    }
+
+    public Short getSGRStatus() {
+        return sGRStatus;
+    }
+
+    public void setSGRStatus(Short sGRStatus) {
+        this.sGRStatus = sGRStatus;
+    }
  
 
     @Override
@@ -846,5 +876,6 @@ public class Collectionobject extends BaseEntity {
     public String toString() {
         return "Collectionobject[ collectionObjectId=" + collectionObjectId + " ]";
     }
-    
+ 
+   
 }

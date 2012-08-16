@@ -11,9 +11,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
-//import javax.validation.constraints.NotNull;
+import javax.persistence.Table;  
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -31,8 +33,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Exsiccataitem.findByVersion", query = "SELECT e FROM Exsiccataitem e WHERE e.version = :version"),
     @NamedQuery(name = "Exsiccataitem.findByFascicle", query = "SELECT e FROM Exsiccataitem e WHERE e.fascicle = :fascicle"),
     @NamedQuery(name = "Exsiccataitem.findByNumber", query = "SELECT e FROM Exsiccataitem e WHERE e.number = :number")})
-public class Exsiccataitem extends BaseEntity { 
-    
+public class Exsiccataitem extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -78,7 +80,12 @@ public class Exsiccataitem extends BaseEntity {
         this.exsiccataItemId = exsiccataItemId; 
     }
 
- 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (exsiccataItemId != null) ? exsiccataItemId.toString() : "0";
+    }
  
     public String getFascicle() {
         return fascicle;
@@ -96,6 +103,7 @@ public class Exsiccataitem extends BaseEntity {
         this.number = number;
     }
 
+    @NotNull(message="Collectionobject must be specified.")
     public Collectionobject getCollectionObject() {
         return collectionObject;
     }
@@ -112,6 +120,7 @@ public class Exsiccataitem extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @NotNull(message="Exsiccata must be specified.")
     public Exsiccata getExsiccata() {
         return exsiccata;
     }
@@ -161,5 +170,5 @@ public class Exsiccataitem extends BaseEntity {
     public String toString() {
         return "Exsiccataitem[ exsiccataItemID=" + exsiccataItemId + " ]";
     }
-    
+ 
 }

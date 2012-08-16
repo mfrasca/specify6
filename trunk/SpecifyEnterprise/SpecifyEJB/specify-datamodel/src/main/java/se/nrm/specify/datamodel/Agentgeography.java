@@ -12,10 +12,15 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
-//import javax.validation.constraints.NotNull;
+import javax.persistence.Table;  
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -31,8 +36,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Agentgeography.findByTimestampModified", query = "SELECT a FROM Agentgeography a WHERE a.timestampModified = :timestampModified"),
     @NamedQuery(name = "Agentgeography.findByVersion", query = "SELECT a FROM Agentgeography a WHERE a.version = :version"),
     @NamedQuery(name = "Agentgeography.findByRole", query = "SELECT a FROM Agentgeography a WHERE a.role = :role")})
-public class Agentgeography extends BaseEntity {  
-    
+public class Agentgeography extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -78,6 +83,13 @@ public class Agentgeography extends BaseEntity {
         super(timestampCreated);
         this.agentGeographyId = agentGeographyId; 
     }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (agentGeographyId != null) ? agentGeographyId.toString() : "0";
+    }
 
     public Integer getAgentGeographyId() {
         return agentGeographyId;
@@ -103,6 +115,8 @@ public class Agentgeography extends BaseEntity {
         this.role = role;
     }
 
+    @NotNull(message="Agent must be specified.")
+    @XmlIDREF
     public Agent getAgent() {
         return agent;
     }
@@ -119,6 +133,7 @@ public class Agentgeography extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @NotNull(message="Geography must be specified.")
     public Geography getGeography() {
         return geography;
     }
@@ -134,8 +149,18 @@ public class Agentgeography extends BaseEntity {
     public void setModifiedByAgent(Agent modifiedByAgent) {
         this.modifiedByAgent = modifiedByAgent;
     }
- 
     
+    /**
+     * Parent pointer
+     * 
+     * @param u
+     * @param parent 
+     */
+    public void afterUnmarshal(Unmarshaller u, Object parent) {
+        if (parent instanceof Agent) {
+            this.agent = (Agent) parent;
+        }
+    }
 
     @Override
     public int hashCode() {
@@ -161,5 +186,5 @@ public class Agentgeography extends BaseEntity {
     public String toString() {
         return "Agentgeography[ agentGeographyId=" + agentGeographyId + " ]";
     }
-    
+  
 }

@@ -13,9 +13,12 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -37,11 +40,12 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Autonumberingscheme.findBySchemeClassName", query = "SELECT a FROM Autonumberingscheme a WHERE a.schemeClassName = :schemeClassName"),
     @NamedQuery(name = "Autonumberingscheme.findBySchemeName", query = "SELECT a FROM Autonumberingscheme a WHERE a.schemeName = :schemeName"),
     @NamedQuery(name = "Autonumberingscheme.findByTableNumber", query = "SELECT a FROM Autonumberingscheme a WHERE a.tableNumber = :tableNumber")})
-public class Autonumberingscheme extends BaseEntity {  
-    
+public class Autonumberingscheme extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    
     @Basic(optional = false)
 //    @NotNull
     @Column(name = "AutoNumberingSchemeID")
@@ -99,7 +103,13 @@ public class Autonumberingscheme extends BaseEntity {
         this.isNumericOnly = isNumericOnly;
         this.tableNumber = tableNumber;
     }
-
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (autoNumberingSchemeId != null) ? autoNumberingSchemeId.toString() : "0";
+    }
     public Integer getAutoNumberingSchemeId() {
         return autoNumberingSchemeId;
     }
@@ -108,6 +118,7 @@ public class Autonumberingscheme extends BaseEntity {
         this.autoNumberingSchemeId = autoNumberingSchemeId;
     }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -116,6 +127,7 @@ public class Autonumberingscheme extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -221,5 +233,7 @@ public class Autonumberingscheme extends BaseEntity {
     public String toString() {
         return "Autonumberingscheme[ autoNumberingSchemeId=" + autoNumberingSchemeId + " ]";
     }
+ 
+ 
     
 }

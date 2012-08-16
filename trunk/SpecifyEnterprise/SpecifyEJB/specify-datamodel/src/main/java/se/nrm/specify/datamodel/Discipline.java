@@ -14,9 +14,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table; 
-//import javax.validation.constraints.NotNull;
+import javax.persistence.Table;  
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -37,8 +40,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Discipline.findByName", query = "SELECT d FROM Discipline d WHERE d.name = :name"),
     @NamedQuery(name = "Discipline.findByRegNumber", query = "SELECT d FROM Discipline d WHERE d.regNumber = :regNumber"),
     @NamedQuery(name = "Discipline.findByType", query = "SELECT d FROM Discipline d WHERE d.type = :type")})
-public class Discipline extends BaseEntity {  
-    
+public class Discipline extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -180,6 +183,14 @@ public class Discipline extends BaseEntity {
         super(timestampCreated);
         this.userGroupScopeId = userGroupScopeId; 
     }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (userGroupScopeId != null) ? userGroupScopeId.toString() : "0";
+    }
+ 
 
     public Integer getUserGroupScopeId() {
         return userGroupScopeId;
@@ -221,8 +232,7 @@ public class Discipline extends BaseEntity {
         this.type = type;
     }
 
- 
- 
+  
 
     @XmlTransient
     public Collection<Attributedef> getAttributeDefs() {
@@ -233,9 +243,7 @@ public class Discipline extends BaseEntity {
         this.attributeDefs = attributeDefs;
     }
 
- 
-  
-
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -244,6 +252,7 @@ public class Discipline extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -287,10 +296,7 @@ public class Discipline extends BaseEntity {
         this.taxonTreeDef = taxonTreeDef;
     }
 
- 
-
- 
-
+    @NotNull(message="Datatype must be specified.")
     public Datatype getDataType() {
         return dataType;
     }
@@ -299,6 +305,7 @@ public class Discipline extends BaseEntity {
         this.dataType = dataType;
     }
 
+    @NotNull(message="Division must be specified.")
     public Division getDivision() {
         return division;
     }
@@ -307,6 +314,7 @@ public class Discipline extends BaseEntity {
         this.division = division;
     }
 
+    @NotNull(message="Geographytreedef must be specified.")
     public Geographytreedef getGeographyTreeDef() {
         return geographyTreeDef;
     }
@@ -315,6 +323,7 @@ public class Discipline extends BaseEntity {
         this.geographyTreeDef = geographyTreeDef;
     }
 
+    @NotNull(message="Geologictimeperiodtreedef must be specified.")
     public Geologictimeperiodtreedef getGeologicTimePeriodTreeDef() {
         return geologicTimePeriodTreeDef;
     }
@@ -539,5 +548,6 @@ public class Discipline extends BaseEntity {
     public String toString() {
         return "Discipline[ userGroupScopeId=" + userGroupScopeId + " ]";
     }
+ 
     
 }

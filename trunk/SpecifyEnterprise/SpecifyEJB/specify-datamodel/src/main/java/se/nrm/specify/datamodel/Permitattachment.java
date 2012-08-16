@@ -14,7 +14,12 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table; 
 //import javax.validation.constraints.NotNull;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -31,7 +36,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Permitattachment.findByTimestampModified", query = "SELECT p FROM Permitattachment p WHERE p.timestampModified = :timestampModified"),
     @NamedQuery(name = "Permitattachment.findByVersion", query = "SELECT p FROM Permitattachment p WHERE p.version = :version"),
     @NamedQuery(name = "Permitattachment.findByOrdinal", query = "SELECT p FROM Permitattachment p WHERE p.ordinal = :ordinal")})
-public class Permitattachment extends BaseEntity {  
+public class Permitattachment extends BaseEntity {
+ 
     
     private static final long serialVersionUID = 1L;
     
@@ -78,7 +84,12 @@ public class Permitattachment extends BaseEntity {
         this.permitAttachmentId = permitAttachmentId; 
     }
 
-     
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (permitAttachmentId != null) ? permitAttachmentId.toString() : "0";
+    }
  
     public Integer getOrdinal() {
         return ordinal;
@@ -103,6 +114,7 @@ public class Permitattachment extends BaseEntity {
         return hash;
     }
 
+    @NotNull(message="Attachment must be specified.")
     public Attachment getAttachment() {
         return attachment;
     }
@@ -127,6 +139,7 @@ public class Permitattachment extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
 
+    @NotNull(message="Permit must be specified.")
     public Permit getPermit() {
         return permit;
     }
@@ -160,5 +173,5 @@ public class Permitattachment extends BaseEntity {
     public String toString() {
         return "Permitattachment[ permitAttachmentID=" + permitAttachmentId + " ]";
     }
-    
+ 
 }

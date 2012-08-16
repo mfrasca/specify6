@@ -1,5 +1,5 @@
 package se.nrm.specify.datamodel;
- 
+
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
@@ -19,7 +19,9 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.Size; 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -52,6 +54,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Dnasequence.findByNumber2", query = "SELECT d FROM Dnasequence d WHERE d.number2 = :number2"),
     @NamedQuery(name = "Dnasequence.findByNumber3", query = "SELECT d FROM Dnasequence d WHERE d.number3 = :number3"),
     @NamedQuery(name = "Dnasequence.findByTargetMarker", query = "SELECT d FROM Dnasequence d WHERE d.targetMarker = :targetMarker"),
+    @NamedQuery(name = "Dnasequence.findByNumber3", query = "SELECT d FROM Dnasequence d WHERE d.number3 = :number3"),
+    @NamedQuery(name = "Dnasequence.findByTargetMarkerAndCatalogNumber", query = "SELECT d FROM Dnasequence d , Determination dt WHERE dt.collectionObject = d.collectionObject AND dt.isCurrent=true AND d.targetMarker = :targetMarker AND d.collectionObject.catalogNumber IN :catalogNumber"),
     @NamedQuery(name = "Dnasequence.findByText1", query = "SELECT d FROM Dnasequence d WHERE d.text1 = :text1"),
     @NamedQuery(name = "Dnasequence.findByText2", query = "SELECT d FROM Dnasequence d WHERE d.text2 = :text2"),
     @NamedQuery(name = "Dnasequence.findByText3", query = "SELECT d FROM Dnasequence d WHERE d.text3 = :text3"),
@@ -59,8 +63,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Dnasequence.findByYesNo1", query = "SELECT d FROM Dnasequence d WHERE d.yesNo1 = :yesNo1"),
     @NamedQuery(name = "Dnasequence.findByYesNo2", query = "SELECT d FROM Dnasequence d WHERE d.yesNo2 = :yesNo2"),
     @NamedQuery(name = "Dnasequence.findByYesNo3", query = "SELECT d FROM Dnasequence d WHERE d.yesNo3 = :yesNo3")})
-public class Dnasequence extends BaseEntity {  
-    
+public class Dnasequence extends BaseEntity {
+ 
+     
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -69,7 +74,7 @@ public class Dnasequence extends BaseEntity {
 //    @NotNull
     @Column(name = "DnaSequenceID")
     private Integer dnaSequenceId;
-     
+    
     @Basic(optional = false)
     @NotNull
     @Column(name = "CollectionMemberID")
@@ -78,13 +83,13 @@ public class Dnasequence extends BaseEntity {
     @Column(name = "AmbiguousResidues")
     private Integer ambiguousResidues;
     
-    @Size(max = 32)
-    @Column(name = "BOLDBarcodeID")
-    private String boldBarcodeId;
-    
     @Column(name = "BOLDLastUpdateDate")
     @Temporal(TemporalType.DATE)
     private Date boldLastUpdateDate;
+    
+    @Size(max = 32)
+    @Column(name = "BOLDBarcodeID")
+    private String boldBarcodeId;
     
     @Size(max = 32)
     @Column(name = "BOLDSampleID")
@@ -180,34 +185,35 @@ public class Dnasequence extends BaseEntity {
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "dnaSequence")
     private Collection<Dnasequencingrun> dnaSequencingRuns;
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "dnasequence")
+    private Collection<Dnasequenceattachment> dnasequenceattachments;
 
     public Dnasequence() {
     }
 
     public Dnasequence(Integer dnaSequenceId) {
-        this.dnaSequenceId = dnaSequenceId; 
+        this.dnaSequenceId = dnaSequenceId;
     }
 
     public Dnasequence(Integer dnaSequenceId, Date timestampCreated, int collectionMemberId) {
         super(timestampCreated);
-        this.dnaSequenceId = dnaSequenceId; 
-        this.collectionMemberId = collectionMemberId; 
+        this.dnaSequenceId = dnaSequenceId;
+        this.collectionMemberId = collectionMemberId;
     }
-
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (dnaSequenceId != null) ? dnaSequenceId.toString() : "0";
+    }
     public String getBoldBarcodeId() {
         return boldBarcodeId;
     }
 
     public void setBoldBarcodeId(String boldBarcodeId) {
         this.boldBarcodeId = boldBarcodeId;
-    }
-
-    public Date getBoldLastUpdateDate() {
-        return boldLastUpdateDate;
-    }
-
-    public void setBoldLastUpdateDate(Date boldLastUpdateDate) {
-        this.boldLastUpdateDate = boldLastUpdateDate;
     }
 
     public String getBoldSampleId() {
@@ -250,7 +256,23 @@ public class Dnasequence extends BaseEntity {
         this.genbankAccessionNumber = genbankAccessionNumber;
     }
 
- 
+    public Date getBoldLastUpdateDate() {
+        return boldLastUpdateDate;
+    }
+
+    public void setBoldLastUpdateDate(Date boldLastUpdateDate) {
+        this.boldLastUpdateDate = boldLastUpdateDate;
+    }
+
+    public Collection<Dnasequenceattachment> getDnasequenceattachments() {
+        return dnasequenceattachments;
+    }
+
+    public void setDnasequenceattachments(Collection<Dnasequenceattachment> dnasequenceattachments) {
+        this.dnasequenceattachments = dnasequenceattachments;
+    }
+    
+    
 
     public Integer getAmbiguousResidues() {
         return ambiguousResidues;
@@ -259,7 +281,6 @@ public class Dnasequence extends BaseEntity {
     public void setAmbiguousResidues(Integer ambiguousResidues) {
         this.ambiguousResidues = ambiguousResidues;
     }
- 
 
     public Integer getCompA() {
         return compA;
@@ -292,8 +313,6 @@ public class Dnasequence extends BaseEntity {
     public void setCompT(Integer compT) {
         this.compT = compT;
     }
-
- 
 
     public String getGeneSequence() {
         return geneSequence;
@@ -406,7 +425,7 @@ public class Dnasequence extends BaseEntity {
     public void setYesNo3(Boolean yesNo3) {
         this.yesNo3 = yesNo3;
     }
-
+ 
     public Collectionobject getCollectionObject() {
         return collectionObject;
     }
@@ -448,7 +467,6 @@ public class Dnasequence extends BaseEntity {
         this.sequencer = sequencer;
     }
 
-    
  
 
     @Override
@@ -475,5 +493,4 @@ public class Dnasequence extends BaseEntity {
     public String toString() {
         return "Dnasequence[ dnaSequenceId=" + dnaSequenceId + " ]";
     }
-    
 }

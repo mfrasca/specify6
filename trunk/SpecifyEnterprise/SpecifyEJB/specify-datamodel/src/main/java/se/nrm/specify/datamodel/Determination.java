@@ -21,6 +21,9 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -62,8 +65,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Determination.findCurrentByTaxonNameAndEvent", query = "SELECT d FROM Determination d WHERE d.taxon.fullName = :fullName and d.collectionObject.collectingEvent = :collectingEventID and d.collectionObject.collection.code = :code and d.isCurrent = :isCurrent"),
     @NamedQuery(name = "Determination.findByTaxonID", query = "SELECT d FROM Determination d WHERE d.taxon = :taxonId"),
     @NamedQuery(name = "Determination.findCurrentByCollectionobjectID", query = "SELECT d FROM Determination d WHERE d.collectionObject = :collectionObjectID and d.isCurrent = :isCurrent")})
-public class Determination extends BaseEntity { 
-    
+public class Determination extends BaseEntity {
+  
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -90,16 +93,16 @@ public class Determination extends BaseEntity {
     @Column(name = "Confidence")
     private String confidence;
     
-    @Column(name = "DeterminedDate")
-    @Temporal(TemporalType.DATE)
-    private Date determinedDate;
-    
     @Column(name = "DeterminedDatePrecision")
     private Short determinedDatePrecision;
     
     @Size(max = 50)
     @Column(name = "FeatureOrBasis")
     private String featureOrBasis;
+    
+    @Column(name = "DeterminedDate")
+    @Temporal(TemporalType.DATE)
+    private Date determinedDate;
     
     @Basic(optional = false)
     @NotNull
@@ -189,7 +192,7 @@ public class Determination extends BaseEntity {
     @ManyToOne
     private Taxon taxon;
      
-
+      
     public Determination() {
     }
 
@@ -204,7 +207,12 @@ public class Determination extends BaseEntity {
         this.isCurrent = isCurrent;
     }
  
-   
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (determinationId != null) ? determinationId.toString() : "0";
+    }
 
     public String getAddendum() {
         return addendum;
@@ -228,14 +236,6 @@ public class Determination extends BaseEntity {
 
     public void setConfidence(String confidence) {
         this.confidence = confidence;
-    }
-
-    public Date getDeterminedDate() {
-        return determinedDate;
-    }
-
-    public void setDeterminedDate(Date determinedDate) {
-        this.determinedDate = determinedDate;
     }
 
     public Short getDeterminedDatePrecision() {
@@ -382,6 +382,7 @@ public class Determination extends BaseEntity {
         this.collectionMemberId = collectionMemberId;
     }
 
+    @NotNull(message="Collectionobject must be specified.")
     @XmlTransient
     public Collectionobject getCollectionObject() {
         return collectionObject;
@@ -391,6 +392,7 @@ public class Determination extends BaseEntity {
         this.collectionObject = collectionObject;
     }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -415,7 +417,7 @@ public class Determination extends BaseEntity {
     public void setDeterminationId(Integer determinationId) {
         this.determinationId = determinationId;
     }
-
+ 
     public Agent getDeterminer() {
         return determiner;
     }
@@ -424,6 +426,7 @@ public class Determination extends BaseEntity {
         this.determiner = determiner;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -431,7 +434,8 @@ public class Determination extends BaseEntity {
     public void setModifiedByAgent(Agent modifiedByAgent) {
         this.modifiedByAgent = modifiedByAgent;
     }
-
+ 
+    @XmlIDREF
     public Taxon getPreferredTaxon() {
         return preferredTaxon;
     }
@@ -439,7 +443,7 @@ public class Determination extends BaseEntity {
     public void setPreferredTaxon(Taxon preferredTaxon) {
         this.preferredTaxon = preferredTaxon;
     }
-
+ 
     public Taxon getTaxon() {
         return taxon;
     }
@@ -448,7 +452,13 @@ public class Determination extends BaseEntity {
         this.taxon = taxon;
     }
 
- 
+    public Date getDeterminedDate() {
+        return determinedDate;
+    }
+
+    public void setDeterminedDate(Date determinedDate) {
+        this.determinedDate = determinedDate;
+    }
   
     /**
      * Parent pointer
@@ -485,5 +495,6 @@ public class Determination extends BaseEntity {
     @Override
     public String toString() {
         return "Determination[ determinationID=" + determinationId + " ]";
-    } 
+    }
+ 
 }

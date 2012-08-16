@@ -14,10 +14,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table; 
-//import javax.validation.constraints.NotNull;
+import javax.persistence.Table;  
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlRootElement; 
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
@@ -34,8 +37,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Deaccessionpreparation.findByTimestampModified", query = "SELECT d FROM Deaccessionpreparation d WHERE d.timestampModified = :timestampModified"),
     @NamedQuery(name = "Deaccessionpreparation.findByVersion", query = "SELECT d FROM Deaccessionpreparation d WHERE d.version = :version"),
     @NamedQuery(name = "Deaccessionpreparation.findByQuantity", query = "SELECT d FROM Deaccessionpreparation d WHERE d.quantity = :quantity")})
-public class Deaccessionpreparation extends BaseEntity {  
-    
+public class Deaccessionpreparation extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -84,6 +87,14 @@ public class Deaccessionpreparation extends BaseEntity {
         this.deaccessionPreparationId = deaccessionPreparationId; 
     }
 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (deaccessionPreparationId != null) ? deaccessionPreparationId.toString() : "0";
+    }
+    
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -92,6 +103,7 @@ public class Deaccessionpreparation extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @NotNull(message="Deaccession must be specified.")
     public Deaccession getDeaccession() {
         return deaccession;
     }
@@ -108,6 +120,7 @@ public class Deaccessionpreparation extends BaseEntity {
         this.deaccessionPreparationId = deaccessionPreparationId;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -142,6 +155,7 @@ public class Deaccessionpreparation extends BaseEntity {
         this.remarks = remarks;
     }
 
+    @XmlTransient
     public Collection<Loanreturnpreparation> getLoanreturnpreparations() {
         return loanreturnpreparations;
     }
@@ -177,5 +191,6 @@ public class Deaccessionpreparation extends BaseEntity {
     public String toString() {
         return "Deaccessionpreparation[ deaccessionPreparationID=" + deaccessionPreparationId + " ]";
     }
+
     
 }

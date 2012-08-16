@@ -16,7 +16,12 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table; 
 //import javax.validation.constraints.NotNull;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -37,8 +42,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Spexportschemaitem.findByDescription", query = "SELECT s FROM Spexportschemaitem s WHERE s.description = :description"),
     @NamedQuery(name = "Spexportschemaitem.findByFieldName", query = "SELECT s FROM Spexportschemaitem s WHERE s.fieldName = :fieldName"),
     @NamedQuery(name = "Spexportschemaitem.findByFormatter", query = "SELECT s FROM Spexportschemaitem s WHERE s.formatter = :formatter")})
-public class Spexportschemaitem extends BaseEntity { 
-    
+public class Spexportschemaitem extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -95,6 +100,12 @@ public class Spexportschemaitem extends BaseEntity {
         this.spExportSchemaItemId = spExportSchemaItemId; 
     }
 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (spExportSchemaItemId != null) ? spExportSchemaItemId.toString() : "0";
+    }
   
     public String getDataType() {
         return dataType;
@@ -144,6 +155,7 @@ public class Spexportschemaitem extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
 
+    @NotNull(message="SpExportSchema must be specified.")
     public Spexportschema getSpExportSchema() {
         return spExportSchema;
     }
@@ -203,5 +215,5 @@ public class Spexportschemaitem extends BaseEntity {
     public String toString() {
         return "Spexportschemaitem[ spExportSchemaItemID=" + spExportSchemaItemId + " ]";
     }
-    
+ 
 }

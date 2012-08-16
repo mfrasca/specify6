@@ -15,7 +15,10 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 //import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -38,8 +41,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Sptasksemaphore.findByScope", query = "SELECT s FROM Sptasksemaphore s WHERE s.scope = :scope"),
     @NamedQuery(name = "Sptasksemaphore.findByTaskName", query = "SELECT s FROM Sptasksemaphore s WHERE s.taskName = :taskName"),
     @NamedQuery(name = "Sptasksemaphore.findByUsageCount", query = "SELECT s FROM Sptasksemaphore s WHERE s.usageCount = :usageCount")})
-public class Sptasksemaphore extends BaseEntity { 
-    
+public class Sptasksemaphore extends BaseEntity {
+  
     private static final long serialVersionUID = 1L;
     
     
@@ -57,10 +60,6 @@ public class Sptasksemaphore extends BaseEntity {
     @Column(name = "IsLocked")
     private Boolean isLocked;
     
-    @Column(name = "LockedTime")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date lockedTime;
-    
     @Size(max = 64)
     @Column(name = "MachineName")
     private String machineName;
@@ -74,6 +73,10 @@ public class Sptasksemaphore extends BaseEntity {
     
     @Column(name = "UsageCount")
     private Integer usageCount;
+    
+    @Column(name = "LockedTime")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lockedTime;
     
     @JoinColumn(name = "CollectionID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne
@@ -107,7 +110,13 @@ public class Sptasksemaphore extends BaseEntity {
         this.spTaskSemaphoreId = spTaskSemaphoreId; 
     }
  
- 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (spTaskSemaphoreId != null) ? spTaskSemaphoreId.toString() : "0";
+    }
+    
     public String getContext() {
         return context;
     }
@@ -122,14 +131,6 @@ public class Sptasksemaphore extends BaseEntity {
 
     public void setIsLocked(Boolean isLocked) {
         this.isLocked = isLocked;
-    }
-
-    public Date getLockedTime() {
-        return lockedTime;
-    }
-
-    public void setLockedTime(Date lockedTime) {
-        this.lockedTime = lockedTime;
     }
 
     public String getMachineName() {
@@ -212,6 +213,13 @@ public class Sptasksemaphore extends BaseEntity {
         this.spTaskSemaphoreId = spTaskSemaphoreId;
     }
  
+    public Date getLockedTime() {
+        return lockedTime;
+    }
+
+    public void setLockedTime(Date lockedTime) {
+        this.lockedTime = lockedTime;
+    }
 
     @Override
     public int hashCode() {
@@ -237,5 +245,5 @@ public class Sptasksemaphore extends BaseEntity {
     public String toString() {
         return "Sptasksemaphore[ taskSemaphoreID=" + spTaskSemaphoreId + " ]";
     }
-    
+   
 }

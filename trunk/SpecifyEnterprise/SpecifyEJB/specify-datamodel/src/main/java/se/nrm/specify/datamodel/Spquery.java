@@ -15,8 +15,12 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table; 
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -42,14 +46,14 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Spquery.findBySearchSynonymy", query = "SELECT s FROM Spquery s WHERE s.searchSynonymy = :searchSynonymy"),
     @NamedQuery(name = "Spquery.findBySelectDistinct", query = "SELECT s FROM Spquery s WHERE s.selectDistinct = :selectDistinct"),
     @NamedQuery(name = "Spquery.findBySqlStr", query = "SELECT s FROM Spquery s WHERE s.sqlStr = :sqlStr")})
-public class Spquery extends BaseEntity { 
-    
+public class Spquery extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @NotNull
+//    @NotNull
     @Column(name = "SpQueryID")
     private Integer spQueryId;
      
@@ -70,8 +74,7 @@ public class Spquery extends BaseEntity {
     @Column(name = "IsFavorite")
     private Boolean isFavorite;
     
-    @Basic(optional = false)
-    @NotNull
+    @Basic(optional = false) 
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
@@ -127,7 +130,14 @@ public class Spquery extends BaseEntity {
         this.name = name;
     }
 
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (spQueryId != null) ? spQueryId.toString() : "0";
+    }
     
+    @NotNull(message="ContextName must be specified.")
     public String getContextName() {
         return contextName;
     }
@@ -160,6 +170,7 @@ public class Spquery extends BaseEntity {
         this.isFavorite = isFavorite;
     }
 
+    @NotNull(message="Name must be specified.")
     public String getName() {
         return name;
     }
@@ -284,5 +295,5 @@ public class Spquery extends BaseEntity {
     public String toString() {
         return "Spquery[ spQueryID=" + spQueryId + " ]";
     }
-    
+ 
 }

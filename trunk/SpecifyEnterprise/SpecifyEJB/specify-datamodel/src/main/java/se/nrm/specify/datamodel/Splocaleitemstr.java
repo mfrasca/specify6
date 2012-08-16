@@ -12,8 +12,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table; 
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -33,8 +37,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Splocaleitemstr.findByLanguage", query = "SELECT s FROM Splocaleitemstr s WHERE s.language = :language"),
     @NamedQuery(name = "Splocaleitemstr.findByText", query = "SELECT s FROM Splocaleitemstr s WHERE s.text = :text"),
     @NamedQuery(name = "Splocaleitemstr.findByVariant", query = "SELECT s FROM Splocaleitemstr s WHERE s.variant = :variant")})
-public class Splocaleitemstr extends BaseEntity { 
-    
+public class Splocaleitemstr extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -48,14 +52,12 @@ public class Splocaleitemstr extends BaseEntity {
     @Column(name = "Country")
     private String country;
     
-    @Basic(optional = false)
-    @NotNull
+    @Basic(optional = false) 
     @Size(min = 1, max = 2)
     @Column(name = "Language")
     private String language;
     
-    @Basic(optional = false)
-    @NotNull
+    @Basic(optional = false) 
     @Size(min = 1, max = 255)
     @Column(name = "Text")
     private String text;
@@ -102,12 +104,26 @@ public class Splocaleitemstr extends BaseEntity {
         this.text = text;
     }
 
-   
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (spLocaleItemStrId != null) ? spLocaleItemStrId.toString() : "0";
+    }
 
+    public String getCountry() {
+        return country;
+    }
+
+    
+    
     public void setCountry(String country) {
         this.country = country;
     }
+    
+    
 
+    @NotNull(message="Language must be specified.")
     public String getLanguage() {
         return language;
     }
@@ -116,6 +132,7 @@ public class Splocaleitemstr extends BaseEntity {
         this.language = language;
     }
 
+    @NotNull(message="Text must be specified.")
     public String getText() {
         return text;
     }
@@ -213,5 +230,5 @@ public class Splocaleitemstr extends BaseEntity {
     public String toString() {
         return "Splocaleitemstr[ spLocaleItemStrID=" + spLocaleItemStrId + " ]";
     }
-    
+ 
 }

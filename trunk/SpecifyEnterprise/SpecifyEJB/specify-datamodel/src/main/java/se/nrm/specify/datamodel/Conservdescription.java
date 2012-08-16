@@ -15,9 +15,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table; 
-//import javax.validation.constraints.NotNull;
+import javax.persistence.Table;  
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -39,7 +40,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Conservdescription.findByShortDesc", query = "SELECT c FROM Conservdescription c WHERE c.shortDesc = :shortDesc"),
     @NamedQuery(name = "Conservdescription.findByUnits", query = "SELECT c FROM Conservdescription c WHERE c.units = :units"),
     @NamedQuery(name = "Conservdescription.findByWidth", query = "SELECT c FROM Conservdescription c WHERE c.width = :width")})
-public class Conservdescription extends BaseEntity {  
+public class Conservdescription extends BaseEntity {
     
     private static final long serialVersionUID = 1L;
     
@@ -139,6 +140,13 @@ public class Conservdescription extends BaseEntity {
     public Conservdescription(Integer conservDescriptionId, Date timestampCreated) {
         super(timestampCreated);
         this.conservDescriptionId = conservDescriptionId; 
+    }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (conservDescriptionId != null) ? conservDescriptionId.toString() : "0";
     }
  
  
@@ -335,6 +343,6 @@ public class Conservdescription extends BaseEntity {
     @Override
     public String toString() {
         return "Conservdescription[ conservDescriptionId=" + conservDescriptionId + " ]";
-    }
+    } 
     
 }

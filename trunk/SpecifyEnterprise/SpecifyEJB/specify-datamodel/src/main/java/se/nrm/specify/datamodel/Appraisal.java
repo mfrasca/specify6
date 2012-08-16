@@ -17,9 +17,12 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.TemporalType; 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -39,10 +42,12 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Appraisal.findByAppraisalDate", query = "SELECT a FROM Appraisal a WHERE a.appraisalDate = :appraisalDate"),
     @NamedQuery(name = "Appraisal.findByAppraisalNumber", query = "SELECT a FROM Appraisal a WHERE a.appraisalNumber = :appraisalNumber"),
     @NamedQuery(name = "Appraisal.findByAppraisalValue", query = "SELECT a FROM Appraisal a WHERE a.appraisalValue = :appraisalValue"),
-    @NamedQuery(name = "Appraisal.findByMonetaryUnitType", query = "SELECT a FROM Appraisal a WHERE a.monetaryUnitType = :monetaryUnitType")})
-public class Appraisal extends BaseEntity {  
+    @NamedQuery(name = "Appraisal.findByMonetaryUnitType", query = "SELECT a FROM Appraisal a WHERE a.monetaryUnitType = :monetaryUnitType")}) 
+public class Appraisal extends BaseEntity {
+
     
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -50,14 +55,8 @@ public class Appraisal extends BaseEntity {
     @Column(name = "AppraisalID")
     private Integer appraisalId; 
     
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "AppraisalDate")
-    @Temporal(TemporalType.DATE)
-    private Date appraisalDate;
-    
-    @Basic(optional = false)
-    @NotNull
+    @Basic(optional = false)  
+    @NotNull(message="AppraisalNumber must be specified.")
     @Size(min = 1, max = 64)
     @Column(name = "AppraisalNumber")
     private String appraisalNumber;
@@ -69,6 +68,13 @@ public class Appraisal extends BaseEntity {
     @Size(max = 8)
     @Column(name = "MonetaryUnitType")
     private String monetaryUnitType;
+    
+     
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "AppraisalDate")
+    @Temporal(TemporalType.DATE)
+    private Date appraisalDate;
     
     @Lob
     @Size(max = 65535)
@@ -107,22 +113,20 @@ public class Appraisal extends BaseEntity {
         this.appraisalDate = appraisalDate;
         this.appraisalNumber = appraisalNumber;
     }
-
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (appraisalId != null) ? appraisalId.toString() : "0";
+    }
+    
     public Integer getAppraisalId() {
         return appraisalId;
     }
 
     public void setAppraisalId(Integer appraisalId) {
         this.appraisalId = appraisalId;
-    }
-
- 
-    public Date getAppraisalDate() {
-        return appraisalDate;
-    }
-
-    public void setAppraisalDate(Date appraisalDate) {
-        this.appraisalDate = appraisalDate;
     }
 
     public String getAppraisalNumber() {
@@ -165,6 +169,8 @@ public class Appraisal extends BaseEntity {
         this.accession = accession;
     }
 
+    @XmlIDREF
+    @NotNull(message="Agent must be specified.")
     public Agent getAgent() {
         return agent;
     }
@@ -173,6 +179,7 @@ public class Appraisal extends BaseEntity {
         this.agent = agent;
     }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -180,7 +187,8 @@ public class Appraisal extends BaseEntity {
     public void setCreatedByAgent(Agent createdByAgent) {
         this.createdByAgent = createdByAgent;
     }
-
+    
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -199,6 +207,13 @@ public class Appraisal extends BaseEntity {
     }
 
  
+    public Date getAppraisalDate() {
+        return appraisalDate;
+    }
+
+    public void setAppraisalDate(Date appraisalDate) {
+        this.appraisalDate = appraisalDate;
+    }
  
 
     @Override
@@ -225,5 +240,6 @@ public class Appraisal extends BaseEntity {
     public String toString() {
         return "Appraisal[ appraisalID=" + appraisalId + " ]";
     }
+ 
     
 }

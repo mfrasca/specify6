@@ -11,9 +11,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -34,8 +36,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Spfieldvaluedefault.findByIdValue", query = "SELECT s FROM Spfieldvaluedefault s WHERE s.idValue = :idValue"),
     @NamedQuery(name = "Spfieldvaluedefault.findByStrValue", query = "SELECT s FROM Spfieldvaluedefault s WHERE s.strValue = :strValue"),
     @NamedQuery(name = "Spfieldvaluedefault.findByTableName", query = "SELECT s FROM Spfieldvaluedefault s WHERE s.tableName = :tableName")})
-public class Spfieldvaluedefault extends BaseEntity {  
-    
+public class Spfieldvaluedefault extends BaseEntity {
+ 
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -84,6 +86,13 @@ public class Spfieldvaluedefault extends BaseEntity {
         super(timestampCreated);
         this.spFieldValueDefaultId = spFieldValueDefaultId; 
         this.collectionMemberId = collectionMemberId;
+    }
+    
+    @XmlID
+    @XmlAttribute(name = "id")
+    @Override
+    public String getIdentityString() {
+        return (spFieldValueDefaultId != null) ? spFieldValueDefaultId.toString() : "0";
     }
 
     public int getCollectionMemberId() {
@@ -177,5 +186,5 @@ public class Spfieldvaluedefault extends BaseEntity {
     public String toString() {
         return "Spfieldvaluedefault[ spFieldValueDefaultID=" + spFieldValueDefaultId + " ]";
     }
-    
+ 
 }
