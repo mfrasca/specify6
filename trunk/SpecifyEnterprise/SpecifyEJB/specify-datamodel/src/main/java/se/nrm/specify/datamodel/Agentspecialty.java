@@ -12,14 +12,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;  
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlIDREF;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlRootElement; 
 
 /**
  *
@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Agentspecialty.findAll", query = "SELECT a FROM Agentspecialty a"),
-    @NamedQuery(name = "Agentspecialty.findByAgentSpecialtyID", query = "SELECT a FROM Agentspecialty a WHERE a.agentSpecialtyId = :agentSpecialtyID"),
+    @NamedQuery(name = "Agentspecialty.findByAgentSpecialtyId", query = "SELECT a FROM Agentspecialty a WHERE a.agentSpecialtyId = :agentSpecialtyId"),
     @NamedQuery(name = "Agentspecialty.findByTimestampCreated", query = "SELECT a FROM Agentspecialty a WHERE a.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Agentspecialty.findByTimestampModified", query = "SELECT a FROM Agentspecialty a WHERE a.timestampModified = :timestampModified"),
     @NamedQuery(name = "Agentspecialty.findByVersion", query = "SELECT a FROM Agentspecialty a WHERE a.version = :version"),
@@ -68,6 +68,7 @@ public class Agentspecialty extends BaseEntity {
     private Agent modifiedByAgent;
     
     @JoinColumn(name = "AgentID", referencedColumnName = "AgentID")
+    @NotNull
     @ManyToOne(optional = false)
     private Agent agent;
 
@@ -153,6 +154,11 @@ public class Agentspecialty extends BaseEntity {
         if (parent instanceof Agent) {
             this.agent = (Agent) parent;
         }
+    }
+    
+    @Override
+    public String getEntityName() {
+        return "agentSpecialty";
     }
 
     @Override

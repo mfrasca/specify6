@@ -14,9 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table; 
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -33,7 +31,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Spappresourcedir.findAll", query = "SELECT s FROM Spappresourcedir s"),
-    @NamedQuery(name = "Spappresourcedir.findBySpAppResourceDirID", query = "SELECT s FROM Spappresourcedir s WHERE s.spAppResourceDirId = :spAppResourceDirID"),
+    @NamedQuery(name = "Spappresourcedir.findBySpAppResourceDirId", query = "SELECT s FROM Spappresourcedir s WHERE s.spAppResourceDirId = :spAppResourceDirId"),
     @NamedQuery(name = "Spappresourcedir.findByTimestampCreated", query = "SELECT s FROM Spappresourcedir s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Spappresourcedir.findByTimestampModified", query = "SELECT s FROM Spappresourcedir s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Spappresourcedir.findByVersion", query = "SELECT s FROM Spappresourcedir s WHERE s.version = :version"),
@@ -201,7 +199,10 @@ public class Spappresourcedir extends BaseEntity {
     }
 
    
- 
+    @Override
+    public String getEntityName() {
+        return "spAppResourceDir";
+    }
 
     @Override
     public int hashCode() {

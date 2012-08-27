@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Shipment.findAll", query = "SELECT s FROM Shipment s"),
-    @NamedQuery(name = "Shipment.findByShipmentID", query = "SELECT s FROM Shipment s WHERE s.shipmentId = :shipmentID"),
+    @NamedQuery(name = "Shipment.findByShipmentId", query = "SELECT s FROM Shipment s WHERE s.shipmentId = :shipmentId"),
     @NamedQuery(name = "Shipment.findByTimestampCreated", query = "SELECT s FROM Shipment s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Shipment.findByTimestampModified", query = "SELECT s FROM Shipment s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Shipment.findByVersion", query = "SELECT s FROM Shipment s WHERE s.version = :version"),
@@ -364,6 +364,11 @@ public class Shipment extends BaseEntity {
     }
   
 
+    @Override
+    public String getEntityName() {
+        return "shipment";
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

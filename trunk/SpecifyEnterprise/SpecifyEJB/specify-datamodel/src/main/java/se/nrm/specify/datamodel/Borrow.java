@@ -17,7 +17,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.TemporalType; 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -35,7 +35,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Borrow.findAll", query = "SELECT b FROM Borrow b"),
-    @NamedQuery(name = "Borrow.findByBorrowID", query = "SELECT b FROM Borrow b WHERE b.borrowId = :borrowID"),
+    @NamedQuery(name = "Borrow.findByBorrowId", query = "SELECT b FROM Borrow b WHERE b.borrowId = :borrowId"),
     @NamedQuery(name = "Borrow.findByTimestampCreated", query = "SELECT b FROM Borrow b WHERE b.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Borrow.findByTimestampModified", query = "SELECT b FROM Borrow b WHERE b.timestampModified = :timestampModified"),
     @NamedQuery(name = "Borrow.findByVersion", query = "SELECT b FROM Borrow b WHERE b.version = :version"),
@@ -68,6 +68,7 @@ public class Borrow extends BaseEntity {
     private int collectionMemberId;
     
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 50)
     @Column(name = "InvoiceNumber")
     private String invoiceNumber;
@@ -345,6 +346,11 @@ public class Borrow extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
   
+    @Override
+    public String getEntityName() {
+        return "borrow";
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

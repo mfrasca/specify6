@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Geologictimeperiodtreedefitem.findAll", query = "SELECT g FROM Geologictimeperiodtreedefitem g"),
-    @NamedQuery(name = "Geologictimeperiodtreedefitem.findByGeologicTimePeriodTreeDefItemID", query = "SELECT g FROM Geologictimeperiodtreedefitem g WHERE g.geologicTimePeriodTreeDefItemId = :geologicTimePeriodTreeDefItemID"),
+    @NamedQuery(name = "Geologictimeperiodtreedefitem.findByGeologicTimePeriodTreeDefItemId", query = "SELECT g FROM Geologictimeperiodtreedefitem g WHERE g.geologicTimePeriodTreeDefItemId = :geologicTimePeriodTreeDefItemId"),
     @NamedQuery(name = "Geologictimeperiodtreedefitem.findByTimestampCreated", query = "SELECT g FROM Geologictimeperiodtreedefitem g WHERE g.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Geologictimeperiodtreedefitem.findByTimestampModified", query = "SELECT g FROM Geologictimeperiodtreedefitem g WHERE g.timestampModified = :timestampModified"),
     @NamedQuery(name = "Geologictimeperiodtreedefitem.findByVersion", query = "SELECT g FROM Geologictimeperiodtreedefitem g WHERE g.version = :version"),
@@ -94,6 +94,7 @@ public class Geologictimeperiodtreedefitem extends BaseEntity {
     private String title;
     
     @JoinColumn(name = "GeologicTimePeriodTreeDefID", referencedColumnName = "GeologicTimePeriodTreeDefID")
+    @NotNull
     @ManyToOne(optional = false)
     private Geologictimeperiodtreedef treeDef;
     
@@ -271,6 +272,10 @@ public class Geologictimeperiodtreedefitem extends BaseEntity {
         this.treeEntries = treeEntries;
     }
  
+    @Override
+    public String getEntityName() {
+        return "geologicTimePeriodTreeDefItem";
+    }
 
     @Override
     public int hashCode() {

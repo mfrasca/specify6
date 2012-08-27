@@ -13,9 +13,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-//import javax.validation.constraints.NotNull;
-import javax.validation.constraints.NotNull;
+import javax.persistence.TemporalType; 
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlID;
@@ -30,7 +28,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Sptasksemaphore.findAll", query = "SELECT s FROM Sptasksemaphore s"),
-    @NamedQuery(name = "Sptasksemaphore.findByTaskSemaphoreID", query = "SELECT s FROM Sptasksemaphore s WHERE s.spTaskSemaphoreId = :taskSemaphoreID"),
+    @NamedQuery(name = "Sptasksemaphore.findByTaskSemaphoreId", query = "SELECT s FROM Sptasksemaphore s WHERE s.spTaskSemaphoreId = :taskSemaphoreId"),
     @NamedQuery(name = "Sptasksemaphore.findByTimestampCreated", query = "SELECT s FROM Sptasksemaphore s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Sptasksemaphore.findByTimestampModified", query = "SELECT s FROM Sptasksemaphore s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Sptasksemaphore.findByVersion", query = "SELECT s FROM Sptasksemaphore s WHERE s.version = :version"),
@@ -219,6 +217,11 @@ public class Sptasksemaphore extends BaseEntity {
 
     public void setLockedTime(Date lockedTime) {
         this.lockedTime = lockedTime;
+    }
+    
+    @Override
+    public String getEntityName() {
+        return "spTaskSemaphore";
     }
 
     @Override

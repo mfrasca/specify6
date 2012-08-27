@@ -10,9 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -28,7 +26,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Spvisualquery.findAll", query = "SELECT s FROM Spvisualquery s"),
-    @NamedQuery(name = "Spvisualquery.findBySpVisualQueryID", query = "SELECT s FROM Spvisualquery s WHERE s.spVisualQueryId = :spVisualQueryID"),
+    @NamedQuery(name = "Spvisualquery.findBySpVisualQueryId", query = "SELECT s FROM Spvisualquery s WHERE s.spVisualQueryId = :spVisualQueryId"),
     @NamedQuery(name = "Spvisualquery.findByTimestampCreated", query = "SELECT s FROM Spvisualquery s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Spvisualquery.findByTimestampModified", query = "SELECT s FROM Spvisualquery s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Spvisualquery.findByVersion", query = "SELECT s FROM Spvisualquery s WHERE s.version = :version"),
@@ -53,6 +51,7 @@ public class Spvisualquery extends BaseEntity {
     private String description;
     
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
@@ -139,7 +138,10 @@ public class Spvisualquery extends BaseEntity {
         this.specifyUser = specifyUser;
     }
 
- 
+    @Override
+    public String getEntityName() {
+        return "spVisualQuery";
+    }
 
     @Override
     public int hashCode() {

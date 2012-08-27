@@ -12,10 +12,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
-//import javax.validation.constraints.NotNull;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -31,7 +28,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Permitattachment.findAll", query = "SELECT p FROM Permitattachment p"),
-    @NamedQuery(name = "Permitattachment.findByPermitAttachmentID", query = "SELECT p FROM Permitattachment p WHERE p.permitAttachmentId = :permitAttachmentID"),
+    @NamedQuery(name = "Permitattachment.findByPermitAttachmentId", query = "SELECT p FROM Permitattachment p WHERE p.permitAttachmentId = :permitAttachmentId"),
     @NamedQuery(name = "Permitattachment.findByTimestampCreated", query = "SELECT p FROM Permitattachment p WHERE p.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Permitattachment.findByTimestampModified", query = "SELECT p FROM Permitattachment p WHERE p.timestampModified = :timestampModified"),
     @NamedQuery(name = "Permitattachment.findByVersion", query = "SELECT p FROM Permitattachment p WHERE p.version = :version"),
@@ -57,10 +54,12 @@ public class Permitattachment extends BaseEntity {
     private String remarks;
     
     @JoinColumn(name = "AttachmentID", referencedColumnName = "AttachmentID")
+    @NotNull
     @ManyToOne(optional = false)
     private Attachment attachment;
     
     @JoinColumn(name = "PermitID", referencedColumnName = "PermitID")
+    @NotNull
     @ManyToOne(optional = false)
     private Permit permit;
     
@@ -107,12 +106,7 @@ public class Permitattachment extends BaseEntity {
         this.remarks = remarks;
     }
  
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (permitAttachmentId != null ? permitAttachmentId.hashCode() : 0);
-        return hash;
-    }
+
 
     @NotNull(message="Attachment must be specified.")
     public Attachment getAttachment() {
@@ -154,6 +148,19 @@ public class Permitattachment extends BaseEntity {
 
     public void setPermitAttachmentId(Integer permitAttachmentId) {
         this.permitAttachmentId = permitAttachmentId;
+    }
+    
+    
+    @Override
+    public String getEntityName() {
+        return "permitAttachment";
+    }
+    
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (permitAttachmentId != null ? permitAttachmentId.hashCode() : 0);
+        return hash;
     }
 
     @Override

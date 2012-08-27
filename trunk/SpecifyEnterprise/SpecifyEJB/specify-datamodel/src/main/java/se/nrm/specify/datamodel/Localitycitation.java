@@ -31,7 +31,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Localitycitation.findAll", query = "SELECT l FROM Localitycitation l"),
-    @NamedQuery(name = "Localitycitation.findByLocalityCitationID", query = "SELECT l FROM Localitycitation l WHERE l.localityCitationId = :localityCitationID"),
+    @NamedQuery(name = "Localitycitation.findByLocalityCitationId", query = "SELECT l FROM Localitycitation l WHERE l.localityCitationId = :localityCitationId"),
     @NamedQuery(name = "Localitycitation.findByTimestampCreated", query = "SELECT l FROM Localitycitation l WHERE l.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Localitycitation.findByTimestampModified", query = "SELECT l FROM Localitycitation l WHERE l.timestampModified = :timestampModified"),
     @NamedQuery(name = "Localitycitation.findByVersion", query = "SELECT l FROM Localitycitation l WHERE l.version = :version")})
@@ -52,6 +52,7 @@ public class Localitycitation extends BaseEntity {
     private String remarks;
     
     @JoinColumn(name = "LocalityID", referencedColumnName = "LocalityID")
+    @NotNull
     @ManyToOne(optional = false)
     private Locality locality;
     
@@ -60,6 +61,7 @@ public class Localitycitation extends BaseEntity {
     private Agent createdByAgent;
     
     @JoinColumn(name = "ReferenceWorkID", referencedColumnName = "ReferenceWorkID")
+    @NotNull
     @ManyToOne(optional = false)
     private Referencework referenceWork;
     
@@ -149,7 +151,10 @@ public class Localitycitation extends BaseEntity {
         this.remarks = remarks;
     }
 
-   
+    @Override
+    public String getEntityName() {
+        return "localityCitation";
+    }
 
   
     @Override

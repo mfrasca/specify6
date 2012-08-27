@@ -18,6 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType; 
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -35,7 +36,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Appraisal.findAll", query = "SELECT a FROM Appraisal a"),
-    @NamedQuery(name = "Appraisal.findByAppraisalID", query = "SELECT a FROM Appraisal a WHERE a.appraisalId = :appraisalID"),
+    @NamedQuery(name = "Appraisal.findByAppraisalId", query = "SELECT a FROM Appraisal a WHERE a.appraisalId = :appraisalId"),
     @NamedQuery(name = "Appraisal.findByTimestampCreated", query = "SELECT a FROM Appraisal a WHERE a.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Appraisal.findByTimestampModified", query = "SELECT a FROM Appraisal a WHERE a.timestampModified = :timestampModified"),
     @NamedQuery(name = "Appraisal.findByVersion", query = "SELECT a FROM Appraisal a WHERE a.version = :version"),
@@ -94,6 +95,7 @@ public class Appraisal extends BaseEntity {
     private Accession accession;
     
     @JoinColumn(name = "AgentID", referencedColumnName = "AgentID")
+    @NotNull
     @ManyToOne(optional = false)
     private Agent agent;
     
@@ -215,7 +217,11 @@ public class Appraisal extends BaseEntity {
         this.appraisalDate = appraisalDate;
     }
  
-
+    @Override
+    public String getEntityName() {
+        return "appraisal";
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

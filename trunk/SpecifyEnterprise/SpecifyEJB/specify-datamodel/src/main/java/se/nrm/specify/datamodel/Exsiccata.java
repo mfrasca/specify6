@@ -31,7 +31,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Exsiccata.findAll", query = "SELECT e FROM Exsiccata e"),
-    @NamedQuery(name = "Exsiccata.findByExsiccataID", query = "SELECT e FROM Exsiccata e WHERE e.exsiccataId = :exsiccataID"),
+    @NamedQuery(name = "Exsiccata.findByExsiccataId", query = "SELECT e FROM Exsiccata e WHERE e.exsiccataId = :exsiccataId"),
     @NamedQuery(name = "Exsiccata.findByTimestampCreated", query = "SELECT e FROM Exsiccata e WHERE e.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Exsiccata.findByTimestampModified", query = "SELECT e FROM Exsiccata e WHERE e.timestampModified = :timestampModified"),
     @NamedQuery(name = "Exsiccata.findByVersion", query = "SELECT e FROM Exsiccata e WHERE e.version = :version"),
@@ -48,6 +48,7 @@ public class Exsiccata extends BaseEntity {
     private Integer exsiccataId;
      
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 255)
     @Column(name = "Title")
     private String title;
@@ -57,6 +58,7 @@ public class Exsiccata extends BaseEntity {
     private Agent createdByAgent;
     
     @JoinColumn(name = "ReferenceWorkID", referencedColumnName = "ReferenceWorkID")
+    @NotNull
     @ManyToOne(optional = false)
     private Referencework referenceWork;
     
@@ -138,7 +140,10 @@ public class Exsiccata extends BaseEntity {
         this.exsiccataItems = exsiccataItems;
     }
 
- 
+    @Override
+    public String getEntityName() {
+        return "exsiccata";
+    }
 
     @Override
     public int hashCode() {

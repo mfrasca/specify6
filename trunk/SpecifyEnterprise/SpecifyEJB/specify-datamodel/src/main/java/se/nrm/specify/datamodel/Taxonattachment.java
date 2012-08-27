@@ -20,7 +20,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Taxonattachment.findAll", query = "SELECT t FROM Taxonattachment t"),
-    @NamedQuery(name = "Taxonattachment.findByTaxonAttachmentID", query = "SELECT t FROM Taxonattachment t WHERE t.taxonAttachmentId = :taxonAttachmentID"),
+    @NamedQuery(name = "Taxonattachment.findByTaxonAttachmentId", query = "SELECT t FROM Taxonattachment t WHERE t.taxonAttachmentId = :taxonAttachmentId"),
     @NamedQuery(name = "Taxonattachment.findByTimestampCreated", query = "SELECT t FROM Taxonattachment t WHERE t.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Taxonattachment.findByTimestampModified", query = "SELECT t FROM Taxonattachment t WHERE t.timestampModified = :timestampModified"),
     @NamedQuery(name = "Taxonattachment.findByVersion", query = "SELECT t FROM Taxonattachment t WHERE t.version = :version"),
@@ -45,6 +45,7 @@ public class Taxonattachment extends BaseEntity {
     private String remarks;
     
     @JoinColumn(name = "AttachmentID", referencedColumnName = "AttachmentID")
+    @NotNull
     @ManyToOne(optional = false)
     private Attachment attachment;
     
@@ -57,6 +58,7 @@ public class Taxonattachment extends BaseEntity {
     private Agent modifiedByAgent;
     
     @JoinColumn(name = "TaxonID", referencedColumnName = "TaxonID")
+    @NotNull
     @ManyToOne(optional = false)
     private Taxon taxon;
 
@@ -151,6 +153,11 @@ public class Taxonattachment extends BaseEntity {
         if(parent instanceof Taxon) {
             this.taxon = (Taxon)parent;   
         }
+    }
+    
+    @Override
+    public String getEntityName() {
+        return "taxonAttachment";
     }
 
     @Override

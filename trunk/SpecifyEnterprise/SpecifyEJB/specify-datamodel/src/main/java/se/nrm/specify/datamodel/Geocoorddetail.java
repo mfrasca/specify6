@@ -15,8 +15,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
-import javax.persistence.TemporalType; 
-import javax.validation.constraints.NotNull;
+import javax.persistence.TemporalType;  
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlID;
@@ -31,7 +30,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Geocoorddetail.findAll", query = "SELECT g FROM Geocoorddetail g"),
-    @NamedQuery(name = "Geocoorddetail.findByGeoCoordDetailID", query = "SELECT g FROM Geocoorddetail g WHERE g.geoCoordDetailId = :geoCoordDetailID"),
+    @NamedQuery(name = "Geocoorddetail.findByGeoCoordDetailId", query = "SELECT g FROM Geocoorddetail g WHERE g.geoCoordDetailId = :geoCoordDetailId"),
     @NamedQuery(name = "Geocoorddetail.findByTimestampCreated", query = "SELECT g FROM Geocoorddetail g WHERE g.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Geocoorddetail.findByTimestampModified", query = "SELECT g FROM Geocoorddetail g WHERE g.timestampModified = :timestampModified"),
     @NamedQuery(name = "Geocoorddetail.findByVersion", query = "SELECT g FROM Geocoorddetail g WHERE g.version = :version"),
@@ -316,6 +315,11 @@ public class Geocoorddetail extends BaseEntity {
     }
 
  
+    @Override
+    public String getEntityName() {
+        return "geoCoordDetail";
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

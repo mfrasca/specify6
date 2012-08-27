@@ -33,7 +33,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Commonnametx.findAll", query = "SELECT c FROM Commonnametx c"),
-    @NamedQuery(name = "Commonnametx.findByCommonNameTxID", query = "SELECT c FROM Commonnametx c WHERE c.commonNameTxId = :commonNameTxID"),
+    @NamedQuery(name = "Commonnametx.findByCommonNameTxId", query = "SELECT c FROM Commonnametx c WHERE c.commonNameTxId = :commonNameTxId"),
     @NamedQuery(name = "Commonnametx.findByTimestampCreated", query = "SELECT c FROM Commonnametx c WHERE c.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Commonnametx.findByTimestampModified", query = "SELECT c FROM Commonnametx c WHERE c.timestampModified = :timestampModified"),
     @NamedQuery(name = "Commonnametx.findByVersion", query = "SELECT c FROM Commonnametx c WHERE c.version = :version"),
@@ -82,6 +82,7 @@ public class Commonnametx extends BaseEntity {
     private Agent modifiedByAgent;
     
     @JoinColumn(name = "TaxonID", referencedColumnName = "TaxonID")
+    @NotNull
     @ManyToOne(optional = false)
     private Taxon taxon;
     
@@ -209,6 +210,10 @@ public class Commonnametx extends BaseEntity {
         }
     }
  
+    @Override
+    public String getEntityName() {
+        return "commonNameTx";
+    }
 
     @Override
     public int hashCode() {

@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Commonnametxcitation.findAll", query = "SELECT c FROM Commonnametxcitation c"),
-    @NamedQuery(name = "Commonnametxcitation.findByCommonNameTxCitationID", query = "SELECT c FROM Commonnametxcitation c WHERE c.commonNameTxCitationId = :commonNameTxCitationID"),
+    @NamedQuery(name = "Commonnametxcitation.findByCommonNameTxCitationId", query = "SELECT c FROM Commonnametxcitation c WHERE c.commonNameTxCitationId = :commonNameTxCitationId"),
     @NamedQuery(name = "Commonnametxcitation.findByTimestampCreated", query = "SELECT c FROM Commonnametxcitation c WHERE c.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Commonnametxcitation.findByTimestampModified", query = "SELECT c FROM Commonnametxcitation c WHERE c.timestampModified = :timestampModified"),
     @NamedQuery(name = "Commonnametxcitation.findByVersion", query = "SELECT c FROM Commonnametxcitation c WHERE c.version = :version"),
@@ -80,6 +80,7 @@ public class Commonnametxcitation extends BaseEntity {
     private Agent createdByAgent;
     
     @JoinColumn(name = "ReferenceWorkID", referencedColumnName = "ReferenceWorkID")
+    @NotNull
     @ManyToOne(optional = false)
     private Referencework referenceWork;
     
@@ -88,6 +89,7 @@ public class Commonnametxcitation extends BaseEntity {
     private Agent modifiedByAgent;
     
     @JoinColumn(name = "CommonNameTxID", referencedColumnName = "CommonNameTxID")
+    @NotNull
     @ManyToOne(optional = false)
     private Commonnametx commonNameTx;
      
@@ -208,6 +210,10 @@ public class Commonnametxcitation extends BaseEntity {
         this.referenceWork = referenceWork;
     }
 
+    @Override
+    public String getEntityName() {
+        return "commonNameTxCitation";
+    }
     
     @Override
     public int hashCode() {

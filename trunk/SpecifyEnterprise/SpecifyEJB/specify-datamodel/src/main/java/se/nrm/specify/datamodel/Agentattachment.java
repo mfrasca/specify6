@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;  
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -29,7 +30,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Agentattachment.findAll", query = "SELECT a FROM Agentattachment a"),
-    @NamedQuery(name = "Agentattachment.findByAgentAttachmentID", query = "SELECT a FROM Agentattachment a WHERE a.agentAttachmentId = :agentAttachmentID"),
+    @NamedQuery(name = "Agentattachment.findByAgentAttachmentId", query = "SELECT a FROM Agentattachment a WHERE a.agentAttachmentId = :agentAttachmentId"),
     @NamedQuery(name = "Agentattachment.findByTimestampCreated", query = "SELECT a FROM Agentattachment a WHERE a.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Agentattachment.findByTimestampModified", query = "SELECT a FROM Agentattachment a WHERE a.timestampModified = :timestampModified"),
     @NamedQuery(name = "Agentattachment.findByVersion", query = "SELECT a FROM Agentattachment a WHERE a.version = :version"),
@@ -54,6 +55,7 @@ public class Agentattachment extends BaseEntity {
     private String remarks;
     
     @JoinColumn(name = "AttachmentID", referencedColumnName = "AttachmentID")
+    @NotNull
     @ManyToOne(optional = false)
     private Attachment attachment;
     
@@ -66,6 +68,7 @@ public class Agentattachment extends BaseEntity {
     private Agent modifiedByAgent;
     
     @JoinColumn(name = "AgentID", referencedColumnName = "AgentID")
+    @NotNull
     @ManyToOne(optional = false)
     private Agent agent;
 
@@ -150,7 +153,11 @@ public class Agentattachment extends BaseEntity {
         this.remarks = remarks;
     }
  
-
+    @Override
+    public String getEntityName() {
+        return "agentAttachment";
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

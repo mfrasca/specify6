@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Collectingeventattr.findAll", query = "SELECT c FROM Collectingeventattr c"),
-    @NamedQuery(name = "Collectingeventattr.findByAttrID", query = "SELECT c FROM Collectingeventattr c WHERE c.attrId = :attrID"),
+    @NamedQuery(name = "Collectingeventattr.findByAttrId", query = "SELECT c FROM Collectingeventattr c WHERE c.attrId = :attrId"),
     @NamedQuery(name = "Collectingeventattr.findByTimestampCreated", query = "SELECT c FROM Collectingeventattr c WHERE c.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Collectingeventattr.findByTimestampModified", query = "SELECT c FROM Collectingeventattr c WHERE c.timestampModified = :timestampModified"),
     @NamedQuery(name = "Collectingeventattr.findByVersion", query = "SELECT c FROM Collectingeventattr c WHERE c.version = :version"),
@@ -60,10 +60,12 @@ public class Collectingeventattr extends BaseEntity {
     private String strValue;
     
     @JoinColumn(name = "AttributeDefID", referencedColumnName = "AttributeDefID")
+    @NotNull
     @ManyToOne(optional = false)
     private Attributedef definition;
     
     @JoinColumn(name = "CollectingEventID", referencedColumnName = "CollectingEventID")
+    @NotNull
     @ManyToOne(optional = false, cascade= CascadeType.ALL)
     private Collectingevent collectingEvent;
     
@@ -163,7 +165,10 @@ public class Collectingeventattr extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
 
- 
+    @Override
+    public String getEntityName() {
+        return "collectingEventAttr";
+    }
 
     @Override
     public int hashCode() {

@@ -12,8 +12,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table;  
-import javax.validation.constraints.NotNull;
+import javax.persistence.Table;   
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -27,7 +26,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Spappresourcedata.findAll", query = "SELECT s FROM Spappresourcedata s"),
-    @NamedQuery(name = "Spappresourcedata.findBySpAppResourceDataID", query = "SELECT s FROM Spappresourcedata s WHERE s.spAppResourceDataId = :spAppResourceDataID"),
+    @NamedQuery(name = "Spappresourcedata.findBySpAppResourceDataId", query = "SELECT s FROM Spappresourcedata s WHERE s.spAppResourceDataId = :spAppResourceDataId"),
     @NamedQuery(name = "Spappresourcedata.findByTimestampCreated", query = "SELECT s FROM Spappresourcedata s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Spappresourcedata.findByTimestampModified", query = "SELECT s FROM Spappresourcedata s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Spappresourcedata.findByVersion", query = "SELECT s FROM Spappresourcedata s WHERE s.version = :version")})
@@ -127,6 +126,11 @@ public class Spappresourcedata extends BaseEntity {
 
     public void setData(byte[] data) {
         this.data = data;
+    }
+    
+    @Override
+    public String getEntityName() {
+        return "spAppResourceData";
     }
 
     @Override

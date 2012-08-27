@@ -35,7 +35,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Dnasequencingrun.findAll", query = "SELECT d FROM Dnasequencingrun d"),
-    @NamedQuery(name = "Dnasequencingrun.findByDNASequencingRunID", query = "SELECT d FROM Dnasequencingrun d WHERE d.dnaSequencingRunId = :dNASequencingRunID"),
+    @NamedQuery(name = "Dnasequencingrun.findByDNASequencingRunId", query = "SELECT d FROM Dnasequencingrun d WHERE d.dnaSequencingRunId = :dnaSequencingRunId"),
     @NamedQuery(name = "Dnasequencingrun.findByTimestampCreated", query = "SELECT d FROM Dnasequencingrun d WHERE d.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Dnasequencingrun.findByTimestampModified", query = "SELECT d FROM Dnasequencingrun d WHERE d.timestampModified = :timestampModified"),
     @NamedQuery(name = "Dnasequencingrun.findByVersion", query = "SELECT d FROM Dnasequencingrun d WHERE d.version = :version"),
@@ -193,6 +193,7 @@ public class Dnasequencingrun extends BaseEntity {
     private Agent modifiedByAgent;
     
     @JoinColumn(name = "DNASequenceID", referencedColumnName = "DnaSequenceID")
+    @NotNull
     @ManyToOne(optional = false)
     private Dnasequence dnaSequence;
     
@@ -506,7 +507,10 @@ public class Dnasequencingrun extends BaseEntity {
     }
 
     
-  
+    @Override
+    public String getEntityName() {
+        return "dnaSequencingRun";
+    }
 
     @Override
     public int hashCode() {

@@ -31,7 +31,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Datatype.findAll", query = "SELECT d FROM Datatype d"),
-    @NamedQuery(name = "Datatype.findByDataTypeID", query = "SELECT d FROM Datatype d WHERE d.dataTypeId = :dataTypeID"),
+    @NamedQuery(name = "Datatype.findByDataTypeId", query = "SELECT d FROM Datatype d WHERE d.dataTypeId = :dataTypeId"),
     @NamedQuery(name = "Datatype.findByTimestampCreated", query = "SELECT d FROM Datatype d WHERE d.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Datatype.findByTimestampModified", query = "SELECT d FROM Datatype d WHERE d.timestampModified = :timestampModified"),
     @NamedQuery(name = "Datatype.findByVersion", query = "SELECT d FROM Datatype d WHERE d.version = :version"),
@@ -127,7 +127,10 @@ public class Datatype extends BaseEntity {
         this.disciplines = disciplines;
     }
  
-
+    @Override
+    public String getEntityName() {
+        return "dataType";
+    }
  
 
     @Override

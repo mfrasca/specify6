@@ -35,13 +35,13 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Sgrbatchmatchresultitem.findByMatchedId", query = "SELECT s FROM Sgrbatchmatchresultitem s WHERE s.matchedId = :matchedId"),
     @NamedQuery(name = "Sgrbatchmatchresultitem.findByMaxScore", query = "SELECT s FROM Sgrbatchmatchresultitem s WHERE s.maxScore = :maxScore"),
     @NamedQuery(name = "Sgrbatchmatchresultitem.findByQTime", query = "SELECT s FROM Sgrbatchmatchresultitem s WHERE s.qTime = :qTime")})
-public class Sgrbatchmatchresultitem implements Serializable {
+public class Sgrbatchmatchresultitem implements Serializable, SpecifyBean {
     
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @NotNull
+//    @NotNull
     @Column(name = "id")
     private Long id;
     
@@ -61,6 +61,7 @@ public class Sgrbatchmatchresultitem implements Serializable {
     private int qTime;
     
     @JoinColumn(name = "batchMatchResultSetId", referencedColumnName = "id")
+    @NotNull
     @ManyToOne(optional = false)
     private Sgrbatchmatchresultset sgrbatchmatchresultset;
 
@@ -129,6 +130,11 @@ public class Sgrbatchmatchresultitem implements Serializable {
         this.sgrbatchmatchresultset = sgrbatchmatchresultset;
     }
 
+    @Override
+    public String getEntityName() {
+        return "sgrbatchmatchresultitem";
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

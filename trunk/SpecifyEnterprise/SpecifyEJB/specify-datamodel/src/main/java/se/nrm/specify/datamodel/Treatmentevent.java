@@ -1,13 +1,14 @@
 package se.nrm.specify.datamodel;
  
 import java.util.Date;
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import javax.persistence.*; 
 import javax.validation.constraints.Size;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -18,7 +19,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Treatmentevent.findAll", query = "SELECT t FROM Treatmentevent t"),
-    @NamedQuery(name = "Treatmentevent.findByTreatmentEventID", query = "SELECT t FROM Treatmentevent t WHERE t.treatmentEventId = :treatmentEventID"),
+    @NamedQuery(name = "Treatmentevent.findByTreatmentEventId", query = "SELECT t FROM Treatmentevent t WHERE t.treatmentEventId = :treatmentEventId"),
     @NamedQuery(name = "Treatmentevent.findByTimestampCreated", query = "SELECT t FROM Treatmentevent t WHERE t.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Treatmentevent.findByTimestampModified", query = "SELECT t FROM Treatmentevent t WHERE t.timestampModified = :timestampModified"),
     @NamedQuery(name = "Treatmentevent.findByVersion", query = "SELECT t FROM Treatmentevent t WHERE t.version = :version"),
@@ -103,6 +104,7 @@ public class Treatmentevent extends BaseEntity {
     @ManyToOne
     private Agent createdByAgent;
     
+    @XmlTransient
     @JoinColumn(name = "CollectionObjectID", referencedColumnName = "CollectionObjectID")
     @ManyToOne
     private Collectionobject collectionObject;
@@ -175,7 +177,7 @@ public class Treatmentevent extends BaseEntity {
         this.accession = accession;
     }
 
-    @XmlIDREF
+    @XmlTransient
     public Collectionobject getCollectionObject() {
         return collectionObject;
     }
@@ -282,7 +284,24 @@ public class Treatmentevent extends BaseEntity {
     public void setTreatmentEventId(Integer treatmentEventId) {
         this.treatmentEventId = treatmentEventId;
     }
+    
+    @Override
+    public String getEntityName() {
+        return "treatmentEvent";
+    }
 
+    
+    /**
+     * Parent pointer
+     * 
+     * @param u
+     * @param parent 
+     */
+    public void afterUnmarshal(Unmarshaller u, Object parent) {  
+        if(parent instanceof Collectionobject) {
+            this.collectionObject = (Collectionobject)parent;   
+        }
+    }
     
     @Override
     public int hashCode() {

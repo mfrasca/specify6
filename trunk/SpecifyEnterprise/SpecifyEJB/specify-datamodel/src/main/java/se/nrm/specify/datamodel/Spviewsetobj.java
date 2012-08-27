@@ -13,9 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table; 
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -32,7 +30,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Spviewsetobj.findAll", query = "SELECT s FROM Spviewsetobj s"),
-    @NamedQuery(name = "Spviewsetobj.findBySpViewSetObjID", query = "SELECT s FROM Spviewsetobj s WHERE s.spViewSetObjId = :spViewSetObjID"),
+    @NamedQuery(name = "Spviewsetobj.findBySpViewSetObjId", query = "SELECT s FROM Spviewsetobj s WHERE s.spViewSetObjId = :spViewSetObjId"),
     @NamedQuery(name = "Spviewsetobj.findByTimestampCreated", query = "SELECT s FROM Spviewsetobj s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Spviewsetobj.findByTimestampModified", query = "SELECT s FROM Spviewsetobj s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Spviewsetobj.findByVersion", query = "SELECT s FROM Spviewsetobj s WHERE s.version = :version"),
@@ -71,6 +69,7 @@ public class Spviewsetobj extends BaseEntity {
     private String metaData;
     
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
@@ -87,6 +86,7 @@ public class Spviewsetobj extends BaseEntity {
     private Agent modifiedByAgent;
     
     @JoinColumn(name = "SpAppResourceDirID", referencedColumnName = "SpAppResourceDirID")
+    @NotNull
     @ManyToOne(optional = false)
     private Spappresourcedir spAppResourceDir;
 
@@ -196,6 +196,10 @@ public class Spviewsetobj extends BaseEntity {
         this.name = name;
     }
 
+    @Override
+    public String getEntityName() {
+        return "spViewSetObj";
+    }
     
     @Override
     public int hashCode() {

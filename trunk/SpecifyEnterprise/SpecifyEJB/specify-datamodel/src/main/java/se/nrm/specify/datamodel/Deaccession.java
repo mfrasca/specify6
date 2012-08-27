@@ -35,7 +35,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Deaccession.findAll", query = "SELECT d FROM Deaccession d"),
-    @NamedQuery(name = "Deaccession.findByDeaccessionID", query = "SELECT d FROM Deaccession d WHERE d.deaccessionId = :deaccessionID"),
+    @NamedQuery(name = "Deaccession.findByDeaccessionId", query = "SELECT d FROM Deaccession d WHERE d.deaccessionId = :deaccessionId"),
     @NamedQuery(name = "Deaccession.findByTimestampCreated", query = "SELECT d FROM Deaccession d WHERE d.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Deaccession.findByTimestampModified", query = "SELECT d FROM Deaccession d WHERE d.timestampModified = :timestampModified"),
     @NamedQuery(name = "Deaccession.findByVersion", query = "SELECT d FROM Deaccession d WHERE d.version = :version"),
@@ -279,6 +279,11 @@ public class Deaccession extends BaseEntity {
         }
     }
     
+    
+    @Override
+    public String getEntityName() {
+        return "deaccession";
+    }
     
     @Override
     public int hashCode() {

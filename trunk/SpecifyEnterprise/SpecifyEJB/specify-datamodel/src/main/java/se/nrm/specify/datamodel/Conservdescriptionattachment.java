@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Conservdescriptionattachment.findAll", query = "SELECT c FROM Conservdescriptionattachment c"),
-    @NamedQuery(name = "Conservdescriptionattachment.findByConservDescriptionAttachmentID", query = "SELECT c FROM Conservdescriptionattachment c WHERE c.conservDescriptionAttachmentId = :conservDescriptionAttachmentID"),
+    @NamedQuery(name = "Conservdescriptionattachment.findByConservDescriptionAttachmentId", query = "SELECT c FROM Conservdescriptionattachment c WHERE c.conservDescriptionAttachmentId = :conservDescriptionAttachmentId"),
     @NamedQuery(name = "Conservdescriptionattachment.findByTimestampCreated", query = "SELECT c FROM Conservdescriptionattachment c WHERE c.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Conservdescriptionattachment.findByTimestampModified", query = "SELECT c FROM Conservdescriptionattachment c WHERE c.timestampModified = :timestampModified"),
     @NamedQuery(name = "Conservdescriptionattachment.findByVersion", query = "SELECT c FROM Conservdescriptionattachment c WHERE c.version = :version"),
@@ -53,10 +53,12 @@ public class Conservdescriptionattachment extends BaseEntity {
     private String remarks;
     
     @JoinColumn(name = "AttachmentID", referencedColumnName = "AttachmentID")
+    @NotNull
     @ManyToOne(optional = false)
     private Attachment attachment;
     
     @JoinColumn(name = "ConservDescriptionID", referencedColumnName = "ConservDescriptionID")
+    @NotNull
     @ManyToOne(optional = false)
     private Conservdescription conservDescription;
     
@@ -146,6 +148,10 @@ public class Conservdescriptionattachment extends BaseEntity {
     }
 
  
+    @Override
+    public String getEntityName() {
+        return "conservDescriptionAttachment";
+    }
 
     @Override
     public int hashCode() {

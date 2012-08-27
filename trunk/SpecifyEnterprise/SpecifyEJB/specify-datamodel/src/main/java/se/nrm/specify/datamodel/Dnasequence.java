@@ -34,11 +34,11 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Dnasequence.findAll", query = "SELECT d FROM Dnasequence d"),
-    @NamedQuery(name = "Dnasequence.findByDnaSequenceID", query = "SELECT d FROM Dnasequence d WHERE d.dnaSequenceId = :dnaSequenceID"),
+    @NamedQuery(name = "Dnasequence.findByDnaSequenceId", query = "SELECT d FROM Dnasequence d WHERE d.dnaSequenceId = :dnaSequenceId"),
     @NamedQuery(name = "Dnasequence.findByTimestampCreated", query = "SELECT d FROM Dnasequence d WHERE d.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Dnasequence.findByTimestampModified", query = "SELECT d FROM Dnasequence d WHERE d.timestampModified = :timestampModified"),
 //    @NamedQuery(name = "Dnasequence.findByVersion", query = "SELECT d FROM Dnasequence d WHERE d.version = :version"), 
-    @NamedQuery(name = "Dnasequence.findByCollectionMemberID", query = "SELECT d FROM Dnasequence d WHERE d.collectionMemberId = :collectionMemberID"),
+    @NamedQuery(name = "Dnasequence.findByCollectionMemberId", query = "SELECT d FROM Dnasequence d WHERE d.collectionMemberId = :collectionMemberId"),
     @NamedQuery(name = "Dnasequence.findByAmbiguousResidues", query = "SELECT d FROM Dnasequence d WHERE d.ambiguousResidues = :ambiguousResidues"),
     @NamedQuery(name = "Dnasequence.findByBOLDBarcodeID", query = "SELECT d FROM Dnasequence d WHERE d.boldBarcodeId = :bOLDBarcodeID"),
     @NamedQuery(name = "Dnasequence.findByBOLDLastUpdateDate", query = "SELECT d FROM Dnasequence d WHERE d.boldLastUpdateDate = :bOLDLastUpdateDate"),
@@ -467,6 +467,10 @@ public class Dnasequence extends BaseEntity {
         this.sequencer = sequencer;
     }
 
+    @Override
+    public String getEntityName() {
+        return "dnaSequence";
+    }
  
 
     @Override

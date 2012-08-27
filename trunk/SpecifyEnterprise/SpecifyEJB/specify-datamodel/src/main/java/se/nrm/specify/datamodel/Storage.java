@@ -33,7 +33,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Storage.findAll", query = "SELECT s FROM Storage s"),
-    @NamedQuery(name = "Storage.findByStorageID", query = "SELECT s FROM Storage s WHERE s.storageId = :storageID"),
+    @NamedQuery(name = "Storage.findByStorageId", query = "SELECT s FROM Storage s WHERE s.storageId = :storageId"),
     @NamedQuery(name = "Storage.findByTimestampCreated", query = "SELECT s FROM Storage s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Storage.findByTimestampModified", query = "SELECT s FROM Storage s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Storage.findByVersion", query = "SELECT s FROM Storage s WHERE s.version = :version"),
@@ -75,6 +75,7 @@ public class Storage extends BaseEntity {
     private Boolean isAccepted;
     
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
@@ -128,6 +129,7 @@ public class Storage extends BaseEntity {
     private Agent createdByAgent;
     
     @JoinColumn(name = "StorageTreeDefID", referencedColumnName = "StorageTreeDefID")
+    @NotNull
     @ManyToOne(optional = false)
     private Storagetreedef definition;
     
@@ -136,6 +138,7 @@ public class Storage extends BaseEntity {
     private Agent modifiedByAgent;
     
     @JoinColumn(name = "StorageTreeDefItemID", referencedColumnName = "StorageTreeDefItemID")
+    @NotNull
     @ManyToOne(optional = false)
     private Storagetreedefitem definitionItem;
     
@@ -368,7 +371,10 @@ public class Storage extends BaseEntity {
         this.timestampVersion = timestampVersion;
     }
 
-   
+    @Override
+    public String getEntityName() {
+        return "storage";
+    }
 
     @Override
     public int hashCode() {

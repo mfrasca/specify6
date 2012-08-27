@@ -31,7 +31,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Spappresource.findAll", query = "SELECT s FROM Spappresource s"),
-    @NamedQuery(name = "Spappresource.findBySpAppResourceID", query = "SELECT s FROM Spappresource s WHERE s.spAppResourceId = :spAppResourceID"),
+    @NamedQuery(name = "Spappresource.findBySpAppResourceId", query = "SELECT s FROM Spappresource s WHERE s.spAppResourceId = :spAppResourceId"),
     @NamedQuery(name = "Spappresource.findByTimestampCreated", query = "SELECT s FROM Spappresource s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Spappresource.findByTimestampModified", query = "SELECT s FROM Spappresource s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Spappresource.findByVersion", query = "SELECT s FROM Spappresource s WHERE s.version = :version"),
@@ -78,6 +78,7 @@ public class Spappresource extends BaseEntity {
     private String mimeType;
     
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
@@ -101,10 +102,12 @@ public class Spappresource extends BaseEntity {
     private Agent modifiedByAgent;
     
     @JoinColumn(name = "SpecifyUserID", referencedColumnName = "SpecifyUserID")
+    @NotNull
     @ManyToOne(optional = false)
     private Specifyuser specifyUser;
     
     @JoinColumn(name = "SpAppResourceDirID", referencedColumnName = "SpAppResourceDirID")
+    @NotNull
     @ManyToOne(optional = false)
     private Spappresourcedir spAppResourceDir;
     
@@ -268,7 +271,10 @@ public class Spappresource extends BaseEntity {
     }
 
     
- 
+    @Override
+    public String getEntityName() {
+        return "spAppResource";
+    }
 
     @Override
     public int hashCode() {

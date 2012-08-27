@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Giftpreparation.findAll", query = "SELECT g FROM Giftpreparation g"),
-    @NamedQuery(name = "Giftpreparation.findByGiftPreparationID", query = "SELECT g FROM Giftpreparation g WHERE g.giftPreparationId = :giftPreparationID"),
+    @NamedQuery(name = "Giftpreparation.findByGiftPreparationId", query = "SELECT g FROM Giftpreparation g WHERE g.giftPreparationId = :giftPreparationId"),
     @NamedQuery(name = "Giftpreparation.findByTimestampCreated", query = "SELECT g FROM Giftpreparation g WHERE g.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Giftpreparation.findByTimestampModified", query = "SELECT g FROM Giftpreparation g WHERE g.timestampModified = :timestampModified"),
     @NamedQuery(name = "Giftpreparation.findByVersion", query = "SELECT g FROM Giftpreparation g WHERE g.version = :version"),
@@ -195,6 +195,10 @@ public class Giftpreparation extends BaseEntity {
         this.receivedComments = receivedComments;
     }
 
+    @Override
+    public String getEntityName() {
+        return "giftPreparation";
+    }
    
     @Override
     public int hashCode() {

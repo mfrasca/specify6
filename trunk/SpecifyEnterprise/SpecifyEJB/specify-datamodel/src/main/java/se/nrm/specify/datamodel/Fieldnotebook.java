@@ -35,7 +35,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Fieldnotebook.findAll", query = "SELECT f FROM Fieldnotebook f"),
-    @NamedQuery(name = "Fieldnotebook.findByFieldNotebookID", query = "SELECT f FROM Fieldnotebook f WHERE f.fieldNotebookId = :fieldNotebookID"),
+    @NamedQuery(name = "Fieldnotebook.findByFieldNotebookId", query = "SELECT f FROM Fieldnotebook f WHERE f.fieldNotebookId = :fieldNotebookId"),
     @NamedQuery(name = "Fieldnotebook.findByTimestampCreated", query = "SELECT f FROM Fieldnotebook f WHERE f.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Fieldnotebook.findByTimestampModified", query = "SELECT f FROM Fieldnotebook f WHERE f.timestampModified = :timestampModified"),
     @NamedQuery(name = "Fieldnotebook.findByVersion", query = "SELECT f FROM Fieldnotebook f WHERE f.version = :version"),
@@ -82,6 +82,7 @@ public class Fieldnotebook extends BaseEntity {
     private Collection<Fieldnotebookattachment> attachments;
     
     @JoinColumn(name = "CollectionID", referencedColumnName = "UserGroupScopeId")
+    @NotNull
     @ManyToOne(optional = false)
     private se.nrm.specify.datamodel.Collection collection;
     
@@ -94,10 +95,12 @@ public class Fieldnotebook extends BaseEntity {
     private Agent modifiedByAgent;
     
     @JoinColumn(name = "DisciplineID", referencedColumnName = "UserGroupScopeId")
+    @NotNull
     @ManyToOne(optional = false)
     private Discipline discipline;
     
     @JoinColumn(name = "AgentID", referencedColumnName = "AgentID")
+    @NotNull
     @ManyToOne(optional = false)
     private Agent ownerAgent;
 
@@ -234,6 +237,11 @@ public class Fieldnotebook extends BaseEntity {
     }
   
 
+    @Override
+    public String getEntityName() {
+        return "fieldNoteBook";
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

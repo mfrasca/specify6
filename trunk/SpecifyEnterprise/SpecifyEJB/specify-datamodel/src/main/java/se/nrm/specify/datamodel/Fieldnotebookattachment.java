@@ -56,10 +56,12 @@ public class Fieldnotebookattachment extends BaseEntity {
     private String remarks;
     
     @JoinColumn(name = "AttachmentID", referencedColumnName = "AttachmentID")
+    @NotNull
     @ManyToOne(optional = false)
     private Attachment attachment;
     
     @JoinColumn(name = "FieldNotebookID", referencedColumnName = "FieldNotebookID")
+    @NotNull
     @ManyToOne(optional = false)
     private Fieldnotebook fieldNotebook;
     
@@ -158,11 +160,16 @@ public class Fieldnotebookattachment extends BaseEntity {
      * @param parent 
      */
     public void afterUnmarshal(Unmarshaller u, Object parent) {  
-        if(parent instanceof Collectionobject) {
+        if(parent instanceof Fieldnotebook) {
             this.fieldNotebook = (Fieldnotebook)parent;   
         }
     }
  
+    @Override
+    public String getEntityName() {
+        return "fieldNotebookAttachment";
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

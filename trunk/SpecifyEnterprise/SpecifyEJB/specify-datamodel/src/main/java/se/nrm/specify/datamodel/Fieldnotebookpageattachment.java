@@ -57,6 +57,7 @@ public class Fieldnotebookpageattachment extends BaseEntity {
     private String remarks;
     
     @JoinColumn(name = "AttachmentID", referencedColumnName = "AttachmentID")
+    @NotNull
     @ManyToOne(optional = false)
     private Attachment attachment;
     
@@ -65,6 +66,7 @@ public class Fieldnotebookpageattachment extends BaseEntity {
     private Agent createdByAgent;
     
     @JoinColumn(name = "FieldNotebookPageID", referencedColumnName = "FieldNotebookPageID")
+    @NotNull
     @ManyToOne(optional = false)
     private Fieldnotebookpage fieldNotebookPage;
     
@@ -164,7 +166,10 @@ public class Fieldnotebookpageattachment extends BaseEntity {
         }
     }
     
-    
+    @Override
+    public String getEntityName() {
+        return "fieldNotebookPageAttachment";
+    }
     
     @Override
     public int hashCode() {

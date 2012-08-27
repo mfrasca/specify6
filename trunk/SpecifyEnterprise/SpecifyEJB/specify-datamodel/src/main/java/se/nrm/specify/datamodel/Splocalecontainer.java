@@ -14,9 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table; 
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -33,7 +31,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Splocalecontainer.findAll", query = "SELECT s FROM Splocalecontainer s"),
-    @NamedQuery(name = "Splocalecontainer.findBySpLocaleContainerID", query = "SELECT s FROM Splocalecontainer s WHERE s.spLocaleContainerId = :spLocaleContainerID"),
+    @NamedQuery(name = "Splocalecontainer.findBySpLocaleContainerId", query = "SELECT s FROM Splocalecontainer s WHERE s.spLocaleContainerId = :spLocaleContainerId"),
     @NamedQuery(name = "Splocalecontainer.findByTimestampCreated", query = "SELECT s FROM Splocalecontainer s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Splocalecontainer.findByTimestampModified", query = "SELECT s FROM Splocalecontainer s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Splocalecontainer.findByVersion", query = "SELECT s FROM Splocalecontainer s WHERE s.version = :version"),
@@ -120,6 +118,7 @@ public class Splocalecontainer extends BaseEntity {
     private Agent modifiedByAgent;
     
     @JoinColumn(name = "DisciplineID", referencedColumnName = "UserGroupScopeId")
+    @NotNull
     @ManyToOne(optional = false)
     private Discipline discipline;
 
@@ -288,7 +287,10 @@ public class Splocalecontainer extends BaseEntity {
         this.spLocaleContainerId = spLocaleContainerId;
     }
 
-    
+    @Override
+    public String getEntityName() {
+        return "spLocaleContainer";
+    }
 
     @Override
     public int hashCode() {

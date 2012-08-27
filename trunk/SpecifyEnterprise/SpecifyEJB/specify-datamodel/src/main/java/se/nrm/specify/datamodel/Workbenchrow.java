@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Workbenchrow.findAll", query = "SELECT w FROM Workbenchrow w"),
-    @NamedQuery(name = "Workbenchrow.findByWorkbenchRowID", query = "SELECT w FROM Workbenchrow w WHERE w.workbenchRowId = :workbenchRowID"),
+    @NamedQuery(name = "Workbenchrow.findByWorkbenchRowId", query = "SELECT w FROM Workbenchrow w WHERE w.workbenchRowId = :workbenchRowId"),
     @NamedQuery(name = "Workbenchrow.findByCardImageFullPath", query = "SELECT w FROM Workbenchrow w WHERE w.cardImageFullPath = :cardImageFullPath"),
     @NamedQuery(name = "Workbenchrow.findByLat1Text", query = "SELECT w FROM Workbenchrow w WHERE w.lat1Text = :lat1Text"),
     @NamedQuery(name = "Workbenchrow.findByLat2Text", query = "SELECT w FROM Workbenchrow w WHERE w.lat2Text = :lat2Text"),
@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Workbenchrow.findByLong2Text", query = "SELECT w FROM Workbenchrow w WHERE w.long2Text = :long2Text"),
     @NamedQuery(name = "Workbenchrow.findByRowNumber", query = "SELECT w FROM Workbenchrow w WHERE w.rowNumber = :rowNumber"),
     @NamedQuery(name = "Workbenchrow.findByUploadStatus", query = "SELECT w FROM Workbenchrow w WHERE w.uploadStatus = :uploadStatus"),
-    @NamedQuery(name = "Workbenchrow.findByRecordID", query = "SELECT w FROM Workbenchrow w WHERE w.recordId = :recordID")})
+    @NamedQuery(name = "Workbenchrow.findByRecordId", query = "SELECT w FROM Workbenchrow w WHERE w.recordId = :recordId")})
 public class Workbenchrow implements Serializable, SpecifyBean {
     
      
@@ -88,6 +88,7 @@ public class Workbenchrow implements Serializable, SpecifyBean {
     private Collection<Workbenchdataitem> workbenchDataItems;
     
     @JoinColumn(name = "WorkbenchID", referencedColumnName = "WorkbenchID")
+    @NotNull
     @ManyToOne(optional = false)
     private Workbench workbench;
 
@@ -212,7 +213,10 @@ public class Workbenchrow implements Serializable, SpecifyBean {
     }
  
 
-    
+    @Override
+    public String getEntityName() {
+        return "workbenchRow";
+    }
 
     @Override
     public int hashCode() {

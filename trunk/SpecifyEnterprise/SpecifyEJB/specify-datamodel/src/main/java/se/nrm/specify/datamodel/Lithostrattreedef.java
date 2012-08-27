@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Lithostrattreedef.findAll", query = "SELECT l FROM Lithostrattreedef l"),
-    @NamedQuery(name = "Lithostrattreedef.findByLithoStratTreeDefID", query = "SELECT l FROM Lithostrattreedef l WHERE l.lithoStratTreeDefId = :lithoStratTreeDefID"),
+    @NamedQuery(name = "Lithostrattreedef.findByLithoStratTreeDefId", query = "SELECT l FROM Lithostrattreedef l WHERE l.lithoStratTreeDefId = :lithoStratTreeDefId"),
     @NamedQuery(name = "Lithostrattreedef.findByTimestampCreated", query = "SELECT l FROM Lithostrattreedef l WHERE l.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Lithostrattreedef.findByTimestampModified", query = "SELECT l FROM Lithostrattreedef l WHERE l.timestampModified = :timestampModified"),
     @NamedQuery(name = "Lithostrattreedef.findByVersion", query = "SELECT l FROM Lithostrattreedef l WHERE l.version = :version"),
@@ -53,6 +53,7 @@ public class Lithostrattreedef extends BaseEntity {
     private Integer fullNameDirection;
     
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
@@ -177,6 +178,10 @@ public class Lithostrattreedef extends BaseEntity {
         this.treeEntries = treeEntries;
     }
  
+    @Override
+    public String getEntityName() {
+        return "lithoStratTreeDef";
+    }
 
     @Override
     public int hashCode() {

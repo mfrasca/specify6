@@ -31,7 +31,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Sppermission.findAll", query = "SELECT s FROM Sppermission s"),
-    @NamedQuery(name = "Sppermission.findBySpPermissionID", query = "SELECT s FROM Sppermission s WHERE s.permissionId = :spPermissionID"),
+    @NamedQuery(name = "Sppermission.findBySpPermissionId", query = "SELECT s FROM Sppermission s WHERE s.permissionId = :spPermissionId"),
     @NamedQuery(name = "Sppermission.findByName", query = "SELECT s FROM Sppermission s WHERE s.name = :name"),
     @NamedQuery(name = "Sppermission.findByTargetId", query = "SELECT s FROM Sppermission s WHERE s.targetId = :targetId")})
 public class Sppermission implements Serializable, SpecifyBean {
@@ -55,6 +55,7 @@ public class Sppermission implements Serializable, SpecifyBean {
     private String name;
     
     @Basic(optional = false) 
+    @NotNull
     @Lob
     @Size(min = 1, max = 65535)
     @Column(name = "PermissionClass")
@@ -138,6 +139,10 @@ public class Sppermission implements Serializable, SpecifyBean {
     }
 
      
+    @Override
+    public String getEntityName() {
+        return "permission";
+    }
 
     @Override
     public int hashCode() {

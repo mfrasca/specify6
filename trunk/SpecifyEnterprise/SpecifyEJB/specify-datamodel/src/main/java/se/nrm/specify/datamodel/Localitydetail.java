@@ -14,10 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table; 
-//import javax.validation.constraints.NotNull;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
+//import javax.validation.constraints.NotNull; 
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlID;
@@ -32,7 +29,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Localitydetail.findAll", query = "SELECT l FROM Localitydetail l"),
-    @NamedQuery(name = "Localitydetail.findByLocalityDetailID", query = "SELECT l FROM Localitydetail l WHERE l.localityDetailId = :localityDetailID"),
+    @NamedQuery(name = "Localitydetail.findByLocalityDetailId", query = "SELECT l FROM Localitydetail l WHERE l.localityDetailId = :localityDetailId"),
     @NamedQuery(name = "Localitydetail.findByTimestampCreated", query = "SELECT l FROM Localitydetail l WHERE l.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Localitydetail.findByTimestampModified", query = "SELECT l FROM Localitydetail l WHERE l.timestampModified = :timestampModified"),
     @NamedQuery(name = "Localitydetail.findByVersion", query = "SELECT l FROM Localitydetail l WHERE l.version = :version"),
@@ -563,7 +560,10 @@ public class Localitydetail extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
 
-   
+    @Override
+    public String getEntityName() {
+        return "localityDetail";
+    }
 
     @Override
     public int hashCode() {

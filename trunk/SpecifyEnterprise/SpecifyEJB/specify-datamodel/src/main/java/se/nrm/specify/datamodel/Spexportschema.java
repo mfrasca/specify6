@@ -33,7 +33,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Spexportschema.findAll", query = "SELECT s FROM Spexportschema s"),
-    @NamedQuery(name = "Spexportschema.findBySpExportSchemaID", query = "SELECT s FROM Spexportschema s WHERE s.spExportSchemaId = :spExportSchemaID"),
+    @NamedQuery(name = "Spexportschema.findBySpExportSchemaId", query = "SELECT s FROM Spexportschema s WHERE s.spExportSchemaId = :spExportSchemaId"),
     @NamedQuery(name = "Spexportschema.findByTimestampCreated", query = "SELECT s FROM Spexportschema s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Spexportschema.findByTimestampModified", query = "SELECT s FROM Spexportschema s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Spexportschema.findByVersion", query = "SELECT s FROM Spexportschema s WHERE s.version = :version"),
@@ -78,6 +78,7 @@ public class Spexportschema extends BaseEntity {
     private Agent modifiedByAgent;
     
     @JoinColumn(name = "DisciplineID", referencedColumnName = "UserGroupScopeId")
+    @NotNull
     @ManyToOne(optional = false)
     private Discipline discipline
             ;
@@ -180,6 +181,11 @@ public class Spexportschema extends BaseEntity {
     }
  
 
+    @Override
+    public String getEntityName() {
+        return "spExportSchema";
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Morphbankview.findAll", query = "SELECT m FROM Morphbankview m"),
-    @NamedQuery(name = "Morphbankview.findByMorphBankViewID", query = "SELECT m FROM Morphbankview m WHERE m.morphBankViewId = :morphBankViewID"),
+    @NamedQuery(name = "Morphbankview.findByMorphBankViewId", query = "SELECT m FROM Morphbankview m WHERE m.morphBankViewId = :morphBankViewId"),
     @NamedQuery(name = "Morphbankview.findByTimestampCreated", query = "SELECT m FROM Morphbankview m WHERE m.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Morphbankview.findByTimestampModified", query = "SELECT m FROM Morphbankview m WHERE m.timestampModified = :timestampModified"),
     @NamedQuery(name = "Morphbankview.findByVersion", query = "SELECT m FROM Morphbankview m WHERE m.version = :version"),
@@ -37,8 +37,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Morphbankview.findBySpecimenPart", query = "SELECT m FROM Morphbankview m WHERE m.specimenPart = :specimenPart"),
     @NamedQuery(name = "Morphbankview.findByViewAngle", query = "SELECT m FROM Morphbankview m WHERE m.viewAngle = :viewAngle"),
     @NamedQuery(name = "Morphbankview.findByViewName", query = "SELECT m FROM Morphbankview m WHERE m.viewName = :viewName"),
-    @NamedQuery(name = "Morphbankview.findByCreatedByAgentID", query = "SELECT m FROM Morphbankview m WHERE m.createdByAgent = :createdByAgentID"),
-    @NamedQuery(name = "Morphbankview.findByModifiedByAgentID", query = "SELECT m FROM Morphbankview m WHERE m.modifiedByAgent = :modifiedByAgentID")})
+    @NamedQuery(name = "Morphbankview.findByCreatedByAgent", query = "SELECT m FROM Morphbankview m WHERE m.createdByAgent = :createdByAgent"),
+    @NamedQuery(name = "Morphbankview.findByModifiedByAgent", query = "SELECT m FROM Morphbankview m WHERE m.modifiedByAgent = :modifiedByAgent")})
 public class Morphbankview extends BaseEntity {
    
     private static final long serialVersionUID = 1L;
@@ -209,6 +209,10 @@ public class Morphbankview extends BaseEntity {
     }
 
      
+    @Override
+    public String getEntityName() {
+        return "morphBankView";
+    }
 
     @Override
     public int hashCode() {

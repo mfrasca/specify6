@@ -294,6 +294,11 @@ public class Geoname implements Serializable, SpecifyBean {
     }
 
     @Override
+    public String getEntityName() {
+        return "geoname";
+    }
+    
+    @Override
     public int hashCode() {
         int hash = 0;
         hash += (geonameId != null ? geonameId.hashCode() : 0);

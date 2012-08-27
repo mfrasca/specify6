@@ -35,7 +35,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Repositoryagreement.findAll", query = "SELECT r FROM Repositoryagreement r"),
-    @NamedQuery(name = "Repositoryagreement.findByRepositoryAgreementID", query = "SELECT r FROM Repositoryagreement r WHERE r.repositoryAgreementId = :repositoryAgreementID"),
+    @NamedQuery(name = "Repositoryagreement.findByRepositoryAgreementId", query = "SELECT r FROM Repositoryagreement r WHERE r.repositoryAgreementId = :repositoryAgreementId"),
     @NamedQuery(name = "Repositoryagreement.findByTimestampCreated", query = "SELECT r FROM Repositoryagreement r WHERE r.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Repositoryagreement.findByTimestampModified", query = "SELECT r FROM Repositoryagreement r WHERE r.timestampModified = :timestampModified"),
     @NamedQuery(name = "Repositoryagreement.findByVersion", query = "SELECT r FROM Repositoryagreement r WHERE r.version = :version"),
@@ -88,6 +88,7 @@ public class Repositoryagreement extends BaseEntity {
     private Date startDate;
     
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 60)
     @Column(name = "RepositoryAgreementNumber")
     private String repositoryAgreementNumber;
@@ -125,6 +126,7 @@ public class Repositoryagreement extends BaseEntity {
     private Addressofrecord addressOfRecord;
     
     @JoinColumn(name = "DivisionID", referencedColumnName = "UserGroupScopeId")
+    @NotNull
     @ManyToOne(optional = false)
     private Division division;
     
@@ -137,6 +139,7 @@ public class Repositoryagreement extends BaseEntity {
     private Agent modifiedByAgent;
      
     @JoinColumn(name = "AgentID", referencedColumnName = "AgentID")
+    @NotNull
     @ManyToOne(optional = false)
     private Agent originator;
     
@@ -359,6 +362,11 @@ public class Repositoryagreement extends BaseEntity {
         this.startDate = startDate;
     }
 
+    @Override
+    public String getEntityName() {
+        return "repositoryAgreement";
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

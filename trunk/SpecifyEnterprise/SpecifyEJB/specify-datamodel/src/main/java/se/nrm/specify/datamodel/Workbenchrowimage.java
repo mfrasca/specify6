@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Workbenchrowimage.findAll", query = "SELECT w FROM Workbenchrowimage w"),
-    @NamedQuery(name = "Workbenchrowimage.findByWorkbenchRowImageID", query = "SELECT w FROM Workbenchrowimage w WHERE w.workbenchRowImageId = :workbenchRowImageID"),
+    @NamedQuery(name = "Workbenchrowimage.findByWorkbenchRowImageId", query = "SELECT w FROM Workbenchrowimage w WHERE w.workbenchRowImageId = :workbenchRowImageId"),
     @NamedQuery(name = "Workbenchrowimage.findByAttachToTableName", query = "SELECT w FROM Workbenchrowimage w WHERE w.attachToTableName = :attachToTableName"),
     @NamedQuery(name = "Workbenchrowimage.findByCardImageFullPath", query = "SELECT w FROM Workbenchrowimage w WHERE w.cardImageFullPath = :cardImageFullPath"),
     @NamedQuery(name = "Workbenchrowimage.findByImageOrder", query = "SELECT w FROM Workbenchrowimage w WHERE w.imageOrder = :imageOrder")})
@@ -45,6 +45,7 @@ public class Workbenchrowimage implements Serializable, SpecifyBean {
     private Integer imageOrder;
     
     @JoinColumn(name = "WorkbenchRowID", referencedColumnName = "WorkbenchRowID")
+    @NotNull
     @ManyToOne(optional = false)
     private Workbenchrow workbenchRow;
     
@@ -116,6 +117,10 @@ public class Workbenchrowimage implements Serializable, SpecifyBean {
         this.cardImageData = cardImageData;
     }
 
+    @Override
+    public String getEntityName() {
+        return "workbenchRowImage";
+    }
  
     @Override
     public int hashCode() {

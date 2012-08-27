@@ -13,9 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table; 
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -32,7 +30,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Splocalecontaineritem.findAll", query = "SELECT s FROM Splocalecontaineritem s"),
-    @NamedQuery(name = "Splocalecontaineritem.findBySpLocaleContainerItemID", query = "SELECT s FROM Splocalecontaineritem s WHERE s.spLocaleContainerItemId = :spLocaleContainerItemID"),
+    @NamedQuery(name = "Splocalecontaineritem.findBySpLocaleContainerItemId", query = "SELECT s FROM Splocalecontaineritem s WHERE s.spLocaleContainerItemId = :spLocaleContainerItemId"),
     @NamedQuery(name = "Splocalecontaineritem.findByTimestampCreated", query = "SELECT s FROM Splocalecontaineritem s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Splocalecontaineritem.findByTimestampModified", query = "SELECT s FROM Splocalecontaineritem s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Splocalecontaineritem.findByVersion", query = "SELECT s FROM Splocalecontaineritem s WHERE s.version = :version"),
@@ -74,6 +72,7 @@ public class Splocalecontaineritem extends BaseEntity {
     private Boolean isUIFormatter;
     
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
@@ -100,6 +99,7 @@ public class Splocalecontaineritem extends BaseEntity {
     private Collection<Splocaleitemstr> descs;
     
     @JoinColumn(name = "SpLocaleContainerID", referencedColumnName = "SpLocaleContainerID")
+    @NotNull
     @ManyToOne(optional = false)
     private Splocalecontainer container;
     
@@ -269,7 +269,10 @@ public class Splocalecontaineritem extends BaseEntity {
         this.spLocaleContainerItemId = spLocaleContainerItemId;
     }
 
-    
+    @Override
+    public String getEntityName() {
+        return "spLocaleContainerItem";
+    }
 
     @Override
     public int hashCode() {

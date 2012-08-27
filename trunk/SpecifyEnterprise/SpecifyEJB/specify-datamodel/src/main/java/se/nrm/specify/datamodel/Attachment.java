@@ -18,6 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -34,7 +35,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Attachment.findAll", query = "SELECT a FROM Attachment a"),
-    @NamedQuery(name = "Attachment.findByAttachmentID", query = "SELECT a FROM Attachment a WHERE a.attachmentId = :attachmentID"),
+    @NamedQuery(name = "Attachment.findByAttachmentId", query = "SELECT a FROM Attachment a WHERE a.attachmentId = :attachmentId"),
     @NamedQuery(name = "Attachment.findByTimestampCreated", query = "SELECT a FROM Attachment a WHERE a.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Attachment.findByTimestampModified", query = "SELECT a FROM Attachment a WHERE a.timestampModified = :timestampModified"),
     @NamedQuery(name = "Attachment.findByVersion", query = "SELECT a FROM Attachment a WHERE a.version = :version"),
@@ -519,8 +520,10 @@ public class Attachment extends BaseEntity {
         this.visibilitySetBy = visibilitySetBy;
     }
 
- 
- 
+    @Override
+    public String getEntityName() {
+        return "attachment";
+    }
 
     @Override
     public int hashCode() {
@@ -545,30 +548,6 @@ public class Attachment extends BaseEntity {
     @Override
     public String toString() {
         return "Attachment[ attachmentId=" + attachmentId + " ]";
-    }
-
-    public Date getTimestampCreated() {
-        return timestampCreated;
-    }
-
-    public void setTimestampCreated(Date timestampCreated) {
-        this.timestampCreated = timestampCreated;
-    }
-
-    public Date getTimestampModified() {
-        return timestampModified;
-    }
-
-    public void setTimestampModified(Date timestampModified) {
-        this.timestampModified = timestampModified;
-    }
-
-    public Integer getVersion() {
-        return version;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
     }
  
 }

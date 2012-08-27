@@ -38,7 +38,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Specifyuser.findAll", query = "SELECT s FROM Specifyuser s"),
-    @NamedQuery(name = "Specifyuser.findBySpecifyUserID", query = "SELECT s FROM Specifyuser s WHERE s.specifyUserId = :specifyUserID"),
+    @NamedQuery(name = "Specifyuser.findBySpecifyUserId", query = "SELECT s FROM Specifyuser s WHERE s.specifyUserId = :specifyUserId"),
     @NamedQuery(name = "Specifyuser.findByTimestampCreated", query = "SELECT s FROM Specifyuser s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Specifyuser.findByTimestampModified", query = "SELECT s FROM Specifyuser s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Specifyuser.findByVersion", query = "SELECT s FROM Specifyuser s WHERE s.version = :version"),
@@ -90,6 +90,7 @@ public class Specifyuser extends BaseEntity implements CycleRecoverable {
     private String loginDisciplineName;
     
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
@@ -443,6 +444,11 @@ public class Specifyuser extends BaseEntity implements CycleRecoverable {
         this.loginOutTime = loginOutTime;
     }
 
+    @Override
+    public String getEntityName() {
+        return "specifyUser";
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

@@ -20,7 +20,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Taxontreedef.findAll", query = "SELECT t FROM Taxontreedef t"),
-    @NamedQuery(name = "Taxontreedef.findByTaxonTreeDefID", query = "SELECT t FROM Taxontreedef t WHERE t.taxonTreeDefId = :taxonTreeDefID"),
+    @NamedQuery(name = "Taxontreedef.findByTaxonTreeDefId", query = "SELECT t FROM Taxontreedef t WHERE t.taxonTreeDefId = :taxonTreeDefId"),
     @NamedQuery(name = "Taxontreedef.findByTimestampCreated", query = "SELECT t FROM Taxontreedef t WHERE t.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Taxontreedef.findByTimestampModified", query = "SELECT t FROM Taxontreedef t WHERE t.timestampModified = :timestampModified"),
     @NamedQuery(name = "Taxontreedef.findByVersion", query = "SELECT t FROM Taxontreedef t WHERE t.version = :version"),
@@ -42,6 +42,7 @@ public class Taxontreedef extends BaseEntity {
     private Integer fullNameDirection;
     
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
@@ -167,7 +168,10 @@ public class Taxontreedef extends BaseEntity {
     }
 
    
- 
+    @Override
+    public String getEntityName() {
+        return "taxonTreeDef";
+    }
 
     @Override
     public int hashCode() {

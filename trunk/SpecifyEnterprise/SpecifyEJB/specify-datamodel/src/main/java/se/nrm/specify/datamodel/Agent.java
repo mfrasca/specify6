@@ -17,7 +17,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.TemporalType;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size; 
@@ -37,7 +37,7 @@ import org.eclipse.persistence.oxm.annotations.XmlInverseReference;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Agent.findAll", query = "SELECT a FROM Agent a"),
-    @NamedQuery(name = "Agent.findByAgentID", query = "SELECT a FROM Agent a WHERE a.agentId = :agentID"),
+    @NamedQuery(name = "Agent.findByAgentId", query = "SELECT a FROM Agent a WHERE a.agentId = :agentId"),
     @NamedQuery(name = "Agent.findByTimestampCreated", query = "SELECT a FROM Agent a WHERE a.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Agent.findByTimestampModified", query = "SELECT a FROM Agent a WHERE a.timestampModified = :timestampModified"),
     @NamedQuery(name = "Agent.findByVersion", query = "SELECT a FROM Agent a WHERE a.version = :version"),
@@ -84,7 +84,7 @@ public class Agent extends BaseEntity {
     private Date dateOfDeath;
     
     @NotNull
-    @Basic(optional = false) 
+    @Basic(optional = false)  
     @Column(name = "AgentType")
     private short agentType;
     
@@ -809,7 +809,8 @@ public class Agent extends BaseEntity {
     private Collection<Lithostrat> lithostrats1;
     
     @JoinColumn(name = "DivisionID", referencedColumnName = "UserGroupScopeId") 
-    @ManyToOne(optional=false)
+//    @ManyToOne(optional=false)
+    @ManyToOne
     private Division division;
     
     @JoinColumn(name = "InstitutionTCID", referencedColumnName = "UserGroupScopeId")
@@ -1376,7 +1377,7 @@ public class Agent extends BaseEntity {
     }
   
     
-    @NotNull(message="Division must be specified.") 
+//    @NotNull(message="Division must be specified.") 
     public Division getDivision() {
         return division;
     }
@@ -4402,6 +4403,12 @@ public class Agent extends BaseEntity {
         this.dateOfDeath = dateOfDeath;
     }
 
+     
+    @Override
+    public String getEntityName() {
+        return "agent";
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

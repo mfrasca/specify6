@@ -15,9 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;  
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.Table;   
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -35,7 +33,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Workbenchtemplate.findAll", query = "SELECT w FROM Workbenchtemplate w"),
-    @NamedQuery(name = "Workbenchtemplate.findByWorkbenchTemplateID", query = "SELECT w FROM Workbenchtemplate w WHERE w.workbenchTemplateId = :workbenchTemplateID"),
+    @NamedQuery(name = "Workbenchtemplate.findByWorkbenchTemplateId", query = "SELECT w FROM Workbenchtemplate w WHERE w.workbenchTemplateId = :workbenchTemplateId"),
     @NamedQuery(name = "Workbenchtemplate.findByTimestampCreated", query = "SELECT w FROM Workbenchtemplate w WHERE w.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Workbenchtemplate.findByTimestampModified", query = "SELECT w FROM Workbenchtemplate w WHERE w.timestampModified = :timestampModified"),
     @NamedQuery(name = "Workbenchtemplate.findByVersion", query = "SELECT w FROM Workbenchtemplate w WHERE w.version = :version"),
@@ -77,6 +75,7 @@ public class Workbenchtemplate extends BaseEntity {
     private Agent modifiedByAgent;
     
     @JoinColumn(name = "SpecifyUserID", referencedColumnName = "SpecifyUserID")
+    @NotNull
     @ManyToOne(optional = false)
     private Specifyuser specifyUser;
     
@@ -199,7 +198,10 @@ public class Workbenchtemplate extends BaseEntity {
 
    
 
-    
+    @Override
+    public String getEntityName() {
+        return "workbenchTemplate";
+    }
  
 
     @Override

@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Spversion.findAll", query = "SELECT s FROM Spversion s"),
-    @NamedQuery(name = "Spversion.findBySpVersionID", query = "SELECT s FROM Spversion s WHERE s.spVersionId = :spVersionID"),
+    @NamedQuery(name = "Spversion.findBySpVersionId", query = "SELECT s FROM Spversion s WHERE s.spVersionId = :spVersionId"),
     @NamedQuery(name = "Spversion.findByTimestampCreated", query = "SELECT s FROM Spversion s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Spversion.findByTimestampModified", query = "SELECT s FROM Spversion s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Spversion.findByVersion", query = "SELECT s FROM Spversion s WHERE s.version = :version"),
@@ -154,6 +154,11 @@ public class Spversion extends BaseEntity {
 
     public void setDbClosedBy(String dbClosedBy) {
         this.dbClosedBy = dbClosedBy;
+    }
+    
+    @Override
+    public String getEntityName() {
+        return "spVersion";
     }
    
     @Override

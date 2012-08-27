@@ -9,7 +9,7 @@
         <exclude-unlisted-classes>false</exclude-unlisted-classes> 
 
         <properties>
-<!--            <property name="toplink.logging.level" value="fine"/>  -->
+            <property name="toplink.logging.level" value="fine"/>  
             <property name="eclipselink.weaving" value="true" />   
 <!--            <property name="eclipselink.cache.shared.default" value="false"/>-->
         </properties>

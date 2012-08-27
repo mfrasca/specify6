@@ -53,10 +53,12 @@ public class Dnasequenceattachment extends BaseEntity {
     private String remarks;
     
     @JoinColumn(name = "AttachmentID", referencedColumnName = "AttachmentID")
+    @NotNull
     @ManyToOne(optional = false)
     private Attachment attachment;
     
     @JoinColumn(name = "DnaSequenceID", referencedColumnName = "DnaSequenceID")
+    @NotNull
     @ManyToOne(optional = false)
     private Dnasequence dnasequence;
     
@@ -148,6 +150,11 @@ public class Dnasequenceattachment extends BaseEntity {
 
     public void setDnasequence(Dnasequence dnasequence) {
         this.dnasequence = dnasequence;
+    }
+    
+    @Override
+    public String getEntityName() {
+        return "dnaSequenceAttachment";
     }
 
     @Override

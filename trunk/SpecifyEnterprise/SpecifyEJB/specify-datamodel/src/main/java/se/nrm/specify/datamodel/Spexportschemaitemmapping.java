@@ -11,10 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
-//import javax.validation.constraints.NotNull;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -31,7 +28,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Spexportschemaitemmapping.findAll", query = "SELECT s FROM Spexportschemaitemmapping s"),
-    @NamedQuery(name = "Spexportschemaitemmapping.findBySpExportSchemaItemMappingID", query = "SELECT s FROM Spexportschemaitemmapping s WHERE s.spExportSchemaItemMappingId = :spExportSchemaItemMappingID"),
+    @NamedQuery(name = "Spexportschemaitemmapping.findBySpExportSchemaItemMappingId", query = "SELECT s FROM Spexportschemaitemmapping s WHERE s.spExportSchemaItemMappingId = :spExportSchemaItemMappingId"),
     @NamedQuery(name = "Spexportschemaitemmapping.findByTimestampCreated", query = "SELECT s FROM Spexportschemaitemmapping s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Spexportschemaitemmapping.findByTimestampModified", query = "SELECT s FROM Spexportschemaitemmapping s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Spexportschemaitemmapping.findByVersion", query = "SELECT s FROM Spexportschemaitemmapping s WHERE s.version = :version"),
@@ -71,6 +68,7 @@ public class Spexportschemaitemmapping extends BaseEntity {
     private Spqueryfield queryField;
     
     @JoinColumn(name = "ExportSchemaItemID", referencedColumnName = "SpExportSchemaItemID")
+    @NotNull
     @ManyToOne(optional = false)
     private Spexportschemaitem exportSchemaItem;
 
@@ -150,7 +148,10 @@ public class Spexportschemaitemmapping extends BaseEntity {
         this.remarks = remarks;
     }
 
-  
+    @Override
+    public String getEntityName() {
+        return "spExportSchemaItemMapping";
+    }
 
     @Override
     public int hashCode() {

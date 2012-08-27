@@ -37,7 +37,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Inforequest.findByTimestampCreated", query = "SELECT i FROM Inforequest i WHERE i.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Inforequest.findByTimestampModified", query = "SELECT i FROM Inforequest i WHERE i.timestampModified = :timestampModified"),
     @NamedQuery(name = "Inforequest.findByVersion", query = "SELECT i FROM Inforequest i WHERE i.version = :version"),
-    @NamedQuery(name = "Inforequest.findByCollectionMemberID", query = "SELECT i FROM Inforequest i WHERE i.collectionMemberId = :collectionMemberID"),
+    @NamedQuery(name = "Inforequest.findByCollectionMemberId", query = "SELECT i FROM Inforequest i WHERE i.collectionMemberId = :collectionMemberId"),
     @NamedQuery(name = "Inforequest.findByEmail", query = "SELECT i FROM Inforequest i WHERE i.email = :email"),
     @NamedQuery(name = "Inforequest.findByFirstname", query = "SELECT i FROM Inforequest i WHERE i.firstName = :firstname"),
     @NamedQuery(name = "Inforequest.findByInfoReqNumber", query = "SELECT i FROM Inforequest i WHERE i.infoReqNumber = :infoReqNumber"),
@@ -248,6 +248,10 @@ public class Inforequest extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
 
+    @Override
+    public String getEntityName() {
+        return "infoRequest";
+    }
  
 
     @Override

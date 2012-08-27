@@ -34,7 +34,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Gift.findAll", query = "SELECT g FROM Gift g"),
-    @NamedQuery(name = "Gift.findByGiftID", query = "SELECT g FROM Gift g WHERE g.giftId = :giftID"),
+    @NamedQuery(name = "Gift.findByGiftId", query = "SELECT g FROM Gift g WHERE g.giftId = :giftId"),
     @NamedQuery(name = "Gift.findByTimestampCreated", query = "SELECT g FROM Gift g WHERE g.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Gift.findByTimestampModified", query = "SELECT g FROM Gift g WHERE g.timestampModified = :timestampModified"),
     @NamedQuery(name = "Gift.findByVersion", query = "SELECT g FROM Gift g WHERE g.version = :version"),
@@ -62,6 +62,7 @@ public class Gift extends BaseEntity {
     private Integer giftId;
     
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 50)
     @Column(name = "GiftNumber")
     private String giftNumber;
@@ -146,6 +147,7 @@ public class Gift extends BaseEntity {
     private Agent modifiedByAgent;
     
     @JoinColumn(name = "DisciplineID", referencedColumnName = "UserGroupScopeId")
+    @NotNull
     @ManyToOne(optional = false)
     private Discipline discipline;
     
@@ -378,6 +380,11 @@ public class Gift extends BaseEntity {
 
     public void setGiftDate(Date giftDate) {
         this.giftDate = giftDate;
+    }
+    
+    @Override
+    public String getEntityName() {
+        return "gift";
     }
  
 

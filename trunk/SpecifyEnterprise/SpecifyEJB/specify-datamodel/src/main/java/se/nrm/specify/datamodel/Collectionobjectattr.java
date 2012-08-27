@@ -30,11 +30,11 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Collectionobjectattr.findAll", query = "SELECT c FROM Collectionobjectattr c"),
-    @NamedQuery(name = "Collectionobjectattr.findByAttrID", query = "SELECT c FROM Collectionobjectattr c WHERE c.attrId = :attrID"),
+    @NamedQuery(name = "Collectionobjectattr.findByAttrId", query = "SELECT c FROM Collectionobjectattr c WHERE c.attrId = :attrId"),
     @NamedQuery(name = "Collectionobjectattr.findByTimestampCreated", query = "SELECT c FROM Collectionobjectattr c WHERE c.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Collectionobjectattr.findByTimestampModified", query = "SELECT c FROM Collectionobjectattr c WHERE c.timestampModified = :timestampModified"),
     @NamedQuery(name = "Collectionobjectattr.findByVersion", query = "SELECT c FROM Collectionobjectattr c WHERE c.version = :version"),
-    @NamedQuery(name = "Collectionobjectattr.findByCollectionMemberID", query = "SELECT c FROM Collectionobjectattr c WHERE c.collectionMemberId = :collectionMemberID"),
+    @NamedQuery(name = "Collectionobjectattr.findByCollectionMemberId", query = "SELECT c FROM Collectionobjectattr c WHERE c.collectionMemberId = :collectionMemberId"),
     @NamedQuery(name = "Collectionobjectattr.findByDoubleValue", query = "SELECT c FROM Collectionobjectattr c WHERE c.dblValue = :doubleValue"),
     @NamedQuery(name = "Collectionobjectattr.findByStrValue", query = "SELECT c FROM Collectionobjectattr c WHERE c.strValue = :strValue")})
 public class Collectionobjectattr extends BaseEntity {
@@ -62,6 +62,7 @@ public class Collectionobjectattr extends BaseEntity {
     private String strValue;
     
     @JoinColumn(name = "AttributeDefID", referencedColumnName = "AttributeDefID")
+    @NotNull
     @ManyToOne(optional = false)
     private Attributedef definition;
     
@@ -70,6 +71,7 @@ public class Collectionobjectattr extends BaseEntity {
     private Agent createdByAgent;
     
     @JoinColumn(name = "CollectionObjectID", referencedColumnName = "CollectionObjectID")
+    @NotNull
     @ManyToOne(optional = false)
     private Collectionobject collectionObject;
     
@@ -179,6 +181,11 @@ public class Collectionobjectattr extends BaseEntity {
         if(parent instanceof Collectionobject) {
             this.collectionObject = (Collectionobject)parent;   
         }
+    }
+    
+    @Override
+    public String getEntityName() {
+        return "collectionObjectAttr";
     }
     
     @Override

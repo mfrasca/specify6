@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;  
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -31,7 +32,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Autonumberingscheme.findAll", query = "SELECT a FROM Autonumberingscheme a"),
-    @NamedQuery(name = "Autonumberingscheme.findByAutoNumberingSchemeID", query = "SELECT a FROM Autonumberingscheme a WHERE a.autoNumberingSchemeId = :autoNumberingSchemeID"),
+    @NamedQuery(name = "Autonumberingscheme.findByAutoNumberingSchemeId", query = "SELECT a FROM Autonumberingscheme a WHERE a.autoNumberingSchemeId = :autoNumberingSchemeId"),
     @NamedQuery(name = "Autonumberingscheme.findByTimestampCreated", query = "SELECT a FROM Autonumberingscheme a WHERE a.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Autonumberingscheme.findByTimestampModified", query = "SELECT a FROM Autonumberingscheme a WHERE a.timestampModified = :timestampModified"),
     @NamedQuery(name = "Autonumberingscheme.findByVersion", query = "SELECT a FROM Autonumberingscheme a WHERE a.version = :version"),
@@ -205,9 +206,10 @@ public class Autonumberingscheme extends BaseEntity {
         this.divisions = divisions;
     }
 
- 
-
- 
+    @Override
+    public String getEntityName() {
+        return "autoNumberingScheme";
+    }
 
     @Override
     public int hashCode() {

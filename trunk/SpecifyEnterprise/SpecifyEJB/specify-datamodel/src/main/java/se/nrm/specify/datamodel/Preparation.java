@@ -35,11 +35,11 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Preparation.findAll", query = "SELECT p FROM Preparation p"),
-    @NamedQuery(name = "Preparation.findByPreparationID", query = "SELECT p FROM Preparation p WHERE p.preparationId = :preparationID"),
+    @NamedQuery(name = "Preparation.findByPreparationId", query = "SELECT p FROM Preparation p WHERE p.preparationId = :preparationId"),
     @NamedQuery(name = "Preparation.findByTimestampCreated", query = "SELECT p FROM Preparation p WHERE p.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Preparation.findByTimestampModified", query = "SELECT p FROM Preparation p WHERE p.timestampModified = :timestampModified"),
     @NamedQuery(name = "Preparation.findByVersion", query = "SELECT p FROM Preparation p WHERE p.version = :version"),
-    @NamedQuery(name = "Preparation.findByCollectionMemberID", query = "SELECT p FROM Preparation p WHERE p.collectionMemberId = :collectionMemberID"),
+    @NamedQuery(name = "Preparation.findByCollectionMemberId", query = "SELECT p FROM Preparation p WHERE p.collectionMemberId = :collectionMemberId"),
     @NamedQuery(name = "Preparation.findByCountAmt", query = "SELECT p FROM Preparation p WHERE p.countAmt = :countAmt"),
     @NamedQuery(name = "Preparation.findByDescription", query = "SELECT p FROM Preparation p WHERE p.description = :description"),
     @NamedQuery(name = "Preparation.findByNumber1", query = "SELECT p FROM Preparation p WHERE p.number1 = :number1"),
@@ -138,11 +138,12 @@ public class Preparation extends BaseEntity {
     @ManyToOne
     private Agent createdByAgent;
     
-    @JoinColumn(name = "CollectionObjectID", referencedColumnName = "CollectionObjectID")
+    @JoinColumn(name = "CollectionObjectID", referencedColumnName = "CollectionObjectID") 
     @ManyToOne(optional = false)
     private Collectionobject collectionObject;
     
     @JoinColumn(name = "PrepTypeID", referencedColumnName = "PrepTypeID")
+    @NotNull
     @ManyToOne(optional = false, cascade= {CascadeType.MERGE, CascadeType.REFRESH})
     private Preptype prepType;
     
@@ -431,7 +432,10 @@ public class Preparation extends BaseEntity {
 
      
    
- 
+    @Override
+    public String getEntityName() {
+        return "preparation";
+    }
     
     /**
      * Parent pointer

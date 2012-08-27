@@ -34,7 +34,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Conservevent.findAll", query = "SELECT c FROM Conservevent c"),
-    @NamedQuery(name = "Conservevent.findByConservEventID", query = "SELECT c FROM Conservevent c WHERE c.conservEventId = :conservEventID"),
+    @NamedQuery(name = "Conservevent.findByConservEventId", query = "SELECT c FROM Conservevent c WHERE c.conservEventId = :conservEventId"),
     @NamedQuery(name = "Conservevent.findByTimestampCreated", query = "SELECT c FROM Conservevent c WHERE c.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Conservevent.findByTimestampModified", query = "SELECT c FROM Conservevent c WHERE c.timestampModified = :timestampModified"),
     @NamedQuery(name = "Conservevent.findByVersion", query = "SELECT c FROM Conservevent c WHERE c.version = :version"),
@@ -131,6 +131,7 @@ public class Conservevent extends BaseEntity {
     private String treatmentReport;
     
     @JoinColumn(name = "ConservDescriptionID", referencedColumnName = "ConservDescriptionID")
+    @NotNull
     @ManyToOne(optional = false)
     private Conservdescription conservDescription;
     
@@ -376,6 +377,11 @@ public class Conservevent extends BaseEntity {
 
     public void setTreatmentCompDate(Date treatmentCompDate) {
         this.treatmentCompDate = treatmentCompDate;
+    }
+    
+    @Override
+    public String getEntityName() {
+        return "conservEvent";
     }
 
     @Override

@@ -31,7 +31,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Lithostrat.findAll", query = "SELECT l FROM Lithostrat l"),
-    @NamedQuery(name = "Lithostrat.findByLithoStratID", query = "SELECT l FROM Lithostrat l WHERE l.lithoStratId = :lithoStratID"),
+    @NamedQuery(name = "Lithostrat.findByLithoStratId", query = "SELECT l FROM Lithostrat l WHERE l.lithoStratId = :lithoStratId"),
     @NamedQuery(name = "Lithostrat.findByTimestampCreated", query = "SELECT l FROM Lithostrat l WHERE l.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Lithostrat.findByTimestampModified", query = "SELECT l FROM Lithostrat l WHERE l.timestampModified = :timestampModified"),
     @NamedQuery(name = "Lithostrat.findByVersion", query = "SELECT l FROM Lithostrat l WHERE l.version = :version"),
@@ -43,7 +43,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Lithostrat.findByNodeNumber", query = "SELECT l FROM Lithostrat l WHERE l.nodeNumber = :nodeNumber"),
     @NamedQuery(name = "Lithostrat.findByNumber1", query = "SELECT l FROM Lithostrat l WHERE l.number1 = :number1"),
     @NamedQuery(name = "Lithostrat.findByNumber2", query = "SELECT l FROM Lithostrat l WHERE l.number2 = :number2"),
-    @NamedQuery(name = "Lithostrat.findByRankID", query = "SELECT l FROM Lithostrat l WHERE l.rankId = :rankID"),
+    @NamedQuery(name = "Lithostrat.findByRankId", query = "SELECT l FROM Lithostrat l WHERE l.rankId = :rankId"),
     @NamedQuery(name = "Lithostrat.findByYesNo1", query = "SELECT l FROM Lithostrat l WHERE l.yesNo1 = :yesNo1"),
     @NamedQuery(name = "Lithostrat.findByYesNo2", query = "SELECT l FROM Lithostrat l WHERE l.yesNo2 = :yesNo2")})
 public class Lithostrat extends BaseEntity {
@@ -72,6 +72,7 @@ public class Lithostrat extends BaseEntity {
     private Boolean isAccepted;
     
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
@@ -113,6 +114,7 @@ public class Lithostrat extends BaseEntity {
     private Boolean yesNo2;
     
     @JoinColumn(name = "LithoStratTreeDefItemID", referencedColumnName = "LithoStratTreeDefItemID")
+    @NotNull
     @ManyToOne(optional = false)
     private Lithostrattreedefitem definitionItem;
     
@@ -366,7 +368,10 @@ public class Lithostrat extends BaseEntity {
     }
 
    
-  
+    @Override
+    public String getEntityName() {
+        return "lithoStrat";
+    }
 
     @Override
     public int hashCode() {

@@ -31,11 +31,11 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Collectionobjectcitation.findAll", query = "SELECT c FROM Collectionobjectcitation c"),
-    @NamedQuery(name = "Collectionobjectcitation.findByCollectionObjectCitationID", query = "SELECT c FROM Collectionobjectcitation c WHERE c.collectionObjectCitationId = :collectionObjectCitationID"),
+    @NamedQuery(name = "Collectionobjectcitation.findByCollectionObjectCitationId", query = "SELECT c FROM Collectionobjectcitation c WHERE c.collectionObjectCitationId = :collectionObjectCitationId"),
     @NamedQuery(name = "Collectionobjectcitation.findByTimestampCreated", query = "SELECT c FROM Collectionobjectcitation c WHERE c.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Collectionobjectcitation.findByTimestampModified", query = "SELECT c FROM Collectionobjectcitation c WHERE c.timestampModified = :timestampModified"),
     @NamedQuery(name = "Collectionobjectcitation.findByVersion", query = "SELECT c FROM Collectionobjectcitation c WHERE c.version = :version"),
-    @NamedQuery(name = "Collectionobjectcitation.findByCollectionMemberID", query = "SELECT c FROM Collectionobjectcitation c WHERE c.collectionMemberId = :collectionMemberID"),
+    @NamedQuery(name = "Collectionobjectcitation.findByCollectionMemberId", query = "SELECT c FROM Collectionobjectcitation c WHERE c.collectionMemberId = :collectionMemberId"),
     @NamedQuery(name = "Collectionobjectcitation.findByIsFigured", query = "SELECT c FROM Collectionobjectcitation c WHERE c.isFigured = :isFigured")})
 public class Collectionobjectcitation extends BaseEntity {
  
@@ -66,10 +66,12 @@ public class Collectionobjectcitation extends BaseEntity {
     private Agent createdByAgent;
     
     @JoinColumn(name = "CollectionObjectID", referencedColumnName = "CollectionObjectID")
+    @NotNull
     @ManyToOne(optional = false)
     private Collectionobject collectionObject;
     
     @JoinColumn(name = "ReferenceWorkID", referencedColumnName = "ReferenceWorkID")
+    @NotNull
     @ManyToOne(optional = false)
     private Referencework referenceWork;
     
@@ -179,6 +181,11 @@ public class Collectionobjectcitation extends BaseEntity {
         if(parent instanceof Collectionobject) {
             this.collectionObject = (Collectionobject)parent;   
         }
+    }
+    
+    @Override
+    public String getEntityName() {
+        return "collectionObjectCitation";
     }
 
     @Override

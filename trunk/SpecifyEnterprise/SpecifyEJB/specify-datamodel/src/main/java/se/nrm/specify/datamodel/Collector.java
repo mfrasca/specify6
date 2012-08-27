@@ -2,6 +2,7 @@ package se.nrm.specify.datamodel;
  
 import java.util.Date;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,8 +32,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Collector.findAll", query = "SELECT c FROM Collector c"),
-    @NamedQuery(name = "Collector.findByCollectorID", query = "SELECT c FROM Collector c WHERE c.collectorId = :collectorID"),
-    @NamedQuery(name = "Collector.findByCollectingEventID", query = "SELECT c FROM Collector c WHERE c.collectingEvent in :collectingEventID"),
+    @NamedQuery(name = "Collector.findByCollectorId", query = "SELECT c FROM Collector c WHERE c.collectorId = :collectorId"),
+    @NamedQuery(name = "Collector.findByCollectingEventId", query = "SELECT c FROM Collector c WHERE c.collectingEvent in :collectingEventId"),
     @NamedQuery(name = "Collector.findByTimestampCreated", query = "SELECT c FROM Collector c WHERE c.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Collector.findByTimestampModified", query = "SELECT c FROM Collector c WHERE c.timestampModified = :timestampModified"),
     @NamedQuery(name = "Collector.findByVersion", query = "SELECT c FROM Collector c WHERE c.version = :version"),
@@ -65,6 +66,7 @@ public class Collector extends BaseEntity {
     private String remarks;
     
     @JoinColumn(name = "CollectingEventID", referencedColumnName = "CollectingEventID")
+    @NotNull
     @ManyToOne(optional = false)
     private Collectingevent collectingEvent;
     
@@ -81,7 +83,8 @@ public class Collector extends BaseEntity {
     private Agent modifiedByAgent;
     
     @JoinColumn(name = "AgentID", referencedColumnName = "AgentID")
-    @ManyToOne(optional = false)
+    @NotNull
+    @ManyToOne(optional = false, cascade={CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST})
     private Agent agent;
 
     public Collector() {
@@ -196,6 +199,11 @@ public class Collector extends BaseEntity {
         if(parent instanceof Collectingevent) {
             this.collectingEvent = (Collectingevent)parent;   
         }
+    }
+    
+    @Override
+    public String getEntityName() {
+        return "collector";
     }
     
 

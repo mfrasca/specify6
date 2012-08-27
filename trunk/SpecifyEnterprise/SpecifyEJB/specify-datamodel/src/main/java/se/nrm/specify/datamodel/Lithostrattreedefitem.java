@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Lithostrattreedefitem.findAll", query = "SELECT l FROM Lithostrattreedefitem l"),
-    @NamedQuery(name = "Lithostrattreedefitem.findByLithoStratTreeDefItemID", query = "SELECT l FROM Lithostrattreedefitem l WHERE l.lithoStratTreeDefItemId = :lithoStratTreeDefItemID"),
+    @NamedQuery(name = "Lithostrattreedefitem.findByLithoStratTreeDefItemId", query = "SELECT l FROM Lithostrattreedefitem l WHERE l.lithoStratTreeDefItemId = :lithoStratTreeDefItemId"),
     @NamedQuery(name = "Lithostrattreedefitem.findByTimestampCreated", query = "SELECT l FROM Lithostrattreedefitem l WHERE l.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Lithostrattreedefitem.findByTimestampModified", query = "SELECT l FROM Lithostrattreedefitem l WHERE l.timestampModified = :timestampModified"),
     @NamedQuery(name = "Lithostrattreedefitem.findByVersion", query = "SELECT l FROM Lithostrattreedefitem l WHERE l.version = :version"),
@@ -66,6 +66,7 @@ public class Lithostrattreedefitem extends BaseEntity {
     private Boolean isInFullName;
     
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
@@ -104,6 +105,7 @@ public class Lithostrattreedefitem extends BaseEntity {
     private Agent createdByAgent;
     
     @JoinColumn(name = "LithoStratTreeDefID", referencedColumnName = "LithoStratTreeDefID")
+    @NotNull
     @ManyToOne(optional = false)
     private Lithostrattreedef treeDef;
     
@@ -268,7 +270,10 @@ public class Lithostrattreedefitem extends BaseEntity {
     }
 
     
-
+    @Override
+    public String getEntityName() {
+        return "lithoStratTreeDefItem";
+    }
     
 
     @Override

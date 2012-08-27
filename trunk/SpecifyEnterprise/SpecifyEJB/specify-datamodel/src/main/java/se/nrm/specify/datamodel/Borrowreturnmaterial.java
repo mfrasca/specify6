@@ -14,7 +14,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.TemporalType; 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Borrowreturnmaterial.findAll", query = "SELECT b FROM Borrowreturnmaterial b"),
-    @NamedQuery(name = "Borrowreturnmaterial.findByBorrowReturnMaterialID", query = "SELECT b FROM Borrowreturnmaterial b WHERE b.borrowReturnMaterialId = :borrowReturnMaterialID"),
+    @NamedQuery(name = "Borrowreturnmaterial.findByBorrowReturnMaterialId", query = "SELECT b FROM Borrowreturnmaterial b WHERE b.borrowReturnMaterialId = :borrowReturnMaterialId"),
     @NamedQuery(name = "Borrowreturnmaterial.findByTimestampCreated", query = "SELECT b FROM Borrowreturnmaterial b WHERE b.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Borrowreturnmaterial.findByTimestampModified", query = "SELECT b FROM Borrowreturnmaterial b WHERE b.timestampModified = :timestampModified"),
     @NamedQuery(name = "Borrowreturnmaterial.findByVersion", query = "SELECT b FROM Borrowreturnmaterial b WHERE b.version = :version"),
@@ -72,6 +72,7 @@ public class Borrowreturnmaterial extends BaseEntity {
     private Agent agent;
     
     @JoinColumn(name = "BorrowMaterialID", referencedColumnName = "BorrowMaterialID")
+    @NotNull
     @ManyToOne(optional = false)
     private Borrowmaterial borrowMaterial;
     
@@ -175,9 +176,12 @@ public class Borrowreturnmaterial extends BaseEntity {
     public void setRemarks(String remarks) {
         this.remarks = remarks;
     }
-
  
-
+    @Override
+    public String getEntityName() {
+        return "borrowReturnMaterial";
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

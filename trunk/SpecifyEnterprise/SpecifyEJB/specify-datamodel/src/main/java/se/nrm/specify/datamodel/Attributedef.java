@@ -15,6 +15,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;  
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -32,7 +33,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Attributedef.findAll", query = "SELECT a FROM Attributedef a"),
-    @NamedQuery(name = "Attributedef.findByAttributeDefID", query = "SELECT a FROM Attributedef a WHERE a.attributeDefId = :attributeDefID"),
+    @NamedQuery(name = "Attributedef.findByAttributeDefId", query = "SELECT a FROM Attributedef a WHERE a.attributeDefId = :attributeDefId"),
     @NamedQuery(name = "Attributedef.findByTimestampCreated", query = "SELECT a FROM Attributedef a WHERE a.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Attributedef.findByTimestampModified", query = "SELECT a FROM Attributedef a WHERE a.timestampModified = :timestampModified"),
     @NamedQuery(name = "Attributedef.findByVersion", query = "SELECT a FROM Attributedef a WHERE a.version = :version"),
@@ -82,6 +83,7 @@ public class Attributedef extends BaseEntity {
     private Agent modifiedByAgent;
     
     @JoinColumn(name = "DisciplineID", referencedColumnName = "UserGroupScopeId")
+    @NotNull
     @ManyToOne(optional = false)
     private Discipline discipline;
 
@@ -199,11 +201,11 @@ public class Attributedef extends BaseEntity {
     public void setTableType(Short tableType) {
         this.tableType = tableType;
     }
-
  
-    
-
-   
+    @Override
+    public String getEntityName() {
+        return "attributeDef";
+    }
 
     @Override
     public int hashCode() {

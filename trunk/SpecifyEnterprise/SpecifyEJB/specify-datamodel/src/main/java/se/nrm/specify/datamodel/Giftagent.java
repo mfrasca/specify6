@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Giftagent.findAll", query = "SELECT g FROM Giftagent g"),
-    @NamedQuery(name = "Giftagent.findByGiftAgentID", query = "SELECT g FROM Giftagent g WHERE g.giftAgentId = :giftAgentID"),
+    @NamedQuery(name = "Giftagent.findByGiftAgentId", query = "SELECT g FROM Giftagent g WHERE g.giftAgentId = :giftAgentId"),
     @NamedQuery(name = "Giftagent.findByTimestampCreated", query = "SELECT g FROM Giftagent g WHERE g.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Giftagent.findByTimestampModified", query = "SELECT g FROM Giftagent g WHERE g.timestampModified = :timestampModified"),
     @NamedQuery(name = "Giftagent.findByVersion", query = "SELECT g FROM Giftagent g WHERE g.version = :version"),
@@ -56,6 +56,7 @@ public class Giftagent extends BaseEntity {
     private String role;
     
     @JoinColumn(name = "GiftID", referencedColumnName = "GiftID")
+    @NotNull
     @ManyToOne(optional = false)
     private Gift gift;
     
@@ -72,6 +73,7 @@ public class Giftagent extends BaseEntity {
     private Discipline discipline;
     
     @JoinColumn(name = "AgentID", referencedColumnName = "AgentID")
+    @NotNull
     @ManyToOne(optional = false)
     private Agent agent;
 
@@ -161,7 +163,10 @@ public class Giftagent extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
 
-   
+    @Override
+    public String getEntityName() {
+        return "giftAgent";
+    }
 
     @Override
     public int hashCode() {

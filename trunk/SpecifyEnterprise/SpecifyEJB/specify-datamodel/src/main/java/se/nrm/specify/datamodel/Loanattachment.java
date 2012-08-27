@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Loanattachment.findAll", query = "SELECT l FROM Loanattachment l"),
-    @NamedQuery(name = "Loanattachment.findByLoanAttachmentID", query = "SELECT l FROM Loanattachment l WHERE l.loanAttachmentId = :loanAttachmentID"),
+    @NamedQuery(name = "Loanattachment.findByLoanAttachmentId", query = "SELECT l FROM Loanattachment l WHERE l.loanAttachmentId = :loanAttachmentId"),
     @NamedQuery(name = "Loanattachment.findByTimestampCreated", query = "SELECT l FROM Loanattachment l WHERE l.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Loanattachment.findByTimestampModified", query = "SELECT l FROM Loanattachment l WHERE l.timestampModified = :timestampModified"),
     @NamedQuery(name = "Loanattachment.findByVersion", query = "SELECT l FROM Loanattachment l WHERE l.version = :version"),
@@ -53,10 +53,12 @@ public class Loanattachment extends BaseEntity {
     private String remarks;
     
     @JoinColumn(name = "AttachmentID", referencedColumnName = "AttachmentID")
+    @NotNull
     @ManyToOne(optional = false)
     private Attachment attachment;
     
     @JoinColumn(name = "LoanID", referencedColumnName = "LoanID")
+    @NotNull
     @ManyToOne(optional = false)
     private Loan loan;
     
@@ -146,7 +148,10 @@ public class Loanattachment extends BaseEntity {
         this.remarks = remarks;
     }
 
- 
+    @Override
+    public String getEntityName() {
+        return "loanAttachment";
+    }
 
     @Override
     public int hashCode() {

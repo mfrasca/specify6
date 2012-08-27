@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Spauditlog.findAll", query = "SELECT s FROM Spauditlog s"),
-    @NamedQuery(name = "Spauditlog.findBySpAuditLogID", query = "SELECT s FROM Spauditlog s WHERE s.spAuditLogId = :spAuditLogID"),
+    @NamedQuery(name = "Spauditlog.findBySpAuditLogId", query = "SELECT s FROM Spauditlog s WHERE s.spAuditLogId = :spAuditLogId"),
     @NamedQuery(name = "Spauditlog.findByTimestampCreated", query = "SELECT s FROM Spauditlog s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Spauditlog.findByTimestampModified", query = "SELECT s FROM Spauditlog s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Spauditlog.findByVersion", query = "SELECT s FROM Spauditlog s WHERE s.version = :version"),
@@ -186,7 +186,10 @@ public class Spauditlog extends BaseEntity {
         this.recordVersion = recordVersion;
     }
 
-   
+    @Override
+    public String getEntityName() {
+        return "spAuditLog";
+    }
 
     @Override
     public int hashCode() {

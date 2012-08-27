@@ -31,7 +31,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Container.findAll", query = "SELECT c FROM Container c"),
-    @NamedQuery(name = "Container.findByContainerID", query = "SELECT c FROM Container c WHERE c.containerId = :containerID"),
+    @NamedQuery(name = "Container.findByContainerId", query = "SELECT c FROM Container c WHERE c.containerId = :containerId"),
     @NamedQuery(name = "Container.findByTimestampCreated", query = "SELECT c FROM Container c WHERE c.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Container.findByTimestampModified", query = "SELECT c FROM Container c WHERE c.timestampModified = :timestampModified"),
     @NamedQuery(name = "Container.findByVersion", query = "SELECT c FROM Container c WHERE c.version = :version"),
@@ -224,6 +224,10 @@ public class Container extends BaseEntity {
         this.containerId = containerId;
     }
 
+    @Override
+    public String getEntityName() {
+        return "container";
+    }
  
     @Override
     public int hashCode() {

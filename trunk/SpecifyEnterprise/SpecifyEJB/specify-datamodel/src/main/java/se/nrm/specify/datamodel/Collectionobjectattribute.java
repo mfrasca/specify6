@@ -17,8 +17,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import javax.xml.bind.Unmarshaller;
+import javax.validation.constraints.Size; 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlIDREF;
@@ -34,11 +33,11 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Collectionobjectattribute.findAll", query = "SELECT c FROM Collectionobjectattribute c"),
-    @NamedQuery(name = "Collectionobjectattribute.findByCollectionObjectAttributeID", query = "SELECT c FROM Collectionobjectattribute c WHERE c.collectionObjectAttributeId = :collectionObjectAttributeID"),
+    @NamedQuery(name = "Collectionobjectattribute.findByCollectionObjectAttributeId", query = "SELECT c FROM Collectionobjectattribute c WHERE c.collectionObjectAttributeId = :collectionObjectAttributeId"),
     @NamedQuery(name = "Collectionobjectattribute.findByTimestampCreated", query = "SELECT c FROM Collectionobjectattribute c WHERE c.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Collectionobjectattribute.findByTimestampModified", query = "SELECT c FROM Collectionobjectattribute c WHERE c.timestampModified = :timestampModified"),
     @NamedQuery(name = "Collectionobjectattribute.findByVersion", query = "SELECT c FROM Collectionobjectattribute c WHERE c.version = :version"),
-    @NamedQuery(name = "Collectionobjectattribute.findByCollectionMemberID", query = "SELECT c FROM Collectionobjectattribute c WHERE c.collectionMemberId = :collectionMemberID"),
+    @NamedQuery(name = "Collectionobjectattribute.findByCollectionMemberId", query = "SELECT c FROM Collectionobjectattribute c WHERE c.collectionMemberId = :collectionMemberId"),
     @NamedQuery(name = "Collectionobjectattribute.findByYesNo7", query = "SELECT c FROM Collectionobjectattribute c WHERE c.yesNo7 = :yesNo7")})
 public class Collectionobjectattribute extends BaseEntity {
      
@@ -868,7 +867,10 @@ public class Collectionobjectattribute extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
 
- 
+    @Override
+    public String getEntityName() {
+        return "collectionObjectAttribute";
+    }
 
     @Override
     public int hashCode() {

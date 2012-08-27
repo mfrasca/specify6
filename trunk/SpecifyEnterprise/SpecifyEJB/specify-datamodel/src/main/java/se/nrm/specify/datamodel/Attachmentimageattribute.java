@@ -13,6 +13,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table; 
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlID;
@@ -27,7 +28,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Attachmentimageattribute.findAll", query = "SELECT a FROM Attachmentimageattribute a"),
-    @NamedQuery(name = "Attachmentimageattribute.findByAttachmentImageAttributeID", query = "SELECT a FROM Attachmentimageattribute a WHERE a.attachmentImageAttributeId = :attachmentImageAttributeID"),
+    @NamedQuery(name = "Attachmentimageattribute.findByAttachmentImageAttributeId", query = "SELECT a FROM Attachmentimageattribute a WHERE a.attachmentImageAttributeId = :attachmentImageAttributeId"),
     @NamedQuery(name = "Attachmentimageattribute.findByTimestampCreated", query = "SELECT a FROM Attachmentimageattribute a WHERE a.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Attachmentimageattribute.findByTimestampModified", query = "SELECT a FROM Attachmentimageattribute a WHERE a.timestampModified = :timestampModified"),
     @NamedQuery(name = "Attachmentimageattribute.findByVersion", query = "SELECT a FROM Attachmentimageattribute a WHERE a.version = :version"),
@@ -314,7 +315,12 @@ public class Attachmentimageattribute extends BaseEntity {
     public void setYesNo2(Boolean yesNo2) {
         this.yesNo2 = yesNo2;
     }
-
+ 
+    @Override
+    public String getEntityName() {
+        return "attachmentImageAttribute";
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

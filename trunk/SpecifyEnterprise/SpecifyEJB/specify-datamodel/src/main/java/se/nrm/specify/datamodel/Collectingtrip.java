@@ -33,7 +33,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Collectingtrip.findAll", query = "SELECT c FROM Collectingtrip c"),
-    @NamedQuery(name = "Collectingtrip.findByCollectingTripID", query = "SELECT c FROM Collectingtrip c WHERE c.collectingTripId = :collectingTripID"),
+    @NamedQuery(name = "Collectingtrip.findByCollectingTripId", query = "SELECT c FROM Collectingtrip c WHERE c.collectingTripId = :collectingTripId"),
     @NamedQuery(name = "Collectingtrip.findByTimestampCreated", query = "SELECT c FROM Collectingtrip c WHERE c.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Collectingtrip.findByTimestampModified", query = "SELECT c FROM Collectingtrip c WHERE c.timestampModified = :timestampModified"),
     @NamedQuery(name = "Collectingtrip.findByVersion", query = "SELECT c FROM Collectingtrip c WHERE c.version = :version"),
@@ -137,6 +137,7 @@ public class Collectingtrip extends BaseEntity {
     private Agent modifiedByAgent;
     
     @JoinColumn(name = "DisciplineID", referencedColumnName = "UserGroupScopeId")
+    @NotNull
     @ManyToOne(optional = false)
     private Discipline discipline;
     
@@ -356,7 +357,10 @@ public class Collectingtrip extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
 
-     
+    @Override
+    public String getEntityName() {
+        return "collectingTrip";
+    }
 
     @Override
     public int hashCode() {

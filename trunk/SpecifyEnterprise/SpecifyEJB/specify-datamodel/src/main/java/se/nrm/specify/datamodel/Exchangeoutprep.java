@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Exchangeoutprep.findAll", query = "SELECT e FROM Exchangeoutprep e"),
-    @NamedQuery(name = "Exchangeoutprep.findByExchangeOutPrepID", query = "SELECT e FROM Exchangeoutprep e WHERE e.exchangeOutPrepId = :exchangeOutPrepID"),
+    @NamedQuery(name = "Exchangeoutprep.findByExchangeOutPrepId", query = "SELECT e FROM Exchangeoutprep e WHERE e.exchangeOutPrepId = :exchangeOutPrepId"),
     @NamedQuery(name = "Exchangeoutprep.findByTimestampCreated", query = "SELECT e FROM Exchangeoutprep e WHERE e.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Exchangeoutprep.findByTimestampModified", query = "SELECT e FROM Exchangeoutprep e WHERE e.timestampModified = :timestampModified"),
     @NamedQuery(name = "Exchangeoutprep.findByVersion", query = "SELECT e FROM Exchangeoutprep e WHERE e.version = :version"),
@@ -34,10 +34,10 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Exchangeoutprep.findByNumber1", query = "SELECT e FROM Exchangeoutprep e WHERE e.number1 = :number1"),
     @NamedQuery(name = "Exchangeoutprep.findByQuantity", query = "SELECT e FROM Exchangeoutprep e WHERE e.quantity = :quantity"),
     @NamedQuery(name = "Exchangeoutprep.findByPreparationID", query = "SELECT e FROM Exchangeoutprep e WHERE e.preparation = :preparationID"),
-    @NamedQuery(name = "Exchangeoutprep.findByCreatedByAgentID", query = "SELECT e FROM Exchangeoutprep e WHERE e.createdByAgent = :createdByAgentID"),
+    @NamedQuery(name = "Exchangeoutprep.findByCreatedByAgent", query = "SELECT e FROM Exchangeoutprep e WHERE e.createdByAgent = :createdByAgent"),
     @NamedQuery(name = "Exchangeoutprep.findByExchangeOutID", query = "SELECT e FROM Exchangeoutprep e WHERE e.exchangeOut = :exchangeOutID"),
-    @NamedQuery(name = "Exchangeoutprep.findByModifiedByAgentID", query = "SELECT e FROM Exchangeoutprep e WHERE e.modifiedByAgent = :modifiedByAgentID"),
-    @NamedQuery(name = "Exchangeoutprep.findByDisciplineID", query = "SELECT e FROM Exchangeoutprep e WHERE e.discipline = :disciplineID")})
+    @NamedQuery(name = "Exchangeoutprep.findByModifiedByAgent", query = "SELECT e FROM Exchangeoutprep e WHERE e.modifiedByAgent = :modifiedByAgent"),
+    @NamedQuery(name = "Exchangeoutprep.findByDiscipline", query = "SELECT e FROM Exchangeoutprep e WHERE e.discipline = :discipline")})
 public class Exchangeoutprep extends BaseEntity {
    
     private static final long serialVersionUID = 1L;
@@ -87,6 +87,7 @@ public class Exchangeoutprep extends BaseEntity {
     private Integer modifiedByAgent;
     
     @Basic(optional = false) 
+    @NotNull
     @Column(name = "DisciplineID")
     private int discipline;
 
@@ -209,7 +210,10 @@ public class Exchangeoutprep extends BaseEntity {
         this.preparation = preparation;
     }
 
- 
+    @Override
+    public String getEntityName() {
+        return "exchangeOutPrep";
+    }
 
     @Override
     public int hashCode() {

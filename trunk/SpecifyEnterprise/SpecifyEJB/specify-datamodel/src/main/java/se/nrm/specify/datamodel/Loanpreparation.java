@@ -15,9 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table; 
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -34,7 +32,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Loanpreparation.findAll", query = "SELECT l FROM Loanpreparation l"),
-    @NamedQuery(name = "Loanpreparation.findByLoanPreparationID", query = "SELECT l FROM Loanpreparation l WHERE l.loanPreparationId = :loanPreparationID"),
+    @NamedQuery(name = "Loanpreparation.findByLoanPreparationId", query = "SELECT l FROM Loanpreparation l WHERE l.loanPreparationId = :loanPreparationId"),
     @NamedQuery(name = "Loanpreparation.findByTimestampCreated", query = "SELECT l FROM Loanpreparation l WHERE l.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Loanpreparation.findByTimestampModified", query = "SELECT l FROM Loanpreparation l WHERE l.timestampModified = :timestampModified"),
     @NamedQuery(name = "Loanpreparation.findByVersion", query = "SELECT l FROM Loanpreparation l WHERE l.version = :version"),
@@ -91,6 +89,7 @@ public class Loanpreparation extends BaseEntity {
     private Collection<Loanreturnpreparation> loanreturnpreparations;
     
     @JoinColumn(name = "LoanID", referencedColumnName = "LoanID")
+    @NotNull
     @ManyToOne(optional = false)
     private Loan loan;
     
@@ -254,7 +253,10 @@ public class Loanpreparation extends BaseEntity {
         this.preparation = preparation;
     }
 
-    
+    @Override
+    public String getEntityName() {
+        return "loanPreparation";
+    }
 
     @Override
     public int hashCode() {

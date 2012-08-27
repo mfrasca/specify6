@@ -33,11 +33,11 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Project.findAll", query = "SELECT p FROM Project p"),
-    @NamedQuery(name = "Project.findByProjectID", query = "SELECT p FROM Project p WHERE p.projectId = :projectID"),
+    @NamedQuery(name = "Project.findByProjectId", query = "SELECT p FROM Project p WHERE p.projectId = :projectId"),
     @NamedQuery(name = "Project.findByTimestampCreated", query = "SELECT p FROM Project p WHERE p.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Project.findByTimestampModified", query = "SELECT p FROM Project p WHERE p.timestampModified = :timestampModified"),
     @NamedQuery(name = "Project.findByVersion", query = "SELECT p FROM Project p WHERE p.version = :version"),
-    @NamedQuery(name = "Project.findByCollectionMemberID", query = "SELECT p FROM Project p WHERE p.collectionMemberId = :collectionMemberID"),
+    @NamedQuery(name = "Project.findByCollectionMemberId", query = "SELECT p FROM Project p WHERE p.collectionMemberId = :collectionMemberId"),
     @NamedQuery(name = "Project.findByEndDate", query = "SELECT p FROM Project p WHERE p.endDate = :endDate"),
     @NamedQuery(name = "Project.findByGrantAgency", query = "SELECT p FROM Project p WHERE p.grantAgency = :grantAgency"),
     @NamedQuery(name = "Project.findByGrantNumber", query = "SELECT p FROM Project p WHERE p.grantNumber = :grantNumber"),
@@ -332,6 +332,11 @@ public class Project extends BaseEntity {
 
     public void setStartDate(Date startDate) {
         this.startDate = startDate;
+    }
+    
+    @Override
+    public String getEntityName() {
+        return "project";
     }
 
     @Override

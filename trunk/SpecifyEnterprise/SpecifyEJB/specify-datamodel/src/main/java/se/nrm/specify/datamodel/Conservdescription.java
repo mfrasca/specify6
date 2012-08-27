@@ -17,8 +17,10 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;  
 import javax.validation.constraints.Size;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -31,7 +33,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Conservdescription.findAll", query = "SELECT c FROM Conservdescription c"),
-    @NamedQuery(name = "Conservdescription.findByConservDescriptionID", query = "SELECT c FROM Conservdescription c WHERE c.conservDescriptionId = :conservDescriptionID"),
+    @NamedQuery(name = "Conservdescription.findByConservDescriptionId", query = "SELECT c FROM Conservdescription c WHERE c.conservDescriptionId = :conservDescriptionId"),
     @NamedQuery(name = "Conservdescription.findByTimestampCreated", query = "SELECT c FROM Conservdescription c WHERE c.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Conservdescription.findByTimestampModified", query = "SELECT c FROM Conservdescription c WHERE c.timestampModified = :timestampModified"),
     @NamedQuery(name = "Conservdescription.findByVersion", query = "SELECT c FROM Conservdescription c WHERE c.version = :version"),
@@ -119,6 +121,7 @@ public class Conservdescription extends BaseEntity {
     @ManyToOne
     private Agent createdByAgent;
     
+    @XmlTransient
     @JoinColumn(name = "CollectionObjectID", referencedColumnName = "CollectionObjectID")
     @ManyToOne
     private Collectionobject collectionObject;
@@ -255,7 +258,7 @@ public class Conservdescription extends BaseEntity {
     }
 
  
-
+    @XmlTransient
     public Collectionobject getCollectionObject() {
         return collectionObject;
     }
@@ -272,6 +275,7 @@ public class Conservdescription extends BaseEntity {
         this.conservDescriptionId = conservDescriptionId;
     }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -288,6 +292,7 @@ public class Conservdescription extends BaseEntity {
         this.division = division;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -313,11 +318,25 @@ public class Conservdescription extends BaseEntity {
     public void setEvents(Collection<Conservevent> events) {
         this.events = events;
     }
-
+    
+    /**
+     * Parent pointer
+     * 
+     * @param u
+     * @param parent 
+     */
+    public void afterUnmarshal(Unmarshaller u, Object parent) {  
+        if(parent instanceof Collectionobject) {
+            this.collectionObject = (Collectionobject)parent;   
+        }
+    }
    
 
     
-
+    @Override
+    public String getEntityName() {
+        return "conservDescription";
+    }
  
 
     @Override

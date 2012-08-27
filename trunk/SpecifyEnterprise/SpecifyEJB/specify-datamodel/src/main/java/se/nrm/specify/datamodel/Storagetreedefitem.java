@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Storagetreedefitem.findAll", query = "SELECT s FROM Storagetreedefitem s"),
-    @NamedQuery(name = "Storagetreedefitem.findByStorageTreeDefItemID", query = "SELECT s FROM Storagetreedefitem s WHERE s.storageTreeDefItemId = :storageTreeDefItemID"),
+    @NamedQuery(name = "Storagetreedefitem.findByStorageTreeDefItemId", query = "SELECT s FROM Storagetreedefitem s WHERE s.storageTreeDefItemId = :storageTreeDefItemId"),
     @NamedQuery(name = "Storagetreedefitem.findByTimestampCreated", query = "SELECT s FROM Storagetreedefitem s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Storagetreedefitem.findByTimestampModified", query = "SELECT s FROM Storagetreedefitem s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Storagetreedefitem.findByVersion", query = "SELECT s FROM Storagetreedefitem s WHERE s.version = :version"),
@@ -66,6 +66,7 @@ public class Storagetreedefitem extends BaseEntity {
     private Boolean isInFullName;
     
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
@@ -97,6 +98,7 @@ public class Storagetreedefitem extends BaseEntity {
     private Agent createdByAgent;
     
     @JoinColumn(name = "StorageTreeDefID", referencedColumnName = "StorageTreeDefID")
+    @NotNull
     @ManyToOne(optional = false)
     private Storagetreedef treeDef;
     
@@ -268,7 +270,10 @@ public class Storagetreedefitem extends BaseEntity {
         this.treeEntries = treeEntries;
     }
 
-     
+    @Override
+    public String getEntityName() {
+        return "storageTreeDefItem";
+    }
 
     @Override
     public int hashCode() {

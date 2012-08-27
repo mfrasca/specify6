@@ -16,6 +16,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;  
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -32,7 +33,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Borrowmaterial.findAll", query = "SELECT b FROM Borrowmaterial b"),
-    @NamedQuery(name = "Borrowmaterial.findByBorrowMaterialID", query = "SELECT b FROM Borrowmaterial b WHERE b.borrowMaterialId = :borrowMaterialID"),
+    @NamedQuery(name = "Borrowmaterial.findByBorrowMaterialId", query = "SELECT b FROM Borrowmaterial b WHERE b.borrowMaterialId = :borrowMaterialId"),
     @NamedQuery(name = "Borrowmaterial.findByTimestampCreated", query = "SELECT b FROM Borrowmaterial b WHERE b.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Borrowmaterial.findByTimestampModified", query = "SELECT b FROM Borrowmaterial b WHERE b.timestampModified = :timestampModified"),
     @NamedQuery(name = "Borrowmaterial.findByVersion", query = "SELECT b FROM Borrowmaterial b WHERE b.version = :version"),
@@ -69,6 +70,7 @@ public class Borrowmaterial extends BaseEntity {
     private String inComments;
     
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 50)
     @Column(name = "MaterialNumber")
     private String materialNumber;
@@ -88,6 +90,7 @@ public class Borrowmaterial extends BaseEntity {
     private Short quantityReturned;
     
     @JoinColumn(name = "BorrowID", referencedColumnName = "BorrowID")
+    @NotNull
     @ManyToOne(optional = false)
     private Borrow borrow;
     
@@ -231,9 +234,12 @@ public class Borrowmaterial extends BaseEntity {
     public void setBorrowReturnMaterials(Collection<Borrowreturnmaterial> borrowReturnMaterials) {
         this.borrowReturnMaterials = borrowReturnMaterials;
     }
-
+    
+    @Override
+    public String getEntityName() {
+        return "borrowMaterial";
+    }
  
-
     @Override
     public int hashCode() {
         int hash = 0;
