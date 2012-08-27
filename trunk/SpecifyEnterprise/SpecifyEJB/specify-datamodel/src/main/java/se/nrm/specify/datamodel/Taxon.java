@@ -360,8 +360,7 @@ public class Taxon extends BaseEntity {
     public void setCommonNames(Collection<Commonnametx> commonNames) {
         this.commonNames = commonNames;
     }
-
-    @XmlIDREF
+ 
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -450,8 +449,7 @@ public class Taxon extends BaseEntity {
     public void setModifiedByAgent(Agent modifiedByAgent) {
         this.modifiedByAgent = modifiedByAgent;
     }
-
-    @XmlIDREF
+ 
     public Taxon getParent() {
         return parent;
     }
