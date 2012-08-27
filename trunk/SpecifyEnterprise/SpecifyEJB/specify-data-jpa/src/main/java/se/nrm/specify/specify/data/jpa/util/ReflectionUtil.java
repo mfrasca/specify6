@@ -121,19 +121,17 @@ public class ReflectionUtil {
     
     public static void setEntityValue(SpecifyBean target, SpecifyBean source) { 
         try { 
-            Class parentClazz = target.getClass();
-//            Class childClazz = source.getClass();
-//            Field field = getField(parentClazz, childClazz.getSimpleName().toLowerCase());
+            Class parentClazz = target.getClass(); 
             Field field = getField(parentClazz, source.getEntityName());
 
             ReflectionUtil.makeAccessible(field);
             field.set(target, source);
         } catch (IllegalArgumentException ex) {
-            throw new DataReflectionException(ex);
+            logger.error(ex.getMessage());
         } catch (IllegalAccessException ex) {
-            throw new DataReflectionException(ex);
+            logger.error(ex.getMessage());
         } catch (NoSuchFieldException ex) {
-            throw new DataReflectionException(ex);
+            logger.error(ex.getMessage());
         }
     }
     
@@ -149,11 +147,11 @@ public class ReflectionUtil {
                 field.set(bean, parent);
             } 
         } catch (IllegalArgumentException ex) {
-            throw new DataReflectionException(ex);
+            logger.error(ex.getMessage());
         } catch (IllegalAccessException ex) {
-            throw new DataReflectionException(ex);
+            logger.error(ex.getMessage());
         } catch (NoSuchFieldException ex) {
-            throw new DataReflectionException(ex);
+            logger.error(ex.getMessage());
         }
     }
     
