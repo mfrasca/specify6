@@ -30,42 +30,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Collectingeventattribute.findAll", query = "SELECT c FROM Collectingeventattribute c"),
-    @NamedQuery(name = "Collectingeventattribute.findByCollectingEventAttributeID", query = "SELECT c FROM Collectingeventattribute c WHERE c.collectingEventAttributeId = :collectingEventAttributeID"),
+    @NamedQuery(name = "Collectingeventattribute.findByCollectingEventAttributeId", query = "SELECT c FROM Collectingeventattribute c WHERE c.collectingEventAttributeId = :collectingEventAttributeId"),
     @NamedQuery(name = "Collectingeventattribute.findByTimestampCreated", query = "SELECT c FROM Collectingeventattribute c WHERE c.timestampCreated = :timestampCreated"),
-    @NamedQuery(name = "Collectingeventattribute.findByTimestampModified", query = "SELECT c FROM Collectingeventattribute c WHERE c.timestampModified = :timestampModified"),
-    @NamedQuery(name = "Collectingeventattribute.findByVersion", query = "SELECT c FROM Collectingeventattribute c WHERE c.version = :version"),
-    @NamedQuery(name = "Collectingeventattribute.findByNumber1", query = "SELECT c FROM Collectingeventattribute c WHERE c.number1 = :number1"),
-    @NamedQuery(name = "Collectingeventattribute.findByNumber10", query = "SELECT c FROM Collectingeventattribute c WHERE c.number10 = :number10"),
-    @NamedQuery(name = "Collectingeventattribute.findByNumber11", query = "SELECT c FROM Collectingeventattribute c WHERE c.number11 = :number11"),
-    @NamedQuery(name = "Collectingeventattribute.findByNumber12", query = "SELECT c FROM Collectingeventattribute c WHERE c.number12 = :number12"),
-    @NamedQuery(name = "Collectingeventattribute.findByNumber13", query = "SELECT c FROM Collectingeventattribute c WHERE c.number13 = :number13"),
-    @NamedQuery(name = "Collectingeventattribute.findByNumber2", query = "SELECT c FROM Collectingeventattribute c WHERE c.number2 = :number2"),
-    @NamedQuery(name = "Collectingeventattribute.findByNumber3", query = "SELECT c FROM Collectingeventattribute c WHERE c.number3 = :number3"),
-    @NamedQuery(name = "Collectingeventattribute.findByNumber4", query = "SELECT c FROM Collectingeventattribute c WHERE c.number4 = :number4"),
-    @NamedQuery(name = "Collectingeventattribute.findByNumber5", query = "SELECT c FROM Collectingeventattribute c WHERE c.number5 = :number5"),
-    @NamedQuery(name = "Collectingeventattribute.findByNumber6", query = "SELECT c FROM Collectingeventattribute c WHERE c.number6 = :number6"),
-    @NamedQuery(name = "Collectingeventattribute.findByNumber7", query = "SELECT c FROM Collectingeventattribute c WHERE c.number7 = :number7"),
-    @NamedQuery(name = "Collectingeventattribute.findByNumber8", query = "SELECT c FROM Collectingeventattribute c WHERE c.number8 = :number8"),
-    @NamedQuery(name = "Collectingeventattribute.findByNumber9", query = "SELECT c FROM Collectingeventattribute c WHERE c.number9 = :number9"),
-    @NamedQuery(name = "Collectingeventattribute.findByText10", query = "SELECT c FROM Collectingeventattribute c WHERE c.text10 = :text10"),
-    @NamedQuery(name = "Collectingeventattribute.findByText11", query = "SELECT c FROM Collectingeventattribute c WHERE c.text11 = :text11"),
-    @NamedQuery(name = "Collectingeventattribute.findByText12", query = "SELECT c FROM Collectingeventattribute c WHERE c.text12 = :text12"),
-    @NamedQuery(name = "Collectingeventattribute.findByText13", query = "SELECT c FROM Collectingeventattribute c WHERE c.text13 = :text13"),
-    @NamedQuery(name = "Collectingeventattribute.findByText14", query = "SELECT c FROM Collectingeventattribute c WHERE c.text14 = :text14"),
-    @NamedQuery(name = "Collectingeventattribute.findByText15", query = "SELECT c FROM Collectingeventattribute c WHERE c.text15 = :text15"),
-    @NamedQuery(name = "Collectingeventattribute.findByText16", query = "SELECT c FROM Collectingeventattribute c WHERE c.text16 = :text16"),
-    @NamedQuery(name = "Collectingeventattribute.findByText17", query = "SELECT c FROM Collectingeventattribute c WHERE c.text17 = :text17"),
-    @NamedQuery(name = "Collectingeventattribute.findByText4", query = "SELECT c FROM Collectingeventattribute c WHERE c.text4 = :text4"),
-    @NamedQuery(name = "Collectingeventattribute.findByText5", query = "SELECT c FROM Collectingeventattribute c WHERE c.text5 = :text5"),
-    @NamedQuery(name = "Collectingeventattribute.findByText6", query = "SELECT c FROM Collectingeventattribute c WHERE c.text6 = :text6"),
-    @NamedQuery(name = "Collectingeventattribute.findByText7", query = "SELECT c FROM Collectingeventattribute c WHERE c.text7 = :text7"),
-    @NamedQuery(name = "Collectingeventattribute.findByText8", query = "SELECT c FROM Collectingeventattribute c WHERE c.text8 = :text8"),
-    @NamedQuery(name = "Collectingeventattribute.findByText9", query = "SELECT c FROM Collectingeventattribute c WHERE c.text9 = :text9"),
-    @NamedQuery(name = "Collectingeventattribute.findByYesNo1", query = "SELECT c FROM Collectingeventattribute c WHERE c.yesNo1 = :yesNo1"),
-    @NamedQuery(name = "Collectingeventattribute.findByYesNo2", query = "SELECT c FROM Collectingeventattribute c WHERE c.yesNo2 = :yesNo2"),
-    @NamedQuery(name = "Collectingeventattribute.findByYesNo3", query = "SELECT c FROM Collectingeventattribute c WHERE c.yesNo3 = :yesNo3"),
-    @NamedQuery(name = "Collectingeventattribute.findByYesNo4", query = "SELECT c FROM Collectingeventattribute c WHERE c.yesNo4 = :yesNo4"),
-    @NamedQuery(name = "Collectingeventattribute.findByYesNo5", query = "SELECT c FROM Collectingeventattribute c WHERE c.yesNo5 = :yesNo5")})
+    @NamedQuery(name = "Collectingeventattribute.findByTimestampModified", query = "SELECT c FROM Collectingeventattribute c WHERE c.timestampModified = :timestampModified") })
 public class Collectingeventattribute extends BaseEntity {
  
 // implements Serializable {
@@ -591,7 +558,10 @@ public class Collectingeventattribute extends BaseEntity {
     }
 
    
-
+    @Override
+    public String getEntityName() {
+        return "collectingEventAttribute";
+    }
  
 
     @Override

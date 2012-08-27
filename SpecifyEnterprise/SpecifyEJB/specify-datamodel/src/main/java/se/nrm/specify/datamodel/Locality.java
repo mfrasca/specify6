@@ -34,7 +34,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Locality.findAll", query = "SELECT l FROM Locality l"),
-    @NamedQuery(name = "Locality.findByLocalityID", query = "SELECT l FROM Locality l WHERE l.localityId = :localityID"),
+    @NamedQuery(name = "Locality.findByLocalityId", query = "SELECT l FROM Locality l WHERE l.localityId = :localityId"),
     @NamedQuery(name = "Locality.findByTimestampCreated", query = "SELECT l FROM Locality l WHERE l.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Locality.findByTimestampModified", query = "SELECT l FROM Locality l WHERE l.timestampModified = :timestampModified"),
     @NamedQuery(name = "Locality.findByVersion", query = "SELECT l FROM Locality l WHERE l.version = :version"),
@@ -126,6 +126,7 @@ public class Locality extends BaseEntity {
     private BigDecimal latitude2;
     
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 255)
     @Column(name = "LocalityName")
     private String localityName;
@@ -229,6 +230,7 @@ public class Locality extends BaseEntity {
     private Agent modifiedByAgent;
     
     @JoinColumn(name = "DisciplineID", referencedColumnName = "UserGroupScopeId")
+    @NotNull
     @ManyToOne(optional = false)
     private Discipline discipline;
     
@@ -616,6 +618,11 @@ public class Locality extends BaseEntity {
     }
    
 
+    @Override
+    public String getEntityName() {
+        return "locality";
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

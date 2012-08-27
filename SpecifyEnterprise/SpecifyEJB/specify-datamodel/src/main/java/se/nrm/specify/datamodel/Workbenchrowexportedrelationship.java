@@ -5,8 +5,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlID; 
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -18,7 +17,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Workbenchrowexportedrelationship.findAll", query = "SELECT w FROM Workbenchrowexportedrelationship w"),
-    @NamedQuery(name = "Workbenchrowexportedrelationship.findByWorkbenchRowExportedRelationshipID", query = "SELECT w FROM Workbenchrowexportedrelationship w WHERE w.workbenchRowExportedRelationshipId = :workbenchRowExportedRelationshipID"),
+    @NamedQuery(name = "Workbenchrowexportedrelationship.findByWorkbenchRowExportedRelationshipId", query = "SELECT w FROM Workbenchrowexportedrelationship w WHERE w.workbenchRowExportedRelationshipId = :workbenchRowExportedRelationshipId"),
     @NamedQuery(name = "Workbenchrowexportedrelationship.findByTimestampCreated", query = "SELECT w FROM Workbenchrowexportedrelationship w WHERE w.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Workbenchrowexportedrelationship.findByTimestampModified", query = "SELECT w FROM Workbenchrowexportedrelationship w WHERE w.timestampModified = :timestampModified"),
     @NamedQuery(name = "Workbenchrowexportedrelationship.findByVersion", query = "SELECT w FROM Workbenchrowexportedrelationship w WHERE w.version = :version"),
@@ -26,9 +25,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Workbenchrowexportedrelationship.findByRelationshipName", query = "SELECT w FROM Workbenchrowexportedrelationship w WHERE w.relationshipName = :relationshipName"),
     @NamedQuery(name = "Workbenchrowexportedrelationship.findBySequence", query = "SELECT w FROM Workbenchrowexportedrelationship w WHERE w.sequence = :sequence"),
     @NamedQuery(name = "Workbenchrowexportedrelationship.findByTableName", query = "SELECT w FROM Workbenchrowexportedrelationship w WHERE w.tableName = :tableName"),
-    @NamedQuery(name = "Workbenchrowexportedrelationship.findByModifiedByAgentID", query = "SELECT w FROM Workbenchrowexportedrelationship w WHERE w.modifiedByAgent = :modifiedByAgentID"),
+    @NamedQuery(name = "Workbenchrowexportedrelationship.findByModifiedByAgent", query = "SELECT w FROM Workbenchrowexportedrelationship w WHERE w.modifiedByAgent = :modifiedByAgent"),
     @NamedQuery(name = "Workbenchrowexportedrelationship.findByWorkbenchRowID", query = "SELECT w FROM Workbenchrowexportedrelationship w WHERE w.workbenchRow = :workbenchRowID"),
-    @NamedQuery(name = "Workbenchrowexportedrelationship.findByCreatedByAgentID", query = "SELECT w FROM Workbenchrowexportedrelationship w WHERE w.createdByAgent = :createdByAgentID")})
+    @NamedQuery(name = "Workbenchrowexportedrelationship.findByCreatedByAgent", query = "SELECT w FROM Workbenchrowexportedrelationship w WHERE w.createdByAgent = :createdByAgent")})
 public class Workbenchrowexportedrelationship extends BaseEntity {
    
     private static final long serialVersionUID = 1L;
@@ -58,6 +57,7 @@ public class Workbenchrowexportedrelationship extends BaseEntity {
     private Integer modifiedByAgent;
     
     @Basic(optional = false) 
+    @NotNull
     @Column(name = "WorkbenchRowID")
     private int workbenchRow;
     
@@ -149,6 +149,10 @@ public class Workbenchrowexportedrelationship extends BaseEntity {
         this.workbenchRowExportedRelationshipId = workbenchRowExportedRelationshipId;
     }
  
+    @Override
+    public String getEntityName() {
+        return "workbenchRowExportedRelationship";
+    }
 
     @Override
     public int hashCode() {

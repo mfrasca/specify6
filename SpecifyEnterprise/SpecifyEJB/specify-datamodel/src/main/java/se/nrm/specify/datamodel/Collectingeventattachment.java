@@ -12,9 +12,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.Table;    
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.Unmarshaller;
@@ -33,13 +31,13 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Collectingeventattachment.findAll", query = "SELECT c FROM Collectingeventattachment c"),
-    @NamedQuery(name = "Collectingeventattachment.findByCollectingEventAttachmentID", query = "SELECT c FROM Collectingeventattachment c WHERE c.collectingEventAttachmentId = :collectingEventAttachmentID"),
+    @NamedQuery(name = "Collectingeventattachment.findByCollectingEventAttachmentId", query = "SELECT c FROM Collectingeventattachment c WHERE c.collectingEventAttachmentId = :collectingEventAttachmentId"),
     @NamedQuery(name = "Collectingeventattachment.findByTimestampCreated", query = "SELECT c FROM Collectingeventattachment c WHERE c.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Collectingeventattachment.findByTimestampModified", query = "SELECT c FROM Collectingeventattachment c WHERE c.timestampModified = :timestampModified"),
     @NamedQuery(name = "Collectingeventattachment.findByVersion", query = "SELECT c FROM Collectingeventattachment c WHERE c.version = :version"),
-    @NamedQuery(name = "Collectingeventattachment.findByCollectionMemberID", query = "SELECT c FROM Collectingeventattachment c WHERE c.collectionMemberId = :collectionMemberID"),
+    @NamedQuery(name = "Collectingeventattachment.findByCollectionMemberId", query = "SELECT c FROM Collectingeventattachment c WHERE c.collectionMemberId = :collectionMemberId"),
     @NamedQuery(name = "Collectingeventattachment.findByOrdinal", query = "SELECT c FROM Collectingeventattachment c WHERE c.ordinal = :ordinal")})
-public class Collectingeventattachment extends BaseEntity {
+public class Collectingeventattachment extends BaseEntity  {
     
     private static final long serialVersionUID = 1L;
     
@@ -66,10 +64,12 @@ public class Collectingeventattachment extends BaseEntity {
     private String remarks;
     
     @JoinColumn(name = "AttachmentID", referencedColumnName = "AttachmentID")
+    @NotNull
     @ManyToOne(optional = false)
     private Attachment attachment;
     
     @JoinColumn(name = "CollectingEventID", referencedColumnName = "CollectingEventID")
+    @NotNull
     @ManyToOne(optional = false)
     private Collectingevent collectingEvent;
     
@@ -173,9 +173,7 @@ public class Collectingeventattachment extends BaseEntity {
     public void setModifiedByAgent(Agent modifiedByAgent) {
         this.modifiedByAgent = modifiedByAgent;
     }
-
-    
-    
+ 
     /**
      * Parent pointer
      * 
@@ -186,6 +184,11 @@ public class Collectingeventattachment extends BaseEntity {
         if(parent instanceof Collectingevent) {
             this.collectingEvent = (Collectingevent)parent;   
         }
+    }
+    
+    @Override
+    public String getEntityName() {
+        return "collectingEventAttachment";
     }
  
     @Override
@@ -211,5 +214,7 @@ public class Collectingeventattachment extends BaseEntity {
     @Override
     public String toString() {
         return "Collectingeventattachment[ collectingEventAttachmentID=" + collectingEventAttachmentId + " ]";
-    } 
+    }
+
+    
 }

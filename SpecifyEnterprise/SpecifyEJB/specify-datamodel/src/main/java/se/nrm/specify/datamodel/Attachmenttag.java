@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;  
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -45,11 +46,13 @@ public class Attachmenttag extends BaseEntity {
     private Integer attachmentTagID;
      
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 64)
     @Column(name = "Tag")
     private String tag;
     
     @JoinColumn(name = "AttachmentID", referencedColumnName = "AttachmentID")
+    @NotNull
     @ManyToOne(optional = false)
     private Attachment attachment;
     
@@ -124,8 +127,12 @@ public class Attachmenttag extends BaseEntity {
     public void setModifiedByAgent(Agent modifiedByAgent) {
         this.modifiedByAgent = modifiedByAgent;
     }
-
  
+    @Override
+    public String getEntityName() {
+        return "attachmentTag";
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

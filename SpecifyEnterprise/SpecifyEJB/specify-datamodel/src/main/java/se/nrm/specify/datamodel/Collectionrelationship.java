@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Collectionrelationship.findAll", query = "SELECT c FROM Collectionrelationship c"),
-    @NamedQuery(name = "Collectionrelationship.findByCollectionRelationshipID", query = "SELECT c FROM Collectionrelationship c WHERE c.collectionRelationshipId = :collectionRelationshipID"),
+    @NamedQuery(name = "Collectionrelationship.findByCollectionRelationshipId", query = "SELECT c FROM Collectionrelationship c WHERE c.collectionRelationshipId = :collectionRelationshipId"),
     @NamedQuery(name = "Collectionrelationship.findByTimestampCreated", query = "SELECT c FROM Collectionrelationship c WHERE c.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Collectionrelationship.findByTimestampModified", query = "SELECT c FROM Collectionrelationship c WHERE c.timestampModified = :timestampModified"),
     @NamedQuery(name = "Collectionrelationship.findByVersion", query = "SELECT c FROM Collectionrelationship c WHERE c.version = :version"),
@@ -54,10 +54,12 @@ public class Collectionrelationship extends BaseEntity {
     private String text2;
     
     @JoinColumn(name = "RightSideCollectionID", referencedColumnName = "CollectionObjectID")
+    @NotNull
     @ManyToOne(optional = false)
     private Collectionobject rightSide;
     
     @JoinColumn(name = "LeftSideCollectionID", referencedColumnName = "CollectionObjectID")
+    @NotNull
     @ManyToOne(optional = false)
     private Collectionobject leftSide;
     
@@ -160,7 +162,10 @@ public class Collectionrelationship extends BaseEntity {
         this.rightSide = rightSide;
     }
 
-   
+    @Override
+    public String getEntityName() {
+        return "collectionRelationship";
+    }
 
     @Override
     public int hashCode() {

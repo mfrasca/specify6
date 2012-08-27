@@ -11,9 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -29,7 +27,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Spauditlogfield.findAll", query = "SELECT s FROM Spauditlogfield s"),
-    @NamedQuery(name = "Spauditlogfield.findBySpAuditLogFieldID", query = "SELECT s FROM Spauditlogfield s WHERE s.spAuditLogFieldId = :spAuditLogFieldID"),
+    @NamedQuery(name = "Spauditlogfield.findBySpAuditLogFieldId", query = "SELECT s FROM Spauditlogfield s WHERE s.spAuditLogFieldId = :spAuditLogFieldId"),
     @NamedQuery(name = "Spauditlogfield.findByTimestampCreated", query = "SELECT s FROM Spauditlogfield s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Spauditlogfield.findByTimestampModified", query = "SELECT s FROM Spauditlogfield s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Spauditlogfield.findByVersion", query = "SELECT s FROM Spauditlogfield s WHERE s.version = :version"),
@@ -48,16 +46,19 @@ public class Spauditlogfield extends BaseEntity {
     private Integer spAuditLogFieldId;
      
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 32)
     @Column(name = "FieldName")
     private String fieldName;
     
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 64)
     @Column(name = "NewValue")
     private String newValue;
     
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 64)
     @Column(name = "OldValue")
     private String oldValue;
@@ -154,8 +155,11 @@ public class Spauditlogfield extends BaseEntity {
     public void setSpAuditLogFieldId(Integer spAuditLogFieldId) {
         this.spAuditLogFieldId = spAuditLogFieldId;
     }
-
-   
+    
+    @Override
+    public String getEntityName() {
+        return "spAuditLogField";
+    }
 
     @Override
     public int hashCode() {

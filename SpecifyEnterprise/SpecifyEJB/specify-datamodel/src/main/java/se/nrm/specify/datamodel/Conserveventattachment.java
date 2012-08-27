@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Conserveventattachment.findAll", query = "SELECT c FROM Conserveventattachment c"),
-    @NamedQuery(name = "Conserveventattachment.findByConservEventAttachmentID", query = "SELECT c FROM Conserveventattachment c WHERE c.conservEventAttachmentId = :conservEventAttachmentID"),
+    @NamedQuery(name = "Conserveventattachment.findByConservEventAttachmentId", query = "SELECT c FROM Conserveventattachment c WHERE c.conservEventAttachmentId = :conservEventAttachmentId"),
     @NamedQuery(name = "Conserveventattachment.findByTimestampCreated", query = "SELECT c FROM Conserveventattachment c WHERE c.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Conserveventattachment.findByTimestampModified", query = "SELECT c FROM Conserveventattachment c WHERE c.timestampModified = :timestampModified"),
     @NamedQuery(name = "Conserveventattachment.findByVersion", query = "SELECT c FROM Conserveventattachment c WHERE c.version = :version"),
@@ -54,10 +54,12 @@ public class Conserveventattachment extends BaseEntity {
     private String remarks;
     
     @JoinColumn(name = "ConservEventID", referencedColumnName = "ConservEventID")
+    @NotNull
     @ManyToOne(optional = false)
     private Conservevent conservEvent;
     
     @JoinColumn(name = "AttachmentID", referencedColumnName = "AttachmentID")
+    @NotNull
     @ManyToOne(optional = false)
     private Attachment attachment;
     
@@ -150,6 +152,10 @@ public class Conserveventattachment extends BaseEntity {
         this.remarks = remarks;
     }
  
+    @Override
+    public String getEntityName() {
+        return "conservEventAttachment";
+    }
 
     @Override
     public int hashCode() {

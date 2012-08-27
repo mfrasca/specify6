@@ -35,7 +35,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Fieldnotebookpage.findAll", query = "SELECT f FROM Fieldnotebookpage f"),
-    @NamedQuery(name = "Fieldnotebookpage.findByFieldNotebookPageID", query = "SELECT f FROM Fieldnotebookpage f WHERE f.fieldNotebookPageId = :fieldNotebookPageID"),
+    @NamedQuery(name = "Fieldnotebookpage.findByFieldNotebookPageId", query = "SELECT f FROM Fieldnotebookpage f WHERE f.fieldNotebookPageId = :fieldNotebookPageId"),
     @NamedQuery(name = "Fieldnotebookpage.findByTimestampCreated", query = "SELECT f FROM Fieldnotebookpage f WHERE f.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Fieldnotebookpage.findByTimestampModified", query = "SELECT f FROM Fieldnotebookpage f WHERE f.timestampModified = :timestampModified"),
     @NamedQuery(name = "Fieldnotebookpage.findByVersion", query = "SELECT f FROM Fieldnotebookpage f WHERE f.version = :version"),
@@ -86,6 +86,7 @@ public class Fieldnotebookpage extends BaseEntity {
     private Agent modifiedByAgent;
     
     @JoinColumn(name = "DisciplineID", referencedColumnName = "UserGroupScopeId")
+    @NotNull
     @ManyToOne(optional = false)
     private Discipline discipline;
 
@@ -212,6 +213,12 @@ public class Fieldnotebookpage extends BaseEntity {
             this.discipline = (Discipline)parent;
         }
     }
+    
+    @Override
+    public String getEntityName() {
+        return "fieldNotebookPage";
+    }
+    
     
     @Override
     public int hashCode() {

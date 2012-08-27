@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Recordsetitem.findAll", query = "SELECT r FROM Recordsetitem r"),
-    @NamedQuery(name = "Recordsetitem.findByRecordSetItemID", query = "SELECT r FROM Recordsetitem r WHERE r.recordSetItemId = :recordSetItemID"),
+    @NamedQuery(name = "Recordsetitem.findByRecordSetItemId", query = "SELECT r FROM Recordsetitem r WHERE r.recordSetItemId = :recordSetItemId"),
     @NamedQuery(name = "Recordsetitem.findByRecordId", query = "SELECT r FROM Recordsetitem r WHERE r.recordId = :recordId")})
 public class Recordsetitem implements Serializable, SpecifyBean {
     
@@ -45,6 +45,7 @@ public class Recordsetitem implements Serializable, SpecifyBean {
     private int recordId;
     
     @JoinColumn(name = "RecordSetID", referencedColumnName = "RecordSetID")
+    @NotNull
     @ManyToOne(optional = false)
     private Recordset recordSet;
 
@@ -91,6 +92,10 @@ public class Recordsetitem implements Serializable, SpecifyBean {
         this.recordSetItemId = recordSetItemId;
     }
  
+    @Override
+    public String getEntityName() {
+        return "recordSetItem";
+    }
 
     @Override
     public int hashCode() {

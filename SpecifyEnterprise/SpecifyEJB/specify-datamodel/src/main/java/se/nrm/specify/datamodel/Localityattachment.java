@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Localityattachment.findAll", query = "SELECT l FROM Localityattachment l"),
-    @NamedQuery(name = "Localityattachment.findByLocalityAttachmentID", query = "SELECT l FROM Localityattachment l WHERE l.localityAttachmentId = :localityAttachmentID"),
+    @NamedQuery(name = "Localityattachment.findByLocalityAttachmentId", query = "SELECT l FROM Localityattachment l WHERE l.localityAttachmentId = :localityAttachmentId"),
     @NamedQuery(name = "Localityattachment.findByTimestampCreated", query = "SELECT l FROM Localityattachment l WHERE l.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Localityattachment.findByTimestampModified", query = "SELECT l FROM Localityattachment l WHERE l.timestampModified = :timestampModified"),
     @NamedQuery(name = "Localityattachment.findByVersion", query = "SELECT l FROM Localityattachment l WHERE l.version = :version"),
@@ -53,10 +53,12 @@ public class Localityattachment extends BaseEntity {
     private String remarks;
     
     @JoinColumn(name = "AttachmentID", referencedColumnName = "AttachmentID")
+    @NotNull
     @ManyToOne(optional = false)
     private Attachment attachment;
     
     @JoinColumn(name = "LocalityID", referencedColumnName = "LocalityID")
+    @NotNull
     @ManyToOne(optional = false)
     private Locality locality;
     
@@ -146,6 +148,11 @@ public class Localityattachment extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
  
+    @Override
+    public String getEntityName() {
+        return "localityAttachment";
+    }
+    
 
     @Override
     public int hashCode() {

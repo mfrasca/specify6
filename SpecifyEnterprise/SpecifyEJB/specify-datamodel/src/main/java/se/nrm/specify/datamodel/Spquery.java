@@ -14,9 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table; 
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -33,7 +31,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Spquery.findAll", query = "SELECT s FROM Spquery s"),
-    @NamedQuery(name = "Spquery.findBySpQueryID", query = "SELECT s FROM Spquery s WHERE s.spQueryId = :spQueryID"),
+    @NamedQuery(name = "Spquery.findBySpQueryId", query = "SELECT s FROM Spquery s WHERE s.spQueryId = :spQueryId"),
     @NamedQuery(name = "Spquery.findByTimestampCreated", query = "SELECT s FROM Spquery s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Spquery.findByTimestampModified", query = "SELECT s FROM Spquery s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Spquery.findByVersion", query = "SELECT s FROM Spquery s WHERE s.version = :version"),
@@ -75,6 +73,7 @@ public class Spquery extends BaseEntity {
     private Boolean isFavorite;
     
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
@@ -112,6 +111,7 @@ public class Spquery extends BaseEntity {
     private Agent modifiedByAgent;
     
     @JoinColumn(name = "SpecifyUserID", referencedColumnName = "SpecifyUserID")
+    @NotNull
     @ManyToOne(optional = false)
     private Specifyuser specifyUser;
 
@@ -269,7 +269,10 @@ public class Spquery extends BaseEntity {
         this.specifyUser = specifyUser;
     }
 
-   
+    @Override
+    public String getEntityName() {
+        return "spQuery";
+    }
 
     @Override
     public int hashCode() {

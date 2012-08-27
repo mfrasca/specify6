@@ -523,7 +523,10 @@ public class Institution extends BaseEntity implements CycleRecoverable {
         this.storageTreeDef = storageTreeDef;
     }
 
-    
+    @Override
+    public String getEntityName() {
+        return "userGroupScope";
+    }
 
     @Override
     public int hashCode() {

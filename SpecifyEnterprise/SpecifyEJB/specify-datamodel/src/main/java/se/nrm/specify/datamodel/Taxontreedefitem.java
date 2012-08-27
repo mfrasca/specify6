@@ -21,7 +21,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Taxontreedefitem.findAll", query = "SELECT t FROM Taxontreedefitem t"),
-    @NamedQuery(name = "Taxontreedefitem.findByTaxonTreeDefItemID", query = "SELECT t FROM Taxontreedefitem t WHERE t.taxonTreeDefItemId = :taxonTreeDefItemID"),
+    @NamedQuery(name = "Taxontreedefitem.findByTaxonTreeDefItemId", query = "SELECT t FROM Taxontreedefitem t WHERE t.taxonTreeDefItemId = :taxonTreeDefItemId"),
     @NamedQuery(name = "Taxontreedefitem.findByTimestampCreated", query = "SELECT t FROM Taxontreedefitem t WHERE t.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Taxontreedefitem.findByTimestampModified", query = "SELECT t FROM Taxontreedefitem t WHERE t.timestampModified = :timestampModified"),
     @NamedQuery(name = "Taxontreedefitem.findByVersion", query = "SELECT t FROM Taxontreedefitem t WHERE t.version = :version"),
@@ -61,6 +61,7 @@ public class Taxontreedefitem extends BaseEntity {
     private Boolean isInFullName;
     
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
@@ -91,6 +92,7 @@ public class Taxontreedefitem extends BaseEntity {
     private Collection<Taxon> treeEntries;
     
     @JoinColumn(name = "TaxonTreeDefID", referencedColumnName = "TaxonTreeDefID")
+    @NotNull
     @ManyToOne(optional = false)
     private Taxontreedef treeDef;
     
@@ -275,6 +277,11 @@ public class Taxontreedefitem extends BaseEntity {
         this.title = title;
     }
  
+    @Override
+    public String getEntityName() {
+        return "taxonTreeDefItem";
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

@@ -45,13 +45,13 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Sgrbatchmatchresultset.findByName", query = "SELECT s FROM Sgrbatchmatchresultset s WHERE s.name = :name"),
     @NamedQuery(name = "Sgrbatchmatchresultset.findByRecordSetID", query = "SELECT s FROM Sgrbatchmatchresultset s WHERE s.recordSetID = :recordSetID"),
     @NamedQuery(name = "Sgrbatchmatchresultset.findByDbTableId", query = "SELECT s FROM Sgrbatchmatchresultset s WHERE s.dbTableId = :dbTableId")})
-public class Sgrbatchmatchresultset implements Serializable {
+public class Sgrbatchmatchresultset implements Serializable, SpecifyBean {
     
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @NotNull
+//    @NotNull
     @Column(name = "id")
     private Long id;
     
@@ -91,6 +91,7 @@ public class Sgrbatchmatchresultset implements Serializable {
     private Collection<Sgrbatchmatchresultitem> sgrbatchmatchresultitems;
     
     @JoinColumn(name = "matchConfigurationId", referencedColumnName = "id")
+    @NotNull
     @ManyToOne(optional = false)
     private Sgrmatchconfiguration sgrmatchconfiguration;
 
@@ -192,6 +193,11 @@ public class Sgrbatchmatchresultset implements Serializable {
 
     public void setSgrmatchconfiguration(Sgrmatchconfiguration sgrmatchconfiguration) {
         this.sgrmatchconfiguration = sgrmatchconfiguration;
+    }
+    
+    @Override
+    public String getEntityName() {
+        return "sgrbatchmatchresultset";
     }
 
     @Override

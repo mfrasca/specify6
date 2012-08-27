@@ -26,15 +26,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Giftattachment.findAll", query = "SELECT g FROM Giftattachment g"),
-    @NamedQuery(name = "Giftattachment.findByGiftAttachmentID", query = "SELECT g FROM Giftattachment g WHERE g.giftAttachmentId = :giftAttachmentID"),
+    @NamedQuery(name = "Giftattachment.findByGiftAttachmentId", query = "SELECT g FROM Giftattachment g WHERE g.giftAttachmentId = :giftAttachmentId"),
     @NamedQuery(name = "Giftattachment.findByTimestampCreated", query = "SELECT g FROM Giftattachment g WHERE g.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Giftattachment.findByTimestampModified", query = "SELECT g FROM Giftattachment g WHERE g.timestampModified = :timestampModified"),
     @NamedQuery(name = "Giftattachment.findByVersion", query = "SELECT g FROM Giftattachment g WHERE g.version = :version"),
     @NamedQuery(name = "Giftattachment.findByOrdinal", query = "SELECT g FROM Giftattachment g WHERE g.ordinal = :ordinal"),
-    @NamedQuery(name = "Giftattachment.findByCreatedByAgentID", query = "SELECT g FROM Giftattachment g WHERE g.createdByAgentId = :createdByAgentID"),
-    @NamedQuery(name = "Giftattachment.findByAttachmentID", query = "SELECT g FROM Giftattachment g WHERE g.attachmentId = :attachmentID"),
+    @NamedQuery(name = "Giftattachment.findByCreatedByAgentId", query = "SELECT g FROM Giftattachment g WHERE g.createdByAgentId = :createdByAgentId"),
+    @NamedQuery(name = "Giftattachment.findByAttachmentId", query = "SELECT g FROM Giftattachment g WHERE g.attachmentId = :attachmentId"),
     @NamedQuery(name = "Giftattachment.findByGiftID", query = "SELECT g FROM Giftattachment g WHERE g.giftId = :giftID"),
-    @NamedQuery(name = "Giftattachment.findByModifiedByAgentID", query = "SELECT g FROM Giftattachment g WHERE g.modifiedByAgentId = :modifiedByAgentID")})
+    @NamedQuery(name = "Giftattachment.findByModifiedByAgentId", query = "SELECT g FROM Giftattachment g WHERE g.modifiedByAgentId = :modifiedByAgentId")})
 public class Giftattachment extends BaseEntity {
     
     private static final long serialVersionUID = 1L;
@@ -149,8 +149,11 @@ public class Giftattachment extends BaseEntity {
         this.remarks = remarks;
     }
 
+    @Override
+    public String getEntityName() {
+        return "giftAttachment";
+    }    
     
-
     @Override
     public int hashCode() {
         int hash = 0;

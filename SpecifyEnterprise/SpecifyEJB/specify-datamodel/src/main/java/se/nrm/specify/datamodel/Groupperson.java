@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Groupperson.findAll", query = "SELECT g FROM Groupperson g"),
-    @NamedQuery(name = "Groupperson.findByGroupPersonID", query = "SELECT g FROM Groupperson g WHERE g.groupPersonId = :groupPersonID"),
+    @NamedQuery(name = "Groupperson.findByGroupPersonId", query = "SELECT g FROM Groupperson g WHERE g.groupPersonId = :groupPersonId"),
     @NamedQuery(name = "Groupperson.findByTimestampCreated", query = "SELECT g FROM Groupperson g WHERE g.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Groupperson.findByTimestampModified", query = "SELECT g FROM Groupperson g WHERE g.timestampModified = :timestampModified"),
     @NamedQuery(name = "Groupperson.findByVersion", query = "SELECT g FROM Groupperson g WHERE g.version = :version"),
@@ -60,6 +60,7 @@ public class Groupperson extends BaseEntity {
     private Division division;
     
     @JoinColumn(name = "GroupID", referencedColumnName = "AgentID")
+    @NotNull
     @ManyToOne(optional = false)
     private Agent group;
     
@@ -72,6 +73,7 @@ public class Groupperson extends BaseEntity {
     private Agent modifiedByAgent;
     
     @JoinColumn(name = "MemberID", referencedColumnName = "AgentID")
+    @NotNull
     @ManyToOne(optional = false)
     private Agent member;
 
@@ -166,6 +168,10 @@ public class Groupperson extends BaseEntity {
         this.remarks = remarks;
     }
  
+    @Override
+    public String getEntityName() {
+        return "groupPerson";
+    }
 
     @Override
     public int hashCode() {

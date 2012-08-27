@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Spqueryfield.findAll", query = "SELECT s FROM Spqueryfield s"),
-    @NamedQuery(name = "Spqueryfield.findBySpQueryFieldID", query = "SELECT s FROM Spqueryfield s WHERE s.spQueryFieldId = :spQueryFieldID"),
+    @NamedQuery(name = "Spqueryfield.findBySpQueryFieldId", query = "SELECT s FROM Spqueryfield s WHERE s.spQueryFieldId = :spQueryFieldId"),
     @NamedQuery(name = "Spqueryfield.findByTimestampCreated", query = "SELECT s FROM Spqueryfield s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Spqueryfield.findByTimestampModified", query = "SELECT s FROM Spqueryfield s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Spqueryfield.findByVersion", query = "SELECT s FROM Spqueryfield s WHERE s.version = :version"),
@@ -78,6 +78,7 @@ public class Spqueryfield extends BaseEntity {
     private String endValue;
     
     @Basic(optional = false) 
+    @NotNull
 //    @Size(min = 1, max = 32)
     @Column(name = "FieldName")
     private String fieldName;
@@ -379,7 +380,10 @@ public class Spqueryfield extends BaseEntity {
         this.spQueryFieldId = spQueryFieldId;
     }
 
-    
+    @Override
+    public String getEntityName() {
+        return "spQueryField";
+    }
 
     @Override
     public int hashCode() {

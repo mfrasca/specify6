@@ -33,7 +33,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Exchangeout.findAll", query = "SELECT e FROM Exchangeout e"),
-    @NamedQuery(name = "Exchangeout.findByExchangeOutID", query = "SELECT e FROM Exchangeout e WHERE e.exchangeOutId = :exchangeOutID"),
+    @NamedQuery(name = "Exchangeout.findByExchangeOutId", query = "SELECT e FROM Exchangeout e WHERE e.exchangeOutId = :exchangeOutId"),
     @NamedQuery(name = "Exchangeout.findByTimestampCreated", query = "SELECT e FROM Exchangeout e WHERE e.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Exchangeout.findByTimestampModified", query = "SELECT e FROM Exchangeout e WHERE e.timestampModified = :timestampModified"),
     @NamedQuery(name = "Exchangeout.findByVersion", query = "SELECT e FROM Exchangeout e WHERE e.version = :version"),
@@ -112,10 +112,12 @@ public class Exchangeout extends BaseEntity {
     private Addressofrecord addressOfRecord;
     
     @JoinColumn(name = "SentToOrganizationID", referencedColumnName = "AgentID")
+    @NotNull
     @ManyToOne(optional = false)
     private Agent agentSentTo;
     
     @JoinColumn(name = "DivisionID", referencedColumnName = "UserGroupScopeId")
+    @NotNull
     @ManyToOne(optional = false)
     private Division division;
     
@@ -128,6 +130,7 @@ public class Exchangeout extends BaseEntity {
     private Agent modifiedByAgent;
     
     @JoinColumn(name = "CatalogedByID", referencedColumnName = "AgentID")
+    @NotNull
     @ManyToOne(optional = false)
     private Agent agentCatalogedBy;
 
@@ -316,6 +319,11 @@ public class Exchangeout extends BaseEntity {
         this.exchangeDate = exchangeDate;
     }
 
+    @Override
+    public String getEntityName() {
+        return "exchangeOut";
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

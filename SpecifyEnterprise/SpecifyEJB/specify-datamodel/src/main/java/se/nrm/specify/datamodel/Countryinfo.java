@@ -199,6 +199,11 @@ public class Countryinfo implements Serializable, SpecifyBean {
     public void setGeonameId(Integer geonameId) {
         this.geonameId = geonameId;
     }
+    
+    @Override
+    public String getEntityName() {
+        return "countryinfo";
+    }
 
     @Override
     public int hashCode() {

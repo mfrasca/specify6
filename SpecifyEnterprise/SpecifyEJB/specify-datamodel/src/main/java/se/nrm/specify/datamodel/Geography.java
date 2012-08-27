@@ -36,7 +36,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Geography.findAll", query = "SELECT g FROM Geography g"),
-    @NamedQuery(name = "Geography.findByGeographyID", query = "SELECT g FROM Geography g WHERE g.geographyId = :geographyID"),
+    @NamedQuery(name = "Geography.findByGeographyId", query = "SELECT g FROM Geography g WHERE g.geographyId = :geographyId"),
     @NamedQuery(name = "Geography.findByGeographytreedefitemId", query = "SELECT g FROM Geography g WHERE g.definitionItem = :geographyTreeDefItemID"),
     @NamedQuery(name = "Geography.findByContinent", query = "SELECT g FROM Geography g WHERE g.definitionItem.name = :name"),
     @NamedQuery(name = "Geography.findByTimestampCreated", query = "SELECT g FROM Geography g WHERE g.timestampCreated = :timestampCreated"),
@@ -118,6 +118,7 @@ public class Geography extends BaseEntity {
     private Boolean isCurrent;
      
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
@@ -160,10 +161,12 @@ public class Geography extends BaseEntity {
     private Geography acceptedGeography;
     
     @JoinColumn(name = "GeographyTreeDefItemID", referencedColumnName = "GeographyTreeDefItemID")
+    @NotNull
     @ManyToOne(optional = false)
     private Geographytreedefitem definitionItem;
     
     @JoinColumn(name = "GeographyTreeDefID", referencedColumnName = "GeographyTreeDefID")
+    @NotNull
     @ManyToOne(optional = false)
     private Geographytreedef definition;
     
@@ -489,6 +492,12 @@ public class Geography extends BaseEntity {
         }
         return new Geography();
     }
+    
+    @Override
+    public String getEntityName() {
+        return "geography";
+    }
+    
 
     @Override
     public int hashCode() {

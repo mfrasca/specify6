@@ -21,7 +21,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Accessionagent.findAll", query = "SELECT a FROM Accessionagent a"),
-    @NamedQuery(name = "Accessionagent.findByAccessionAgentID", query = "SELECT a FROM Accessionagent a WHERE a.accessionAgentId = :accessionAgentID"),
+    @NamedQuery(name = "Accessionagent.findByAccessionAgentId", query = "SELECT a FROM Accessionagent a WHERE a.accessionAgentId = :accessionAgentId"),
     @NamedQuery(name = "Accessionagent.findByTimestampCreated", query = "SELECT a FROM Accessionagent a WHERE a.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Accessionagent.findByTimestampModified", query = "SELECT a FROM Accessionagent a WHERE a.timestampModified = :timestampModified"),
     @NamedQuery(name = "Accessionagent.findByVersion", query = "SELECT a FROM Accessionagent a WHERE a.version = :version"),
@@ -45,6 +45,7 @@ public class Accessionagent extends BaseEntity implements CycleRecoverable {
     
     @Basic(optional = false) 
     @Size(min = 1, max = 50)
+    @NotNull
     @Column(name = "Role")
     private String role;
     
@@ -65,6 +66,7 @@ public class Accessionagent extends BaseEntity implements CycleRecoverable {
     private Accession accession;
     
     @JoinColumn(name = "AgentID", referencedColumnName = "AgentID")
+    @NotNull
     @ManyToOne(optional = false)
     private Agent agent;
 
@@ -167,7 +169,14 @@ public class Accessionagent extends BaseEntity implements CycleRecoverable {
     public void setRole(String role) {
         this.role = role;
     }
+ 
+     
 
+    @Override
+    public String getEntityName() {
+        return "accessionAgent";
+    }
+ 
     /**
      * Parent pointer
      * 

@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Splocaleitemstr.findAll", query = "SELECT s FROM Splocaleitemstr s"),
-    @NamedQuery(name = "Splocaleitemstr.findBySpLocaleItemStrID", query = "SELECT s FROM Splocaleitemstr s WHERE s.spLocaleItemStrId = :spLocaleItemStrID"),
+    @NamedQuery(name = "Splocaleitemstr.findBySpLocaleItemStrId", query = "SELECT s FROM Splocaleitemstr s WHERE s.spLocaleItemStrId = :spLocaleItemStrId"),
     @NamedQuery(name = "Splocaleitemstr.findByTimestampCreated", query = "SELECT s FROM Splocaleitemstr s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Splocaleitemstr.findByTimestampModified", query = "SELECT s FROM Splocaleitemstr s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Splocaleitemstr.findByVersion", query = "SELECT s FROM Splocaleitemstr s WHERE s.version = :version"),
@@ -53,11 +53,13 @@ public class Splocaleitemstr extends BaseEntity {
     private String country;
     
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 2)
     @Column(name = "Language")
     private String language;
     
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 255)
     @Column(name = "Text")
     private String text;
@@ -206,6 +208,11 @@ public class Splocaleitemstr extends BaseEntity {
     }
 
    
+    @Override
+    public String getEntityName() {
+        return "spLocaleItemStr";
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

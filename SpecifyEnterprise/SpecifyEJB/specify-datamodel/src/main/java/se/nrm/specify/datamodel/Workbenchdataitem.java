@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Workbenchdataitem.findAll", query = "SELECT w FROM Workbenchdataitem w"),
-    @NamedQuery(name = "Workbenchdataitem.findByWorkbenchDataItemID", query = "SELECT w FROM Workbenchdataitem w WHERE w.workbenchDataItemId = :workbenchDataItemID"),
+    @NamedQuery(name = "Workbenchdataitem.findByWorkbenchDataItemId", query = "SELECT w FROM Workbenchdataitem w WHERE w.workbenchDataItemId = :workbenchDataItemId"),
     @NamedQuery(name = "Workbenchdataitem.findByRowNumber", query = "SELECT w FROM Workbenchdataitem w WHERE w.rowNumber = :rowNumber"),
     @NamedQuery(name = "Workbenchdataitem.findByValidationStatus", query = "SELECT w FROM Workbenchdataitem w WHERE w.validationStatus = :validationStatus")})
 public class Workbenchdataitem implements Serializable, SpecifyBean {
@@ -43,10 +43,12 @@ public class Workbenchdataitem implements Serializable, SpecifyBean {
     private Short validationStatus;
     
     @JoinColumn(name = "WorkbenchRowID", referencedColumnName = "WorkbenchRowID")
+    @NotNull
     @ManyToOne(optional = false)
     private Workbenchrow workbenchRow;
     
     @JoinColumn(name = "WorkbenchTemplateMappingItemID", referencedColumnName = "WorkbenchTemplateMappingItemID")
+    @NotNull
     @ManyToOne(optional = false)
     private Workbenchtemplatemappingitem workbenchTemplateMappingItem;
 
@@ -113,7 +115,10 @@ public class Workbenchdataitem implements Serializable, SpecifyBean {
         this.workbenchTemplateMappingItem = workbenchTemplateMappingItem;
     }
 
- 
+    @Override
+    public String getEntityName() {
+        return "workbenchDataItem";
+    }
 
     @Override
     public int hashCode() {

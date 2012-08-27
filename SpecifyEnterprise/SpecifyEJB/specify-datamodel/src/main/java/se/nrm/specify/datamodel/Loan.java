@@ -34,7 +34,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Loan.findAll", query = "SELECT l FROM Loan l"),
-    @NamedQuery(name = "Loan.findByLoanID", query = "SELECT l FROM Loan l WHERE l.loanId = :loanID"),
+    @NamedQuery(name = "Loan.findByLoanId", query = "SELECT l FROM Loan l WHERE l.loanId = :loanId"),
     @NamedQuery(name = "Loan.findByTimestampCreated", query = "SELECT l FROM Loan l WHERE l.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Loan.findByTimestampModified", query = "SELECT l FROM Loan l WHERE l.timestampModified = :timestampModified"),
     @NamedQuery(name = "Loan.findByVersion", query = "SELECT l FROM Loan l WHERE l.version = :version"),
@@ -97,6 +97,7 @@ public class Loan extends BaseEntity {
     private Date overdueNotiSentDate;
     
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 50)
     @Column(name = "LoanNumber")
     private String loanNumber;
@@ -175,6 +176,7 @@ public class Loan extends BaseEntity {
     private Agent modifiedByAgent;
     
     @JoinColumn(name = "DisciplineID", referencedColumnName = "UserGroupScopeId")
+    @NotNull
     @ManyToOne(optional = false)
     private Discipline discipline;
     
@@ -457,6 +459,11 @@ public class Loan extends BaseEntity {
     public void setOriginalDueDate(Date originalDueDate) {
         this.originalDueDate = originalDueDate;
     } 
+    
+    @Override
+    public String getEntityName() {
+        return "loan";
+    }
     
     @Override
     public int hashCode() {

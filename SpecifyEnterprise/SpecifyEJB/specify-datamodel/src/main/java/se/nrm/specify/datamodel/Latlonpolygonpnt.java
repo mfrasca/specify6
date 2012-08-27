@@ -25,12 +25,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Latlonpolygonpnt.findAll", query = "SELECT l FROM Latlonpolygonpnt l"),
-    @NamedQuery(name = "Latlonpolygonpnt.findByLatLonPolygonPntID", query = "SELECT l FROM Latlonpolygonpnt l WHERE l.latLonPolygonPntId = :latLonPolygonPntID"),
+    @NamedQuery(name = "Latlonpolygonpnt.findByLatLonPolygonPntId", query = "SELECT l FROM Latlonpolygonpnt l WHERE l.latLonPolygonPntId = :latLonPolygonPntId"),
     @NamedQuery(name = "Latlonpolygonpnt.findByElevation", query = "SELECT l FROM Latlonpolygonpnt l WHERE l.elevation = :elevation"),
     @NamedQuery(name = "Latlonpolygonpnt.findByLatitude", query = "SELECT l FROM Latlonpolygonpnt l WHERE l.latitude = :latitude"),
     @NamedQuery(name = "Latlonpolygonpnt.findByLongitude", query = "SELECT l FROM Latlonpolygonpnt l WHERE l.longitude = :longitude"),
     @NamedQuery(name = "Latlonpolygonpnt.findByOrdinal", query = "SELECT l FROM Latlonpolygonpnt l WHERE l.ordinal = :ordinal"),
-    @NamedQuery(name = "Latlonpolygonpnt.findByLatLonPolygonID", query = "SELECT l FROM Latlonpolygonpnt l WHERE l.latLonPolygon = :latLonPolygonID")})
+    @NamedQuery(name = "Latlonpolygonpnt.findByLatLonPolygon", query = "SELECT l FROM Latlonpolygonpnt l WHERE l.latLonPolygon = :latLonPolygon")})
 public class Latlonpolygonpnt implements Serializable, SpecifyBean {
     
     private static final long serialVersionUID = 1L;
@@ -133,6 +133,11 @@ public class Latlonpolygonpnt implements Serializable, SpecifyBean {
 
     public void setLatLonPolygonPntId(Integer latLonPolygonPntId) {
         this.latLonPolygonPntId = latLonPolygonPntId;
+    }
+    
+    @Override
+    public String getEntityName() {
+        return "latLonPolygonPnt";
     }
  
     @Override

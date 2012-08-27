@@ -20,7 +20,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Workbench.findAll", query = "SELECT w FROM Workbench w"),
-    @NamedQuery(name = "Workbench.findByWorkbenchID", query = "SELECT w FROM Workbench w WHERE w.workbenchId = :workbenchID"),
+    @NamedQuery(name = "Workbench.findByWorkbenchId", query = "SELECT w FROM Workbench w WHERE w.workbenchId = :workbenchId"),
     @NamedQuery(name = "Workbench.findByTimestampCreated", query = "SELECT w FROM Workbench w WHERE w.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Workbench.findByTimestampModified", query = "SELECT w FROM Workbench w WHERE w.timestampModified = :timestampModified"),
     @NamedQuery(name = "Workbench.findByVersion", query = "SELECT w FROM Workbench w WHERE w.version = :version"),
@@ -90,6 +90,7 @@ public class Workbench extends BaseEntity {
     private Spprincipal group;
     
     @JoinColumn(name = "WorkbenchTemplateID", referencedColumnName = "WorkbenchTemplateID")
+    @NotNull
     @ManyToOne(optional = false)
     private Workbenchtemplate workbenchTemplate;
     
@@ -102,6 +103,7 @@ public class Workbench extends BaseEntity {
     private Agent modifiedByAgent;
     
     @JoinColumn(name = "SpecifyUserID", referencedColumnName = "SpecifyUserID")
+    @NotNull
     @ManyToOne(optional = false)
     private Specifyuser specifyUser;
     
@@ -278,6 +280,11 @@ public class Workbench extends BaseEntity {
     }
  
 
+    @Override
+    public String getEntityName() {
+        return "workbench";
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

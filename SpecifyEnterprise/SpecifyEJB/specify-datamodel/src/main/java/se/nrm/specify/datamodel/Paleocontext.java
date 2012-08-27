@@ -30,11 +30,11 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Paleocontext.findAll", query = "SELECT p FROM Paleocontext p"),
-    @NamedQuery(name = "Paleocontext.findByPaleoContextID", query = "SELECT p FROM Paleocontext p WHERE p.paleoContextId = :paleoContextID"),
+    @NamedQuery(name = "Paleocontext.findByPaleoContextId", query = "SELECT p FROM Paleocontext p WHERE p.paleoContextId = :paleoContextId"),
     @NamedQuery(name = "Paleocontext.findByTimestampCreated", query = "SELECT p FROM Paleocontext p WHERE p.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Paleocontext.findByTimestampModified", query = "SELECT p FROM Paleocontext p WHERE p.timestampModified = :timestampModified"),
     @NamedQuery(name = "Paleocontext.findByVersion", query = "SELECT p FROM Paleocontext p WHERE p.version = :version"),
-    @NamedQuery(name = "Paleocontext.findByCollectionMemberID", query = "SELECT p FROM Paleocontext p WHERE p.collectionMemberId = :collectionMemberID"),
+    @NamedQuery(name = "Paleocontext.findByCollectionMemberId", query = "SELECT p FROM Paleocontext p WHERE p.collectionMemberId = :collectionMemberId"),
     @NamedQuery(name = "Paleocontext.findByBottomDistance", query = "SELECT p FROM Paleocontext p WHERE p.bottomDistance = :bottomDistance"),
     @NamedQuery(name = "Paleocontext.findByDirection", query = "SELECT p FROM Paleocontext p WHERE p.direction = :direction"),
     @NamedQuery(name = "Paleocontext.findByDistanceUnits", query = "SELECT p FROM Paleocontext p WHERE p.distanceUnits = :distanceUnits"),
@@ -300,7 +300,10 @@ public class Paleocontext extends BaseEntity {
         this.paleoContextId = paleoContextId;
     }
 
-    
+    @Override
+    public String getEntityName() {
+        return "paleoContext";
+    }
 
     @Override
     public int hashCode() {

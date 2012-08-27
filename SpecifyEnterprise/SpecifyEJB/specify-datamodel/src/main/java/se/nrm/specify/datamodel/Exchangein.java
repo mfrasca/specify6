@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Exchangein.findAll", query = "SELECT e FROM Exchangein e"),
-    @NamedQuery(name = "Exchangein.findByExchangeInID", query = "SELECT e FROM Exchangein e WHERE e.exchangeInId = :exchangeInID"),
+    @NamedQuery(name = "Exchangein.findByExchangeInId", query = "SELECT e FROM Exchangein e WHERE e.exchangeInId = :exchangeInId"),
     @NamedQuery(name = "Exchangein.findByTimestampCreated", query = "SELECT e FROM Exchangein e WHERE e.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Exchangein.findByTimestampModified", query = "SELECT e FROM Exchangein e WHERE e.timestampModified = :timestampModified"),
     @NamedQuery(name = "Exchangein.findByVersion", query = "SELECT e FROM Exchangein e WHERE e.version = :version"),
@@ -102,6 +102,7 @@ public class Exchangein extends BaseEntity {
     private Boolean yesNo2;
     
     @JoinColumn(name = "ReceivedFromOrganizationID", referencedColumnName = "AgentID")
+    @NotNull
     @ManyToOne(optional = false)
     private Agent agentReceivedFrom;
     
@@ -110,6 +111,7 @@ public class Exchangein extends BaseEntity {
     private Addressofrecord addressOfRecord;
     
     @JoinColumn(name = "DivisionID", referencedColumnName = "UserGroupScopeId")
+    @NotNull
     @ManyToOne(optional = false)
     private Division division;
     
@@ -122,6 +124,7 @@ public class Exchangein extends BaseEntity {
     private Agent modifiedByAgent;
     
     @JoinColumn(name = "CatalogedByID", referencedColumnName = "AgentID")
+    @NotNull
     @ManyToOne(optional = false)
     private Agent agentCatalogedBy;
 
@@ -300,6 +303,10 @@ public class Exchangein extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
  
+    @Override
+    public String getEntityName() {
+        return "exchangeIn";
+    }
 
     @Override
     public int hashCode() {

@@ -18,7 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
-import javax.persistence.TemporalType;  
+import javax.persistence.TemporalType;   
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -36,7 +36,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Collectingevent.findAll", query = "SELECT c FROM Collectingevent c"),
-    @NamedQuery(name = "Collectingevent.findByCollectingEventID", query = "SELECT c FROM Collectingevent c WHERE c.collectingEventId = :collectingEventID"), 
+    @NamedQuery(name = "Collectingevent.findByCollectingEventId", query = "SELECT c FROM Collectingevent c WHERE c.collectingEventId = :collectingEventId"), 
     @NamedQuery(name = "Collectingevent.findByTimestampCreated", query = "SELECT c FROM Collectingevent c WHERE c.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Collectingevent.findByTimestampModified", query = "SELECT c FROM Collectingevent c WHERE c.timestampModified = :timestampModified"),
     @NamedQuery(name = "Collectingevent.findByVersion", query = "SELECT c FROM Collectingevent c WHERE c.version = :version"),
@@ -120,7 +120,7 @@ public class Collectingevent extends BaseEntity {
     @Column(name = "Visibility")
     private Short visibility;
      
-    @OneToOne(mappedBy = "collectingEvent")
+    @OneToOne(mappedBy = "collectingEvent", cascade={CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST})
     private Collector collector;
  
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "collectingEvent")
@@ -151,6 +151,7 @@ public class Collectingevent extends BaseEntity {
     private Agent modifiedByAgent;
     
     @JoinColumn(name = "DisciplineID", referencedColumnName = "UserGroupScopeId")
+    @NotNull
     @ManyToOne(optional = false)
     private Discipline discipline;
     
@@ -414,11 +415,11 @@ public class Collectingevent extends BaseEntity {
     public void setVisibilitySetBy(Specifyuser visibilitySetBy) {
         this.visibilitySetBy = visibilitySetBy;
     }
-
-   
  
-    
- 
+    @Override
+    public String getEntityName() {
+        return "collectingEvent";
+    }
 
     @Override
     public int hashCode() {

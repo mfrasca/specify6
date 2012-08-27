@@ -20,7 +20,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Accessionattachment.findAll", query = "SELECT a FROM Accessionattachment a"),
-    @NamedQuery(name = "Accessionattachment.findByAccessionAttachmentID", query = "SELECT a FROM Accessionattachment a WHERE a.accessionAttachmentId = :accessionAttachmentID"),
+    @NamedQuery(name = "Accessionattachment.findByAccessionAttachmentId", query = "SELECT a FROM Accessionattachment a WHERE a.accessionAttachmentId = :accessionAttachmentId"),
     @NamedQuery(name = "Accessionattachment.findByTimestampCreated", query = "SELECT a FROM Accessionattachment a WHERE a.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Accessionattachment.findByTimestampModified", query = "SELECT a FROM Accessionattachment a WHERE a.timestampModified = :timestampModified"),
     @NamedQuery(name = "Accessionattachment.findByVersion", query = "SELECT a FROM Accessionattachment a WHERE a.version = :version"),
@@ -46,6 +46,7 @@ public class Accessionattachment extends BaseEntity {
     private String remarks;
     
     @JoinColumn(name = "AttachmentID", referencedColumnName = "AttachmentID")
+    @NotNull
     @ManyToOne(optional = false)
     private Attachment attachment;
     
@@ -58,6 +59,7 @@ public class Accessionattachment extends BaseEntity {
     private Agent modifiedByAgent;
     
     @JoinColumn(name = "AccessionID", referencedColumnName = "AccessionID")
+    @NotNull
     @ManyToOne(optional = false)
     private Accession accession;
 
@@ -140,6 +142,12 @@ public class Accessionattachment extends BaseEntity {
     public void setModifiedByAgent(Agent modifiedByAgent) {
         this.modifiedByAgent = modifiedByAgent;
     }
+ 
+    @Override
+    public String getEntityName() {
+        return "accessionAttachment";
+    }
+    
     
     /**
      * Parent pointer

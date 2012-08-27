@@ -33,7 +33,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Storagetreedef.findAll", query = "SELECT s FROM Storagetreedef s"),
-    @NamedQuery(name = "Storagetreedef.findByStorageTreeDefID", query = "SELECT s FROM Storagetreedef s WHERE s.storageTreeDefId = :storageTreeDefID"),
+    @NamedQuery(name = "Storagetreedef.findByStorageTreeDefId", query = "SELECT s FROM Storagetreedef s WHERE s.storageTreeDefId = :storageTreeDefId"),
     @NamedQuery(name = "Storagetreedef.findByTimestampCreated", query = "SELECT s FROM Storagetreedef s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Storagetreedef.findByTimestampModified", query = "SELECT s FROM Storagetreedef s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Storagetreedef.findByVersion", query = "SELECT s FROM Storagetreedef s WHERE s.version = :version"),
@@ -54,6 +54,7 @@ public class Storagetreedef extends BaseEntity {
     private Integer fullNameDirection;
     
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
@@ -182,7 +183,10 @@ public class Storagetreedef extends BaseEntity {
    
 
  
-
+    @Override
+    public String getEntityName() {
+        return "storageTreeDef";
+    }
      
 
     @Override

@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Preptype.findAll", query = "SELECT p FROM Preptype p"),
-    @NamedQuery(name = "Preptype.findByPrepTypeID", query = "SELECT p FROM Preptype p WHERE p.prepTypeId = :prepTypeID"),
+    @NamedQuery(name = "Preptype.findByPrepTypeId", query = "SELECT p FROM Preptype p WHERE p.prepTypeId = :prepTypeId"),
     @NamedQuery(name = "Preptype.findByTimestampCreated", query = "SELECT p FROM Preptype p WHERE p.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Preptype.findByTimestampModified", query = "SELECT p FROM Preptype p WHERE p.timestampModified = :timestampModified"),
     @NamedQuery(name = "Preptype.findByVersion", query = "SELECT p FROM Preptype p WHERE p.version = :version"),
@@ -55,11 +55,13 @@ public class Preptype extends BaseEntity {
     private boolean isLoanable;
     
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
     
     @JoinColumn(name = "CollectionID", referencedColumnName = "UserGroupScopeId")
+    @NotNull
     @ManyToOne(optional = false)
     private se.nrm.specify.datamodel.Collection collection;
     
@@ -171,7 +173,10 @@ public class Preptype extends BaseEntity {
     }
 
     
-
+    @Override
+    public String getEntityName() {
+        return "prepType";
+    }
     
 
     @Override

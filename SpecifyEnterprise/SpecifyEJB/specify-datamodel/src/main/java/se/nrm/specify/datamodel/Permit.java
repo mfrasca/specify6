@@ -34,7 +34,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Permit.findAll", query = "SELECT p FROM Permit p"),
-    @NamedQuery(name = "Permit.findByPermitID", query = "SELECT p FROM Permit p WHERE p.permitId = :permitID"),
+    @NamedQuery(name = "Permit.findByPermitId", query = "SELECT p FROM Permit p WHERE p.permitId = :permitId"),
     @NamedQuery(name = "Permit.findByTimestampCreated", query = "SELECT p FROM Permit p WHERE p.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Permit.findByTimestampModified", query = "SELECT p FROM Permit p WHERE p.timestampModified = :timestampModified"),
     @NamedQuery(name = "Permit.findByVersion", query = "SELECT p FROM Permit p WHERE p.version = :version"),
@@ -67,6 +67,7 @@ public class Permit extends BaseEntity {
     private Float number2;
     
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 50)
     @Column(name = "PermitNumber")
     private String permitNumber;
@@ -318,7 +319,10 @@ public class Permit extends BaseEntity {
         this.permitId = permitId;
     }
 
-   
+    @Override
+    public String getEntityName() {
+        return "permit";
+    }
 
     @Override
     public int hashCode() {

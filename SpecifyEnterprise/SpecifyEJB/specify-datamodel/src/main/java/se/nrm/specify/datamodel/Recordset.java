@@ -32,11 +32,11 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Recordset.findAll", query = "SELECT r FROM Recordset r"),
-    @NamedQuery(name = "Recordset.findByRecordSetID", query = "SELECT r FROM Recordset r WHERE r.recordSetId = :recordSetID"),
+    @NamedQuery(name = "Recordset.findByRecordSetId", query = "SELECT r FROM Recordset r WHERE r.recordSetId = :recordSetId"),
     @NamedQuery(name = "Recordset.findByTimestampCreated", query = "SELECT r FROM Recordset r WHERE r.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Recordset.findByTimestampModified", query = "SELECT r FROM Recordset r WHERE r.timestampModified = :timestampModified"),
     @NamedQuery(name = "Recordset.findByVersion", query = "SELECT r FROM Recordset r WHERE r.version = :version"),
-    @NamedQuery(name = "Recordset.findByCollectionMemberID", query = "SELECT r FROM Recordset r WHERE r.collectionMemberId = :collectionMemberID"),
+    @NamedQuery(name = "Recordset.findByCollectionMemberId", query = "SELECT r FROM Recordset r WHERE r.collectionMemberId = :collectionMemberId"),
     @NamedQuery(name = "Recordset.findByAllPermissionLevel", query = "SELECT r FROM Recordset r WHERE r.allPermissionLevel = :allPermissionLevel"),
     @NamedQuery(name = "Recordset.findByTableID", query = "SELECT r FROM Recordset r WHERE r.dbTableId = :tableID"),
     @NamedQuery(name = "Recordset.findByGroupPermissionLevel", query = "SELECT r FROM Recordset r WHERE r.groupPermissionLevel = :groupPermissionLevel"),
@@ -71,6 +71,7 @@ public class Recordset extends BaseEntity {
     private Integer groupPermissionLevel;
     
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
@@ -101,6 +102,7 @@ public class Recordset extends BaseEntity {
     private Agent modifiedByAgent;
     
     @JoinColumn(name = "SpecifyUserID", referencedColumnName = "SpecifyUserID")
+    @NotNull
     @ManyToOne(optional = false)
     private Specifyuser specifyUser;
     
@@ -258,7 +260,11 @@ public class Recordset extends BaseEntity {
     public void setSpecifyUser(Specifyuser specifyUser) {
         this.specifyUser = specifyUser;
     }
-
+    
+    @Override
+    public String getEntityName() {
+        return "recordSet";
+    }
     
 
     @Override

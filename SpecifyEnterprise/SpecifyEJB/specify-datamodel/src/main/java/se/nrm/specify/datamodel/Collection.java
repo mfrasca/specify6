@@ -17,9 +17,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table; 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlAttribute; 
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -171,7 +169,7 @@ public class Collection extends BaseEntity {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "collection")
     private java.util.Collection<Picklist> pickLists;
     
-    @JoinColumn(name = "DisciplineID", referencedColumnName = "UserGroupScopeId")
+    @JoinColumn(name = "DisciplineID", referencedColumnName = "UserGroupScopeId") 
     @ManyToOne(optional = false)
     private Discipline discipline;
     
@@ -226,7 +224,7 @@ public class Collection extends BaseEntity {
     @XmlAttribute(name = "id")
     @Override
     public String getIdentityString() {
-        return (collectionId != null) ? collectionId.toString() : "0";
+        return (userGroupScopeId != null) ? userGroupScopeId.toString() : "0";
     }
   
     public Integer getUserGroupScopeId() {
@@ -542,6 +540,12 @@ public class Collection extends BaseEntity {
     }
  
 
+    @Override
+    public String getEntityName() {
+        return "collection";
+    }
+    
+    
     @Override
     public int hashCode() {
         int hash = 0;

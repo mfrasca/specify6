@@ -11,7 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Borrowattachment.findAll", query = "SELECT b FROM Borrowattachment b"),
-    @NamedQuery(name = "Borrowattachment.findByBorrowAttachmentID", query = "SELECT b FROM Borrowattachment b WHERE b.borrowAttachmentId = :borrowAttachmentID"),
+    @NamedQuery(name = "Borrowattachment.findByBorrowAttachmentId", query = "SELECT b FROM Borrowattachment b WHERE b.borrowAttachmentId = :borrowAttachmentId"),
     @NamedQuery(name = "Borrowattachment.findByTimestampCreated", query = "SELECT b FROM Borrowattachment b WHERE b.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Borrowattachment.findByTimestampModified", query = "SELECT b FROM Borrowattachment b WHERE b.timestampModified = :timestampModified"),
     @NamedQuery(name = "Borrowattachment.findByVersion", query = "SELECT b FROM Borrowattachment b WHERE b.version = :version"),
@@ -49,6 +49,7 @@ public class Borrowattachment extends BaseEntity implements Serializable {
      
     @Column(name = "Ordinal")
     private Integer ordinal;
+    
     @Lob
     @Size(max = 65535)
     @Column(name = "Remarks")
@@ -148,9 +149,12 @@ public class Borrowattachment extends BaseEntity implements Serializable {
     public void setRemarks(String remarks) {
         this.remarks = remarks;
     }
-
-   
-
+    
+    @Override
+    public String getEntityName() {
+        return "borrowAttachment";
+    }
+ 
     @Override
     public int hashCode() {
         int hash = 0;

@@ -81,10 +81,12 @@ public class Spreport extends BaseEntity {
     private Agent modifiedByAgent;
     
     @JoinColumn(name = "SpecifyUserID", referencedColumnName = "SpecifyUserID")
+    @NotNull
     @ManyToOne(optional = false)
     private Specifyuser specifyUser;
     
     @JoinColumn(name = "AppResourceID", referencedColumnName = "SpAppResourceID")
+    @NotNull
     @ManyToOne(optional = false)
     private Spappresource appResource;
 
@@ -198,7 +200,10 @@ public class Spreport extends BaseEntity {
         this.workbenchTemplate = workbenchTemplate;
     }
 
-    
+    @Override
+    public String getEntityName() {
+        return "spReport";
+    }
 
     @Override
     public int hashCode() {

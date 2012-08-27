@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;   
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size; 
 import javax.xml.bind.annotation.XmlAttribute;
@@ -30,7 +31,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Author.findAll", query = "SELECT a FROM Author a"),
-    @NamedQuery(name = "Author.findByAuthorID", query = "SELECT a FROM Author a WHERE a.authorId = :authorID"),
+    @NamedQuery(name = "Author.findByAuthorId", query = "SELECT a FROM Author a WHERE a.authorId = :authorId"),
     @NamedQuery(name = "Author.findByTimestampCreated", query = "SELECT a FROM Author a WHERE a.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Author.findByTimestampModified", query = "SELECT a FROM Author a WHERE a.timestampModified = :timestampModified"),
     @NamedQuery(name = "Author.findByVersion", query = "SELECT a FROM Author a WHERE a.version = :version"),
@@ -61,6 +62,7 @@ public class Author extends BaseEntity implements CycleRecoverable {
     private Agent createdByAgent;
     
     @JoinColumn(name = "ReferenceWorkID", referencedColumnName = "ReferenceWorkID")
+    @NotNull
     @ManyToOne(optional = false)
     private Referencework referenceWork;
     
@@ -69,6 +71,7 @@ public class Author extends BaseEntity implements CycleRecoverable {
     private Agent modifiedByAgent;
     
     @JoinColumn(name = "AgentID", referencedColumnName = "AgentID", unique=true)
+    @NotNull
     @ManyToOne(optional = false)
     private Agent agent;
 
@@ -161,6 +164,11 @@ public class Author extends BaseEntity implements CycleRecoverable {
     public void setRemarks(String remarks) {
         this.remarks = remarks;
     } 
+    
+    @Override
+    public String getEntityName() {
+        return "author";
+    }
 
     @Override
     public int hashCode() {

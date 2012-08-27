@@ -32,14 +32,14 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Spexportschemamapping.findAll", query = "SELECT s FROM Spexportschemamapping s"),
-    @NamedQuery(name = "Spexportschemamapping.findBySpExportSchemaMappingID", query = "SELECT s FROM Spexportschemamapping s WHERE s.spExportSchemaMappingId = :spExportSchemaMappingID"),
+    @NamedQuery(name = "Spexportschemamapping.findBySpExportSchemaMappingId", query = "SELECT s FROM Spexportschemamapping s WHERE s.spExportSchemaMappingId = :spExportSchemaMappingId"),
     @NamedQuery(name = "Spexportschemamapping.findByTimestampCreated", query = "SELECT s FROM Spexportschemamapping s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Spexportschemamapping.findByTimestampModified", query = "SELECT s FROM Spexportschemamapping s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Spexportschemamapping.findByVersion", query = "SELECT s FROM Spexportschemamapping s WHERE s.version = :version"),
     @NamedQuery(name = "Spexportschemamapping.findByDescription", query = "SELECT s FROM Spexportschemamapping s WHERE s.description = :description"),
     @NamedQuery(name = "Spexportschemamapping.findByMappingName", query = "SELECT s FROM Spexportschemamapping s WHERE s.mappingName = :mappingName"),
     @NamedQuery(name = "Spexportschemamapping.findByTimeStampExported", query = "SELECT s FROM Spexportschemamapping s WHERE s.timestampExported = :timeStampExported"),
-    @NamedQuery(name = "Spexportschemamapping.findByCollectionMemberID", query = "SELECT s FROM Spexportschemamapping s WHERE s.collectionMemberId = :collectionMemberID")})
+    @NamedQuery(name = "Spexportschemamapping.findByCollectionMemberId", query = "SELECT s FROM Spexportschemamapping s WHERE s.collectionMemberId = :collectionMemberId")})
 public class Spexportschemamapping extends BaseEntity {
   
     private static final long serialVersionUID = 1L;
@@ -173,6 +173,10 @@ public class Spexportschemamapping extends BaseEntity {
         this.timestampExported = timestampExported;
     }
   
+    @Override
+    public String getEntityName() {
+        return "spExportSchemaMapping";
+    }
 
     @Override
     public int hashCode() {

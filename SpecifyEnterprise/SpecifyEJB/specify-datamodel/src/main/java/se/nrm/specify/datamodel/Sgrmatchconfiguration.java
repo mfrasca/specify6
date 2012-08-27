@@ -39,13 +39,13 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Sgrmatchconfiguration.findByFilterQuery", query = "SELECT s FROM Sgrmatchconfiguration s WHERE s.filterQuery = :filterQuery"),
     @NamedQuery(name = "Sgrmatchconfiguration.findByBoostInterestingTerms", query = "SELECT s FROM Sgrmatchconfiguration s WHERE s.boostInterestingTerms = :boostInterestingTerms"),
     @NamedQuery(name = "Sgrmatchconfiguration.findByNRows", query = "SELECT s FROM Sgrmatchconfiguration s WHERE s.nRows = :nRows")})
-public class Sgrmatchconfiguration implements Serializable {
+public class Sgrmatchconfiguration implements Serializable, SpecifyBean {
     
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @NotNull
+//    @NotNull
     @Column(name = "id")
     private Long id;
     
@@ -216,6 +216,11 @@ public class Sgrmatchconfiguration implements Serializable {
     }
 
   
+    @Override
+    public String getEntityName() {
+        return "sgrmatchconfiguration";
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

@@ -33,7 +33,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Geographytreedef.findAll", query = "SELECT g FROM Geographytreedef g"),
-    @NamedQuery(name = "Geographytreedef.findByGeographyTreeDefID", query = "SELECT g FROM Geographytreedef g WHERE g.geographyTreeDefId = :geographyTreeDefID"),
+    @NamedQuery(name = "Geographytreedef.findByGeographyTreeDefId", query = "SELECT g FROM Geographytreedef g WHERE g.geographyTreeDefId = :geographyTreeDefId"),
     @NamedQuery(name = "Geographytreedef.findByTimestampCreated", query = "SELECT g FROM Geographytreedef g WHERE g.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Geographytreedef.findByTimestampModified", query = "SELECT g FROM Geographytreedef g WHERE g.timestampModified = :timestampModified"),
     @NamedQuery(name = "Geographytreedef.findByVersion", query = "SELECT g FROM Geographytreedef g WHERE g.version = :version"),
@@ -54,6 +54,7 @@ public class Geographytreedef extends BaseEntity {
     private Integer fullNameDirection;
     
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
@@ -179,7 +180,10 @@ public class Geographytreedef extends BaseEntity {
     }
 
    
- 
+    @Override
+    public String getEntityName() {
+        return "geographyTreeDef";
+    }
 
     @Override
     public int hashCode() {

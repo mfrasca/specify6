@@ -42,7 +42,7 @@ public class Dnasequencerunattachment extends BaseEntity implements Serializable
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @NotNull
+//    @NotNull
     @Column(name = "DnaSequencingRunAttachmentId")
     private Integer dnaSequencingRunAttachmentId;
   
@@ -56,10 +56,12 @@ public class Dnasequencerunattachment extends BaseEntity implements Serializable
     private String remarks;
     
     @JoinColumn(name = "AttachmentID", referencedColumnName = "AttachmentID")
+    @NotNull
     @ManyToOne(optional = false)
     private Attachment attachment;
     
     @JoinColumn(name = "DnaSequencingRunID", referencedColumnName = "DNASequencingRunID")
+    @NotNull
     @ManyToOne(optional = false)
     private Dnasequencingrun dnasequencingrun;
     
@@ -152,6 +154,10 @@ public class Dnasequencerunattachment extends BaseEntity implements Serializable
         this.modifiedByAgent = modifiedByAgent;
     }
  
+    @Override
+    public String getEntityName() {
+        return "dnaSequencingRunAttachment";
+    }
     
 
     @Override

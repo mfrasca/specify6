@@ -12,9 +12,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -30,7 +28,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Loanagent.findAll", query = "SELECT l FROM Loanagent l"),
-    @NamedQuery(name = "Loanagent.findByLoanAgentID", query = "SELECT l FROM Loanagent l WHERE l.loanAgentId = :loanAgentID"),
+    @NamedQuery(name = "Loanagent.findByLoanAgentId", query = "SELECT l FROM Loanagent l WHERE l.loanAgentId = :loanAgentId"),
     @NamedQuery(name = "Loanagent.findByTimestampCreated", query = "SELECT l FROM Loanagent l WHERE l.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Loanagent.findByTimestampModified", query = "SELECT l FROM Loanagent l WHERE l.timestampModified = :timestampModified"),
     @NamedQuery(name = "Loanagent.findByVersion", query = "SELECT l FROM Loanagent l WHERE l.version = :version"),
@@ -52,11 +50,13 @@ public class Loanagent extends BaseEntity {
     private String remarks;
     
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 50)
     @Column(name = "Role")
     private String role;
     
     @JoinColumn(name = "LoanID", referencedColumnName = "LoanID")
+    @NotNull
     @ManyToOne(optional = false)
     private Loan loan;
     
@@ -73,6 +73,7 @@ public class Loanagent extends BaseEntity {
     private Discipline discipline;
     
     @JoinColumn(name = "AgentID", referencedColumnName = "AgentID")
+    @NotNull
     @ManyToOne(optional = false)
     private Agent agent;
 
@@ -166,7 +167,10 @@ public class Loanagent extends BaseEntity {
     }
 
     
-
+    @Override
+    public String getEntityName() {
+        return "loanAgent";
+    }
    
 
     @Override

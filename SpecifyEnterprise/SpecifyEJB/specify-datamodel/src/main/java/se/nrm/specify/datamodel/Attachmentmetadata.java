@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;  
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -47,11 +48,13 @@ public class Attachmentmetadata extends BaseEntity {
     private Integer attachmentMetadataID;
      
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
     
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 128)
     @Column(name = "Value")
     private String value;
@@ -140,8 +143,11 @@ public class Attachmentmetadata extends BaseEntity {
     public void setModifiedByAgent(Agent modifiedByAgent) {
         this.modifiedByAgent = modifiedByAgent;
     }
-
- 
+    
+    @Override
+    public String getEntityName() {
+        return "attachmentMetadata";
+    }
 
     @Override
     public int hashCode() {
@@ -149,7 +155,9 @@ public class Attachmentmetadata extends BaseEntity {
         hash += (attachmentMetadataID != null ? attachmentMetadataID.hashCode() : 0);
         return hash;
     }
-
+    
+    
+    
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set

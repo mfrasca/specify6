@@ -33,7 +33,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Preparationattribute.findAll", query = "SELECT p FROM Preparationattribute p"),
-    @NamedQuery(name = "Preparationattribute.findByPreparationAttributeID", query = "SELECT p FROM Preparationattribute p WHERE p.preparationAttributeId = :preparationAttributeID"),
+    @NamedQuery(name = "Preparationattribute.findByPreparationAttributeId", query = "SELECT p FROM Preparationattribute p WHERE p.preparationAttributeId = :preparationAttributeId"),
     @NamedQuery(name = "Preparationattribute.findByTimestampCreated", query = "SELECT p FROM Preparationattribute p WHERE p.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Preparationattribute.findByTimestampModified", query = "SELECT p FROM Preparationattribute p WHERE p.timestampModified = :timestampModified"),
     @NamedQuery(name = "Preparationattribute.findByVersion", query = "SELECT p FROM Preparationattribute p WHERE p.version = :version"),
@@ -652,6 +652,12 @@ public class Preparationattribute extends BaseEntity {
     }
     
  
+    @Override
+    public String getEntityName() {
+        return "preparationAttribute";
+    }
+    
+    
     @Override
     public int hashCode() {
         int hash = 0;

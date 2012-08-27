@@ -42,7 +42,8 @@ public abstract class BaseEntity implements Serializable, SpecifyBean {
         this.timestampCreated = timestampCreated;
     }
 
-    public abstract String getIdentityString();
+//    public abstract String getIdentityString();
+     
  
     public Integer getVersion() {
         return version;

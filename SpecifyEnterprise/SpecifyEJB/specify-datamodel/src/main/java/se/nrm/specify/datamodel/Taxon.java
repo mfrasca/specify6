@@ -25,7 +25,7 @@ import org.eclipse.persistence.annotations.Index;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Taxon.findAll", query = "SELECT t FROM Taxon t"),
-    @NamedQuery(name = "Taxon.findByTaxonID", query = "SELECT t FROM Taxon t WHERE t.taxonId = :taxonID"),
+    @NamedQuery(name = "Taxon.findByTaxonId", query = "SELECT t FROM Taxon t WHERE t.taxonId = :taxonId"),
     @NamedQuery(name = "Taxon.findByTimestampCreated", query = "SELECT t FROM Taxon t WHERE t.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Taxon.findByTimestampModified", query = "SELECT t FROM Taxon t WHERE t.timestampModified = :timestampModified"),
     @NamedQuery(name = "Taxon.findByVersion", query = "SELECT t FROM Taxon t WHERE t.version = :version"),
@@ -56,14 +56,6 @@ import org.eclipse.persistence.annotations.Index;
     @NamedQuery(name = "Taxon.findByTaxonomicSerialNumber", query = "SELECT t FROM Taxon t WHERE t.taxonomicSerialNumber = :taxonomicSerialNumber"),
     @NamedQuery(name = "Taxon.findByText1", query = "SELECT t FROM Taxon t WHERE t.text1 = :text1"),
     @NamedQuery(name = "Taxon.findByText2", query = "SELECT t FROM Taxon t WHERE t.text2 = :text2"),
-    @NamedQuery(name = "Taxon.findByUnitInd1", query = "SELECT t FROM Taxon t WHERE t.unitInd1 = :unitInd1"),
-    @NamedQuery(name = "Taxon.findByUnitInd2", query = "SELECT t FROM Taxon t WHERE t.unitInd2 = :unitInd2"),
-    @NamedQuery(name = "Taxon.findByUnitInd3", query = "SELECT t FROM Taxon t WHERE t.unitInd3 = :unitInd3"),
-    @NamedQuery(name = "Taxon.findByUnitInd4", query = "SELECT t FROM Taxon t WHERE t.unitInd4 = :unitInd4"),
-    @NamedQuery(name = "Taxon.findByUnitName1", query = "SELECT t FROM Taxon t WHERE t.unitName1 = :unitName1"),
-    @NamedQuery(name = "Taxon.findByUnitName2", query = "SELECT t FROM Taxon t WHERE t.unitName2 = :unitName2"),
-    @NamedQuery(name = "Taxon.findByUnitName3", query = "SELECT t FROM Taxon t WHERE t.unitName3 = :unitName3"),
-    @NamedQuery(name = "Taxon.findByUnitName4", query = "SELECT t FROM Taxon t WHERE t.unitName4 = :unitName4"),
     @NamedQuery(name = "Taxon.findByUsfwsCode", query = "SELECT t FROM Taxon t WHERE t.usfwsCode = :usfwsCode"),
     @NamedQuery(name = "Taxon.findByVisibility", query = "SELECT t FROM Taxon t WHERE t.visibility = :visibility")})
 public class Taxon extends BaseEntity {
@@ -137,6 +129,7 @@ public class Taxon extends BaseEntity {
     private String labelFormat;
     
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
@@ -218,7 +211,8 @@ public class Taxon extends BaseEntity {
     @Column(name = "Visibility")
     private Short visibility;
     
-    @JoinColumn(name = "TaxonTreeDefID", referencedColumnName = "TaxonTreeDefID")
+    @NotNull
+    @JoinColumn(name = "TaxonTreeDefID", referencedColumnName = "TaxonTreeDefID") 
     @ManyToOne(optional = false)
     private Taxontreedef definition;
     
@@ -229,7 +223,8 @@ public class Taxon extends BaseEntity {
     @ManyToOne
     private Taxon parent;
     
-    @JoinColumn(name = "TaxonTreeDefItemID", referencedColumnName = "TaxonTreeDefItemID")
+    @NotNull
+    @JoinColumn(name = "TaxonTreeDefItemID", referencedColumnName = "TaxonTreeDefItemID") 
     @ManyToOne(optional = false)
     private Taxontreedefitem definitionItem;
     
@@ -374,8 +369,7 @@ public class Taxon extends BaseEntity {
     public void setCreatedByAgent(Agent createdByAgent) {
         this.createdByAgent = createdByAgent;
     }
-
-    @XmlIDREF
+ 
     @NotNull(message="Definition must be specified.")
     public Taxontreedef getDefinition() {
         return definition;
@@ -384,8 +378,7 @@ public class Taxon extends BaseEntity {
     public void setDefinition(Taxontreedef definition) {
         this.definition = definition;
     }
-
-    @XmlIDREF
+ 
     @NotNull(message="DefinitionItem must be specified.")
     public Taxontreedefitem getDefinitionItem() {
         return definitionItem;
@@ -809,6 +802,10 @@ public class Taxon extends BaseEntity {
         return new Taxon();
     }
      
+    @Override
+    public String getEntityName() {
+        return "taxon";
+    }
 
     @Override
     public int hashCode() {

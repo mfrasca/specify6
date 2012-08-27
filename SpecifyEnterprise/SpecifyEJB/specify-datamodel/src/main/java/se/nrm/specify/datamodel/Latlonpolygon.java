@@ -10,9 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -28,16 +26,16 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Latlonpolygon.findAll", query = "SELECT l FROM Latlonpolygon l"),
-    @NamedQuery(name = "Latlonpolygon.findByLatLonPolygonID", query = "SELECT l FROM Latlonpolygon l WHERE l.latLonPolygonId = :latLonPolygonID"),
+    @NamedQuery(name = "Latlonpolygon.findByLatLonPolygonId", query = "SELECT l FROM Latlonpolygon l WHERE l.latLonPolygonId = :latLonPolygonId"),
     @NamedQuery(name = "Latlonpolygon.findByTimestampCreated", query = "SELECT l FROM Latlonpolygon l WHERE l.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Latlonpolygon.findByTimestampModified", query = "SELECT l FROM Latlonpolygon l WHERE l.timestampModified = :timestampModified"),
     @NamedQuery(name = "Latlonpolygon.findByVersion", query = "SELECT l FROM Latlonpolygon l WHERE l.version = :version"),
     @NamedQuery(name = "Latlonpolygon.findByIsPolyline", query = "SELECT l FROM Latlonpolygon l WHERE l.isPolyline = :isPolyline"),
     @NamedQuery(name = "Latlonpolygon.findByName", query = "SELECT l FROM Latlonpolygon l WHERE l.name = :name"),
-    @NamedQuery(name = "Latlonpolygon.findBySpVisualQueryID", query = "SELECT l FROM Latlonpolygon l WHERE l.visualQuery = :spVisualQueryID"),
+    @NamedQuery(name = "Latlonpolygon.findByVisualQuery", query = "SELECT l FROM Latlonpolygon l WHERE l.visualQuery = :visualQuery"),
     @NamedQuery(name = "Latlonpolygon.findByLocalityID", query = "SELECT l FROM Latlonpolygon l WHERE l.locality = :localityID"),
-    @NamedQuery(name = "Latlonpolygon.findByCreatedByAgentID", query = "SELECT l FROM Latlonpolygon l WHERE l.createdByAgent = :createdByAgentID"),
-    @NamedQuery(name = "Latlonpolygon.findByModifiedByAgentID", query = "SELECT l FROM Latlonpolygon l WHERE l.modifiedByAgent = :modifiedByAgentID")})
+    @NamedQuery(name = "Latlonpolygon.findByCreatedByAgent", query = "SELECT l FROM Latlonpolygon l WHERE l.createdByAgent = :createdByAgent"),
+    @NamedQuery(name = "Latlonpolygon.findByModifiedByAgent", query = "SELECT l FROM Latlonpolygon l WHERE l.modifiedByAgent = :modifiedByAgent")})
 public class Latlonpolygon extends BaseEntity {
  
     private static final long serialVersionUID = 1L;
@@ -60,6 +58,7 @@ public class Latlonpolygon extends BaseEntity {
     private boolean isPolyline;
     
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
@@ -162,7 +161,10 @@ public class Latlonpolygon extends BaseEntity {
         this.visualQuery = visualQuery;
     }
 
-  
+    @Override
+    public String getEntityName() {
+        return "latLonPolygon";
+    }
 
     @Override
     public int hashCode() {

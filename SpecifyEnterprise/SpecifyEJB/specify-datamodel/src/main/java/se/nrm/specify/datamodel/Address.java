@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement 
 @NamedQueries({
     @NamedQuery(name = "Address.findAll", query = "SELECT a FROM Address a"),
-    @NamedQuery(name = "Address.findByAddressID", query = "SELECT a FROM Address a WHERE a.addressId = :addressID"),
+    @NamedQuery(name = "Address.findByAddressId", query = "SELECT a FROM Address a WHERE a.addressId = :addressId"),
     @NamedQuery(name = "Address.findByTimestampCreated", query = "SELECT a FROM Address a WHERE a.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Address.findByTimestampModified", query = "SELECT a FROM Address a WHERE a.timestampModified = :timestampModified"),
     @NamedQuery(name = "Address.findByVersion", query = "SELECT a FROM Address a WHERE a.version = :version"),
@@ -424,7 +424,7 @@ public class Address extends BaseEntity implements CycleRecoverable {
     public void setModifiedByAgent(Agent modifiedByAgent) {
         this.modifiedByAgent = modifiedByAgent;
     }
-  
+ 
     
     /**
      * Parent pointer
@@ -438,7 +438,12 @@ public class Address extends BaseEntity implements CycleRecoverable {
             this.agent = (Agent)parent;   
         }
     }
-  
+ 
+    @Override
+    public String getEntityName() {
+        return "address";
+    }
+        
     @Override
     public int hashCode() {
         int hash = 0;

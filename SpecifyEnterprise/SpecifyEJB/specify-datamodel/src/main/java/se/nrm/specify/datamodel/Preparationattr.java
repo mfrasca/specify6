@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Preparationattr.findAll", query = "SELECT p FROM Preparationattr p"),
-    @NamedQuery(name = "Preparationattr.findByAttrID", query = "SELECT p FROM Preparationattr p WHERE p.attrId = :attrID"),
+    @NamedQuery(name = "Preparationattr.findByAttrId", query = "SELECT p FROM Preparationattr p WHERE p.attrId = :attrId"),
     @NamedQuery(name = "Preparationattr.findByTimestampCreated", query = "SELECT p FROM Preparationattr p WHERE p.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Preparationattr.findByTimestampModified", query = "SELECT p FROM Preparationattr p WHERE p.timestampModified = :timestampModified"),
     @NamedQuery(name = "Preparationattr.findByVersion", query = "SELECT p FROM Preparationattr p WHERE p.version = :version"),
@@ -59,6 +59,7 @@ public class Preparationattr extends BaseEntity {
     private String strValue;
     
     @JoinColumn(name = "AttributeDefID", referencedColumnName = "AttributeDefID")
+    @NotNull
     @ManyToOne(optional = false)
     private Attributedef definition;
     
@@ -71,6 +72,7 @@ public class Preparationattr extends BaseEntity {
     private Agent modifiedByAgent;
     
     @JoinColumn(name = "PreparationId", referencedColumnName = "PreparationID")
+    @NotNull
     @ManyToOne(optional = false)
     private Preparation preparation;
 
@@ -160,7 +162,10 @@ public class Preparationattr extends BaseEntity {
         this.preparation = preparation;
     }
 
- 
+    @Override
+    public String getEntityName() {
+        return "preparationAttr";
+    }
 
     @Override
     public int hashCode() {

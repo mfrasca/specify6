@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Workbenchtemplatemappingitem.findAll", query = "SELECT w FROM Workbenchtemplatemappingitem w"),
-    @NamedQuery(name = "Workbenchtemplatemappingitem.findByWorkbenchTemplateMappingItemID", query = "SELECT w FROM Workbenchtemplatemappingitem w WHERE w.workbenchTemplateMappingItemId = :workbenchTemplateMappingItemID"),
+    @NamedQuery(name = "Workbenchtemplatemappingitem.findByWorkbenchTemplateMappingItemId", query = "SELECT w FROM Workbenchtemplatemappingitem w WHERE w.workbenchTemplateMappingItemId = :workbenchTemplateMappingItemId"),
     @NamedQuery(name = "Workbenchtemplatemappingitem.findByTimestampCreated", query = "SELECT w FROM Workbenchtemplatemappingitem w WHERE w.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Workbenchtemplatemappingitem.findByTimestampModified", query = "SELECT w FROM Workbenchtemplatemappingitem w WHERE w.timestampModified = :timestampModified"),
     @NamedQuery(name = "Workbenchtemplatemappingitem.findByVersion", query = "SELECT w FROM Workbenchtemplatemappingitem w WHERE w.version = :version"),
@@ -121,6 +121,7 @@ public class Workbenchtemplatemappingitem extends BaseEntity {
     private Boolean isEditable;
     
     @JoinColumn(name = "WorkbenchTemplateID", referencedColumnName = "WorkbenchTemplateID")
+    @NotNull
     @ManyToOne(optional = false)
     private Workbenchtemplate workbenchTemplate;
     
@@ -353,7 +354,10 @@ public class Workbenchtemplatemappingitem extends BaseEntity {
     }
  
  
- 
+    @Override
+    public String getEntityName() {
+        return "workbenchTemplateMappingItem";
+    }
 
     @Override
     public int hashCode() {

@@ -1,6 +1,5 @@
 package se.nrm.specify.datamodel;
- 
-import com.sun.xml.bind.CycleRecoverable;
+  
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
@@ -46,7 +45,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Division.findByName", query = "SELECT d FROM Division d WHERE d.name = :name"),
     @NamedQuery(name = "Division.findByRegNumber", query = "SELECT d FROM Division d WHERE d.regNumber = :regNumber"),
     @NamedQuery(name = "Division.findByUri", query = "SELECT d FROM Division d WHERE d.uri = :uri")})
-public class Division extends BaseEntity implements CycleRecoverable {
+public class Division extends BaseEntity {
  
     private static final long serialVersionUID = 1L;
     
@@ -130,7 +129,7 @@ public class Division extends BaseEntity implements CycleRecoverable {
     @ManyToOne  
     private Address address;
     
-    @JoinColumn(name = "InstitutionID", referencedColumnName = "UserGroupScopeId")
+    @JoinColumn(name = "InstitutionID", referencedColumnName = "UserGroupScopeId") 
     @ManyToOne(optional = false)  
     private Institution institution;
     
@@ -166,19 +165,7 @@ public class Division extends BaseEntity implements CycleRecoverable {
         super(timestampCreated);
         this.userGroupScopeId = userGroupScopeId; 
     }
-
  
-    
-    @Override
-    public Division onCycleDetected(Context context) {
-       // Context provides access to the Marshaller being used:
-       System.out.println("JAXB Marshaller is: " + context.getMarshaller() + " -- " + this.getClass().getSimpleName());
-        
-       Division d = new Division(userGroupScopeId);  
-       d.setName(name);
-       
-       return d;
-   }
 
     @XmlID
     @XmlAttribute(name = "id")
@@ -429,7 +416,10 @@ public class Division extends BaseEntity implements CycleRecoverable {
         this.numberingSchemes = numberingSchemes;
     }
 
- 
+    @Override
+    public String getEntityName() {
+        return "division";
+    }
 
     @Override
     public int hashCode() {

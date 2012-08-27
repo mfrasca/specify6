@@ -56,10 +56,12 @@ public class Fieldnotebookpagesetattachment extends BaseEntity {
     private String remarks;
     
     @JoinColumn(name = "AttachmentID", referencedColumnName = "AttachmentID")
+    @NotNull
     @ManyToOne(optional = false)
     private Attachment attachment;
     
     @JoinColumn(name = "FieldNotebookPageSetID", referencedColumnName = "FieldNotebookPageSetID")
+    @NotNull
     @ManyToOne(optional = false)
     private Fieldnotebookpageset fieldNotebookPageSet;
     
@@ -161,6 +163,11 @@ public class Fieldnotebookpagesetattachment extends BaseEntity {
         if(parent instanceof Fieldnotebookpageset) {
             this.fieldNotebookPageSet = (Fieldnotebookpageset)parent;   
         }
+    }
+    
+    @Override
+    public String getEntityName() {
+        return "fieldNotebookPageSetAttachment";
     }
 
     @Override

@@ -31,7 +31,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Loanreturnpreparation.findAll", query = "SELECT l FROM Loanreturnpreparation l"),
-    @NamedQuery(name = "Loanreturnpreparation.findByLoanReturnPreparationID", query = "SELECT l FROM Loanreturnpreparation l WHERE l.loanReturnPreparationId = :loanReturnPreparationID"),
+    @NamedQuery(name = "Loanreturnpreparation.findByLoanReturnPreparationId", query = "SELECT l FROM Loanreturnpreparation l WHERE l.loanReturnPreparationId = :loanReturnPreparationId"),
     @NamedQuery(name = "Loanreturnpreparation.findByTimestampCreated", query = "SELECT l FROM Loanreturnpreparation l WHERE l.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Loanreturnpreparation.findByTimestampModified", query = "SELECT l FROM Loanreturnpreparation l WHERE l.timestampModified = :timestampModified"),
     @NamedQuery(name = "Loanreturnpreparation.findByVersion", query = "SELECT l FROM Loanreturnpreparation l WHERE l.version = :version"),
@@ -70,6 +70,7 @@ public class Loanreturnpreparation extends BaseEntity {
     private Deaccessionpreparation deaccessionPreparation;
     
     @JoinColumn(name = "LoanPreparationID", referencedColumnName = "LoanPreparationID")
+    @NotNull
     @ManyToOne(optional = false)
     private Loanpreparation loanPreparation;
     
@@ -197,6 +198,11 @@ public class Loanreturnpreparation extends BaseEntity {
         this.returnedDate = returnedDate;
     }
 
+    @Override
+    public String getEntityName() {
+        return "loanReturnPreparation";
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

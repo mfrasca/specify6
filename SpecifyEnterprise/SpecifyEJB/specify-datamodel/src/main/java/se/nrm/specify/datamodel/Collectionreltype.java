@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Collectionreltype.findAll", query = "SELECT c FROM Collectionreltype c"),
-    @NamedQuery(name = "Collectionreltype.findByCollectionRelTypeID", query = "SELECT c FROM Collectionreltype c WHERE c.collectionRelTypeId = :collectionRelTypeID"),
+    @NamedQuery(name = "Collectionreltype.findByCollectionRelTypeId", query = "SELECT c FROM Collectionreltype c WHERE c.collectionRelTypeId = :collectionRelTypeId"),
     @NamedQuery(name = "Collectionreltype.findByTimestampCreated", query = "SELECT c FROM Collectionreltype c WHERE c.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Collectionreltype.findByTimestampModified", query = "SELECT c FROM Collectionreltype c WHERE c.timestampModified = :timestampModified"),
     @NamedQuery(name = "Collectionreltype.findByVersion", query = "SELECT c FROM Collectionreltype c WHERE c.version = :version"),
@@ -165,7 +165,10 @@ public class Collectionreltype extends BaseEntity {
     }
 
  
-
+    @Override
+    public String getEntityName() {
+        return "collectionRelType";
+    }
  
 
     @Override

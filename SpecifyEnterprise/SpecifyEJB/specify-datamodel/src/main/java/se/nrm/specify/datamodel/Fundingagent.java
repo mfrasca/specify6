@@ -30,18 +30,18 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Fundingagent.findAll", query = "SELECT f FROM Fundingagent f"),
-    @NamedQuery(name = "Fundingagent.findByFundingAgentID", query = "SELECT f FROM Fundingagent f WHERE f.fundingAgentId = :fundingAgentID"),
+    @NamedQuery(name = "Fundingagent.findByFundingAgentId", query = "SELECT f FROM Fundingagent f WHERE f.fundingAgentId = :fundingAgentId"),
     @NamedQuery(name = "Fundingagent.findByTimestampCreated", query = "SELECT f FROM Fundingagent f WHERE f.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Fundingagent.findByTimestampModified", query = "SELECT f FROM Fundingagent f WHERE f.timestampModified = :timestampModified"),
     @NamedQuery(name = "Fundingagent.findByVersion", query = "SELECT f FROM Fundingagent f WHERE f.version = :version"),
     @NamedQuery(name = "Fundingagent.findByIsPrimary", query = "SELECT f FROM Fundingagent f WHERE f.isPrimary = :isPrimary"),
     @NamedQuery(name = "Fundingagent.findByOrderNumber", query = "SELECT f FROM Fundingagent f WHERE f.orderNumber = :orderNumber"),
     @NamedQuery(name = "Fundingagent.findByType", query = "SELECT f FROM Fundingagent f WHERE f.type = :type"),
-    @NamedQuery(name = "Fundingagent.findByDivisionID", query = "SELECT f FROM Fundingagent f WHERE f.divisionId = :divisionID"),
-    @NamedQuery(name = "Fundingagent.findByCreatedByAgentID", query = "SELECT f FROM Fundingagent f WHERE f.createdByAgentId = :createdByAgentID"),
-    @NamedQuery(name = "Fundingagent.findByModifiedByAgentID", query = "SELECT f FROM Fundingagent f WHERE f.modifiedByAgentId = :modifiedByAgentID"),
-    @NamedQuery(name = "Fundingagent.findByCollectingTripID", query = "SELECT f FROM Fundingagent f WHERE f.collectingTripId = :collectingTripID"),
-    @NamedQuery(name = "Fundingagent.findByAgentID", query = "SELECT f FROM Fundingagent f WHERE f.agentId = :agentID")})
+    @NamedQuery(name = "Fundingagent.findByDivisionId", query = "SELECT f FROM Fundingagent f WHERE f.divisionId = :divisionId"),
+    @NamedQuery(name = "Fundingagent.findByCreatedByAgentId", query = "SELECT f FROM Fundingagent f WHERE f.createdByAgentId = :createdByAgentId"),
+    @NamedQuery(name = "Fundingagent.findByModifiedByAgentId", query = "SELECT f FROM Fundingagent f WHERE f.modifiedByAgentId = :modifiedByAgentId"),
+    @NamedQuery(name = "Fundingagent.findByCollectingTripId", query = "SELECT f FROM Fundingagent f WHERE f.collectingTripId = :collectingTripId"),
+    @NamedQuery(name = "Fundingagent.findByAgentId", query = "SELECT f FROM Fundingagent f WHERE f.agentId = :agentId")})
 public class Fundingagent extends BaseEntity {
     
     private static final long serialVersionUID = 1L;
@@ -49,7 +49,7 @@ public class Fundingagent extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @NotNull
+//    @NotNull
     @Column(name = "FundingAgentID")
     private Integer fundingAgentId;
 
@@ -193,6 +193,11 @@ public class Fundingagent extends BaseEntity {
 
     public void setType(String type) {
         this.type = type;
+    }
+    
+    @Override
+    public String getEntityName() {
+        return "fundingAgent";
     }
  
     @Override

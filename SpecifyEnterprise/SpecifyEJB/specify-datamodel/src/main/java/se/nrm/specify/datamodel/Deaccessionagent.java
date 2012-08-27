@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Deaccessionagent.findAll", query = "SELECT d FROM Deaccessionagent d"),
-    @NamedQuery(name = "Deaccessionagent.findByDeaccessionAgentID", query = "SELECT d FROM Deaccessionagent d WHERE d.deaccessionAgentId = :deaccessionAgentID"),
+    @NamedQuery(name = "Deaccessionagent.findByDeaccessionAgentId", query = "SELECT d FROM Deaccessionagent d WHERE d.deaccessionAgentId = :deaccessionAgentId"),
     @NamedQuery(name = "Deaccessionagent.findByTimestampCreated", query = "SELECT d FROM Deaccessionagent d WHERE d.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Deaccessionagent.findByTimestampModified", query = "SELECT d FROM Deaccessionagent d WHERE d.timestampModified = :timestampModified"),
     @NamedQuery(name = "Deaccessionagent.findByVersion", query = "SELECT d FROM Deaccessionagent d WHERE d.version = :version"),
@@ -51,11 +51,13 @@ public class Deaccessionagent extends BaseEntity {
     private String remarks;
     
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 50)
     @Column(name = "Role")
     private String role;
     
     @JoinColumn(name = "DeaccessionID", referencedColumnName = "DeaccessionID")
+    @NotNull
     @ManyToOne(optional = false)
     private Deaccession deaccession;
     
@@ -68,6 +70,7 @@ public class Deaccessionagent extends BaseEntity {
     private Agent modifiedByAgent;
     
     @JoinColumn(name = "AgentID", referencedColumnName = "AgentID")
+    @NotNull
     @ManyToOne(optional = false)
     private Agent agent;
     
@@ -156,6 +159,10 @@ public class Deaccessionagent extends BaseEntity {
         this.role = role;
     }
  
+    @Override
+    public String getEntityName() {
+        return "deaccessionAgent";
+    }
 
     @Override
     public int hashCode() {

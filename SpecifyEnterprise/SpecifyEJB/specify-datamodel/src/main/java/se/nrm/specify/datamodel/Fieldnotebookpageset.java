@@ -35,7 +35,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Fieldnotebookpageset.findAll", query = "SELECT f FROM Fieldnotebookpageset f"),
-    @NamedQuery(name = "Fieldnotebookpageset.findByFieldNotebookPageSetID", query = "SELECT f FROM Fieldnotebookpageset f WHERE f.fieldNotebookPageSetId = :fieldNotebookPageSetID"),
+    @NamedQuery(name = "Fieldnotebookpageset.findByFieldNotebookPageSetId", query = "SELECT f FROM Fieldnotebookpageset f WHERE f.fieldNotebookPageSetId = :fieldNotebookPageSetId"),
     @NamedQuery(name = "Fieldnotebookpageset.findByTimestampCreated", query = "SELECT f FROM Fieldnotebookpageset f WHERE f.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Fieldnotebookpageset.findByTimestampModified", query = "SELECT f FROM Fieldnotebookpageset f WHERE f.timestampModified = :timestampModified"),
     @NamedQuery(name = "Fieldnotebookpageset.findByVersion", query = "SELECT f FROM Fieldnotebookpageset f WHERE f.version = :version"),
@@ -90,6 +90,7 @@ public class Fieldnotebookpageset extends BaseEntity {
     private Agent modifiedByAgent;
     
     @JoinColumn(name = "DisciplineID", referencedColumnName = "UserGroupScopeId")
+    @NotNull
     @ManyToOne(optional = false)
     private Discipline discipline;
     
@@ -242,6 +243,11 @@ public class Fieldnotebookpageset extends BaseEntity {
         if(parent instanceof Fieldnotebook) {
             this.fieldNotebook = (Fieldnotebook)parent;   
         }
+    }
+    
+    @Override
+    public String getEntityName() {
+        return "fieldNotebookPageSet";
     }
 
     @Override

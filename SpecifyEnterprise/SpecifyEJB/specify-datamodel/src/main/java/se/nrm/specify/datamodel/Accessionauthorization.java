@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Accessionauthorization.findAll", query = "SELECT a FROM Accessionauthorization a"),
-    @NamedQuery(name = "Accessionauthorization.findByAccessionAuthorizationID", query = "SELECT a FROM Accessionauthorization a WHERE a.accessionAuthorizationId = :accessionAuthorizationID"),
+    @NamedQuery(name = "Accessionauthorization.findByAccessionAuthorizationId", query = "SELECT a FROM Accessionauthorization a WHERE a.accessionAuthorizationId = :accessionAuthorizationId"),
     @NamedQuery(name = "Accessionauthorization.findByTimestampCreated", query = "SELECT a FROM Accessionauthorization a WHERE a.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Accessionauthorization.findByTimestampModified", query = "SELECT a FROM Accessionauthorization a WHERE a.timestampModified = :timestampModified"),
     @NamedQuery(name = "Accessionauthorization.findByVersion", query = "SELECT a FROM Accessionauthorization a WHERE a.version = :version")})
@@ -40,6 +40,7 @@ public class Accessionauthorization extends BaseEntity {
     private String remarks;
     
     @JoinColumn(name = "PermitID", referencedColumnName = "PermitID")
+    @NotNull
     @ManyToOne(optional = false)
     private Permit permit;
     
@@ -153,7 +154,13 @@ public class Accessionauthorization extends BaseEntity {
             this.repositoryAgreement = (Repositoryagreement)parent; 
         }
     }
-     
+ 
+    
+    @Override
+    public String getEntityName() {
+        return "accessionAuthorization";
+    }
+        
 
     @Override
     public int hashCode() {

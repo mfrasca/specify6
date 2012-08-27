@@ -15,9 +15,12 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -28,7 +31,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Otheridentifier.findAll", query = "SELECT o FROM Otheridentifier o"),
-    @NamedQuery(name = "Otheridentifier.findByOtherIdentifierID", query = "SELECT o FROM Otheridentifier o WHERE o.otherIdentifierId = :otherIdentifierID"),
+    @NamedQuery(name = "Otheridentifier.findByOtherIdentifierId", query = "SELECT o FROM Otheridentifier o WHERE o.otherIdentifierId = :otherIdentifierId"),
     @NamedQuery(name = "Otheridentifier.findByTimestampCreated", query = "SELECT o FROM Otheridentifier o WHERE o.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Otheridentifier.findByTimestampModified", query = "SELECT o FROM Otheridentifier o WHERE o.timestampModified = :timestampModified"),
     @NamedQuery(name = "Otheridentifier.findByVersion", query = "SELECT o FROM Otheridentifier o WHERE o.version = :version"),
@@ -52,6 +55,7 @@ public class Otheridentifier extends BaseEntity {
     private int collectionMemberId;
     
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 64)
     @Column(name = "Identifier")
     private String identifier;
@@ -69,7 +73,9 @@ public class Otheridentifier extends BaseEntity {
     @ManyToOne
     private Agent createdByAgent;
     
+    @XmlTransient
     @JoinColumn(name = "CollectionObjectID", referencedColumnName = "CollectionObjectID")
+    @NotNull
     @ManyToOne(optional = false)
     private Collectionobject collectionObject;
     
@@ -106,15 +112,17 @@ public class Otheridentifier extends BaseEntity {
         this.collectionMemberId = collectionMemberId;
     }
 
+    @XmlTransient
     @NotNull(message="Collectionobject must be specified.")
     public Collectionobject getCollectionObject() {
         return collectionObject;
     }
-
+ 
     public void setCollectionObject(Collectionobject collectionObject) {
         this.collectionObject = collectionObject;
     }
 
+    @XmlIDREF
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -123,6 +131,7 @@ public class Otheridentifier extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -165,7 +174,25 @@ public class Otheridentifier extends BaseEntity {
         this.remarks = remarks;
     }
 
+    
+    
+    /**
+     * Parent pointer
+     * 
+     * @param u
+     * @param parent 
+     */
+    public void afterUnmarshal(Unmarshaller u, Object parent) {
+        if (parent instanceof Collectionobject) {
+            this.collectionObject = (Collectionobject) parent;
+        }
+    }
    
+    @Override
+    public String getEntityName() {
+        return "otherIdentifier";
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

@@ -11,9 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -29,7 +27,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Picklistitem.findAll", query = "SELECT p FROM Picklistitem p"),
-    @NamedQuery(name = "Picklistitem.findByPickListItemID", query = "SELECT p FROM Picklistitem p WHERE p.pickListItemId = :pickListItemID"),
+    @NamedQuery(name = "Picklistitem.findByPickListItemId", query = "SELECT p FROM Picklistitem p WHERE p.pickListItemId = :pickListItemId"),
     @NamedQuery(name = "Picklistitem.findByTimestampCreated", query = "SELECT p FROM Picklistitem p WHERE p.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Picklistitem.findByTimestampModified", query = "SELECT p FROM Picklistitem p WHERE p.timestampModified = :timestampModified"),
     @NamedQuery(name = "Picklistitem.findByVersion", query = "SELECT p FROM Picklistitem p WHERE p.version = :version"),
@@ -51,6 +49,7 @@ public class Picklistitem extends BaseEntity {
     private Integer ordinal;
     
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 64)
     @Column(name = "Title")
     private String title;
@@ -64,6 +63,7 @@ public class Picklistitem extends BaseEntity {
     private Agent createdByAgent;
     
     @JoinColumn(name = "PickListID", referencedColumnName = "PickListID")
+    @NotNull
     @ManyToOne(optional = false)
     private Picklist pickList;
     
@@ -150,6 +150,10 @@ public class Picklistitem extends BaseEntity {
     }
 
      
+    @Override
+    public String getEntityName() {
+        return "pickListItem";
+    }
 
     @Override
     public int hashCode() {

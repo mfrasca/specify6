@@ -8,6 +8,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size; 
 import javax.xml.bind.annotation.XmlAttribute;  
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -22,7 +24,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Accession.findAll", query = "SELECT a FROM Accession a"),
-    @NamedQuery(name = "Accession.findByAccessionID", query = "SELECT a FROM Accession a WHERE a.accessionId = :accessionID"),
+    @NamedQuery(name = "Accession.findByAccessionId", query = "SELECT a FROM Accession a WHERE a.accessionId = :accessionId"),
     @NamedQuery(name = "Accession.findByTimestampCreated", query = "SELECT a FROM Accession a WHERE a.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Accession.findByTimestampModified", query = "SELECT a FROM Accession a WHERE a.timestampModified = :timestampModified"), 
     @NamedQuery(name = "Accession.findByAccessionCondition", query = "SELECT a FROM Accession a WHERE a.accessionCondition = :accessionCondition"),
@@ -115,19 +117,20 @@ public class Accession extends BaseEntity implements CycleRecoverable {
     @Column(name = "YesNo2")
     private Boolean yesNo2;
     
-    @OneToMany(mappedBy = "accession" )
+    @OneToMany(mappedBy = "accession")
     private Collection<Treatmentevent> treatmentEvents;
     
     @OneToMany(mappedBy = "accession", cascade={CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval=true)
     private Collection<Appraisal> appraisals;
     
-    @OneToMany(mappedBy = "accession", cascade= {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval=true)
+    @OneToMany(mappedBy = "accession", cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH}, orphanRemoval=true)
     private Collection<Accessionagent> accessionAgents;
     
     @JoinColumn(name = "AddressOfRecordID", referencedColumnName = "AddressOfRecordID")
-    @ManyToOne 
+    @ManyToOne
     private Addressofrecord addressOfRecord;
     
+    @NotNull
     @JoinColumn(name = "DivisionID", referencedColumnName = "UserGroupScopeId")
     @ManyToOne(optional = false)
     private Division division;
@@ -144,21 +147,23 @@ public class Accession extends BaseEntity implements CycleRecoverable {
     @ManyToOne
     private Repositoryagreement repositoryAgreement;
     
-    @OneToMany(mappedBy = "accession", cascade={CascadeType.PERSIST, CascadeType.MERGE })
+    @OneToMany(mappedBy = "accession" )
     private Collection<Collectionobject> collectionObjects;
     
-    @OneToMany(mappedBy = "accession")
+    @OneToMany(mappedBy = "accession" )
     private Collection<Deaccession> deaccessions;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "accession")
+    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval=true, mappedBy = "accession")
     private Collection<Accessionattachment> accessionAttachments;
     
-    @OneToMany(mappedBy = "accession", cascade={CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval=true)
+    @OneToMany(mappedBy = "accession", cascade={CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval=true )
     private Collection<Accessionauthorization> accessionAuthorizations;
+     
 
     public Accession() { 
     }
 
+ 
     public Accession(Integer accessionId) {
         this.accessionId = accessionId; 
     }
@@ -168,9 +173,7 @@ public class Accession extends BaseEntity implements CycleRecoverable {
         this.accessionId = accessionId; 
         this.accessionNumber = accessionNumber; 
     }
-    
- 
-
+     
     @Override
     public Accession onCycleDetected(Context context) {
        // Context provides access to the Marshaller being used:
@@ -310,10 +313,12 @@ public class Accession extends BaseEntity implements CycleRecoverable {
         this.yesNo2 = yesNo2;
     }
    
-    public Collection<Accessionagent> getAccessionAgents() {
+    @XmlElementWrapper(name="accessionAgents")
+    @XmlElement(name="accessionAgent") 
+    public Collection<Accessionagent> getAccessionAgents() { 
         return accessionAgents;
     }
-
+     
     public void setAccessionAgents(Collection<Accessionagent> accessionAgents) {
         this.accessionAgents = accessionAgents;
     }
@@ -376,8 +381,7 @@ public class Accession extends BaseEntity implements CycleRecoverable {
     public void setTreatmentEvents(Collection<Treatmentevent> treatmentEvents) {
         this.treatmentEvents = treatmentEvents;
     }
-
-    @XmlIDREF
+ 
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -394,8 +398,7 @@ public class Accession extends BaseEntity implements CycleRecoverable {
     public void setDivision(Division division) {
         this.division = division;
     }
-
-    @XmlIDREF
+ 
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -435,6 +438,13 @@ public class Accession extends BaseEntity implements CycleRecoverable {
     public void setAccessionAuthorizations(Collection<Accessionauthorization> accessionAuthorizations) {
         this.accessionAuthorizations = accessionAuthorizations;
     }
+
+    @Override
+    public String getEntityName() {
+        return "accession";
+    }
+ 
+    
  
  
     @Override

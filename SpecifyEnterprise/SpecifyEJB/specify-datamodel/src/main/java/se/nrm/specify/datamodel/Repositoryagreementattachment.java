@@ -12,10 +12,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
-//import javax.validation.constraints.NotNull;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -31,7 +28,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Repositoryagreementattachment.findAll", query = "SELECT r FROM Repositoryagreementattachment r"),
-    @NamedQuery(name = "Repositoryagreementattachment.findByRepositoryAgreementAttachmentID", query = "SELECT r FROM Repositoryagreementattachment r WHERE r.repositoryAgreementAttachmentId = :repositoryAgreementAttachmentID"),
+    @NamedQuery(name = "Repositoryagreementattachment.findByRepositoryAgreementAttachmentId", query = "SELECT r FROM Repositoryagreementattachment r WHERE r.repositoryAgreementAttachmentId = :repositoryAgreementAttachmentId"),
     @NamedQuery(name = "Repositoryagreementattachment.findByTimestampCreated", query = "SELECT r FROM Repositoryagreementattachment r WHERE r.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Repositoryagreementattachment.findByTimestampModified", query = "SELECT r FROM Repositoryagreementattachment r WHERE r.timestampModified = :timestampModified"),
     @NamedQuery(name = "Repositoryagreementattachment.findByVersion", query = "SELECT r FROM Repositoryagreementattachment r WHERE r.version = :version"),
@@ -56,6 +53,7 @@ public class Repositoryagreementattachment extends BaseEntity {
     private String remarks;
     
     @JoinColumn(name = "AttachmentID", referencedColumnName = "AttachmentID")
+    @NotNull
     @ManyToOne(optional = false)
     private Attachment attachment;
     
@@ -68,6 +66,7 @@ public class Repositoryagreementattachment extends BaseEntity {
     private Agent modifiedByAgent;
     
     @JoinColumn(name = "RepositoryAgreementID", referencedColumnName = "RepositoryAgreementID")
+    @NotNull
     @ManyToOne(optional = false)
     private Repositoryagreement repositoryAgreement;
 
@@ -150,7 +149,10 @@ public class Repositoryagreementattachment extends BaseEntity {
         this.remarks = remarks;
     }
 
-   
+    @Override
+    public String getEntityName() {
+        return "repositoryAgreementAttachment";
+    }
 
     @Override
     public int hashCode() {

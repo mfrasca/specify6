@@ -38,11 +38,11 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Determination.findAll", query = "SELECT d FROM Determination d"),
-    @NamedQuery(name = "Determination.findByDeterminationID", query = "SELECT d FROM Determination d WHERE d.determinationId = :determinationID"),
+    @NamedQuery(name = "Determination.findByDeterminationId", query = "SELECT d FROM Determination d WHERE d.determinationId = :determinationId"),
     @NamedQuery(name = "Determination.findByTimestampCreated", query = "SELECT d FROM Determination d WHERE d.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Determination.findByTimestampModified", query = "SELECT d FROM Determination d WHERE d.timestampModified = :timestampModified"),
     @NamedQuery(name = "Determination.findByVersion", query = "SELECT d FROM Determination d WHERE d.version = :version"),
-    @NamedQuery(name = "Determination.findByCollectionMemberID", query = "SELECT d FROM Determination d WHERE d.collectionMemberId = :collectionMemberID"),
+    @NamedQuery(name = "Determination.findByCollectionMemberId", query = "SELECT d FROM Determination d WHERE d.collectionMemberId = :collectionMemberId"),
     @NamedQuery(name = "Determination.findByAddendum", query = "SELECT d FROM Determination d WHERE d.addendum = :addendum"),
     @NamedQuery(name = "Determination.findByAlternateName", query = "SELECT d FROM Determination d WHERE d.alternateName = :alternateName"),
     @NamedQuery(name = "Determination.findByConfidence", query = "SELECT d FROM Determination d WHERE d.confidence = :confidence"),
@@ -61,10 +61,10 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Determination.findByTypeStatusName", query = "SELECT d FROM Determination d WHERE d.typeStatusName = :typeStatusName"),
     @NamedQuery(name = "Determination.findByYesNo1", query = "SELECT d FROM Determination d WHERE d.yesNo1 = :yesNo1"),
     @NamedQuery(name = "Determination.findByYesNo2", query = "SELECT d FROM Determination d WHERE d.yesNo2 = :yesNo2"),
-    @NamedQuery(name = "Determination.findByPreferredTaxonID", query = "SELECT d FROM Determination d WHERE d.preferredTaxon = :preferredTaxonID"),
-    @NamedQuery(name = "Determination.findCurrentByTaxonNameAndEvent", query = "SELECT d FROM Determination d WHERE d.taxon.fullName = :fullName and d.collectionObject.collectingEvent = :collectingEventID and d.collectionObject.collection.code = :code and d.isCurrent = :isCurrent"),
-    @NamedQuery(name = "Determination.findByTaxonID", query = "SELECT d FROM Determination d WHERE d.taxon = :taxonId"),
-    @NamedQuery(name = "Determination.findCurrentByCollectionobjectID", query = "SELECT d FROM Determination d WHERE d.collectionObject = :collectionObjectID and d.isCurrent = :isCurrent")})
+    @NamedQuery(name = "Determination.findByPreferredTaxonId", query = "SELECT d FROM Determination d WHERE d.preferredTaxon = :preferredTaxonId"),
+    @NamedQuery(name = "Determination.findCurrentByTaxonNameAndEvent", query = "SELECT d FROM Determination d WHERE d.taxon.fullName = :fullName and d.collectionObject.collectingEvent = :collectingEventId and d.collectionObject.collection.code = :code and d.isCurrent = :isCurrent"),
+    @NamedQuery(name = "Determination.findByTaxonId", query = "SELECT d FROM Determination d WHERE d.taxon = :taxonId"),
+    @NamedQuery(name = "Determination.findCurrentByCollectionobjectId", query = "SELECT d FROM Determination d WHERE d.collectionObject = :collectionObjectId and d.isCurrent = :isCurrent")})
 public class Determination extends BaseEntity {
   
     private static final long serialVersionUID = 1L;
@@ -171,25 +171,25 @@ public class Determination extends BaseEntity {
     @JoinColumn(name = "DeterminerID", referencedColumnName = "AgentID")
     @ManyToOne
     private Agent determiner;
-    
+     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
     private Agent createdByAgent;
     
-    @JoinColumn(name = "CollectionObjectID", referencedColumnName = "CollectionObjectID")
+    @JoinColumn(name = "CollectionObjectID", referencedColumnName = "CollectionObjectID") 
     @ManyToOne(optional = false, cascade= CascadeType.ALL)
     private Collectionobject collectionObject;
-    
+     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
     private Agent modifiedByAgent;
-    
+     
     @JoinColumn(name = "PreferredTaxonID", referencedColumnName = "TaxonID")
     @ManyToOne
     private Taxon preferredTaxon;
     
     @JoinColumn(name = "TaxonID", referencedColumnName = "TaxonID")
-    @ManyToOne
+    @ManyToOne(optional = false, cascade= {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST})
     private Taxon taxon;
      
       
@@ -391,8 +391,7 @@ public class Determination extends BaseEntity {
     public void setCollectionObject(Collectionobject collectionObject) {
         this.collectionObject = collectionObject;
     }
-
-    @XmlIDREF
+ 
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -425,8 +424,7 @@ public class Determination extends BaseEntity {
     public void setDeterminer(Agent determiner) {
         this.determiner = determiner;
     }
-
-    @XmlIDREF
+ 
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -470,6 +468,11 @@ public class Determination extends BaseEntity {
         if(parent instanceof Collectionobject) {
             this.collectionObject = (Collectionobject)parent;   
         }
+    }
+    
+    @Override
+    public String getEntityName() {
+        return "determination";
     }
      
     @Override

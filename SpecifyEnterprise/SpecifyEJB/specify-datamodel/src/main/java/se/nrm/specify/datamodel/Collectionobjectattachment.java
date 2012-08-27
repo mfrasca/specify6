@@ -31,7 +31,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Collectionobjectattachment.findAll", query = "SELECT c FROM Collectionobjectattachment c"),
-    @NamedQuery(name = "Collectionobjectattachment.findByCollectionObjectAttachmentID", query = "SELECT c FROM Collectionobjectattachment c WHERE c.collectionObjectAttachmentId = :collectionObjectAttachmentID"),
+    @NamedQuery(name = "Collectionobjectattachment.findByCollectionObjectAttachmentId", query = "SELECT c FROM Collectionobjectattachment c WHERE c.collectionObjectAttachmentId = :collectionObjectAttachmentId"),
     @NamedQuery(name = "Collectionobjectattachment.findByTimestampCreated", query = "SELECT c FROM Collectionobjectattachment c WHERE c.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Collectionobjectattachment.findByTimestampModified", query = "SELECT c FROM Collectionobjectattachment c WHERE c.timestampModified = :timestampModified"),
     @NamedQuery(name = "Collectionobjectattachment.findByVersion", query = "SELECT c FROM Collectionobjectattachment c WHERE c.version = :version"),
@@ -62,6 +62,7 @@ public class Collectionobjectattachment extends BaseEntity {
     private String remarks;
     
     @JoinColumn(name = "AttachmentID", referencedColumnName = "AttachmentID")
+    @NotNull
     @ManyToOne(optional = false)
     private Attachment attachment;
     
@@ -70,6 +71,7 @@ public class Collectionobjectattachment extends BaseEntity {
     private Agent createdByAgent;
     
     @JoinColumn(name = "CollectionObjectID", referencedColumnName = "CollectionObjectID")
+    @NotNull
     @ManyToOne(optional = false)
     private Collectionobject collectionObject;
     
@@ -178,6 +180,11 @@ public class Collectionobjectattachment extends BaseEntity {
         if(parent instanceof Collectionobject) {
             this.collectionObject = (Collectionobject)parent;   
         }
+    }
+    
+    @Override
+    public String getEntityName() {
+        return "collectionObjectAttachment";
     }
 
     @Override

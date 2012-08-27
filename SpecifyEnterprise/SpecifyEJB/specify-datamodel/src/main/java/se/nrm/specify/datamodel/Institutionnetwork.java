@@ -3,8 +3,7 @@
  * and open the template in the editor.
  */
 package se.nrm.specify.datamodel;
-
-import java.io.Serializable;
+ 
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -31,7 +30,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Institutionnetwork.findAll", query = "SELECT i FROM Institutionnetwork i"),
-    @NamedQuery(name = "Institutionnetwork.findByInstitutionNetworkID", query = "SELECT i FROM Institutionnetwork i WHERE i.institutionNetworkId = :institutionNetworkID"),
+    @NamedQuery(name = "Institutionnetwork.findByInstitutionNetworkId", query = "SELECT i FROM Institutionnetwork i WHERE i.institutionNetworkId = :institutionNetworkId"),
     @NamedQuery(name = "Institutionnetwork.findByTimestampCreated", query = "SELECT i FROM Institutionnetwork i WHERE i.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Institutionnetwork.findByTimestampModified", query = "SELECT i FROM Institutionnetwork i WHERE i.timestampModified = :timestampModified"),
     @NamedQuery(name = "Institutionnetwork.findByVersion", query = "SELECT i FROM Institutionnetwork i WHERE i.version = :version"),
@@ -267,7 +266,10 @@ public class Institutionnetwork extends BaseEntity {
         this.uri = uri;
     }
 
-    
+    @Override
+    public String getEntityName() {
+        return "institutionNetwork";
+    }
  
     @Override
     public int hashCode() {

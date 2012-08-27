@@ -141,18 +141,22 @@ public class Discipline extends BaseEntity {
     private Taxontreedef taxonTreeDef;
     
     @JoinColumn(name = "DataTypeID", referencedColumnName = "DataTypeID")
+    @NotNull
     @ManyToOne(optional = false)
     private Datatype dataType;
     
     @JoinColumn(name = "GeographyTreeDefID", referencedColumnName = "GeographyTreeDefID")
+    @NotNull
     @ManyToOne(optional = false)
     private Geographytreedef geographyTreeDef;
     
     @JoinColumn(name = "GeologicTimePeriodTreeDefID", referencedColumnName = "GeologicTimePeriodTreeDefID")
+    @NotNull
     @ManyToOne(optional = false)
     private Geologictimeperiodtreedef geologicTimePeriodTreeDef;
     
     @JoinColumn(name = "DivisionID", referencedColumnName = "UserGroupScopeId")
+    @NotNull
     @ManyToOne(optional = false)
     private Division division;
     
@@ -521,7 +525,10 @@ public class Discipline extends BaseEntity {
     }
 
      
- 
+    @Override
+    public String getEntityName() {
+        return "discipline";
+    }
    
 
     @Override

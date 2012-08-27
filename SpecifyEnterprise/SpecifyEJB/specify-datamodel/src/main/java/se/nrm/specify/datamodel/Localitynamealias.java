@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Localitynamealias.findAll", query = "SELECT l FROM Localitynamealias l"),
-    @NamedQuery(name = "Localitynamealias.findByLocalityNameAliasID", query = "SELECT l FROM Localitynamealias l WHERE l.localityNameAliasId = :localityNameAliasID"),
+    @NamedQuery(name = "Localitynamealias.findByLocalityNameAliasId", query = "SELECT l FROM Localitynamealias l WHERE l.localityNameAliasId = :localityNameAliasId"),
     @NamedQuery(name = "Localitynamealias.findByTimestampCreated", query = "SELECT l FROM Localitynamealias l WHERE l.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Localitynamealias.findByTimestampModified", query = "SELECT l FROM Localitynamealias l WHERE l.timestampModified = :timestampModified"),
     @NamedQuery(name = "Localitynamealias.findByVersion", query = "SELECT l FROM Localitynamealias l WHERE l.version = :version"),
@@ -45,6 +45,7 @@ public class Localitynamealias extends BaseEntity {
     private Integer localityNameAliasId;
      
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 255)
     @Column(name = "Name")
     private String name;
@@ -56,6 +57,7 @@ public class Localitynamealias extends BaseEntity {
     private String source;
     
     @JoinColumn(name = "LocalityID", referencedColumnName = "LocalityID")
+    @NotNull
     @ManyToOne(optional = false)
     private Locality locality;
     
@@ -68,6 +70,7 @@ public class Localitynamealias extends BaseEntity {
     private Agent modifiedByAgent;
     
     @JoinColumn(name = "DisciplineID", referencedColumnName = "UserGroupScopeId")
+    @NotNull
     @ManyToOne(optional = false)
     private Discipline discipline;
 
@@ -151,6 +154,10 @@ public class Localitynamealias extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
 
+    @Override
+    public String getEntityName() {
+        return "localityNameAlias";
+    }
   
     @Override
     public int hashCode() {

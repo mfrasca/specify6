@@ -20,14 +20,13 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.TemporalType;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement; 
 import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlID; 
 import javax.xml.bind.annotation.XmlRootElement; 
 import javax.xml.bind.annotation.XmlTransient; 
 
@@ -42,11 +41,11 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Collectionobject.findAll", query = "SELECT c FROM Collectionobject c"),
-    @NamedQuery(name = "Collectionobject.findByCollectionObjectID", query = "SELECT c FROM Collectionobject c WHERE c.collectionObjectId = :collectionObjectID"),
+    @NamedQuery(name = "Collectionobject.findByCollectionObjectId", query = "SELECT c FROM Collectionobject c WHERE c.collectionObjectId = :collectionObjectId"),
     @NamedQuery(name = "Collectionobject.findByTimestampCreated", query = "SELECT c FROM Collectionobject c WHERE c.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Collectionobject.findByTimestampModified", query = "SELECT c FROM Collectionobject c WHERE c.timestampModified = :timestampModified"),
     @NamedQuery(name = "Collectionobject.findByVersion", query = "SELECT c FROM Collectionobject c WHERE c.version = :version"),
-    @NamedQuery(name = "Collectionobject.findByCollectionMemberID", query = "SELECT c FROM Collectionobject c WHERE c.collectionMemberId = :collectionMemberID"),
+    @NamedQuery(name = "Collectionobject.findByCollectionMemberId", query = "SELECT c FROM Collectionobject c WHERE c.collectionMemberId = :collectionMemberId"),
     @NamedQuery(name = "Collectionobject.findByAltCatalogNumber", query = "SELECT c FROM Collectionobject c WHERE c.altCatalogNumber = :altCatalogNumber"),
     @NamedQuery(name = "Collectionobject.findByAvailability", query = "SELECT c FROM Collectionobject c WHERE c.availability = :availability"),
     @NamedQuery(name = "Collectionobject.findByCatalogNumber", query = "SELECT c FROM Collectionobject c WHERE c.catalogNumber = :catalogNumber"),
@@ -91,7 +90,7 @@ public class Collectionobject extends BaseEntity {
     private Integer collectionObjectId;
       
     @NotNull
-    @Basic(optional = false) 
+    @Basic(optional = false)  
     @Column(name = "CollectionMemberID")
     private int collectionMemberId;
     
@@ -218,27 +217,30 @@ public class Collectionobject extends BaseEntity {
     @Column(name = "YesNo6")
     private Boolean yesNo6;
     
+    @XmlTransient
     @JoinTable(name = "project_colobj", joinColumns = {
         @JoinColumn(name = "CollectionObjectID", referencedColumnName = "CollectionObjectID")}, inverseJoinColumns = {
         @JoinColumn(name = "ProjectID", referencedColumnName = "ProjectID")})
     @ManyToMany
     private Collection<Project> projects;
-    
+      
     @OneToMany(mappedBy = "collectionObject")
     private Collection<Treatmentevent> treatmentEvents;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "collectionObject")
     private Collection<Preparation> preparations;
-    
+     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "collectionObject")
     private Collection<Otheridentifier> otherIdentifiers;
     
     @OneToMany(mappedBy = "collectionObject")
     private Collection<Conservdescription> conservDescriptions;
     
+    @XmlTransient
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "rightSide")
     private Collection<Collectionrelationship> rightSideRels;
     
+    @XmlTransient
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "leftSide")
     private Collection<Collectionrelationship> leftSideRels;
     
@@ -246,9 +248,10 @@ public class Collectionobject extends BaseEntity {
     private Collection<Collectionobjectattr> collectionObjectAttrs;
     
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "collectionObject")
+    @OneToMany(mappedBy = "collectionObject", cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH}, orphanRemoval=true)
     private Collection<Determination> determinations;
     
+    @XmlTransient
     @OneToMany(mappedBy = "collectionObject")
     private Collection<Dnasequence> dnaSequences;
     
@@ -256,7 +259,7 @@ public class Collectionobject extends BaseEntity {
     private Collection<Collectionobjectattachment> collectionObjectAttachments;
     
     @JoinColumn(name = "AccessionID", referencedColumnName = "AccessionID")
-    @ManyToOne(cascade={CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne(cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH})
     private Accession accession;
     
     @JoinColumn(name = "CatalogerID", referencedColumnName = "AgentID")
@@ -278,8 +281,9 @@ public class Collectionobject extends BaseEntity {
     @JoinColumn(name = "VisibilitySetByID", referencedColumnName = "SpecifyUserID")
     @ManyToOne
     private Specifyuser visibilitySetBy;
-    
+     
     @JoinColumn(name = "CollectionID", referencedColumnName = "UserGroupScopeId")
+    @NotNull
     @ManyToOne(optional = false)
     private se.nrm.specify.datamodel.Collection collection;
     
@@ -300,18 +304,20 @@ public class Collectionobject extends BaseEntity {
     private Appraisal appraisal;
     
     @JoinColumn(name = "CollectingEventID", referencedColumnName = "CollectingEventID")
-    @ManyToOne(cascade={CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne(cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH})
     private Collectingevent collectingEvent;
     
     @JoinColumn(name = "ContainerID", referencedColumnName = "ContainerID")
     @ManyToOne
     private Container container;
-    
+     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "collectionObject")
     private Collection<Collectionobjectcitation> collectionObjectCitations;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "collectionObject")
     private Collection<Exsiccataitem> exsiccataItems;
+    
+    
 
     public Collectionobject() {
         super();
@@ -337,6 +343,7 @@ public class Collectionobject extends BaseEntity {
         return (collectionObjectId != null) ? collectionObjectId.toString() : "0";
     }
 
+    @NotNull(message="CollectionMemberId must be specified.")
     public int getCollectionMemberId() {
         return collectionMemberId;
     }
@@ -400,7 +407,7 @@ public class Collectionobject extends BaseEntity {
     public void setAvailability(String availability) {
         this.availability = availability;
     }
-
+ 
     public String getCatalogNumber() {
         return catalogNumber;
     }
@@ -635,8 +642,7 @@ public class Collectionobject extends BaseEntity {
     public void setPaleoContext(Paleocontext paleoContext) {
         this.paleoContext = paleoContext;
     }
-  
-    @XmlTransient
+   
     public Collection<Treatmentevent> getTreatmentEvents() {
         return treatmentEvents;
     }
@@ -662,8 +668,7 @@ public class Collectionobject extends BaseEntity {
     public void setLeftSideRels(Collection<Collectionrelationship> leftSideRels) {
         this.leftSideRels = leftSideRels;
     }
-
-    @XmlTransient
+ 
     public Collection<Otheridentifier> getOtherIdentifiers() {
         return otherIdentifiers;
     }
@@ -731,8 +736,7 @@ public class Collectionobject extends BaseEntity {
     public void setContainerOwner(Container containerOwner) {
         this.containerOwner = containerOwner;
     }
-
-    @XmlIDREF
+  
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -740,8 +744,7 @@ public class Collectionobject extends BaseEntity {
     public void setCreatedByAgent(Agent createdByAgent) {
         this.createdByAgent = createdByAgent;
     }
-
-    @XmlIDREF
+ 
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -799,8 +802,7 @@ public class Collectionobject extends BaseEntity {
     public void setCollectionObjectCitations(Collection<Collectionobjectcitation> collectionObjectCitations) {
         this.collectionObjectCitations = collectionObjectCitations;
     }
-
-    @XmlTransient
+ 
     public Collection<Conservdescription> getConservDescriptions() {
         return conservDescriptions;
     }
@@ -808,8 +810,7 @@ public class Collectionobject extends BaseEntity {
     public void setConservDescriptions(Collection<Conservdescription> conservDescriptions) {
         this.conservDescriptions = conservDescriptions;
     }
-
-    @XmlTransient
+ 
     public Collection<Exsiccataitem> getExsiccataItems() {
         return exsiccataItems;
     }
@@ -842,14 +843,23 @@ public class Collectionobject extends BaseEntity {
         this.ocr = ocr;
     }
 
-    public Short getSGRStatus() {
+ 
+
+    public Short getsGRStatus() {
         return sGRStatus;
     }
 
-    public void setSGRStatus(Short sGRStatus) {
+    public void setsGRStatus(Short sGRStatus) {
         this.sGRStatus = sGRStatus;
     }
- 
+     
+    @Override
+    public String getEntityName() {
+        return "collectionObject";
+    }
+    
+    
+  
 
     @Override
     public int hashCode() {

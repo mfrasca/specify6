@@ -15,9 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table; 
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -34,7 +32,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Spprincipal.findAll", query = "SELECT s FROM Spprincipal s"),
-    @NamedQuery(name = "Spprincipal.findBySpPrincipalID", query = "SELECT s FROM Spprincipal s WHERE s.userGroupId = :spPrincipalID"),
+    @NamedQuery(name = "Spprincipal.findBySpPrincipalId", query = "SELECT s FROM Spprincipal s WHERE s.userGroupId = :spPrincipalId"),
     @NamedQuery(name = "Spprincipal.findByTimestampCreated", query = "SELECT s FROM Spprincipal s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Spprincipal.findByTimestampModified", query = "SELECT s FROM Spprincipal s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Spprincipal.findByVersion", query = "SELECT s FROM Spprincipal s WHERE s.version = :version"),
@@ -42,7 +40,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Spprincipal.findByGroupType", query = "SELECT s FROM Spprincipal s WHERE s.groupType = :groupType"),
     @NamedQuery(name = "Spprincipal.findByName", query = "SELECT s FROM Spprincipal s WHERE s.name = :name"),
     @NamedQuery(name = "Spprincipal.findByPriority", query = "SELECT s FROM Spprincipal s WHERE s.priority = :priority"),
-    @NamedQuery(name = "Spprincipal.findByUserGroupScopeID", query = "SELECT s FROM Spprincipal s WHERE s.scope = :scope")})
+    @NamedQuery(name = "Spprincipal.findByScope", query = "SELECT s FROM Spprincipal s WHERE s.scope = :scope")})
 public class Spprincipal extends BaseEntity {
  
     private static final long serialVersionUID = 1L;
@@ -55,6 +53,7 @@ public class Spprincipal extends BaseEntity {
     private Integer userGroupId;
      
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 255)
     @Column(name = "GroupSubClass")
     private String groupSubClass;
@@ -64,6 +63,7 @@ public class Spprincipal extends BaseEntity {
     private String groupType;
     
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
@@ -246,7 +246,10 @@ public class Spprincipal extends BaseEntity {
     }
 
      
- 
+    @Override
+    public String getEntityName() {
+        return "spprincipal";
+    }
 
     @Override
     public int hashCode() {

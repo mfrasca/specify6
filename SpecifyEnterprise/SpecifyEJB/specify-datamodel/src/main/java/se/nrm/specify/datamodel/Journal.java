@@ -31,7 +31,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Journal.findAll", query = "SELECT j FROM Journal j"),
-    @NamedQuery(name = "Journal.findByJournalID", query = "SELECT j FROM Journal j WHERE j.journalId = :journalID"),
+    @NamedQuery(name = "Journal.findByJournalId", query = "SELECT j FROM Journal j WHERE j.journalId = :journalId"),
     @NamedQuery(name = "Journal.findByTimestampCreated", query = "SELECT j FROM Journal j WHERE j.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Journal.findByTimestampModified", query = "SELECT j FROM Journal j WHERE j.timestampModified = :timestampModified"),
     @NamedQuery(name = "Journal.findByVersion", query = "SELECT j FROM Journal j WHERE j.version = :version"),
@@ -191,6 +191,11 @@ public class Journal extends BaseEntity {
     }
  
 
+    @Override
+    public String getEntityName() {
+        return "journal";
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

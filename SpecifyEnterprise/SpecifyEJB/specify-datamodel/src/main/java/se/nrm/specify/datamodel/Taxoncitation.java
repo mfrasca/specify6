@@ -20,7 +20,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Taxoncitation.findAll", query = "SELECT t FROM Taxoncitation t"),
-    @NamedQuery(name = "Taxoncitation.findByTaxonCitationID", query = "SELECT t FROM Taxoncitation t WHERE t.taxonCitationId = :taxonCitationID"),
+    @NamedQuery(name = "Taxoncitation.findByTaxonCitationId", query = "SELECT t FROM Taxoncitation t WHERE t.taxonCitationId = :taxonCitationId"),
     @NamedQuery(name = "Taxoncitation.findByTimestampCreated", query = "SELECT t FROM Taxoncitation t WHERE t.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Taxoncitation.findByTimestampModified", query = "SELECT t FROM Taxoncitation t WHERE t.timestampModified = :timestampModified"),
     @NamedQuery(name = "Taxoncitation.findByVersion", query = "SELECT t FROM Taxoncitation t WHERE t.version = :version"),
@@ -72,6 +72,7 @@ public class Taxoncitation extends BaseEntity {
     private Agent createdByAgent;
     
     @JoinColumn(name = "ReferenceWorkID", referencedColumnName = "ReferenceWorkID")
+    @NotNull
     @ManyToOne(optional = false)
     private Referencework referenceWork;
     
@@ -80,6 +81,7 @@ public class Taxoncitation extends BaseEntity {
     private Agent modifiedByAgent;
     
     @JoinColumn(name = "TaxonID", referencedColumnName = "TaxonID")
+    @NotNull
     @ManyToOne(optional = false)
     private Taxon taxon;
 
@@ -213,6 +215,11 @@ public class Taxoncitation extends BaseEntity {
         if(parent instanceof Taxon) {
             this.taxon = (Taxon)parent;   
         }
+    }
+    
+    @Override
+    public String getEntityName() {
+        return "taxonCitation";
     }
 
     @Override

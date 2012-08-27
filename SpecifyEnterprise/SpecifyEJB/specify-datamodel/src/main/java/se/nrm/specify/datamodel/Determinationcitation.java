@@ -15,10 +15,12 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -29,11 +31,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Determinationcitation.findAll", query = "SELECT d FROM Determinationcitation d"),
-    @NamedQuery(name = "Determinationcitation.findByDeterminationCitationID", query = "SELECT d FROM Determinationcitation d WHERE d.determinationCitationId = :determinationCitationID"),
+    @NamedQuery(name = "Determinationcitation.findByDeterminationCitationId", query = "SELECT d FROM Determinationcitation d WHERE d.determinationCitationId = :determinationCitationId"),
     @NamedQuery(name = "Determinationcitation.findByTimestampCreated", query = "SELECT d FROM Determinationcitation d WHERE d.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Determinationcitation.findByTimestampModified", query = "SELECT d FROM Determinationcitation d WHERE d.timestampModified = :timestampModified"),
     @NamedQuery(name = "Determinationcitation.findByVersion", query = "SELECT d FROM Determinationcitation d WHERE d.version = :version"),
-    @NamedQuery(name = "Determinationcitation.findByCollectionMemberID", query = "SELECT d FROM Determinationcitation d WHERE d.collectionMemberId = :collectionMemberID")})
+    @NamedQuery(name = "Determinationcitation.findByCollectionMemberId", query = "SELECT d FROM Determinationcitation d WHERE d.collectionMemberId = :collectionMemberId")})
 public class Determinationcitation extends BaseEntity {
  
     private static final long serialVersionUID = 1L;
@@ -54,20 +56,23 @@ public class Determinationcitation extends BaseEntity {
     @Size(max = 65535)
     @Column(name = "Remarks")
     private String remarks;
-    
+     
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
     private Agent createdByAgent;
     
     @JoinColumn(name = "ReferenceWorkID", referencedColumnName = "ReferenceWorkID")
+    @NotNull
     @ManyToOne(optional = false)
     private Referencework referenceWork;
-    
+     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
     private Agent modifiedByAgent;
     
+    @XmlTransient
     @JoinColumn(name = "DeterminationID", referencedColumnName = "DeterminationID")
+    @NotNull
     @ManyToOne(optional = false)
     private Determination determination;
 
@@ -83,8 +88,7 @@ public class Determinationcitation extends BaseEntity {
         this.determinationCitationId = determinationCitationId; 
         this.collectionMemberId = collectionMemberId;
     }
-
-    @XmlID
+ 
     @XmlAttribute(name = "id")
     @Override
     public String getIdentityString() {
@@ -106,8 +110,7 @@ public class Determinationcitation extends BaseEntity {
     public void setCollectionMemberId(int collectionMemberId) {
         this.collectionMemberId = collectionMemberId;
     }
-
-    @XmlIDREF
+ 
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -116,6 +119,7 @@ public class Determinationcitation extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
+    @XmlTransient
     @NotNull(message="Determination must be specified.")
     public Determination getDetermination() {
         return determination;
@@ -132,8 +136,7 @@ public class Determinationcitation extends BaseEntity {
     public void setDeterminationCitationId(Integer determinationCitationId) {
         this.determinationCitationId = determinationCitationId;
     }
-
-    @XmlIDREF
+ 
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -151,7 +154,22 @@ public class Determinationcitation extends BaseEntity {
         this.referenceWork = referenceWork;
     }
 
+    /**
+     * Parent pointer
+     * 
+     * @param u
+     * @param parent 
+     */
+    public void afterUnmarshal(Unmarshaller u, Object parent) {
+        if (parent instanceof Determination) {
+            this.determination = (Determination) parent;
+        }
+    }
  
+    @Override
+    public String getEntityName() {
+        return "determinationCitation";
+    }
 
     @Override
     public int hashCode() {

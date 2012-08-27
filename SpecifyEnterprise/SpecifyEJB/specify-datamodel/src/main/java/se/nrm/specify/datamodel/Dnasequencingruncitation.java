@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Dnasequencingruncitation.findAll", query = "SELECT d FROM Dnasequencingruncitation d"),
-    @NamedQuery(name = "Dnasequencingruncitation.findByDNASequencingRunCitationID", query = "SELECT d FROM Dnasequencingruncitation d WHERE d.dnaSequencingRunCitationId = :dNASequencingRunCitationID"),
+    @NamedQuery(name = "Dnasequencingruncitation.findByDNASequencingRunCitationId", query = "SELECT d FROM Dnasequencingruncitation d WHERE d.dnaSequencingRunCitationId = :dnaSequencingRunCitationId"),
     @NamedQuery(name = "Dnasequencingruncitation.findByTimestampCreated", query = "SELECT d FROM Dnasequencingruncitation d WHERE d.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Dnasequencingruncitation.findByTimestampModified", query = "SELECT d FROM Dnasequencingruncitation d WHERE d.timestampModified = :timestampModified"),
     @NamedQuery(name = "Dnasequencingruncitation.findByVersion", query = "SELECT d FROM Dnasequencingruncitation d WHERE d.version = :version"),
@@ -77,6 +77,7 @@ public class Dnasequencingruncitation extends BaseEntity {
     private Boolean yesNo2;
     
     @JoinColumn(name = "DNASequencingRunID", referencedColumnName = "DNASequencingRunID")
+    @NotNull
     @ManyToOne(optional = false)
     private Dnasequencingrun sequencingRun;
     
@@ -85,6 +86,7 @@ public class Dnasequencingruncitation extends BaseEntity {
     private Agent createdByAgent;
     
     @JoinColumn(name = "ReferenceWorkID", referencedColumnName = "ReferenceWorkID")
+    @NotNull
     @ManyToOne(optional = false)
     private Referencework referenceWork;
     
@@ -212,7 +214,10 @@ public class Dnasequencingruncitation extends BaseEntity {
         this.yesNo2 = yesNo2;
     }
 
-    
+    @Override
+    public String getEntityName() {
+        return "dnaSequencingRunCitation";
+    }
 
     @Override
     public int hashCode() {

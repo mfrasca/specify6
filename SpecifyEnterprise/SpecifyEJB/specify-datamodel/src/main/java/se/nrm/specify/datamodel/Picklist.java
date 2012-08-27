@@ -33,7 +33,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Picklist.findAll", query = "SELECT p FROM Picklist p"),
-    @NamedQuery(name = "Picklist.findByPickListID", query = "SELECT p FROM Picklist p WHERE p.pickListId = :pickListID"),
+    @NamedQuery(name = "Picklist.findByPickListId", query = "SELECT p FROM Picklist p WHERE p.pickListId = :pickListId"),
     @NamedQuery(name = "Picklist.findByTimestampCreated", query = "SELECT p FROM Picklist p WHERE p.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Picklist.findByTimestampModified", query = "SELECT p FROM Picklist p WHERE p.timestampModified = :timestampModified"),
     @NamedQuery(name = "Picklist.findByVersion", query = "SELECT p FROM Picklist p WHERE p.version = :version"),
@@ -81,6 +81,7 @@ public class Picklist extends BaseEntity {
     private boolean isSystem;
     
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 64)
     @Column(name = "Name")
     private String name;
@@ -276,6 +277,10 @@ public class Picklist extends BaseEntity {
     }
 
      
+    @Override
+    public String getEntityName() {
+        return "pickList";
+    }
 
     @Override
     public int hashCode() {

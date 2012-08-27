@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Deaccessionpreparation.findAll", query = "SELECT d FROM Deaccessionpreparation d"),
-    @NamedQuery(name = "Deaccessionpreparation.findByDeaccessionPreparationID", query = "SELECT d FROM Deaccessionpreparation d WHERE d.deaccessionPreparationId = :deaccessionPreparationID"),
+    @NamedQuery(name = "Deaccessionpreparation.findByDeaccessionPreparationId", query = "SELECT d FROM Deaccessionpreparation d WHERE d.deaccessionPreparationId = :deaccessionPreparationId"),
     @NamedQuery(name = "Deaccessionpreparation.findByTimestampCreated", query = "SELECT d FROM Deaccessionpreparation d WHERE d.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Deaccessionpreparation.findByTimestampModified", query = "SELECT d FROM Deaccessionpreparation d WHERE d.timestampModified = :timestampModified"),
     @NamedQuery(name = "Deaccessionpreparation.findByVersion", query = "SELECT d FROM Deaccessionpreparation d WHERE d.version = :version"),
@@ -60,6 +60,7 @@ public class Deaccessionpreparation extends BaseEntity {
     private Collection<Loanreturnpreparation> loanreturnpreparations;
     
     @JoinColumn(name = "DeaccessionID", referencedColumnName = "DeaccessionID")
+    @NotNull
     @ManyToOne(optional = false)
     private Deaccession deaccession;
     
@@ -164,7 +165,10 @@ public class Deaccessionpreparation extends BaseEntity {
         this.loanreturnpreparations = loanreturnpreparations;
     }
 
- 
+    @Override
+    public String getEntityName() {
+        return "deaccessionPreparation";
+    }
  
 
     @Override

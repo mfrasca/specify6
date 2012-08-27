@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Preparationattachment.findAll", query = "SELECT p FROM Preparationattachment p"),
-    @NamedQuery(name = "Preparationattachment.findByPreparationAttachmentID", query = "SELECT p FROM Preparationattachment p WHERE p.preparationAttachmentId = :preparationAttachmentID"),
+    @NamedQuery(name = "Preparationattachment.findByPreparationAttachmentId", query = "SELECT p FROM Preparationattachment p WHERE p.preparationAttachmentId = :preparationAttachmentId"),
     @NamedQuery(name = "Preparationattachment.findByTimestampCreated", query = "SELECT p FROM Preparationattachment p WHERE p.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Preparationattachment.findByTimestampModified", query = "SELECT p FROM Preparationattachment p WHERE p.timestampModified = :timestampModified"),
     @NamedQuery(name = "Preparationattachment.findByVersion", query = "SELECT p FROM Preparationattachment p WHERE p.version = :version"),
@@ -61,6 +61,7 @@ public class Preparationattachment extends BaseEntity {
     private String remarks;
     
     @JoinColumn(name = "AttachmentID", referencedColumnName = "AttachmentID")
+    @NotNull
     @ManyToOne(optional = false)
     private Attachment attachment;
     
@@ -73,6 +74,7 @@ public class Preparationattachment extends BaseEntity {
     private Agent modifiedByAgent;
     
     @JoinColumn(name = "PreparationID", referencedColumnName = "PreparationID")
+    @NotNull
     @ManyToOne(optional = false)
     private Preparation preparation;
 
@@ -177,6 +179,11 @@ public class Preparationattachment extends BaseEntity {
     }
 
   
+    @Override
+    public String getEntityName() {
+        return "preparationAttachment";
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

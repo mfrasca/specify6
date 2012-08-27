@@ -12,14 +12,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table; 
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlIDREF;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlRootElement; 
 
 /**
  *
@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Agentvariant.findAll", query = "SELECT a FROM Agentvariant a"),
-    @NamedQuery(name = "Agentvariant.findByAgentVariantID", query = "SELECT a FROM Agentvariant a WHERE a.agentVariantId = :agentVariantID"),
+    @NamedQuery(name = "Agentvariant.findByAgentVariantId", query = "SELECT a FROM Agentvariant a WHERE a.agentVariantId = :agentVariantId"),
     @NamedQuery(name = "Agentvariant.findByTimestampCreated", query = "SELECT a FROM Agentvariant a WHERE a.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Agentvariant.findByTimestampModified", query = "SELECT a FROM Agentvariant a WHERE a.timestampModified = :timestampModified"),
     @NamedQuery(name = "Agentvariant.findByVersion", query = "SELECT a FROM Agentvariant a WHERE a.version = :version"),
@@ -80,6 +80,7 @@ public class Agentvariant extends BaseEntity {
     private Agent modifiedByAgent;
     
     @JoinColumn(name = "AgentID", referencedColumnName = "AgentID")
+    @NotNull
     @ManyToOne(optional = false)
     private Agent agent;
 
@@ -190,6 +191,11 @@ public class Agentvariant extends BaseEntity {
         }
     }
 
+    @Override
+    public String getEntityName() {
+        return "agentVariant";
+    }
+        
     @Override
     public int hashCode() {
         int hash = 0;

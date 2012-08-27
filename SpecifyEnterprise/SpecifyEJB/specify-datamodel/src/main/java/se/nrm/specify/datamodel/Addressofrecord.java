@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Addressofrecord.findAll", query = "SELECT a FROM Addressofrecord a"),
-    @NamedQuery(name = "Addressofrecord.findByAddressOfRecordID", query = "SELECT a FROM Addressofrecord a WHERE a.addressOfRecordId = :addressOfRecordID"),
+    @NamedQuery(name = "Addressofrecord.findByAddressOfRecordId", query = "SELECT a FROM Addressofrecord a WHERE a.addressOfRecordId = :addressOfRecordId"),
     @NamedQuery(name = "Addressofrecord.findByTimestampCreated", query = "SELECT a FROM Addressofrecord a WHERE a.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Addressofrecord.findByTimestampModified", query = "SELECT a FROM Addressofrecord a WHERE a.timestampModified = :timestampModified"),
     @NamedQuery(name = "Addressofrecord.findByVersion", query = "SELECT a FROM Addressofrecord a WHERE a.version = :version"),
@@ -276,8 +276,11 @@ public class Addressofrecord extends BaseEntity {
     public void setRepositoryAgreements(Collection<Repositoryagreement> repositoryAgreements) {
         this.repositoryAgreements = repositoryAgreements;
     }
-
     
+    @Override
+    public String getEntityName() {
+        return "addressOfRecord";
+    } 
  
     @Override
     public int hashCode() {

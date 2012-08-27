@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Spfieldvaluedefault.findAll", query = "SELECT s FROM Spfieldvaluedefault s"),
-    @NamedQuery(name = "Spfieldvaluedefault.findBySpFieldValueDefaultID", query = "SELECT s FROM Spfieldvaluedefault s WHERE s.spFieldValueDefaultId = :spFieldValueDefaultID"),
+    @NamedQuery(name = "Spfieldvaluedefault.findBySpFieldValueDefaultId", query = "SELECT s FROM Spfieldvaluedefault s WHERE s.spFieldValueDefaultId = :spFieldValueDefaultId"),
     @NamedQuery(name = "Spfieldvaluedefault.findByTimestampCreated", query = "SELECT s FROM Spfieldvaluedefault s WHERE s.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Spfieldvaluedefault.findByTimestampModified", query = "SELECT s FROM Spfieldvaluedefault s WHERE s.timestampModified = :timestampModified"),
     @NamedQuery(name = "Spfieldvaluedefault.findByVersion", query = "SELECT s FROM Spfieldvaluedefault s WHERE s.version = :version"),
@@ -161,6 +161,10 @@ public class Spfieldvaluedefault extends BaseEntity {
         this.tableName = tableName;
     }
 
+    @Override
+    public String getEntityName() {
+        return "spFieldValueDefault";
+    }
     
     @Override
     public int hashCode() {

@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table; 
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.Unmarshaller;
@@ -31,7 +32,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Borrowagent.findAll", query = "SELECT b FROM Borrowagent b"),
-    @NamedQuery(name = "Borrowagent.findByBorrowAgentID", query = "SELECT b FROM Borrowagent b WHERE b.borrowAgentId = :borrowAgentID"),
+    @NamedQuery(name = "Borrowagent.findByBorrowAgentId", query = "SELECT b FROM Borrowagent b WHERE b.borrowAgentId = :borrowAgentId"),
     @NamedQuery(name = "Borrowagent.findByTimestampCreated", query = "SELECT b FROM Borrowagent b WHERE b.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Borrowagent.findByTimestampModified", query = "SELECT b FROM Borrowagent b WHERE b.timestampModified = :timestampModified"),
     @NamedQuery(name = "Borrowagent.findByVersion", query = "SELECT b FROM Borrowagent b WHERE b.version = :version"),
@@ -59,11 +60,13 @@ public class Borrowagent extends BaseEntity {
     private String remarks;
     
     @Basic(optional = false) 
+    @NotNull
     @Size(min = 1, max = 32)
     @Column(name = "Role")
     private String role;
     
     @JoinColumn(name = "BorrowID", referencedColumnName = "BorrowID")
+    @NotNull
     @ManyToOne(optional = false)
     private Borrow borrow;
     
@@ -76,6 +79,7 @@ public class Borrowagent extends BaseEntity {
     private Agent modifiedByAgent;
     
     @JoinColumn(name = "AgentID", referencedColumnName = "AgentID")
+    @NotNull
     @ManyToOne(optional = false)
     private Agent agent;
 
@@ -169,7 +173,7 @@ public class Borrowagent extends BaseEntity {
     public void setRole(String role) {
         this.role = role;
     }
-
+ 
     /**
      * Parent pointer
      * 
@@ -182,6 +186,11 @@ public class Borrowagent extends BaseEntity {
         }
     }
 
+    @Override
+    public String getEntityName() {
+        return "borrowAgent";
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

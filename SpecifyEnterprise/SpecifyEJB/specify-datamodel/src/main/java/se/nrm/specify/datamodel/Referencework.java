@@ -35,7 +35,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Referencework.findAll", query = "SELECT r FROM Referencework r"),
-    @NamedQuery(name = "Referencework.findByReferenceWorkID", query = "SELECT r FROM Referencework r WHERE r.referenceWorkId = :referenceWorkID"),
+    @NamedQuery(name = "Referencework.findByReferenceWorkId", query = "SELECT r FROM Referencework r WHERE r.referenceWorkId = :referenceWorkId"),
     @NamedQuery(name = "Referencework.findByTimestampCreated", query = "SELECT r FROM Referencework r WHERE r.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Referencework.findByTimestampModified", query = "SELECT r FROM Referencework r WHERE r.timestampModified = :timestampModified"),
     @NamedQuery(name = "Referencework.findByVersion", query = "SELECT r FROM Referencework r WHERE r.version = :version"),
@@ -484,7 +484,10 @@ public class Referencework extends BaseEntity {
         this.taxonCitations = taxonCitations;
     }
  
-
+    @Override
+    public String getEntityName() {
+        return "referenceWork";
+    }
    
 
     @Override

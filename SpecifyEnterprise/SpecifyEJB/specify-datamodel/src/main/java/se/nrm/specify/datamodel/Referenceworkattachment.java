@@ -26,15 +26,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Referenceworkattachment.findAll", query = "SELECT r FROM Referenceworkattachment r"),
-    @NamedQuery(name = "Referenceworkattachment.findByReferenceWorkAttachmentID", query = "SELECT r FROM Referenceworkattachment r WHERE r.referenceWorkAttachmentId = :referenceWorkAttachmentID"),
+    @NamedQuery(name = "Referenceworkattachment.findByReferenceWorkAttachmentId", query = "SELECT r FROM Referenceworkattachment r WHERE r.referenceWorkAttachmentId = :referenceWorkAttachmentId"),
     @NamedQuery(name = "Referenceworkattachment.findByTimestampCreated", query = "SELECT r FROM Referenceworkattachment r WHERE r.timestampCreated = :timestampCreated"),
     @NamedQuery(name = "Referenceworkattachment.findByTimestampModified", query = "SELECT r FROM Referenceworkattachment r WHERE r.timestampModified = :timestampModified"),
     @NamedQuery(name = "Referenceworkattachment.findByVersion", query = "SELECT r FROM Referenceworkattachment r WHERE r.version = :version"),
     @NamedQuery(name = "Referenceworkattachment.findByOrdinal", query = "SELECT r FROM Referenceworkattachment r WHERE r.ordinal = :ordinal"),
     @NamedQuery(name = "Referenceworkattachment.findByReferenceWorkID", query = "SELECT r FROM Referenceworkattachment r WHERE r.referenceWorkId = :referenceWorkID"),
-    @NamedQuery(name = "Referenceworkattachment.findByModifiedByAgentID", query = "SELECT r FROM Referenceworkattachment r WHERE r.modifiedByAgentId = :modifiedByAgentID"),
-    @NamedQuery(name = "Referenceworkattachment.findByCreatedByAgentID", query = "SELECT r FROM Referenceworkattachment r WHERE r.createdByAgentId = :createdByAgentID"),
-    @NamedQuery(name = "Referenceworkattachment.findByAttachmentID", query = "SELECT r FROM Referenceworkattachment r WHERE r.attachmentId = :attachmentID")})
+    @NamedQuery(name = "Referenceworkattachment.findByModifiedByAgentId", query = "SELECT r FROM Referenceworkattachment r WHERE r.modifiedByAgentId = :modifiedByAgentId"),
+    @NamedQuery(name = "Referenceworkattachment.findByCreatedByAgentId", query = "SELECT r FROM Referenceworkattachment r WHERE r.createdByAgentId = :createdByAgentId"),
+    @NamedQuery(name = "Referenceworkattachment.findByAttachmentId", query = "SELECT r FROM Referenceworkattachment r WHERE r.attachmentId = :attachmentId")})
 public class Referenceworkattachment extends BaseEntity {
     
     private static final long serialVersionUID = 1L;
@@ -148,8 +148,11 @@ public class Referenceworkattachment extends BaseEntity {
         this.referenceWorkId = referenceWorkId;
     }
 
+    @Override
+    public String getEntityName() {
+        return "referenceWorkAttachment";
+    }
     
- 
     @Override
     public int hashCode() {
         int hash = 0;
