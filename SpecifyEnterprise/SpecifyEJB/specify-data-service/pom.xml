@@ -39,7 +39,7 @@
     </repositories> 
 
 
-    <dependencies>    
+    <dependencies>     
         
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
