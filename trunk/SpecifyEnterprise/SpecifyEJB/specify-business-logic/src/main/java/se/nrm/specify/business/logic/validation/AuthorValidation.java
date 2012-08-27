@@ -8,7 +8,7 @@ import se.nrm.specify.datamodel.Agent;
 import se.nrm.specify.datamodel.Author;
 import se.nrm.specify.datamodel.Referencework;
 import se.nrm.specify.datamodel.SpecifyBean;
-import se.nrm.specify.specify.data.jpa.util.Constants;
+import se.nrm.specify.specify.data.jpa.util.ConstantsClass;
 
 /**
  *
@@ -43,19 +43,19 @@ public class AuthorValidation extends BaseValidationRules {
         agentId = author.getAgent() == null ? agentId : author.getAgent().getAgentId();
         map.put(AGENT_ID, agentId);
         if(!isNew()) {
-            map.put(Constants.getInstance().PRIMARY_FIELD_NAME, PRIMARY_FIELD);
-            map.put(Constants.getInstance().ID, author.getAuthorId());
+            map.put(ConstantsClass.getInstance().PRIMARY_FIELD_NAME, PRIMARY_FIELD);
+            map.put(ConstantsClass.getInstance().ID, author.getAuthorId());
         }
         
-        map.put(Constants.getInstance().TABLE_NAME, Author.class.getSimpleName()); 
-        map.put(Constants.getInstance().SPECIAL_FIELD, SPECIAL_FIELD_NAME); 
-        map.put(Constants.getInstance().SPECIAL_FIELD_VALUE, 
+        map.put(ConstantsClass.getInstance().TABLE_NAME, Author.class.getSimpleName()); 
+        map.put(ConstantsClass.getInstance().SPECIAL_FIELD, SPECIAL_FIELD_NAME); 
+        map.put(ConstantsClass.getInstance().SPECIAL_FIELD_VALUE, 
                                         author.getReferenceWork() == null ? null : author.getReferenceWork().getReferenceWorkId());
         
         duplicationCheckFields = new ArrayList<String>();
         duplicationCheckFields.add(AGENT_ID);
          
-        this.sbId = new SpecifyBeanId(String.valueOf(author.getAuthorId()), Author.class.getSimpleName()); 
+        this.sbId = new SpecifyBeanId(author); 
     }
     
     @Override
@@ -88,19 +88,5 @@ public class AuthorValidation extends BaseValidationRules {
     @Override
     public boolean isCheckForDuplication() {
         return author.getReferenceWork() == null ? false : author.getReferenceWork().getReferenceWorkId() == null ? false : true;
-    }
-   
-    @Override
-    public boolean isNew() {
-        return author.getAuthorId() == null ? true : false;
-    }
-    
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(this.getClass().getSimpleName());
-        sb.append(" : ");
-        sb.append(author);
-        return sb.toString();
     } 
 }

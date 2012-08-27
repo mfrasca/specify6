@@ -8,6 +8,7 @@ import javax.ejb.Stateless;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.nrm.specify.business.logic.util.ValidationMessage;
+import se.nrm.specify.business.logic.validation.BaseValidationRules;
 import se.nrm.specify.business.logic.validation.IBaseValidationRules;
 import se.nrm.specify.business.logic.validation.ValidationHelpClass;
 import se.nrm.specify.business.logic.validation.Validation;
@@ -51,10 +52,55 @@ public class SpecifyLogicImpl implements SpecifyLogic {
     public Validation createEntity(SpecifyBean bean) {
         return mergeEntity(bean);
     }
-
+    
     public Validation mergeEntity(SpecifyBean bean) {
+        Validation validation = mergeValidation(bean);
+        if(validation.isValidationNotOK()) {
+            return validation;
+        }
+        try {
+            bean = dao.merge(bean); 
+            return new ValidationOK(new SpecifyBeanId(bean), (validationRules.isNew()) ? Status.CreateNew : Status.Update, (validationRules.isNew()) ? bean + " is persisted" : bean + " is updated.");
+        } catch (DataStoreException e) {
+            return new ValidationError(validationRules.getSpecifyBeanId(), (validationRules.isNew()) ? Status.CreateNew : Status.Update, e);
+        }
+    }
+    
+//    public Validation mergeEntity(SpecifyBean bean, List<String> fields) {
+//        Validation validation = mergeValidation(bean);
+//        if(validation.isValidationNotOK()) {
+//            return validation;
+//        }
+//        try {
+////            bean = dao.partialMerge(bean, fields); 
+//            bean = dao.partialMerge(bean, null); 
+//            return new ValidationOK(new SpecifyBeanId(bean), (validationRules.isNew()) ? Status.CreateNew : Status.Update, (validationRules.isNew()) ? bean + " is persisted" : bean + " is updated.");
+//        } catch (DataStoreException e) {
+//            return new ValidationError(validationRules.getSpecifyBeanId(), (validationRules.isNew()) ? Status.CreateNew : Status.Update, e);
+//        }
+//    }
+    
+    
+    
+    public Validation mergeEntity(SpecifyBean bean, List<String> fields) {
+        
+        logger.info("mergeEntity : {} - {}", bean, fields);
+    
+        Validation validation = mergeValidation(bean);
+        if(validation.isValidationNotOK()) {
+            return validation;
+        } 
+        try {
+            bean = dao.partialMerge(bean, fields); 
+            return new ValidationOK(new SpecifyBeanId(bean), (validationRules.isNew()) ? Status.CreateNew : Status.Update, (validationRules.isNew()) ? bean + " is persisted" : bean + " is updated.");
+        } catch (DataStoreException e) {
+            return new ValidationError(validationRules.getSpecifyBeanId(), (validationRules.isNew()) ? Status.CreateNew : Status.Update, e);
+        }
+    }
 
-        logger.info("mergeEntity: {}", bean);
+    public Validation mergeValidation(SpecifyBean bean) {
+
+        logger.info("mergeValidation: {}", bean);
 
         validationRules = getValidationRules(bean);
         Validation validation = null; 
@@ -63,22 +109,16 @@ public class SpecifyLogicImpl implements SpecifyLogic {
             if (validation.isValidationNotOK()) {
                 return validation;
             }
-        }
-
+        } 
         if (validationRules.isCheckForDuplication()) {
             validation = checkForDuplication();
             if (validation.isValidationNotOK()) {
                 return validation;
             }
         } 
-        try {
-            bean = dao.merge(bean);
-             
-            return new ValidationOK(new SpecifyBeanId(bean), (validationRules.isNew()) ? Status.CreateNew : Status.Update, (validationRules.isNew()) ? bean + " is persisted" : bean + " is updated.");
-        } catch (DataStoreException e) {
-            return new ValidationError(validationRules.getSpecifyBeanId(), (validationRules.isNew()) ? Status.CreateNew : Status.Update, e);
-        }
+        return new ValidationOK(new SpecifyBeanId(bean), (validationRules.isNew()) ? Status.CreateNew : Status.Update);
     }
+     
 
     public Validation deleteEntity(SpecifyBeanId spId) {
 
@@ -118,7 +158,28 @@ public class SpecifyLogicImpl implements SpecifyLogic {
     private Validation checkForDuplication() {
 
         logger.info("checkForDuplication : {}", validationRules );
-
+        Validation validation = duplicationValidation(validationRules);
+        if(validation.isValidationNotOK()) {
+            return validation;
+        }
+  
+        Map<String, IBaseValidationRules> ruleMap = validationRules.getValidationRuleMap();
+        if(ruleMap != null && !ruleMap.isEmpty()) {
+            for(Map.Entry<String, IBaseValidationRules> entry : ruleMap.entrySet()) {
+                IBaseValidationRules rule = entry.getValue();
+                if(rule.isCheckForDuplication()) {
+                    validation = duplicationValidation(rule); 
+                    if(validation.isValidationNotOK()) {
+                        return validation;
+                    }
+                }
+            }
+        }  
+        return validation;  
+    }
+    
+    private Validation duplicationValidation(IBaseValidationRules validationRules) {
+        
         Map map = validationRules.getMap();
         List<String> duplicationFields = validationRules.getDuplicationCheckFields();
 
@@ -137,8 +198,10 @@ public class SpecifyLogicImpl implements SpecifyLogic {
                 msgs.add(msg); 
             } 
         }
+        
         return isValid ? new ValidationOK(validationRules.getSpecifyBeanId(), Status.DuplicateNumber) : 
                          new ValidationError(validationRules.getSpecifyBeanId(), Status.DuplicateNumber, msgs);  
+        
     }
 
     private IBaseValidationRules getValidationRules(SpecifyBean bean) {

@@ -29,7 +29,7 @@ public final class JournalValidation extends BaseValidationRules {
         this.bean = (Journal) bean;
         this.journal = (Journal) bean;
         
-        this.sbId = new SpecifyBeanId(journal.getIdentityString(), Journal.class.getSimpleName());
+        this.sbId = new SpecifyBeanId(journal);
 
         map = new HashMap<String, Object>();    
         relatedTables = new ArrayList<String>();

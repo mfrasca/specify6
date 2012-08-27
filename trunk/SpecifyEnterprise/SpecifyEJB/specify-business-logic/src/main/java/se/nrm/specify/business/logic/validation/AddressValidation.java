@@ -28,7 +28,7 @@ public class AddressValidation extends BaseValidationRules {
         this.bean = (Address) bean;
         this.address = (Address) bean;
   
-        this.sbId = new SpecifyBeanId(String.valueOf(address.getAddressId()), Address.class.getSimpleName()); 
+        this.sbId = new SpecifyBeanId(address); 
     }
 
     @Override
@@ -60,15 +60,5 @@ public class AddressValidation extends BaseValidationRules {
     @Override
     public boolean isCheckForSaving() {
         return true;
-    } 
-    
-    @Override
-    public boolean isNew() {
-        return address.getAddressId() == null ? true : false;
-    }
-    
-    @Override
-    public String toString() {
-        return "AddressValidation: Address[ addressId=" + address + " ]";
-    }
+    }  
 }

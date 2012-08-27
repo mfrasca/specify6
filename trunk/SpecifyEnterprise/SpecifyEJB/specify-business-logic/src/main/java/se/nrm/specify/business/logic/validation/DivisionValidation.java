@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import se.nrm.specify.datamodel.Division;
 import se.nrm.specify.datamodel.SpecifyBean;
-import se.nrm.specify.specify.data.jpa.util.Constants;
+import se.nrm.specify.specify.data.jpa.util.ConstantsClass;
 
 /**
  *
@@ -32,18 +32,18 @@ public final class DivisionValidation extends BaseValidationRules {
         this.bean = (Division) bean;
         this.division = (Division) bean;
         
-        this.sbId = new SpecifyBeanId(division.getIdentityString(), Division.class.getSimpleName());
+        this.sbId = new SpecifyBeanId(division);
 
         map = new HashMap<String, Object>();  
         map.put(NAME, (division.getName() == null) ? "" : division.getName());
         if(!isNew()) {
-            map.put(Constants.getInstance().PRIMARY_FIELD_NAME, PRIMARY_FIELD);
-            map.put(Constants.getInstance().ID, division.getUserGroupScopeId());
+            map.put(ConstantsClass.getInstance().PRIMARY_FIELD_NAME, PRIMARY_FIELD);
+            map.put(ConstantsClass.getInstance().ID, division.getUserGroupScopeId());
         }
         
-        map.put(Constants.getInstance().TABLE_NAME, Division.class.getSimpleName()); 
-        map.put(Constants.getInstance().SPECIAL_FIELD, SPECIAL_FIELD_NAME); 
-        map.put(Constants.getInstance().SPECIAL_FIELD_VALUE, 
+        map.put(ConstantsClass.getInstance().TABLE_NAME, Division.class.getSimpleName()); 
+        map.put(ConstantsClass.getInstance().SPECIAL_FIELD, SPECIAL_FIELD_NAME); 
+        map.put(ConstantsClass.getInstance().SPECIAL_FIELD_VALUE, 
                                         division.getInstitution() == null ? null : division.getInstitution().getUserGroupScopeId());
           
         duplicationCheckFields = new ArrayList<String>();

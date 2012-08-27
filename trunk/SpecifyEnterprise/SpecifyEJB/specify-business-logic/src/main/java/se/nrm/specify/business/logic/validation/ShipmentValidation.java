@@ -28,7 +28,7 @@ public final class ShipmentValidation extends BaseValidationRules {
         this.bean = (Shipment) bean;
         this.shipment = (Shipment) bean;
         
-        this.sbId = new SpecifyBeanId(shipment.getIdentityString(), Shipment.class.getSimpleName()); 
+        this.sbId = new SpecifyBeanId(shipment); 
     }
 
     @Override

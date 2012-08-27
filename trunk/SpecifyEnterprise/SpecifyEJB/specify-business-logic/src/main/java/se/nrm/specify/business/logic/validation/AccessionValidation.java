@@ -3,7 +3,7 @@ package se.nrm.specify.business.logic.validation;
 import java.util.ArrayList; 
 import java.util.HashMap; 
 import java.util.List; 
-import se.nrm.specify.specify.data.jpa.util.Constants; 
+import se.nrm.specify.specify.data.jpa.util.ConstantsClass; 
 import se.nrm.specify.datamodel.Accession;
 import se.nrm.specify.datamodel.Accessionagent; 
 import se.nrm.specify.datamodel.Accessionauthorization;
@@ -37,18 +37,18 @@ public final class AccessionValidation extends BaseValidationRules {
         this.bean = (Accession) bean;
         this.accession = (Accession) bean;
         
-        this.sbId = new SpecifyBeanId(accession.getIdentityString(), Accession.class.getSimpleName());
+        this.sbId = new SpecifyBeanId(accession);
 
         map = new HashMap<String, Object>();  
         map.put(ACCESSION_NUMBER, (accession.getAccessionNumber() == null) ? "" : accession.getAccessionNumber());
         if(!isNew()) {
-            map.put(Constants.getInstance().PRIMARY_FIELD_NAME, PRIMARY_FIELD);
-            map.put(Constants.getInstance().ID, accession.getAccessionId());
+            map.put(ConstantsClass.getInstance().PRIMARY_FIELD_NAME, PRIMARY_FIELD);
+            map.put(ConstantsClass.getInstance().ID, accession.getAccessionId());
         }
         
-        map.put(Constants.getInstance().TABLE_NAME, Accession.class.getSimpleName()); 
-        map.put(Constants.getInstance().SPECIAL_FIELD, SPECIAL_FIELD_NAME); 
-        map.put(Constants.getInstance().SPECIAL_FIELD_VALUE, 
+        map.put(ConstantsClass.getInstance().TABLE_NAME, Accession.class.getSimpleName()); 
+        map.put(ConstantsClass.getInstance().SPECIAL_FIELD, SPECIAL_FIELD_NAME); 
+        map.put(ConstantsClass.getInstance().SPECIAL_FIELD_VALUE, 
                                         accession.getDivision() == null ? null : accession.getDivision().getUserGroupScopeId());
           
         duplicationCheckFields = new ArrayList<String>();

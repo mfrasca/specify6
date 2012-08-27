@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import se.nrm.specify.datamodel.Institution;
 import se.nrm.specify.datamodel.SpecifyBean;
-import se.nrm.specify.specify.data.jpa.util.Constants;
+import se.nrm.specify.specify.data.jpa.util.ConstantsClass;
 
 /**
  *
@@ -31,17 +31,17 @@ public class InstitutionValidation extends BaseValidationRules {
         this.bean = (Institution) bean;
         this.institution = (Institution) bean;
         
-        this.sbId = new SpecifyBeanId(institution.getIdentityString(), Institution.class.getSimpleName());
+        this.sbId = new SpecifyBeanId(institution);
 
         map = new HashMap<String, Object>();  
         map.put(NAME, (institution.getName() == null) ? "" : institution.getName());
        
         if(!isNew()) {
-            map.put(Constants.getInstance().PRIMARY_FIELD_NAME, PRIMARY_FIELD);
-            map.put(Constants.getInstance().ID, institution.getUserGroupScopeId());
+            map.put(ConstantsClass.getInstance().PRIMARY_FIELD_NAME, PRIMARY_FIELD);
+            map.put(ConstantsClass.getInstance().ID, institution.getUserGroupScopeId());
         }
         
-        map.put(Constants.getInstance().TABLE_NAME, Institution.class.getSimpleName());  
+        map.put(ConstantsClass.getInstance().TABLE_NAME, Institution.class.getSimpleName());  
           
         duplicationCheckFields = new ArrayList<String>();
         duplicationCheckFields.add(NAME); 

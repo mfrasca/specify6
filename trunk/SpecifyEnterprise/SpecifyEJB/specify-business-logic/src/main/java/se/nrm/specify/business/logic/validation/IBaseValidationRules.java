@@ -34,6 +34,8 @@ public interface IBaseValidationRules {
     
     public abstract List<String> getDuplicationCheckFields();
     
+    public abstract Map<String, IBaseValidationRules> getValidationRuleMap();
+    
     public String createMsg(Status validation, ValidationStatus status, String addition, Map map);
     
     public String createDuplicationErrorMsg(Map map, String field);

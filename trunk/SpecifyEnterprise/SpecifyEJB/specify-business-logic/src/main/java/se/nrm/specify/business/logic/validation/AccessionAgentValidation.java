@@ -27,7 +27,7 @@ public class AccessionAgentValidation extends BaseValidationRules {
     public void initialize(SpecifyBean bean) {
         this.bean = (Accessionagent) bean;
         this.accessionAgent = (Accessionagent) bean;  
-        this.sbId = new SpecifyBeanId(accessionAgent.getIdentityString(), Accessionagent.class.getSimpleName());
+        this.sbId = new SpecifyBeanId(accessionAgent);
     }
     
     @Override

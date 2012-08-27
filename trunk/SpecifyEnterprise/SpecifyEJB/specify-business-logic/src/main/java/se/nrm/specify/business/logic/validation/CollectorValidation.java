@@ -29,7 +29,7 @@ public final class CollectorValidation extends BaseValidationRules {
         this.bean = (Collector) bean;
         this.collector = (Collector) bean;
         
-        this.sbId = new SpecifyBeanId(collector.getIdentityString(), Collector.class.getSimpleName()); 
+        this.sbId = new SpecifyBeanId(collector); 
     }
 
     @Override
@@ -58,20 +58,6 @@ public final class CollectorValidation extends BaseValidationRules {
     @Override
     public boolean isCheckForSaving() {
         return true;
-    }
-  
-    @Override
-    public boolean isNew() {
-        return collector.getCollectorId() == null ? true : false;
-    }
-    
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(this.getClass().getSimpleName());
-        sb.append(" : ");
-        sb.append(collector);
-        return sb.toString();
     } 
     
 }

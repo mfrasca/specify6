@@ -5,7 +5,7 @@ import java.util.HashMap;
 import se.nrm.specify.datamodel.Preparation;
 import se.nrm.specify.datamodel.Preptype;
 import se.nrm.specify.datamodel.SpecifyBean;
-import se.nrm.specify.specify.data.jpa.util.Constants;
+import se.nrm.specify.specify.data.jpa.util.ConstantsClass;
 
 
 /**
@@ -35,18 +35,18 @@ public final class PreptypeValidation extends BaseValidationRules {
         this.bean = (Preptype) bean;
         this.preptype = (Preptype) bean;
         
-        this.sbId = new SpecifyBeanId(preptype.getIdentityString(), Preptype.class.getSimpleName());
+        this.sbId = new SpecifyBeanId(preptype);
 
         map = new HashMap<String, Object>();  
         map.put(NAME, (preptype.getName() == null) ? "" : preptype.getName());
         if(!isNew()) {
-            map.put(Constants.getInstance().PRIMARY_FIELD_NAME, PRIMARY_FIELD);
-            map.put(Constants.getInstance().ID, preptype.getPrepTypeId());
+            map.put(ConstantsClass.getInstance().PRIMARY_FIELD_NAME, PRIMARY_FIELD);
+            map.put(ConstantsClass.getInstance().ID, preptype.getPrepTypeId());
         }
         
-        map.put(Constants.getInstance().TABLE_NAME, Preptype.class.getSimpleName()); 
-        map.put(Constants.getInstance().SPECIAL_FIELD, SPECIAL_FIELD_NAME); 
-        map.put(Constants.getInstance().SPECIAL_FIELD_VALUE, 
+        map.put(ConstantsClass.getInstance().TABLE_NAME, Preptype.class.getSimpleName()); 
+        map.put(ConstantsClass.getInstance().SPECIAL_FIELD, SPECIAL_FIELD_NAME); 
+        map.put(ConstantsClass.getInstance().SPECIAL_FIELD_VALUE, 
                                         preptype.getCollection() == null ? null : preptype.getCollection().getUserGroupScopeId());
         
         duplicationCheckFields = new ArrayList<String>();

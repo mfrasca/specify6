@@ -25,7 +25,7 @@ public class ReferenceworkValidation extends BaseValidationRules {
         this.bean = (Referencework) bean;
         this.rw = (Referencework) bean;
         
-        this.sbId = new SpecifyBeanId(rw.getIdentityString(), Referencework.class.getSimpleName());
+        this.sbId = new SpecifyBeanId(rw);
 
 //        map = new HashMap<String, Object>();    
 //        relatedTables = new ArrayList<String>();

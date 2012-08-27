@@ -33,7 +33,7 @@ public class AccessionAuthorizationValidation extends BaseValidationRules  {
             parent = accessionAuth.getRepositoryAgreement();
         }
         
-        this.sbId = new SpecifyBeanId(String.valueOf(accessionAuth.getAccessionAuthorizationId()), Accessionauthorization.class.getSimpleName()); 
+        this.sbId = new SpecifyBeanId(accessionAuth); 
          
     }
 
