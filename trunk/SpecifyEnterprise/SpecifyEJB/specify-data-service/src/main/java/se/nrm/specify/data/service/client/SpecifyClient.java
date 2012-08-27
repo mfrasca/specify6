@@ -8,12 +8,15 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.core.util.MultivaluedMapImpl; 
 import java.net.URI;
 import java.sql.Timestamp; 
-import java.util.ArrayList; 
+import java.util.ArrayList;  
 import java.util.List; 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriBuilder; 
-import se.nrm.specify.datamodel.*;
+import se.nrm.specify.datamodel.*; 
+import se.nrm.specify.ui.form.data.ViewCreator;
+import se.nrm.specify.ui.form.data.service.SpecifyRSClient;
+ 
 
 /**
  *
@@ -26,9 +29,7 @@ public class SpecifyClient {
     private static Gson gson;
 
     public static void main(String[] args) {
-
-
-
+ 
         gson = new Gson();
 
         ClientConfig config = new DefaultClientConfig();
@@ -48,18 +49,136 @@ public class SpecifyClient {
 //        testGetAllEntities();
 //        
 //        testUIView(); 
-        testCreateNewEntity();
+//        testCreateNewEntity();
+        
+        testUIDataFetch();
+//        testFindById();
+        
          
     }
+    
+    
+    
+    private static void testUIDataFetch()  {
+        
+        SpecifyBeanWrapper beanWrapper = service.path("searchbyid").path(Division.class.getName()).path("2").accept(MediaType.APPLICATION_JSON).get(SpecifyBeanWrapper.class);
+        Division division = (Division) beanWrapper.getBean();
+        
+        
+        
+        SpecifyBeanWrapper beanWrapper1 = service.path("searchbyid").path(Taxon.class.getName()).path("1270").accept(MediaType.APPLICATION_JSON).get(SpecifyBeanWrapper.class);
+        Taxon taxon = (Taxon) beanWrapper1.getBean();
+
+
+//        beanWrapper = service.path("searchbyid").path(Accession.class.getName()).path("6").accept(MediaType.APPLICATION_JSON).get(SpecifyBeanWrapper.class);
+//        Accession accession = (Accession)beanWrapper.getBean();
+
+        beanWrapper = service.path("searchbyid").path(Agent.class.getName()).path("1").accept(MediaType.APPLICATION_JSON).get(SpecifyBeanWrapper.class);
+        Agent agent = (Agent) beanWrapper.getBean();
+        
+        String discipline = "fish";
+        String view = "CollectionObject";
+
+        ViewCreator creator = new ViewCreator(discipline);
+        SpecifyRSClient client = new SpecifyRSClient(creator);
+        
+
+        MultivaluedMapImpl queryParams = new MultivaluedMapImpl();
+//        queryParams.add("catalogNumber", "NHRS-GULI000000970");
+         queryParams.add("collectionObjectId", 779);
+          
+        String json = client.getJSONResult(discipline, view, queryParams);
+        String xml = client.getXMLResult(discipline, view, queryParams);
+        
+        
+        List<SpecifyBean> beans = client.getEntityResult(discipline, view, queryParams);
+        
+        System.out.println("json : " + json);
+        System.out.println("xml : " + xml);
+        System.out.println("beans : " + beans);
+        
+        
+        Collectionobject collectionobject = (Collectionobject)beans.get(0);
+  
+        
+        taxon.setFullName("test name");
+        List<Determination> determinations = new ArrayList<Determination>();
+        Determination d = new Determination();
+        d.setTimestampCreated(timestamp);
+        d.setCollectionMemberId(123);
+        d.setIsCurrent(true);
+        d.setTaxon(taxon);
+        
+        determinations.add(d);
+        
+        d = new Determination();
+        d.setTimestampCreated(timestamp);
+        d.setCollectionMemberId(123);
+        d.setTaxon(taxon);
+        
+        determinations.add(d);
+         
+        
+        collectionobject.setDeterminations(determinations);
+        
+        Collectingevent ce = collectionobject.getCollectingEvent();
+        ce.setStartDate(timestamp);
+        
+        collectionobject.setCollectingEvent(ce);
+        
+        
+        Accession accession = new Accession();
+        accession.setTimestampCreated(timestamp);
+        accession.setAccessionNumber("eit2erte3ee");
+        accession.setDivision(division);
+        
+        List<Accessionagent> aas = new ArrayList<Accessionagent>();
+        Accessionagent aa = new Accessionagent();
+        aa.setTimestampCreated(timestamp);
+        aa.setRole("test");
+        aa.setAgent(agent);
+        
+        aas.add(aa);
+        aa = new Accessionagent();
+        aa.setTimestampCreated(timestamp);
+        aa.setRole("test 2");
+        aa.setAgent(agent);
+        
+        aas.add(aa);
+        accession.setAccessionAgents(aas);
+        collectionobject.setAccession(accession);
+        
+        
+        
+        
+        
+        
+        SpecifyBeanWrapper wp = new SpecifyBeanWrapper(collectionobject);
+     
+        String response = service.path("uidatamerge").path("fish").accept(MediaType.APPLICATION_XML).put(String.class, wp); 
+        System.out.println("response : " + response); 
+//      
+    
+//        "http://localhost:8080/specify-data-service/search/list/bygroup/Collectionobject?jpql=SELECT%20o%20FROM%20Collectionobject%20o%20where%20o.catalogNumber=%27NHRS-COLE000008661%27"
+   
+    
+//    http://localhost:8080/specify-data-service/search/uidata/fish/CollectionObject?catalogNumber=NHRS-GULI000000970
+        
+        
+ //       http://localhost:8080/specify-data-service/search/uidata/fish/CollectionObject/425
+        
+        // NRM-ORTH0004377
+        
+    } 
     
     private static void testCreateNewEntity() {
         SpecifyBeanWrapper beanWrapper1 = service.path("searchbyid").path(Agent.class.getName()).path("1").accept(MediaType.APPLICATION_JSON).get(SpecifyBeanWrapper.class);
         Agent agent = (Agent) beanWrapper1.getBean();
-//        
+        
         SpecifyBeanWrapper beanWrapper = service.path("searchbyid").path(Division.class.getName()).path("2").accept(MediaType.APPLICATION_JSON).get(SpecifyBeanWrapper.class);
         Division division = (Division) beanWrapper.getBean();
-//
-//  
+ 
+ 
         Accession accession = new Accession();
         accession.setTimestampCreated(timestamp);
         accession.setAccessionNumber("newNumber1");
@@ -83,34 +202,7 @@ public class SpecifyClient {
         String response = service.path("newEntity").post(String.class, wrapper);
 
         System.out.println("response..." + response);
-        
- 
-
-
-//        Agent agent = new Agent();
-//        agent.setTimestampCreated(timestamp);
-//        agent.setDivision(division);
-
-//        Borrow borrow = new Borrow();
-//        borrow.setInvoiceNumber("test 2");
-//        borrow.setTimestampCreated(timestamp);
-//
-//        List<Borrowagent> bas = new ArrayList<Borrowagent>();
-//        Borrowagent ba = new Borrowagent();
-//        ba.setTimestampCreated(timestamp);
-//        ba.setRole("test2");
-//        ba.setBorrow(borrow);
-//        ba.setAgent(agent);
-//
-//        bas.add(ba);
-//
-//        borrow.setBorrowAgents(bas);
-//
-//
-//        SpecifyBeanWrapper wrapper = new SpecifyBeanWrapper(borrow);
-//
-//        String response = service.path("updateentity").put(String.class, wrapper);
-//        System.out.println(response);
+         
 
     }
     
@@ -162,6 +254,12 @@ public class SpecifyClient {
     }
     
     
+    private static void testFindById() {
+        String xml = service.path("searchbyid").path(Collectionobject.class.getName()).path("1").accept(MediaType.APPLICATION_XML).get(String.class);
+        
+        System.out.println("cco : " + xml);
+    }
+    
     /**
      * Test webservice client updateEntity;
      */
@@ -185,15 +283,15 @@ public class SpecifyClient {
      * test webservice client get entity
      */
     private static void testGetEntity() {
-        SpecifyBeanWrapper beanWrapper = service.path("searchbyid").path(Address.class.getName()).path("1").accept(MediaType.APPLICATION_JSON).get(SpecifyBeanWrapper.class);
-        Address address = (Address) beanWrapper.getBean(); 
-        System.out.println("Address : " + address); 
+        SpecifyBeanWrapper beanWrapper = service.path("searchbyid").path(Collectionobject.class.getName()).path("245").accept(MediaType.APPLICATION_JSON).get(SpecifyBeanWrapper.class);
+        Collectionobject accession = (Collectionobject) beanWrapper.getBean(); 
+        System.out.println("Address : " + accession); 
         
-        String xml = service.path("searchbyid").path(Address.class.getName()).path("1").accept(MediaType.APPLICATION_XML).get(String.class);
+        String xml = service.path("searchbyid").path(Collectionobject.class.getName()).path("245").accept(MediaType.APPLICATION_XML).get(String.class);
         System.out.println("xml : " + xml);
-
-        String json = service.path("searchbyid").path(Address.class.getName()).path("1").accept(MediaType.APPLICATION_JSON).get(String.class);
-        System.out.println("json : " + json); 
+//
+//        String json = service.path("searchbyid").path(Accession.class.getName()).path("2").accept(MediaType.APPLICATION_JSON).get(String.class);
+//        System.out.println("json : " + json); 
     }
      
     
@@ -240,40 +338,159 @@ public class SpecifyClient {
         System.out.println("xml : " + xml);
 
     } 
+    
+    private static void testFetchGroupByNamedQuery1() {
         
-    private static void testFetchGroupByNamedQuery() {
-
-        String namedQuery = "Accession.findByAccessionID";
+        String namedQuery = "Accession.findByAccessionId";
+//        String namedQuery = "Accession.findByAccessionNumber";
 
         List<String> fields = new ArrayList<String>();
         fields.add("accessionNumber");
-        fields.add("dateReceived");
+        fields.add("dateAccessioned");
         fields.add("remarks");
         fields.add("timestampCreated");
         fields.add("timestampModified");
         fields.add("division.name");
-        fields.add("dateAccessioned"); 
-
-        List<String> list = new ArrayList<String>();
-        list.add("7");
-
-
-        MultivaluedMap queryParams = new MultivaluedMapImpl();
-        queryParams.put("accessionID", list);
+        fields.add("dateAccessioned");
+        fields.add("accessionAgents.role"); 
+        
+        MultivaluedMap queryParams = new MultivaluedMapImpl();  
+        queryParams.putSingle("accessionId", "7"); 
         queryParams.put("fields", fields);
+        queryParams.putSingle("namedQuery", namedQuery);
+         
+        
+         
 
-        String xml = service.path("search").path("bygroup").path("bynqry").path(namedQuery).queryParams(queryParams).accept(MediaType.APPLICATION_XML).get(String.class);
+        String xml = service.path("search").path("bygroup").path("bynqry").queryParams(queryParams).accept(MediaType.APPLICATION_XML).get(String.class);
 
         System.out.println("result: " + xml);
 
-        SpecifyBeanWrapper wrapper = service.path("search").path("bygroup").path("bynqry").path(namedQuery).queryParams(queryParams).accept(MediaType.APPLICATION_JSON).get(SpecifyBeanWrapper.class);
+        SpecifyBeanWrapper wrapper = service.path("search").path("bygroup").path("bynqry").queryParams(queryParams).accept(MediaType.APPLICATION_JSON).get(SpecifyBeanWrapper.class);
         Accession accession = (Accession) wrapper.getBean();
         System.out.println("accession : " + accession + " ---- " + accession.getAccessionNumber());
+        
+        
+        wrapper = service.path("searchbyid").path(Agent.class.getName()).path("1").accept(MediaType.APPLICATION_JSON).get(SpecifyBeanWrapper.class);
+        Agent agent = (Agent)wrapper.getBean();
+         
+//        List<Accessionagent> ags = (List<Accessionagent>)accession.getAccessionAgents();
+//        ags = null;
+        accession.setRemarks("test 4"); 
+     
+        List<Accessionagent> aas = new ArrayList<Accessionagent>();
+        Accessionagent aa = new Accessionagent();
+        aa.setTimestampCreated(timestamp);
+        aa.setRole("new role 1");
+        aa.setAgent(agent);
+        
+        aas.add(aa);
+        aa = new Accessionagent();
+        aa.setTimestampCreated(timestamp);
+        aa.setRole("new role");
+        aa.setAgent(agent);
+        
+        aas.add(aa);
+        
+        
+        
+        accession.setAccessionAgents(aas);
+//        int count = 0;
+//        List<Accessionagent> ags = (List<Accessionagent>)accession.getAccessionAgents();
+//        for(Accessionagent aa : ags) {
+//            aa.setRole(aa.getRole() + count++);
+//        }
+//         
+     
+        SpecifyBeanWrapper wp = new SpecifyBeanWrapper(accession);
+     
+        String response = service.path("partialmearge").queryParams(queryParams).accept(MediaType.APPLICATION_XML).put(String.class, wp); 
+        System.out.println("response : " + response); 
+        
+    }
+        
+    private static void testFetchGroupByNamedQuery() {
+         
+        
+        SpecifyBeanWrapper beanWrapper = service.path("searchbyid").path(Division.class.getName()).path("2").accept(MediaType.APPLICATION_JSON).get(SpecifyBeanWrapper.class);
+        Division division = (Division)beanWrapper.getBean();
+        
+        
+//        beanWrapper = service.path("searchbyid").path(Accession.class.getName()).path("6").accept(MediaType.APPLICATION_JSON).get(SpecifyBeanWrapper.class);
+//        Accession accession = (Accession)beanWrapper.getBean();
+        
+        beanWrapper = service.path("searchbyid").path(Agent.class.getName()).path("1").accept(MediaType.APPLICATION_JSON).get(SpecifyBeanWrapper.class);
+        Agent agent = (Agent)beanWrapper.getBean();
+                
+        
+        String namedQuery = "Collectionobject.findByCollectionObjectId";
+
+        List<String> fields = new ArrayList<String>();
+        fields.add("collectionMemberId");
+        fields.add("altCatalogNumber");
+        fields.add("remarks");
+        fields.add("catalogNumber");
+        fields.add("timestampModified");
+        fields.add("name");
+        fields.add("accession.accessionNumber");
+        fields.add("accession.remarks");
+        fields.add("accession.dateAccessioned");
+        fields.add("determinations.isCurrent");
+        fields.add("determinations.taxon.fullName"); 
+        
   
+        MultivaluedMap queryParams = new MultivaluedMapImpl();  
+//        queryParams.putSingle("collectionObjectID", "152071");
+        queryParams.putSingle("collectionObjectId", "568");
+        queryParams.put("fields", fields);
+        queryParams.putSingle("namedQuery", namedQuery);
+        
+          
+        String xml = service.path("search").path("bygroup").path("bynqry").queryParams(queryParams).accept(MediaType.APPLICATION_XML).get(String.class);
+
+        System.out.println("result: " + xml);
+
+        SpecifyBeanWrapper wrapper = service.path("search").path("bygroup").path("bynqry").queryParams(queryParams).accept(MediaType.APPLICATION_JSON).get(SpecifyBeanWrapper.class);
+        Collectionobject collectionobject = (Collectionobject) wrapper.getBean();
+        System.out.println("collectionobject : " + collectionobject + " ---- " + collectionobject.getCatalogNumber());
+         
+//        Division division = collectionobject.getCollection().getDiscipline().getDivision();
+//        System.out.println("division : " + division);
+      
+        Accession accession = new Accession();
+        accession.setTimestampCreated(timestamp);
+        accession.setAccessionNumber("eereeredeere");
+        accession.setDivision(division);
+        
+        List<Accessionagent> aas = new ArrayList<Accessionagent>();
+        Accessionagent aa = new Accessionagent();
+        aa.setTimestampCreated(timestamp);
+        aa.setRole("test");
+        aa.setAgent(agent);
+        
+        aas.add(aa);
+        aa = new Accessionagent();
+        aa.setTimestampCreated(timestamp);
+        aa.setRole("test 2");
+        aa.setAgent(agent);
+        
+        aas.add(aa);
+        accession.setAccessionAgents(aas);
+        collectionobject.setAccession(accession); 
+        
+        
+        
+   
+        SpecifyBeanWrapper wp = new SpecifyBeanWrapper(collectionobject);
+     
+        String response = service.path("partialmearge").queryParams(queryParams).accept(MediaType.APPLICATION_XML).put(String.class, wp);
+        System.out.println("response : " + response); 
+         
+        
     }
     
     private static void testGetEntityByEntityID() {
-        String xml = service.path("search").path("uidata").path("fish").path("CollectionObject").path("424").accept(MediaType.APPLICATION_XML).get(String.class);
+        String xml = service.path("search").path("uidata").path("fish").path("CollectionObject").path("202841").accept(MediaType.APPLICATION_XML).get(String.class);
         System.out.println("xml: " + xml);
     }
     

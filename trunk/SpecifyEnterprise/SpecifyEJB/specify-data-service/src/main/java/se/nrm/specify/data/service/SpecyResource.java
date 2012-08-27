@@ -1,13 +1,13 @@
 package se.nrm.specify.data.service;
 
-import com.google.gson.Gson;
-import com.sun.jersey.spi.resource.PerRequest;      
-import java.util.HashMap; 
+import com.google.gson.Gson; 
+import com.sun.jersey.spi.resource.PerRequest;   
+import java.util.HashMap;  
 import java.util.List;
 import java.util.Map;
 import java.util.Set;   
 import javax.ejb.Stateless;
-import javax.inject.Inject;
+import javax.inject.Inject; 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
@@ -19,8 +19,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.UriInfo;  
-import org.apache.commons.lang.StringUtils; 
+import javax.ws.rs.core.UriInfo;    
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException; 
@@ -30,9 +29,12 @@ import se.nrm.specify.business.logic.validation.ValidationWrapper;
 import se.nrm.specify.datamodel.SpecifyBean;
 import se.nrm.specify.datamodel.SpecifyBeanWrapper; 
 import se.nrm.specify.business.logic.validation.SpecifyBeanId;    
+import se.nrm.specify.business.logic.validation.Status;
 import se.nrm.specify.business.logic.validation.ValidationError;  
-import se.nrm.specify.specify.data.jpa.exceptions.DataStoreException; 
-import se.nrm.specify.ui.form.data.service.UIDataConstractor;
+import se.nrm.specify.business.logic.validation.ValidationWarning; 
+import se.nrm.specify.specify.data.jpa.exceptions.DataStoreException;  
+import se.nrm.specify.specify.data.jpa.util.Common;
+import se.nrm.specify.ui.form.data.service.UIDataConstractor;  
 import se.nrm.specify.ui.form.data.util.UIXmlUtil;
 import se.nrm.specify.ui.form.data.xml.model.ViewData;
 
@@ -96,8 +98,7 @@ public class SpecyResource {
      * Generic method to create an entity by passing SpecifyBeanWrapper, the entity to be created is wrapped into SpecifyBeanWrapper
      * 
      * @param wrapper - SpecifyBeanWrapper
-     * 
-     * TODO: current
+     *  
      */
     @POST
     @Path("newEntity")
@@ -119,8 +120,7 @@ public class SpecyResource {
      * 
      * @param entity
      * @param id 
-     * 
-     * TODO: current
+     *  
      */
     @DELETE
     @Path("delete/{entity}/{id}")
@@ -139,8 +139,7 @@ public class SpecyResource {
      * @param data - SpecifyBeanWrapper
      * 
      * @return 
-     * 
-     * TODO: current
+     *  
      */
     @PUT
     @Path("updateentity")
@@ -151,6 +150,61 @@ public class SpecyResource {
         Validation validation = specify.mergeEntity(wrapper.getBean());
         return new ValidationWrapper(validation);
     }
+    
+    /**
+     * Generic method update an entity
+     * 
+     * @param data - SpecifyBeanWrapper
+     * 
+     * @return 
+     * 
+     * TODO: current
+     */
+    @PUT
+    @Path("uidatamerge/{discipline}")
+    public ValidationWrapper updatePartialUIDataEntity(SpecifyBeanWrapper wrapper, @PathParam("discipline") String discipline) {
+
+        logger.info("updatePartialUIDataEntity: {} -- {}", wrapper.getBean(), discipline);
+        
+        SpecifyBean bean = wrapper.getBean();  
+          
+        ViewData viewdata = uidata.initData(discipline, Common.getInstance().uppercaseFirstCharacter(bean.getEntityName())); 
+//        ViewData viewdata = uidata.initData(discipline, "CollectionObject");
+        logger.info("viewdata : {}", viewdata);
+        if (viewdata != null) {
+            List<String> fields = uidata.constructSearchFields(viewdata); 
+            Validation validation = specify.mergeEntity(bean, fields); 
+            logger.info("result : {}", validation);
+            return new ValidationWrapper(validation);
+        }  
+        return new ValidationWrapper(new ValidationWarning(null, Status.Update, "View not found"));
+    }
+     
+     
+    
+    /**
+     * Generic method update an entity
+     * 
+     * @param data - SpecifyBeanWrapper
+     * 
+     * @return  
+     */
+    @PUT
+    @Path("partialmearge")
+    public ValidationWrapper updatePartialEntity(SpecifyBeanWrapper wrapper, @Context UriInfo uri) {
+
+        logger.info("updatePartialEntity: {} ", wrapper.getBean());
+         
+        MultivaluedMap map = uri.getQueryParameters(); 
+ 
+        List<String> fields = (List<String>) map.get("fields");   
+  
+        Validation validation = specify.mergeEntity(wrapper.getBean(), fields); 
+        logger.info("result : {}", validation);
+        return new ValidationWrapper(validation);
+    }
+    
+     
     
  
     /**
@@ -177,27 +231,6 @@ public class SpecyResource {
 
         return specify.getDao().getEntityByJPQL(jpql);
     }
-
-//    @GET
-//    @Path("search/entity/namedquery")
-//    public SpecifyBeanWrapper getEntityByNamedQuery(@Context UriInfo uri) {
-//
-//        logger.info("getEntityByNamedQuery");
-//
-//        MultivaluedMap map = uri.getQueryParameters();
-//
-//        Set<String> set = map.keySet();
-//        Map<String, Object> parameters = new HashMap<String, Object>();
-//        List<String> query = (List<String>) map.get("namedquery");
-//        for (String key : set) {
-//            if (!key.equals("namedquery")) {
-//                List<String> params = (List<String>) map.get(key);
-//                parameters.put(key, params.get(0));
-//            }
-//        }
-//
-//        return new SpecifyBeanWrapper(specify.getDao().getEntityByNamedQuery(query.get(0), parameters));
-//    }
  
  
 
@@ -206,8 +239,7 @@ public class SpecyResource {
     public SpecifyBeanWrapper getAllEntitiesByNamedQuery(@Context UriInfo uri) {
 
         logger.info("getAllEntitiesByJPQL");
-
-         
+ 
         
         MultivaluedMap map = uri.getQueryParameters();
          
@@ -220,7 +252,7 @@ public class SpecyResource {
 
         for (String key : set) {
             String value =  ((List<String>)map.get(key)).get(0); 
-            if(key.contains("ID")) {
+            if(key.contains("Id")) {
                 parameters.put(key, (Integer.parseInt(value)));  
             } else {
                 parameters.put(key, value); 
@@ -233,6 +265,13 @@ public class SpecyResource {
         return new SpecifyBeanWrapper(beans);
     }
  
+ 
+    
+ 
+    
+    
+    
+    
     
 
     @GET
@@ -242,16 +281,18 @@ public class SpecyResource {
         logger.info("fetchGroupEntityById: {} - {}", entity, id);
 
         String entityName = UIXmlUtil.entityNameConvert(entity);
-        String namedQuery = entityName + ".findBy" + entity + "ID";
+        String namedQuery = entityName + ".findBy" + entity + "Id";
 
         ViewData viewdata = uidata.initData(discipline, entity);
         if (viewdata != null) {
             List<String> fields = uidata.constructSearchFields(viewdata);
 
             Map<String, Object> map = new HashMap<String, Object>();
-            map.put(UIXmlUtil.entityFieldNameConvert(entity) + "ID", Integer.parseInt(id));
+            map.put(UIXmlUtil.entityFieldNameConvert(entity) + "Id", Integer.parseInt(id));
+            map.put("namedQuery", namedQuery);
+            map.put("fields", fields);
 
-            return specify.getDao().getFetchGroupByNamedQuery(entityName, namedQuery, map, fields);
+            return specify.getDao().getFetchGroupByNamedQuery(map);
         } else {
             return null;
         }
@@ -292,39 +333,44 @@ public class SpecyResource {
     }
 
     @GET
-    @Path("search/bygroup/bynqry/{namedqry}")
-    public SpecifyBeanWrapper fetchGroupByNamedQuery(@PathParam("namedqry") String namedqry, @Context UriInfo uri) {
-        logger.info("fetchByGroup - entity: {}", namedqry);
-
-        String entityName = StringUtils.substringBefore(namedqry, ".");
+    @Path("search/bygroup/bynqry")
+    public SpecifyBeanWrapper fetchGroupByNamedQuery(@Context UriInfo uri) {
+        
+        logger.info("fetchByGroup");
+         
         MultivaluedMap map = uri.getQueryParameters();
-
-
-
-        List<String> fields = (List<String>) map.get("fields");
+ 
+        List<String> fields = (List<String>) map.get("fields");   
+        String neamedQuery = ((List<String>)map.get("namedQuery")).get(0);
+        map.remove("namedQuery");
         map.remove("fields");
 
-        Map<String, Object> conditions = new HashMap<String, Object>();
-
-
+        Map<String, Object> newMap = new HashMap<String, Object>();
         Set<String> set = map.keySet();
         for (String key : set) {
             String value = ((List<String>) map.get(key)).get(0);
-            if (key.endsWith("ID")) {
-                conditions.put(key, Integer.parseInt(value));
+            if (key.endsWith("Id")) {
+                newMap.put(key, Integer.parseInt(value));
             } else {
-                conditions.put(key, value);
-            }
-
-        }
-
-        SpecifyBean bean = specify.getDao().getFetchGroupByNamedQuery(entityName, namedqry, conditions, fields);
+                newMap.put(key, value);
+            } 
+        } 
+        newMap.put("namedQuery", neamedQuery);
+        newMap.put("fields", fields);
+          
+        SpecifyBean bean = specify.getDao().getFetchGroupByNamedQuery(newMap);
 
         if (bean != null) {
             return new SpecifyBeanWrapper(bean);
         }
         return new SpecifyBeanWrapper();
-    }
+    } 
+    
+    
+    
+    
+    
+    
     
 
     /**
@@ -358,5 +404,4 @@ public class SpecyResource {
         }
         return null;
     } 
-    
 }
