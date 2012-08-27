@@ -1,22 +1,25 @@
 package se.nrm.specify.specify.data.jpa;
- 
-import java.sql.Timestamp;
-import java.util.*; 
-import javax.ejb.Stateless;  
+       
+import java.util.*;    
+import javax.ejb.Stateless;   
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.persistence.*;
 import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;  
-import org.eclipse.persistence.jpa.JpaEntityManager; 
-import org.eclipse.persistence.sessions.CopyGroup;
+import javax.validation.ConstraintViolationException;    
+import org.apache.commons.lang.StringUtils;
+import org.eclipse.persistence.config.QueryHints;
+import org.eclipse.persistence.queries.FetchGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.nrm.specify.datamodel.*;
+import se.nrm.specify.specify.data.jpa.exceptions.DataReflectionException;
 import se.nrm.specify.specify.data.jpa.exceptions.DataStoreException;
 import se.nrm.specify.specify.data.jpa.exceptions.ExceptionUtil;
-import se.nrm.specify.specify.data.jpa.util.JPAUtil;
+import se.nrm.specify.specify.data.jpa.util.Common;
+import se.nrm.specify.specify.data.jpa.util.JPAUtil;  
+import se.nrm.specify.specify.data.jpa.util.ReflectionUtil;
 
 /**
  *
@@ -27,12 +30,13 @@ public class SpecifyDaoImpl<T extends SpecifyBean> implements SpecifyDao<T> {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final static String OPTIMISTIC_LOCK_EXCEPTION_MSG = " cannot be updated because it has changed or bean deleted since it was last read.";
+      
     
-    private static Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-    
+//    @Inject
+//    private EntityMapping entitymapping;
     
     @Inject
-    private EntityMapping entitymapping;
+    private PartialCopy partialCopy;
      
     @PersistenceContext(unitName = "jpa-test")                  //  persistence unit connect to test database
     private EntityManager entityManager;
@@ -99,8 +103,122 @@ public class SpecifyDaoImpl<T extends SpecifyBean> implements SpecifyDao<T> {
         return tmp;
     }
      
+   /**
+     * Partially update entity
+     * @param entity
+     * @param fields
+     * @return 
+     */ 
+    public T partialMerge(T entity, List<String> fields) {
+
+        logger.info("partialMerge: entity : {} - fields : {}", entity, fields);
+ 
+        T orgEntity = reWriteEntity(entity, fields);  
+         
+        if(!partialCopy.isIsRelatedEntityChanged() && !partialCopy.isIsCollectionChanged()) {
+             return merge(orgEntity); 
+        }   
+        
+        T mergedEntity = null;
+        try {
+              
+            mergedEntity = solveSubEntities(orgEntity);
+            // TODO: check if orgEntity already merged
+//            mergedEntity = merge(orgEntity);  
+        } catch (DataStoreException e) {
+            throw new DataStoreException(e);
+        }
+          
+        return mergedEntity;
+    }
     
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    private T solveSubEntities(T topBean) {
+        
+        logger.info("solveSubEntities : {}", partialCopy.getMergeDataList()); 
+        
+        boolean isOrgEntityMerged = false;
+        T temp = null;
+        List<MergeData> dataList = partialCopy.getMergeDataList();
+        for (MergeData data : dataList) {
+            SpecifyBean baseParent = data.getParent();
+            Class parentClazz = baseParent.getClass();
+             
+            T parent = findByReference(data.getParentId(), parentClazz); 
+             
+            if(parent.getClass().isInstance(topBean)) {
+                parent = topBean;
+            } 
+            entityManager.flush(); 
+            entityManager.detach(parent);
+                
+            if(data.isIsList()) { 
+                ReflectionUtil.setChildrenValue(parent, data.getChildren()); 
+                try {
+                    for(SpecifyBean child : data.getChildren()) {
+//                        temp = merge((T)child);
+                    }
+                    
+                } catch(DataStoreException e) {
+                    throw new DataStoreException(e);
+                }  
+            } else { 
+                ReflectionUtil.setEntityValue(parent, data.getChild());
+                if(!parent.getClass().isInstance(topBean)) { 
+//                    temp = merge(parent);
+                } else {
+                    temp = merge(parent);
+                    isOrgEntityMerged = true;
+                }
+            } 
+        } 
+        if(!isOrgEntityMerged) {
+            temp = merge(topBean);
+        }
+        return temp;
+    }
     
+    private T reWriteEntity(T copyBean, List<String> fields) { 
+        logger.info("reWriteEntity: {} -- {}", copyBean, fields);
+           
+        BaseEntity baseEntity = (BaseEntity)copyBean;
+        int id = Common.getInstance().stringToInt(baseEntity.getIdentityString());
+        T orgEntity = getOrginalEntity(id, copyBean.getClass().getSimpleName(), fields);
+        entityManager.detach(orgEntity);     
+         
+        partialCopy.copyPartialEntityForMerge(copyBean, orgEntity, fields);
+   
+        return (T) orgEntity;
+    }
+   
+    
+    private T getOrginalEntity(int id, String entityName, List<String> fields) {
+        
+        logger.info("getOrginalEntity -  {} -- {}", entityName, fields);
+          
+        fields = JPAUtil.addValidFields(fields, entityName); 
+         
+        SpecifyBean instance = JPAUtil.createNewInstance(entityName);
+        String idFieldName = ReflectionUtil.getIDFieldName(instance);   
+        String namedQuery = entityName + ".findBy" + Common.getInstance().uppercaseFirstCharacter(idFieldName);
+        Query query = entityManager.createNamedQuery(namedQuery);
+           
+        query.setParameter(idFieldName, id);
+         
+        FetchGroup group = new FetchGroup(); 
+        for (String field : fields) {
+            group.addAttribute(field.trim());
+        }
+        query.setHint(QueryHints.FETCH_GROUP, group);
+         
+        try {
+            return (T) query.getSingleResult();   
+        } catch(NoResultException ex) {
+            return null;
+        }   
+    }
+    
+ 
     public T findById(int id, Class<T> clazz) {
 
         logger.info("findById - class : {} - id : {}", clazz, id);
@@ -191,62 +309,62 @@ public class SpecifyDaoImpl<T extends SpecifyBean> implements SpecifyDao<T> {
 
         logger.info("getListByJPQLByFetchGroup - classname: {} - jpql: {}", classname, jpql);
 
-        Query query = entityManager.createQuery(jpql);
-//        query.setHint("javax.persistence.cache.storeMode", "REFRESH");
-
-        if (fields == null) {
-            fields = new ArrayList<String>();
+        Query query = entityManager.createQuery(jpql); 
+ 
+        fields = JPAUtil.addValidFields(fields, classname);
+        FetchGroup group = new FetchGroup(); 
+        for (String field : fields) {
+            group.addAttribute(field);
         }
-        List<String> removelist = JPAUtil.addFetchGroup(fields, query, classname);
+        query.setHint(QueryHints.FETCH_GROUP, group);
 
         List<T> beans = (List<T>) query.getResultList();
-        
-        logger.info("getListByJPQLByFetchGroup : fetched. {}", beans);
   
-        if (removelist != null) {
-            fields.removeAll(removelist);
-        }
-
-        
-//        return copyEntity(beans, fields); 
         return copyEntityGroup(beans, fields, classname); 
     }
- 
-    public T getFetchGroupByNamedQuery(String classname, String namedQuery, Map<String, Object> conditions, List<String> fields) {
+  
         
-        logger.info("getFetchGroupByNamedQuery - classname: {} - jpql: {}", classname, namedQuery);
-     
-
-        Query query = entityManager.createNamedQuery(namedQuery);
-//        query.setHint("javax.persistence.cache.storeMode", "REFRESH");
-        for (Map.Entry<String, Object> map : conditions.entrySet()) {
-            query.setParameter(map.getKey(), map.getValue());
+    public T getFetchGroupByNamedQuery(Map<String, Object> map) {
+        
+        logger.info("getFetchGroupByNamedQuery -  {}", map);
+       
+        String namedQueery = (String)map.get("namedQuery");
+        Query query = entityManager.createNamedQuery(namedQueery); 
+        String classname = StringUtils.substringBefore(namedQueery, ".");
+         
+        
+        List<String> fields = (List)map.get("fields");
+        map.remove("namedQuery");
+        map.remove("fields");
+        
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            query.setParameter(entry.getKey(), entry.getValue());
         }
+         
+        try {
+            fields = JPAUtil.addValidFields(fields, classname);
+        } catch(DataReflectionException e) {
+            throw new DataReflectionException(e);
+        }  
         
-        
-
-        if (fields == null) {
-            fields = new ArrayList<String>();
+        FetchGroup group = new FetchGroup(); 
+        for (String field : fields) {
+            group.addAttribute(field.trim());
         }
-        List<String> removelist = JPAUtil.addFetchGroup(fields, query, classname);
-        if (removelist != null) {
-            fields.removeAll(removelist);
-        }
-        
- 
- 
-        logger.info("fields : {} - removelist: {}", fields, removelist);
-        
-        
-        SpecifyBean bean = (SpecifyBean) query.getSingleResult();
-          
-        logger.info("getFetchGroupByNamedQuery : fetched. {}", bean);
-        
-//        return copyEntity(bean, fields); 
-        
-        return copyEntity(bean, fields, classname);
+        query.setHint(QueryHints.FETCH_GROUP, group);
+         
+        try {
+            T bean = (T) query.getSingleResult();  
+            return copyEntity(bean, fields, classname); 
+        } catch(NoResultException ex) {
+            return null;
+        }  
     }
- 
+     
+    
+    /**
+     * Copy entity use reflection
+     */
      private List copyEntityGroup(List<T> beans, List<String> fields, String classname) {
 
         List newBeans = new ArrayList();
@@ -258,15 +376,19 @@ public class SpecifyDaoImpl<T extends SpecifyBean> implements SpecifyDao<T> {
     }
 
     private T copyEntity(SpecifyBean bean, List<String> fields, String classname) {
-
-//        logger.info("copyEntity: {} - {}", bean, classname);
+         
+        logger.info("copyEntity: {} - {}", bean, classname);
 
         Map<String, SpecifyBean> beanmap = new HashMap<String, SpecifyBean>();
         beanmap.put(classname, bean);
-        T obj = JPAUtil.createNewInstance(classname);
-        entitymapping.setEntityValue(obj, classname, fields, beanmap);
+        T copyObject = JPAUtil.createNewInstance(classname);
 
-        return obj;
+        partialCopy.copyPartialEntity(bean, copyObject, fields, false);
+        
+        
+//        entitymapping.setEntityValue(obj, classname, fields, beanmap);
+
+        return copyObject;  
     }
 
  
@@ -350,36 +472,7 @@ public class SpecifyDaoImpl<T extends SpecifyBean> implements SpecifyDao<T> {
         List<T> list = query.getResultList();
         return list;
     }
- 
-     
-    
-    
-//    private List<T> copyEntity(List<T> beans, List<String> copyFields) {
-//
-//        logger.info("copy fleld : {}", copyFields);
-//        List<T> copyBeans = new ArrayList<T>();
-//        for (SpecifyBean bean : beans) {
-//            copyBeans.add((T) copyEntity(bean, copyFields));
-//        } 
-//        logger.info("copyEntity : fetched. {}", copyBeans);
-//        return copyBeans;
-//    }
-//
-//    private T copyEntity(SpecifyBean entity, List<String> copyFields) {
-//        
-//        logger.info("copy fleld : {}", copyFields);
-//        CopyGroup cg = new CopyGroup();
-//        cg.setDepth(3);
-//        cg.cascadePrivateParts();
-//         
-//
-//        for (String string : copyFields) {
-//            cg.addAttribute(string);
-//        }
-//        JpaEntityManager nativeEM = entityManager.unwrap(JpaEntityManager.class);
-//
-//        return (T) nativeEM.copy(entity, cg);
-//    }
+  
 
     private Query createQuery(String namedQuery, Map<String, Object> parameters) {
 
