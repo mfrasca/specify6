@@ -1,8 +1,7 @@
 package se.nrm.specify.specify.data.jpa.exceptions;
  
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
-import java.sql.SQLException;  
-import javax.ejb.EJBTransactionRolledbackException;
+import java.sql.SQLException;   
 import org.eclipse.persistence.exceptions.JPQLException;
 import org.eclipse.persistence.internal.libraries.antlr.runtime.NoViableAltException;
 
