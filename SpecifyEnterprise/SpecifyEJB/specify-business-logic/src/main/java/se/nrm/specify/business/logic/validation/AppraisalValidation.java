@@ -6,7 +6,7 @@ import java.util.List;
 import se.nrm.specify.datamodel.Appraisal;
 import se.nrm.specify.datamodel.Collectionobject;
 import se.nrm.specify.datamodel.SpecifyBean;
-import se.nrm.specify.specify.data.jpa.util.Constants;
+import se.nrm.specify.specify.data.jpa.util.ConstantsClass;
 
 /**
  *
@@ -31,23 +31,23 @@ public class AppraisalValidation extends BaseValidationRules {
 
     @Override
     public void initialize(SpecifyBean bean) {
-       this.bean = (Appraisal) bean;
+        this.bean = (Appraisal) bean;
         this.appraisal = (Appraisal) bean;
 
         map = new HashMap<String, Object>();  
         map.put(APPRAISAL_NUMBER, (appraisal.getAppraisalNumber() == null) ? "" : appraisal.getAppraisalNumber()); 
         if(!isNew()) {
-            map.put(Constants.getInstance().PRIMARY_FIELD_NAME, PRIMARY_FIELD);
-            map.put(Constants.getInstance().ID, appraisal.getAppraisalId());
+            map.put(ConstantsClass.getInstance().PRIMARY_FIELD_NAME, PRIMARY_FIELD);
+            map.put(ConstantsClass.getInstance().ID, appraisal.getAppraisalId());
         }
         
-        map.put(Constants.getInstance().TABLE_NAME, Appraisal.class.getSimpleName()); 
-        map.put(Constants.getInstance().SPECIAL_FIELD, SPECIAL_FIELD_NAME); 
-        map.put(Constants.getInstance().SPECIAL_FIELD_VALUE, 
+        map.put(ConstantsClass.getInstance().TABLE_NAME, Appraisal.class.getSimpleName()); 
+        map.put(ConstantsClass.getInstance().SPECIAL_FIELD, SPECIAL_FIELD_NAME); 
+        map.put(ConstantsClass.getInstance().SPECIAL_FIELD_VALUE, 
                                         appraisal.getAccession() == null ? null : appraisal.getAccession().getAccessionId()); 
         
         
-        this.sbId = new SpecifyBeanId(String.valueOf(appraisal.getAppraisalId()), Appraisal.class.getSimpleName());
+        this.sbId = new SpecifyBeanId(appraisal);
 
         duplicationCheckFields = new ArrayList<String>();
         duplicationCheckFields.add(APPRAISAL_NUMBER);
@@ -92,22 +92,6 @@ public class AppraisalValidation extends BaseValidationRules {
     @Override
     public boolean isCheckForDelete() {
         return true;
-    }
- 
-
-    @Override
-    public boolean isNew() {
-        return appraisal.getAppraisalId() == null ? true : false;
-    }
-    
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(this.getClass().getSimpleName());
-        sb.append(" : ");
-        sb.append(appraisal);
-        
-        return  sb.toString();
-    }
+    } 
     
 }

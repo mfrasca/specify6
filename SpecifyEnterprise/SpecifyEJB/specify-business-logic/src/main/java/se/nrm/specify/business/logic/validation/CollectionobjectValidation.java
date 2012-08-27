@@ -1,5 +1,5 @@
 package se.nrm.specify.business.logic.validation;
-
+ 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -9,7 +9,7 @@ import se.nrm.specify.business.logic.util.ValidationMessage;
 import se.nrm.specify.datamodel.Collectionobject;
 import se.nrm.specify.datamodel.Determination;  
 import se.nrm.specify.datamodel.SpecifyBean;
-import se.nrm.specify.specify.data.jpa.util.Constants;
+import se.nrm.specify.specify.data.jpa.util.ConstantsClass;
 
 /**
  *
@@ -22,7 +22,7 @@ public final class CollectionobjectValidation extends BaseValidationRules {
     private final static String SPECIAL_FIELD_NAME = "collection.userGroupScopeId";
     
     private Collectionobject collectionObject; 
-    private List<String> errorMsgs;
+    private List<String> errorMsgs; 
 
     public CollectionobjectValidation() {
         super(Collectionobject.class);
@@ -38,32 +38,40 @@ public final class CollectionobjectValidation extends BaseValidationRules {
         this.bean = (Collectionobject) bean;
         this.collectionObject = (Collectionobject) bean;
         
-        this.sbId = new SpecifyBeanId(collectionObject.getIdentityString(), Collectionobject.class.getSimpleName());
+        this.sbId = new SpecifyBeanId(collectionObject);
 
         map = new HashMap<String, Object>();  
         map.put(CATALOG_NUMBER, (collectionObject.getCatalogNumber() == null) ? "" : collectionObject.getCatalogNumber());
         if(!isNew()) {
-            map.put(Constants.getInstance().PRIMARY_FIELD_NAME, PRIMARY_FIELD);
-            map.put(Constants.getInstance().ID, collectionObject.getCollectionObjectId());
+            map.put(ConstantsClass.getInstance().PRIMARY_FIELD_NAME, PRIMARY_FIELD);
+            map.put(ConstantsClass.getInstance().ID, collectionObject.getCollectionObjectId());
         }
         
-        map.put(Constants.getInstance().TABLE_NAME, Collectionobject.class.getSimpleName()); 
-        map.put(Constants.getInstance().SPECIAL_FIELD, SPECIAL_FIELD_NAME); 
-        map.put(Constants.getInstance().SPECIAL_FIELD_VALUE, 
+        map.put(ConstantsClass.getInstance().TABLE_NAME, Collectionobject.class.getSimpleName()); 
+        map.put(ConstantsClass.getInstance().SPECIAL_FIELD, SPECIAL_FIELD_NAME); 
+        map.put(ConstantsClass.getInstance().SPECIAL_FIELD_VALUE, 
                                         collectionObject.getCollection() == null ? null : collectionObject.getCollection().getUserGroupScopeId());
  
         duplicationCheckFields = new ArrayList<String>();
-        duplicationCheckFields.add(CATALOG_NUMBER);
+        duplicationCheckFields.add(CATALOG_NUMBER); 
         
-//        relatedTables = new ArrayList<String>();
-//        relatedTables.add(Collection.class.getSimpleName());
-//        
-//        map.put(Collection.class.getSimpleName(), "collectionObject"); 
+        validationRuleMap =  new HashMap<String, IBaseValidationRules>();
+        if(collectionObject.getAccession() != null) {
+            logger.info("accessionagents : {}", collectionObject.getAccession().getAccessionAgents());
+            validationRuleMap.put("accession", new AccessionValidation(collectionObject.getAccession())); 
+        } 
+        
+        if(collectionObject.getCollectingEvent() != null) {
+            validationRuleMap.put("collectionEvent", new CollectingeventValidation(collectionObject.getCollectingEvent()));
+        } 
     }
 
     @Override
     public Validation validationBeforeSave() {
           
+        boolean isValidForSaving = true;
+        List<String> msgs = new ArrayList<String>();
+        
         int count = 0;
         Collection<Determination> determinations = collectionObject.getDeterminations();
         if(determinations != null) {
@@ -75,9 +83,23 @@ public final class CollectionobjectValidation extends BaseValidationRules {
             }
         } 
         if(count > 1) {
-            return new ValidationError(sbId, Status.CurrentDetermination, ValidationMessage.getInstance().CURRENT_DETERMINATION); 
+            isValidForSaving = false;
+            msgs.add(ValidationMessage.getInstance().CURRENT_DETERMINATION); 
         } else if(count < 1) {
-            return new ValidationError(sbId, Status.CurrentDetermination, ValidationMessage.getInstance().NO_CURRENT_DETERMINATION); 
+            isValidForSaving = false;
+            msgs.add(ValidationMessage.getInstance().NO_CURRENT_DETERMINATION);  
+        }
+         
+        for(Map.Entry<String, IBaseValidationRules> entry : validationRuleMap.entrySet()) {
+            Validation validation = entry.getValue().validationBeforeSave();
+            if(validation.isValidationNotOK()) {
+                isValidForSaving = false;
+                ValidationError error = (ValidationError)validation;
+                msgs.add(error.getMessage());  
+            }
+        }
+        if(!isValidForSaving) {
+            return new ValidationError(sbId, isNew() ? Status.CreateNew : Status.Update, msgs); 
         }
         return new ValidationOK(sbId, Status.Save);
     }
@@ -90,32 +112,7 @@ public final class CollectionobjectValidation extends BaseValidationRules {
     @Override
     public boolean isCheckForSaving() {
         return true;
-    }
-
-//    @Override
-//    public boolean isCheckForDelete() {
-//        return true;
-//    } 
-    
-//    @Override
-//    public boolean isOkToDelete() {
-//        
-//        boolean isOkToDelete = true;
-//        Collection<Preparation> preparations = collectionObject.getPreparations();
-//        if(preparations != null && preparations.isEmpty()) {
-//            for(Preparation preparation : preparations) {
-//                if(preparation.getLoanPreparations() != null && !preparation.getLoanPreparations().isEmpty()) {
-//                    isOkToDelete = false;
-//                    errorMsgs.add(collectionObject + " can not be deleted, because there are associated prepartion with loanPreparations.");
-//                }
-//                if(preparation.getDeaccessionPreparations() != null && !preparation.getDeaccessionPreparations().isEmpty()) {
-//                    isOkToDelete = false;
-//                    errorMsgs.add(collectionObject + " can not be deleted, because there are associated prepartion with deaccessionPreparations.");
-//                }
-//            } 
-//        }
-//        return isOkToDelete;
-//    }
+    } 
  
     @Override
     public String createMsg(Status validation, ValidationStatus status, String addition, Map map) {  

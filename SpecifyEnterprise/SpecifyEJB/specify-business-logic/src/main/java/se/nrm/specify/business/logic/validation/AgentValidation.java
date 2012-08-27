@@ -1,14 +1,11 @@
 package se.nrm.specify.business.logic.validation;
-
-import java.util.ArrayList;
-import java.util.HashMap;
+ 
 import java.util.List; 
 import java.util.Map;
 import se.nrm.specify.business.logic.util.ValidationMessage;
 import se.nrm.specify.datamodel.Address;
 import se.nrm.specify.datamodel.Agent; 
-import se.nrm.specify.datamodel.SpecifyBean;
-import se.nrm.specify.datamodel.Specifyuser;
+import se.nrm.specify.datamodel.SpecifyBean; 
 
 /**
  *
@@ -32,7 +29,7 @@ public class AgentValidation extends BaseValidationRules {
         this.bean = (Agent) bean;
         this.agent = (Agent) bean; 
         
-        this.sbId = new SpecifyBeanId(String.valueOf(agent.getAgentId()), Agent.class.getSimpleName()); 
+        this.sbId = new SpecifyBeanId(agent); 
     }
 
     @Override
@@ -82,16 +79,5 @@ public class AgentValidation extends BaseValidationRules {
     @Override
     public String createMsg(Status validation, ValidationStatus status, String addition, Map map) {  
         return status == ValidationStatus.ERROR ? agent + " can not be deleted, because there are associated SpecifyUsers" : "";
-    }
- 
- 
-    @Override
-    public boolean isNew() {
-        return agent.getAgentId() == null ? true : false;
-    }
-    
-    @Override
-    public String toString() {
-        return "AgentValidation: Agent [ agentId=" + agent + " ]";
-    }
+    } 
 }

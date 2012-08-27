@@ -6,7 +6,7 @@ import java.util.List;
 import se.nrm.specify.datamodel.Collection;
 import se.nrm.specify.datamodel.Collectionobject;
 import se.nrm.specify.datamodel.SpecifyBean;
-import se.nrm.specify.specify.data.jpa.util.Constants;
+import se.nrm.specify.specify.data.jpa.util.ConstantsClass;
 
 /**
  *
@@ -38,18 +38,18 @@ public class CollectionValidation extends BaseValidationRules {
         map.put(COLLECTION_NAME, (collection.getCollectionName() == null) ? "" : collection.getCollectionName());
         map.put(CODE, collection.getCode() == null ? "" : collection.getCode());
         if(!isNew()) {
-            map.put(Constants.getInstance().PRIMARY_FIELD_NAME, PRIMARY_FIELD);
-            map.put(Constants.getInstance().ID, collection.getUserGroupScopeId());
+            map.put(ConstantsClass.getInstance().PRIMARY_FIELD_NAME, PRIMARY_FIELD);
+            map.put(ConstantsClass.getInstance().ID, collection.getUserGroupScopeId());
         } 
         
-        map.put(Constants.getInstance().TABLE_NAME, Collection.class.getSimpleName());  
+        map.put(ConstantsClass.getInstance().TABLE_NAME, Collection.class.getSimpleName());  
         
         duplicationCheckFields = new ArrayList<String>();
         duplicationCheckFields.add(COLLECTION_NAME);
         duplicationCheckFields.add(CODE);
         
         
-        this.sbId = new SpecifyBeanId(collection.getIdentityString(), Collection.class.getSimpleName());
+        this.sbId = new SpecifyBeanId(collection);
 
         relatedTables = new ArrayList<String>();
         relatedTables.add(Collectionobject.class.getSimpleName());
@@ -95,21 +95,6 @@ public class CollectionValidation extends BaseValidationRules {
         }
        
         return isValid ? new ValidationOK(sbId, isNew() ? Status.CreateNew : Status.Update) : new ValidationError(sbId, Status.FieldCanNotBeNull, msgs);
-    }
-
-    @Override
-    public boolean isNew() {
-        return collection.getCollectionId() == null ? true : false;
-    }
-    
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(this.getClass().getSimpleName());
-        sb.append(" : ");
-        sb.append(collection);
-        return sb.toString();
-    }
-
+    } 
     
 }

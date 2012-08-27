@@ -27,7 +27,7 @@ public class BorrowValidation extends BaseValidationRules {
         this.bean = (Borrow) bean;
         this.borrow = (Borrow) bean;
  
-        this.sbId = new SpecifyBeanId(String.valueOf(borrow.getBorrowId()), Borrow.class.getSimpleName()); 
+        this.sbId = new SpecifyBeanId(bean); 
     }
     
     @Override
@@ -47,21 +47,7 @@ public class BorrowValidation extends BaseValidationRules {
     @Override
     public boolean isCheckForSaving() {
         return true;
-    }
-  
-    @Override
-    public boolean isNew() {
-        return borrow.getBorrowId() == null ? true : false;
-    }
-    
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(this.getClass().getSimpleName());
-        sb.append(" : ");
-        sb.append(borrow);
-        return sb.toString();
-    }
+    } 
 
     private Validation isBorrowAgentRolesValid() {
         return ValidationUtil.borrowAgentRoleValidation((List<Borrowagent>)borrow.getBorrowAgents(), sbId);

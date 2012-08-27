@@ -31,7 +31,7 @@ public final class PreparationValidation extends BaseValidationRules {
         this.bean = (Preparation) bean;
         this.preparation = (Preparation) bean;
         
-        this.sbId = new SpecifyBeanId(preparation.getIdentityString(), Preparation.class.getSimpleName());
+        this.sbId = new SpecifyBeanId(preparation);
 
         map = new HashMap<String, Object>();  
          

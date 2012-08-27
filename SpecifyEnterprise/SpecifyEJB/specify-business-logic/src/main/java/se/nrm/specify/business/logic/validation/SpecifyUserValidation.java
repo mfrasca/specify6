@@ -5,7 +5,7 @@ import java.util.HashMap;
 import org.apache.commons.lang.StringUtils;
 import se.nrm.specify.datamodel.SpecifyBean;
 import se.nrm.specify.datamodel.Specifyuser;
-import se.nrm.specify.specify.data.jpa.util.Constants;
+import se.nrm.specify.specify.data.jpa.util.ConstantsClass;
 
 /**
  *
@@ -37,10 +37,10 @@ public final class SpecifyUserValidation extends BaseValidationRules {
         map = new HashMap<String, Object>();  
         map.put(NAME, (spUser.getName() == null) ? "" : spUser.getName());
         if(!isNew()) {
-            map.put(Constants.getInstance().PRIMARY_FIELD_NAME, PRIMARY_FIELD);
-            map.put(Constants.getInstance().ID, spUser.getSpecifyUserId());
+            map.put(ConstantsClass.getInstance().PRIMARY_FIELD_NAME, PRIMARY_FIELD);
+            map.put(ConstantsClass.getInstance().ID, spUser.getSpecifyUserId());
         } 
-        map.put(Constants.getInstance().TABLE_NAME, Specifyuser.class.getSimpleName());   
+        map.put(ConstantsClass.getInstance().TABLE_NAME, Specifyuser.class.getSimpleName());   
         
         duplicationCheckFields = new ArrayList<String>();
         duplicationCheckFields.add(NAME); 

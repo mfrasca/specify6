@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.nrm.specify.datamodel.BaseEntity;
 import se.nrm.specify.datamodel.SpecifyBean;
-import se.nrm.specify.specify.data.jpa.util.Constants;
+import se.nrm.specify.specify.data.jpa.util.ConstantsClass;
 
 /**
  *
@@ -25,7 +25,8 @@ public class BaseValidationRules implements IBaseValidationRules {
     protected Map<String, Object> map = new HashMap<String, Object>();
     protected List<String> relatedTables = new ArrayList<String>();  
     protected List<String> duplicationCheckFields = new ArrayList<String>();
-      
+    protected Map<String, IBaseValidationRules> validationRuleMap = new HashMap<String, IBaseValidationRules>(); 
+     
     public BaseValidationRules(final Class<?>... dataClasses) {
         this.dataClasses = dataClasses;
     }
@@ -70,7 +71,12 @@ public class BaseValidationRules implements IBaseValidationRules {
     public List<String> getDuplicationCheckFields() {
         return duplicationCheckFields;
     }
-        
+
+    public Map<String, IBaseValidationRules> getValidationRuleMap() {
+        return validationRuleMap;
+    }
+ 
+     
     public ValidationStatus checkDuplicateNumber(String fldName, String tblName, String colName, String value) { 
         return ValidationStatus.OK;
     }
@@ -109,12 +115,12 @@ public class BaseValidationRules implements IBaseValidationRules {
         sb.append(map.get(field));
         sb.append("' for key '");
         sb.append(field); 
-        if (map.containsKey(Constants.getInstance().SPECIAL_FIELD)) {
+        if (map.containsKey(ConstantsClass.getInstance().SPECIAL_FIELD)) {
             sb.append(", ");
             sb.append(" within ");
-            sb.append(map.get(Constants.getInstance().SPECIAL_FIELD));
+            sb.append(map.get(ConstantsClass.getInstance().SPECIAL_FIELD));
             sb.append(" = ");
-            sb.append(map.get(Constants.getInstance().SPECIAL_FIELD_VALUE));
+            sb.append(map.get(ConstantsClass.getInstance().SPECIAL_FIELD_VALUE));
         }
         return sb.toString();
     }
@@ -142,7 +148,7 @@ public class BaseValidationRules implements IBaseValidationRules {
     
     public String createCheckDuplicationSQL(Map map, String field) {
           
-        String tableName = (String)map.get(Constants.getInstance().TABLE_NAME); 
+        String tableName = (String)map.get(ConstantsClass.getInstance().TABLE_NAME); 
         Object fieldValue = map.get(field); 
          
         StringBuilder sb = new StringBuilder();
@@ -162,9 +168,9 @@ public class BaseValidationRules implements IBaseValidationRules {
             sb.append(fieldValue); 
         } 
           
-        if(map.containsKey(Constants.getInstance().PRIMARY_FIELD_NAME)) {
-            String primaryField = (String)map.get(Constants.getInstance().PRIMARY_FIELD_NAME);
-            Object primaryFieldValue = (Object) map.get(Constants.getInstance().ID);
+        if(map.containsKey(ConstantsClass.getInstance().PRIMARY_FIELD_NAME)) {
+            String primaryField = (String)map.get(ConstantsClass.getInstance().PRIMARY_FIELD_NAME);
+            Object primaryFieldValue = (Object) map.get(ConstantsClass.getInstance().ID);
             
             sb.append(" AND o.");
             sb.append(primaryField);
@@ -180,10 +186,10 @@ public class BaseValidationRules implements IBaseValidationRules {
             } 
         }
         
-        if(map.containsKey(Constants.getInstance().SPECIAL_FIELD)) {
+        if(map.containsKey(ConstantsClass.getInstance().SPECIAL_FIELD)) {
             
-            String specialField = (String)map.get(Constants.getInstance().SPECIAL_FIELD);
-            Object specialFieldValue = (Object)map.get(Constants.getInstance().SPECIAL_FIELD_VALUE);
+            String specialField = (String)map.get(ConstantsClass.getInstance().SPECIAL_FIELD);
+            Object specialFieldValue = (Object)map.get(ConstantsClass.getInstance().SPECIAL_FIELD_VALUE);
             
             if(specialFieldValue != null) {
                 sb.append(" AND o.");

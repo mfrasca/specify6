@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import se.nrm.specify.datamodel.Gift;
 import se.nrm.specify.datamodel.SpecifyBean;
-import se.nrm.specify.specify.data.jpa.util.Constants;
+import se.nrm.specify.specify.data.jpa.util.ConstantsClass;
 
 /**
  *
@@ -32,18 +32,18 @@ public final class GiftValidation extends BaseValidationRules {
         this.bean = (Gift) bean;
         this.gift = (Gift) bean;
         
-        this.sbId = new SpecifyBeanId(gift.getIdentityString(), Gift.class.getSimpleName());
+        this.sbId = new SpecifyBeanId(gift);
 
         map = new HashMap<String, Object>();  
         map.put(GIFT_NUMBER, (gift.getGiftNumber() == null) ? "" : gift.getGiftNumber());
         if(!isNew()) {
-            map.put(Constants.getInstance().PRIMARY_FIELD_NAME, PRIMARY_FIELD);
-            map.put(Constants.getInstance().ID, gift.getGiftId());
+            map.put(ConstantsClass.getInstance().PRIMARY_FIELD_NAME, PRIMARY_FIELD);
+            map.put(ConstantsClass.getInstance().ID, gift.getGiftId());
         }
         
-        map.put(Constants.getInstance().TABLE_NAME, Gift.class.getSimpleName()); 
-        map.put(Constants.getInstance().SPECIAL_FIELD, SPECIAL_FIELD_NAME); 
-        map.put(Constants.getInstance().SPECIAL_FIELD_VALUE, 
+        map.put(ConstantsClass.getInstance().TABLE_NAME, Gift.class.getSimpleName()); 
+        map.put(ConstantsClass.getInstance().SPECIAL_FIELD, SPECIAL_FIELD_NAME); 
+        map.put(ConstantsClass.getInstance().SPECIAL_FIELD_VALUE, 
                                         gift.getDiscipline() == null ? null : gift.getDiscipline().getUserGroupScopeId());
           
         duplicationCheckFields = new ArrayList<String>();
