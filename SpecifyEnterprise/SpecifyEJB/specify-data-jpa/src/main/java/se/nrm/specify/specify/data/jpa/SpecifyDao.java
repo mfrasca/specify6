@@ -74,11 +74,14 @@ public interface SpecifyDao<T extends SpecifyBean> {
     
     public List<T> getListByJPQLByFetchGroup(String classname, String jpql, List<String> fields);
     
-    public T getFetchGroupByNamedQuery(String classname, String namedQuery, Map<String, Object> conditions, List<String> fields);
+    public T getFetchGroupByNamedQuery(Map<String, Object> map);
 
     public T getEntityByNamedQuery(String namedQuery, Map<String, Object> parameters);
   
     public List getAllEntitiesByNamedQuery(String namedQuery, Map<String, Object> parameters);
     
     public T getEntityByJPQL(String jpql);  
+    
+    
+    public T partialMerge(T entity, List<String> fields);
 }

@@ -3,6 +3,7 @@ package se.nrm.specify.specify.data.jpa;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.Stateless;
@@ -10,6 +11,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.nrm.specify.datamodel.SpecifyBean;
+import se.nrm.specify.specify.data.jpa.exceptions.DataReflectionException; 
 import se.nrm.specify.specify.data.jpa.util.JPAUtil;
 import se.nrm.specify.specify.data.jpa.util.ReflectionUtil;
 
@@ -39,9 +41,7 @@ public class EntityMapping {
             for (String strfield : fieldlist) {
                 Field field = ReflectionUtil.getField(bean.getClass(), strfield);
                 setFieldValue(o, bean, field);
-            }
-//            map.remove(classname);
-//            fields.removeAll(fieldlist);
+            } 
 
             for (String key : map.keySet()) {
                 if (key.contains(".")) {
@@ -70,6 +70,9 @@ public class EntityMapping {
                     } 
                 }
             }
+            
+        } catch (DataReflectionException ex) {
+            logger.error(ex.getMessage());
         } catch (NoSuchFieldException ex) {
             logger.error("NoSuchFieldException: {}", ex.getMessage());
         } catch (IllegalArgumentException ex) {
@@ -82,6 +85,8 @@ public class EntityMapping {
     private void setSubEntity(SpecifyBean subo, SpecifyBean o, SpecifyBean bean, Field field, List<String> fields) { 
         
 //        logger.info("setSubEntity: {} - {}", o, bean);
+        
+        logger.info("fields : {} -- {}", field.getName(), fields);
         
         String classname = field.getName(); 
         Map<String, List<String>> map = JPAUtil.createMap(classname, fields);  
@@ -100,31 +105,91 @@ public class EntityMapping {
 
                     for (String key : map.keySet()) {
 
+                        
+                        logger.info("entity mapping : {}", key);
+                        
+                        
+                        
+                        
+                        
+                        
                         if (key.contains(".")) {
                             String[] strarry = StringUtils.split(key, ".");
                             Field subfield = ReflectionUtil.getField(subo.getClass(), strarry[1]);
+                            
+                            logger.info("sub fields : {}", subfield);
                             if (subfield.getType().getName().equals(JAVA_UTIL_COLLECTION)) {
+                                
+                                
+                                
+                                Map<String, SpecifyBean> beanmap = new HashMap<String, SpecifyBean>();
+                                
                                 ReflectionUtil.makeAccessible(subfield);
                                 Collection<SpecifyBean> collectionbeans = (Collection<SpecifyBean>) subfield.get(value);
 
+                                
                                 if(collectionbeans != null) {
                                     int size = collectionbeans.size();      // this is needed for IndirectList: not instantiated
+                                    logger.info("collection beans : {}", collectionbeans);
                                     if (size > 0) {
                                         Collection<SpecifyBean> newcollections = new ArrayList<SpecifyBean>();
                                         for (SpecifyBean sb : collectionbeans) {
-                                            SpecifyBean gsubo = JPAUtil.createNewInstance(sb.getClass().getSimpleName());
-                                            List<String> list = map.get(key);
-                                            for (String string : list) {
-                                                Field f = ReflectionUtil.getField(sb.getClass(), string);
-                                                setFieldValue(gsubo, sb, f);
-                                            }
+                                            
+                                             
+                                                SpecifyBean gsubo = JPAUtil.createNewInstance(sb.getClass().getSimpleName());
 
-                                            newcollections.add(gsubo);
+                                                beanmap.put(sb.getClass().getSimpleName(), sb);
+                                                setEntityValue(gsubo, sb.getClass().getSimpleName(), map.get(key), beanmap);
+                                                newcollections.add(gsubo);
 
-                                            Field newField = ReflectionUtil.getField(subo.getClass(), subfield.getName());
-                                            ReflectionUtil.makeAccessible(newField);
-                                            newField.set(subo, newcollections); 
+//                                                Field newField = ReflectionUtil.getField(o.getClass(), field.getName());
+//                                                ReflectionUtil.makeAccessible(newField);
+//                                                newField.set(o, newcollections);
+                                        
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+//                                            SpecifyBean gsubo = JPAUtil.createNewInstance(sb.getClass().getSimpleName());
+//                                            logger.info("gsubo : {}", gsubo);
+//                                            
+//                                            List<String> list = map.get(key);
+//                                            Field f = ReflectionUtil.getField(subo.getClass(), gsubo.getClass().getSimpleName());
+//                                            setSubEntity(ggsubo, gsubo, gsubo, f, list);
+//                                            
+                                            
+                                            
+                                            
+                                            
+//                                            for (String string : list) {
+//                                                
+//                                                logger.info("string : {}", string);
+//                                                logger.info("is true ? {}", string.contains("."));
+//                                                if(string.contains(".")) { 
+//                                                     
+//                                                    String[] strs = StringUtils.split(string, ".");
+//                                                    Field f = ReflectionUtil.getField(subo.getClass(), gsubo.getClass().getSimpleName());
+//                                                    
+//                                                    String subClassName = Common.getInstance().uppercaseFirstCharacter(strs[0]);
+//                                                    
+//                                                    SpecifyBean ggsubo = JPAUtil.createNewInstance(subClassName);
+//                                                    
+//                                                    logger.info("entities : {} --- {}", ggsubo + " --- " + gsubo, f + "---" + list);
+//                                                    setSubEntity(ggsubo, gsubo, gsubo, f, list);
+//                                                }
+//                                                Field f = ReflectionUtil.getField(sb.getClass(), string);
+//                                                setFieldValue(gsubo, sb, f);
+//                                            }
+
+                                            newcollections.add(gsubo);  
                                         }
+                                        Field newField = ReflectionUtil.getField(subo.getClass(), subfield.getName());
+                                        ReflectionUtil.makeAccessible(newField);
+                                        newField.set(subo, newcollections);
+                                        
+                                        logger.info("new field with new collection : {} --- {}", subo, newField.getName() + " ---" + newcollections);
                                     }
                                 }
                                 
