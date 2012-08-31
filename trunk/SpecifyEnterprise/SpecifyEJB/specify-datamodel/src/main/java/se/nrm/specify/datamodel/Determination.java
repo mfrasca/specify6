@@ -22,8 +22,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlID; 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -169,7 +168,7 @@ public class Determination extends BaseEntity {
     private Collection<Determinationcitation> determinationCitations;
     
     @JoinColumn(name = "DeterminerID", referencedColumnName = "AgentID")
-    @ManyToOne
+    @ManyToOne(cascade= {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST})
     private Agent determiner;
      
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
@@ -185,7 +184,7 @@ public class Determination extends BaseEntity {
     private Agent modifiedByAgent;
      
     @JoinColumn(name = "PreferredTaxonID", referencedColumnName = "TaxonID")
-    @ManyToOne
+    @ManyToOne(cascade= {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST})
     private Taxon preferredTaxon;
     
     @JoinColumn(name = "TaxonID", referencedColumnName = "TaxonID")
@@ -432,8 +431,7 @@ public class Determination extends BaseEntity {
     public void setModifiedByAgent(Agent modifiedByAgent) {
         this.modifiedByAgent = modifiedByAgent;
     }
- 
-    @XmlIDREF
+  
     public Taxon getPreferredTaxon() {
         return preferredTaxon;
     }

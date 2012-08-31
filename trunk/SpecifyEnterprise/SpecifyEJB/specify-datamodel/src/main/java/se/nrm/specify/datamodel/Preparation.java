@@ -139,12 +139,12 @@ public class Preparation extends BaseEntity {
     private Agent createdByAgent;
     
     @JoinColumn(name = "CollectionObjectID", referencedColumnName = "CollectionObjectID") 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade={CascadeType.DETACH})
     private Collectionobject collectionObject;
     
     @JoinColumn(name = "PrepTypeID", referencedColumnName = "PrepTypeID")
     @NotNull
-    @ManyToOne(optional = false, cascade= {CascadeType.MERGE, CascadeType.REFRESH})
+    @ManyToOne(optional = false, cascade= {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     private Preptype prepType;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
