@@ -6,11 +6,12 @@ import java.util.Date;
 import javax.persistence.*; 
 import javax.validation.constraints.Size;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlAttribute; 
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlTransient; 
  
 
 
@@ -152,11 +153,13 @@ public class Address extends BaseEntity implements CycleRecoverable {
     
     @OneToMany(mappedBy = "address") 
     private Collection<Institution> institutions;
-    
+     
+    @XmlTransient
     @JoinColumn(name = "CreatedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne  
     private Agent createdByAgent;
     
+    @XmlTransient
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne 
     private Agent modifiedByAgent;
@@ -382,7 +385,7 @@ public class Address extends BaseEntity implements CycleRecoverable {
         this.institutions = institutions;
     }
  
-    @XmlIDREF
+    @XmlTransient
     public Agent getAgent() {
         return agent;
     }
@@ -406,16 +409,18 @@ public class Address extends BaseEntity implements CycleRecoverable {
     public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
-
+ 
+    
     @XmlIDREF 
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
 
+    
     public void setCreatedByAgent(Agent createdByAgent) {
         this.createdByAgent = createdByAgent;
     }
-
+ 
     @XmlIDREF 
     public Agent getModifiedByAgent() {
         return modifiedByAgent;

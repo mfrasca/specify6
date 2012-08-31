@@ -41,9 +41,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Collectionobject.findAll", query = "SELECT c FROM Collectionobject c"),
-    @NamedQuery(name = "Collectionobject.findByCollectionObjectId", query = "SELECT c FROM Collectionobject c WHERE c.collectionObjectId = :collectionObjectId"),
-    @NamedQuery(name = "Collectionobject.findByTimestampCreated", query = "SELECT c FROM Collectionobject c WHERE c.timestampCreated = :timestampCreated"),
-    @NamedQuery(name = "Collectionobject.findByTimestampModified", query = "SELECT c FROM Collectionobject c WHERE c.timestampModified = :timestampModified"),
+    @NamedQuery(name = "Collectionobject.findByCollectionObjectId", query = "SELECT c FROM Collectionobject c WHERE c.collectionObjectId = :collectionObjectId"), 
     @NamedQuery(name = "Collectionobject.findByVersion", query = "SELECT c FROM Collectionobject c WHERE c.version = :version"),
     @NamedQuery(name = "Collectionobject.findByCollectionMemberId", query = "SELECT c FROM Collectionobject c WHERE c.collectionMemberId = :collectionMemberId"),
     @NamedQuery(name = "Collectionobject.findByAltCatalogNumber", query = "SELECT c FROM Collectionobject c WHERE c.altCatalogNumber = :altCatalogNumber"),
@@ -59,23 +57,10 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Collectionobject.findByGuid", query = "SELECT c FROM Collectionobject c WHERE c.guid = :guid"),
     @NamedQuery(name = "Collectionobject.findByInventoryDate", query = "SELECT c FROM Collectionobject c WHERE c.inventoryDate = :inventoryDate"),
     @NamedQuery(name = "Collectionobject.findByModifier", query = "SELECT c FROM Collectionobject c WHERE c.modifier = :modifier"),
-    @NamedQuery(name = "Collectionobject.findByName", query = "SELECT c FROM Collectionobject c WHERE c.name = :name"),
-    @NamedQuery(name = "Collectionobject.findByNotifications", query = "SELECT c FROM Collectionobject c WHERE c.notifications = :notifications"),
-    @NamedQuery(name = "Collectionobject.findByNumber1", query = "SELECT c FROM Collectionobject c WHERE c.number1 = :number1"),
-    @NamedQuery(name = "Collectionobject.findByNumber2", query = "SELECT c FROM Collectionobject c WHERE c.number2 = :number2"),
-    @NamedQuery(name = "Collectionobject.findByObjectCondition", query = "SELECT c FROM Collectionobject c WHERE c.objectCondition = :objectCondition"),
-    @NamedQuery(name = "Collectionobject.findByProjectNumber", query = "SELECT c FROM Collectionobject c WHERE c.projectNumber = :projectNumber"),
-    @NamedQuery(name = "Collectionobject.findByRestrictions", query = "SELECT c FROM Collectionobject c WHERE c.restrictions = :restrictions"),
-    @NamedQuery(name = "Collectionobject.findByTotalValue", query = "SELECT c FROM Collectionobject c WHERE c.totalValue = :totalValue"),
+    @NamedQuery(name = "Collectionobject.findByName", query = "SELECT c FROM Collectionobject c WHERE c.name = :name"), 
     @NamedQuery(name = "Collectionobject.findByVisibility", query = "SELECT c FROM Collectionobject c WHERE c.visibility = :visibility"),
     @NamedQuery(name = "Collectionobject.findLastRecordByCollectionCode", query = "select c from Collectionobject c where c.collection.code = :code order by c.collectionObjectId desc"),
-    @NamedQuery(name = "Collectionobject.findByCollectingEventIDAndYesNo2", query = "SELECT c FROM Collectionobject c WHERE c.collectingEvent = :collectingEventID and c.yesNo2 IS NULL"),  
-    @NamedQuery(name = "Collectionobject.findByYesNo1", query = "SELECT c FROM Collectionobject c WHERE c.yesNo1 = :yesNo1"),
-    @NamedQuery(name = "Collectionobject.findByYesNo2", query = "SELECT c FROM Collectionobject c WHERE c.yesNo2 = :yesNo2"),
-    @NamedQuery(name = "Collectionobject.findByYesNo3", query = "SELECT c FROM Collectionobject c WHERE c.yesNo3 = :yesNo3"),
-    @NamedQuery(name = "Collectionobject.findByYesNo4", query = "SELECT c FROM Collectionobject c WHERE c.yesNo4 = :yesNo4"),
-    @NamedQuery(name = "Collectionobject.findByYesNo5", query = "SELECT c FROM Collectionobject c WHERE c.yesNo5 = :yesNo5"),
-    @NamedQuery(name = "Collectionobject.findByYesNo6", query = "SELECT c FROM Collectionobject c WHERE c.yesNo6 = :yesNo6")})
+    @NamedQuery(name = "Collectionobject.findByCollectingEventIDAndYesNo2", query = "SELECT c FROM Collectionobject c WHERE c.collectingEvent = :collectingEvent and c.yesNo2 IS NULL")})
 public class Collectionobject extends BaseEntity {
   
 //implements CycleRecoverable { 
@@ -227,7 +212,7 @@ public class Collectionobject extends BaseEntity {
     @OneToMany(mappedBy = "collectionObject")
     private Collection<Treatmentevent> treatmentEvents;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "collectionObject")
+    @OneToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST}, mappedBy = "collectionObject")
     private Collection<Preparation> preparations;
      
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "collectionObject")
@@ -263,7 +248,7 @@ public class Collectionobject extends BaseEntity {
     private Accession accession;
     
     @JoinColumn(name = "CatalogerID", referencedColumnName = "AgentID")
-    @ManyToOne
+    @ManyToOne(cascade={CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST})
     private Agent cataloger;
     
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
@@ -284,7 +269,7 @@ public class Collectionobject extends BaseEntity {
      
     @JoinColumn(name = "CollectionID", referencedColumnName = "UserGroupScopeId")
     @NotNull
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade={CascadeType.DETACH})
     private se.nrm.specify.datamodel.Collection collection;
     
     @JoinColumn(name = "PaleoContextID", referencedColumnName = "PaleoContextID")

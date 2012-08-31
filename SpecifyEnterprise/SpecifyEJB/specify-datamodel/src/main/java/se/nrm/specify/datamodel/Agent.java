@@ -56,7 +56,7 @@ import org.eclipse.persistence.oxm.annotations.XmlInverseReference;
     @NamedQuery(name = "Agent.findByLastName", query = "SELECT a FROM Agent a WHERE a.lastName = :lastName"),
     @NamedQuery(name = "Agent.findByMiddleInitial", query = "SELECT a FROM Agent a WHERE a.middleInitial = :middleInitial"),
     @NamedQuery(name = "Agent.findByTitle", query = "SELECT a FROM Agent a WHERE a.title = :title"),
-    @NamedQuery(name = "Agent.findBySpecifyuserid", query = "SELECT a FROM Agent a WHERE a.specifyUser.specifyUserId = :specifyUserID"),
+    @NamedQuery(name = "Agent.findBySpecifyuserId", query = "SELECT a FROM Agent a WHERE a.specifyUser.specifyUserId = :specifyUserId"),
     @NamedQuery(name = "Agent.findByDateType", query = "SELECT a FROM Agent a WHERE a.dateType = :dateType")})
 public class Agent extends BaseEntity {
   
@@ -1200,7 +1200,7 @@ public class Agent extends BaseEntity {
     public String getIdentityString() {
         return (agentId != null) ? agentId.toString() : "0";
     }
-
+ 
     public Integer getAgentId() {
         return agentId;
     }
