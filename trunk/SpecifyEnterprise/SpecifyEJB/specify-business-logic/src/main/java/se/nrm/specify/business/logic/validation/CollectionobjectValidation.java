@@ -56,8 +56,7 @@ public final class CollectionobjectValidation extends BaseValidationRules {
         duplicationCheckFields.add(CATALOG_NUMBER); 
         
         validationRuleMap =  new HashMap<String, IBaseValidationRules>();
-        if(collectionObject.getAccession() != null) {
-            logger.info("accessionagents : {}", collectionObject.getAccession().getAccessionAgents());
+        if(collectionObject.getAccession() != null) { 
             validationRuleMap.put("accession", new AccessionValidation(collectionObject.getAccession())); 
         } 
         
@@ -73,22 +72,25 @@ public final class CollectionobjectValidation extends BaseValidationRules {
         List<String> msgs = new ArrayList<String>();
         
         int count = 0;
-        Collection<Determination> determinations = collectionObject.getDeterminations();
-        if(determinations != null) {
-            for(Determination determination : determinations) {
+        Collection<Determination> determinations = collectionObject.getDeterminations(); 
+        if (determinations != null && !determinations.isEmpty()) {
+            for (Determination determination : determinations) {
+ 
                 // There is one and only one current determination within collectionObject
-                if(determination.getIsCurrent()) {
+                if (determination.getIsCurrent()) {
                     count++;
-                } 
+                }
+            } 
+            if (count > 1) {
+                isValidForSaving = false;
+                msgs.add(ValidationMessage.getInstance().CURRENT_DETERMINATION);
+            } else if (count < 1) {
+                isValidForSaving = false;
+                msgs.add(ValidationMessage.getInstance().NO_CURRENT_DETERMINATION);
             }
-        } 
-        if(count > 1) {
-            isValidForSaving = false;
-            msgs.add(ValidationMessage.getInstance().CURRENT_DETERMINATION); 
-        } else if(count < 1) {
-            isValidForSaving = false;
-            msgs.add(ValidationMessage.getInstance().NO_CURRENT_DETERMINATION);  
         }
+        
+        
          
         for(Map.Entry<String, IBaseValidationRules> entry : validationRuleMap.entrySet()) {
             Validation validation = entry.getValue().validationBeforeSave();

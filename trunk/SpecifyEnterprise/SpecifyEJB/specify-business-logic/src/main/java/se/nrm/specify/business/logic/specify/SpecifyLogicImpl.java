@@ -7,8 +7,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless; 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.nrm.specify.business.logic.util.ValidationMessage;
-import se.nrm.specify.business.logic.validation.BaseValidationRules;
+import se.nrm.specify.business.logic.util.ValidationMessage; 
 import se.nrm.specify.business.logic.validation.IBaseValidationRules;
 import se.nrm.specify.business.logic.validation.ValidationHelpClass;
 import se.nrm.specify.business.logic.validation.Validation;
@@ -65,23 +64,7 @@ public class SpecifyLogicImpl implements SpecifyLogic {
             return new ValidationError(validationRules.getSpecifyBeanId(), (validationRules.isNew()) ? Status.CreateNew : Status.Update, e);
         }
     }
-    
-//    public Validation mergeEntity(SpecifyBean bean, List<String> fields) {
-//        Validation validation = mergeValidation(bean);
-//        if(validation.isValidationNotOK()) {
-//            return validation;
-//        }
-//        try {
-////            bean = dao.partialMerge(bean, fields); 
-//            bean = dao.partialMerge(bean, null); 
-//            return new ValidationOK(new SpecifyBeanId(bean), (validationRules.isNew()) ? Status.CreateNew : Status.Update, (validationRules.isNew()) ? bean + " is persisted" : bean + " is updated.");
-//        } catch (DataStoreException e) {
-//            return new ValidationError(validationRules.getSpecifyBeanId(), (validationRules.isNew()) ? Status.CreateNew : Status.Update, e);
-//        }
-//    }
-    
-    
-    
+ 
     public Validation mergeEntity(SpecifyBean bean, List<String> fields) {
         
         logger.info("mergeEntity : {} - {}", bean, fields);
@@ -222,8 +205,7 @@ public class SpecifyLogicImpl implements SpecifyLogic {
         for (String relatedTable : relatedTables) {
             String jpql = validationRules.createCheckForDeleteJPQL(relatedTable, (String) map.get(relatedTable));
             int count = dao.getCountByJPQL(bean, jpql);
-
-            logger.info("count : {}", count);
+ 
             if (count > validationRules.countForDelete()) {
                 String msg = validationRules.createMsg(Status.Delete, ValidationStatus.ERROR, relatedTable, null);
                 msgs.add(msg);
