@@ -5,11 +5,11 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
-import com.sun.jersey.core.util.MultivaluedMapImpl; 
+import com.sun.jersey.core.util.MultivaluedMapImpl;  
 import java.net.URI;
 import java.sql.Timestamp; 
 import java.util.ArrayList;  
-import java.util.List; 
+import java.util.List;  
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriBuilder; 
@@ -61,20 +61,22 @@ public class SpecifyClient {
     
     private static void testUIDataFetch()  {
         
-        SpecifyBeanWrapper beanWrapper = service.path("searchbyid").path(Division.class.getName()).path("2").accept(MediaType.APPLICATION_JSON).get(SpecifyBeanWrapper.class);
-        Division division = (Division) beanWrapper.getBean();
+        SpecifyBeanWrapper beanWrapper = service.path("searchbyid").path(Preptype.class.getName()).path("21").accept(MediaType.APPLICATION_JSON).get(SpecifyBeanWrapper.class);
+        Preptype preptype = (Preptype) beanWrapper.getBean();
         
         
         
-        SpecifyBeanWrapper beanWrapper1 = service.path("searchbyid").path(Taxon.class.getName()).path("1270").accept(MediaType.APPLICATION_JSON).get(SpecifyBeanWrapper.class);
+        SpecifyBeanWrapper beanWrapper1 = service.path("searchbyid").path(Taxon.class.getName()).path("1272").accept(MediaType.APPLICATION_JSON).get(SpecifyBeanWrapper.class);
         Taxon taxon = (Taxon) beanWrapper1.getBean();
 
+        beanWrapper1 = service.path("searchbyid").path(Agent.class.getName()).path("1").accept(MediaType.APPLICATION_JSON).get(SpecifyBeanWrapper.class);
+        Agent agent = (Agent) beanWrapper1.getBean();
 
 //        beanWrapper = service.path("searchbyid").path(Accession.class.getName()).path("6").accept(MediaType.APPLICATION_JSON).get(SpecifyBeanWrapper.class);
 //        Accession accession = (Accession)beanWrapper.getBean();
 
-        beanWrapper = service.path("searchbyid").path(Agent.class.getName()).path("1").accept(MediaType.APPLICATION_JSON).get(SpecifyBeanWrapper.class);
-        Agent agent = (Agent) beanWrapper.getBean();
+        beanWrapper = service.path("searchbyid").path(Division.class.getName()).path("2").accept(MediaType.APPLICATION_JSON).get(SpecifyBeanWrapper.class);
+        Division division = (Division) beanWrapper.getBean();
         
         String discipline = "fish";
         String view = "CollectionObject";
@@ -85,7 +87,10 @@ public class SpecifyClient {
 
         MultivaluedMapImpl queryParams = new MultivaluedMapImpl();
 //        queryParams.add("catalogNumber", "NHRS-GULI000000970");
-         queryParams.add("collectionObjectId", 779);
+//         queryParams.add("collectionObjectId", 9439);
+        
+        
+        queryParams.add("collectionObjectId", 137234);
           
         String json = client.getJSONResult(discipline, view, queryParams);
         String xml = client.getXMLResult(discipline, view, queryParams);
@@ -93,62 +98,136 @@ public class SpecifyClient {
         
         List<SpecifyBean> beans = client.getEntityResult(discipline, view, queryParams);
         
-        System.out.println("json : " + json);
+//        System.out.println("json : " + json);
         System.out.println("xml : " + xml);
         System.out.println("beans : " + beans);
         
         
         Collectionobject collectionobject = (Collectionobject)beans.get(0);
-  
+        collectionobject.setCollectionMemberId(collectionobject.getCollectionMemberId() + 1);
         
-        taxon.setFullName("test name");
-        List<Determination> determinations = new ArrayList<Determination>();
-        Determination d = new Determination();
-        d.setTimestampCreated(timestamp);
-        d.setCollectionMemberId(123);
-        d.setIsCurrent(true);
-        d.setTaxon(taxon);
+        Agent cataloger = collectionobject.getCataloger();
+          
+        if(cataloger == null) { 
+//            cataloger = new Agent();
+//            cataloger.setTimestampCreated(timestamp);
+//            cataloger.setDivision(division);
+//            cataloger.setFirstName("tst");
+//            cataloger.setLastName("tesetdd");
+
+            
+            cataloger = agent;
+            cataloger.setFirstName(cataloger.getFirstName() + "ww");
+            collectionobject.setCataloger(cataloger);
+        } else {
+            collectionobject.setCataloger(null);
+        }
+//        collectionobject.setCataloger(cataloger);
         
-        determinations.add(d);
+        taxon.setFullName(taxon.getFullName() + "11");
+//         
         
-        d = new Determination();
-        d.setTimestampCreated(timestamp);
-        d.setCollectionMemberId(123);
-        d.setTaxon(taxon);
-        
-        determinations.add(d);
+        List<Determination> determinations = (List<Determination>)collectionobject.getDeterminations();
+        if(determinations == null) {
+            determinations = new ArrayList<Determination>();
+            Determination d = new Determination();
+            d.setTimestampCreated(timestamp);
+            d.setCollectionMemberId(123);
+            d.setIsCurrent(true);
+            d.setTaxon(taxon);
+
+            determinations.add(d);
+
+            d = new Determination();
+            d.setTimestampCreated(timestamp);
+            d.setCollectionMemberId(123);
+            d.setTaxon(taxon);
+
+            determinations.add(d);  
+        } else {
+            for(Determination d : determinations) {
+                Taxon t = d.getTaxon();
+                t.setName(taxon.getName() + "2");
+                d.setTaxon(t);
+                d.setCollectionMemberId(d.getCollectionMemberId() + 12);
+                 
+                Agent determiner = d.getDeterminer(); 
+                if(determiner == null) {
+                    determiner = agent;
+                    determiner.setLastName(determiner.getLastName() + "k");
+                    
+                    
+//                    determiner = new Agent(); 
+//                    determiner.setTimestampCreated(timestamp);
+//                    determiner.setLastName("eerer");
+                    
+                    d.setDeterminer(determiner);
+                } else {
+                    determiner.setLastName(determiner.getLastName() + "d");
+                    d.setDeterminer(null);
+                } 
+            }  
+        } 
+        Collection collection = collectionobject.getCollection();
+        System.out.println("collection : " + collection); 
+        collectionobject.setDeterminations(determinations);
          
         
-        collectionobject.setDeterminations(determinations);
-        
         Collectingevent ce = collectionobject.getCollectingEvent();
-        ce.setStartDate(timestamp);
-        
+        ce.setStartDate(timestamp); 
         collectionobject.setCollectingEvent(ce);
+          
+        Accession accession = collectionobject.getAccession(); 
+        if(accession == null) {
+            accession = new Accession(); 
+            accession.setTimestampCreated(timestamp);
+            accession.setAccessionNumber("dasdfa");
+            accession.setDivision(division);
+            accession.setTimestampCreated(timestamp);
+        } else {
+            accession.setAccessionNumber(accession.getAccessionNumber() + "r"); 
+        }
+        List<Accessionagent> aas = (List<Accessionagent>) accession.getAccessionAgents();
+        if (aas == null) {
+            aas = new ArrayList<Accessionagent>();
+            Accessionagent aa = new Accessionagent();
+            aa.setTimestampCreated(timestamp);
+            aa.setRole("test");
+            aa.setAgent(agent);
+
+            aas.add(aa);
+            aa = new Accessionagent();
+            aa.setTimestampCreated(timestamp);
+            aa.setRole("test 2");
+            aa.setAgent(agent);
+
+            aas.add(aa); 
+        } else {
+            for(Accessionagent aa : aas) {
+                aa.setRole(aa.getRole()+ "i");
+            }
+        }
         
-        
-        Accession accession = new Accession();
-        accession.setTimestampCreated(timestamp);
-        accession.setAccessionNumber("eit2erte3ee");
-        accession.setDivision(division);
-        
-        List<Accessionagent> aas = new ArrayList<Accessionagent>();
-        Accessionagent aa = new Accessionagent();
-        aa.setTimestampCreated(timestamp);
-        aa.setRole("test");
-        aa.setAgent(agent);
-        
-        aas.add(aa);
-        aa = new Accessionagent();
-        aa.setTimestampCreated(timestamp);
-        aa.setRole("test 2");
-        aa.setAgent(agent);
-        
-        aas.add(aa);
         accession.setAccessionAgents(aas);
         collectionobject.setAccession(accession);
-        
-        
+ 
+//        List<Preparation> preparations = (List<Preparation>) collectionobject.getPreparations();
+//        if(preparations == null) {
+//            preparations = new ArrayList<Preparation>();
+//            
+//            Preparation p = new Preparation();
+//            p.setTimestampCreated(timestamp);
+//            p.setPrepType(preptype);
+//            p.setCollectionMemberId(collection.getUserGroupScopeId());
+//            preparations.add(p);
+//        } else {
+//            for(Preparation p : preparations) {
+//                p.setCollectionMemberId(p.getCollectionMemberId() + 12);
+//                preparations.add(p);
+//            }
+//        }
+//        
+//        collectionobject.setPreparations(preparations);
         
         
         
@@ -255,7 +334,7 @@ public class SpecifyClient {
     
     
     private static void testFindById() {
-        String xml = service.path("searchbyid").path(Collectionobject.class.getName()).path("1").accept(MediaType.APPLICATION_XML).get(String.class);
+        String xml = service.path("searchbyid").path(Collectionobject.class.getName()).path("137234").accept(MediaType.APPLICATION_XML).get(String.class);
         
         System.out.println("cco : " + xml);
     }
@@ -266,13 +345,13 @@ public class SpecifyClient {
     private static void testUpdateEntity() {
  
 
-        SpecifyBeanWrapper beanWrapper = service.path("searchbyid").path(Collectionobject.class.getName()).path("217849").accept(MediaType.APPLICATION_JSON).get(SpecifyBeanWrapper.class);
-        Collectionobject co = (Collectionobject) beanWrapper.getBean();
+        SpecifyBeanWrapper beanWrapper = service.path("searchbyid").path(Agent.class.getName()).path("1").accept(MediaType.APPLICATION_JSON).get(SpecifyBeanWrapper.class);
+        Agent agent = (Agent) beanWrapper.getBean();
    
-        co.setCatalogNumber(co.getCatalogNumber() + "-1");
+        agent.setLastName(agent.getLastName() + "i");
   
 
-        SpecifyBeanWrapper wrapper = new SpecifyBeanWrapper(co);
+        SpecifyBeanWrapper wrapper = new SpecifyBeanWrapper(agent);
 
         String response = service.path("updateentity").put(String.class, wrapper);
         System.out.println(response); 
@@ -435,13 +514,17 @@ public class SpecifyClient {
         fields.add("accession.accessionNumber");
         fields.add("accession.remarks");
         fields.add("accession.dateAccessioned");
-        fields.add("determinations.isCurrent");
-        fields.add("determinations.taxon.fullName"); 
+        fields.add("accession.timestampCreated");
+//        fields.add("determinations.isCurrent");
+//        fields.add("determinations.taxon.fullName"); 
+        fields.add("preparations.timestampModified"); 
+        fields.add("preparations.collectionMemberId"); 
+        
         
   
         MultivaluedMap queryParams = new MultivaluedMapImpl();  
 //        queryParams.putSingle("collectionObjectID", "152071");
-        queryParams.putSingle("collectionObjectId", "568");
+        queryParams.putSingle("collectionObjectId", "424");
         queryParams.put("fields", fields);
         queryParams.putSingle("namedQuery", namedQuery);
         
@@ -457,28 +540,68 @@ public class SpecifyClient {
 //        Division division = collectionobject.getCollection().getDiscipline().getDivision();
 //        System.out.println("division : " + division);
       
-        Accession accession = new Accession();
-        accession.setTimestampCreated(timestamp);
-        accession.setAccessionNumber("eereeredeere");
-        accession.setDivision(division);
+        Accession accession = collectionobject.getAccession(); 
+        if(accession == null) {
+            accession = new Accession();
+            accession.setAccessionNumber("sdfdsadfsdaf");
+            accession.setDivision(division);
+            accession.setTimestampCreated(timestamp);
+
+            List<Accessionagent> aas = new ArrayList<Accessionagent>();
+            Accessionagent aa = new Accessionagent();
+            aa.setTimestampCreated(timestamp);
+            aa.setRole("test");
+            aa.setAgent(agent);
+
+            aas.add(aa);
+            aa = new Accessionagent();
+            aa.setTimestampCreated(timestamp);
+            aa.setRole("test 2");
+            aa.setAgent(agent);
+
+            aas.add(aa);
+            accession.setAccessionAgents(aas);
+        } else {
+            accession.setAccessionNumber(accession.getAccessionNumber() + "ww");
+            accession.setDivision(division);
+
+            List<Accessionagent> aas = new ArrayList<Accessionagent>();
+            Accessionagent aa = new Accessionagent(); 
+            aa.setRole("test");
+            aa.setAgent(agent);
+            aa.setTimestampCreated(timestamp);
+
+            aas.add(aa);
+            aa = new Accessionagent(); 
+            aa.setRole("test 2");
+            aa.setAgent(agent);
+            aa.setTimestampCreated(timestamp);
+
+            aas.add(aa);
+            accession.setAccessionAgents(aas);
+        }
         
-        List<Accessionagent> aas = new ArrayList<Accessionagent>();
-        Accessionagent aa = new Accessionagent();
-        aa.setTimestampCreated(timestamp);
-        aa.setRole("test");
-        aa.setAgent(agent);
-        
-        aas.add(aa);
-        aa = new Accessionagent();
-        aa.setTimestampCreated(timestamp);
-        aa.setRole("test 2");
-        aa.setAgent(agent);
-        
-        aas.add(aa);
-        accession.setAccessionAgents(aas);
         collectionobject.setAccession(accession); 
         
+//        List<Determination> determinations = (List<Determination>)collectionobject.getDeterminations();
+//        for(Determination d : determinations) {
+//            Taxon t = d.getTaxon();
+//            t.setFullName(t.getFullName() + "22");
+//            d.setTaxon(t);
+//        }
+//        collectionobject.setDeterminations(determinations);
         
+        List<Preparation> preparations = (List<Preparation>)collectionobject.getPreparations();
+        Preparation p = preparations.get(0);
+        p.setCollectionMemberId(p.getCollectionMemberId() + 1);
+        
+        Preptype preptype = p.getPrepType();
+        preptype.setTimestampCreated(timestamp);
+        
+        
+        collectionobject.setPreparations(preparations);
+        
+        collectionobject.setRemarks(collectionobject.getRemarks() + "ee");
         
    
         SpecifyBeanWrapper wp = new SpecifyBeanWrapper(collectionobject);
