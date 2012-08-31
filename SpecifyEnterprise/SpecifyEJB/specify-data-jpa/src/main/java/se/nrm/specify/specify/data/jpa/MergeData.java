@@ -12,28 +12,37 @@ import se.nrm.specify.specify.data.jpa.util.Common;
 public class MergeData implements Serializable {
     
     private SpecifyBean parent;
-    private SpecifyBean child;
+    private SpecifyBean child; 
     private List<SpecifyBean> children;
     private List<String> fetchFields;
     private boolean isList;
-    private String fieldName;
+    private String fieldName; 
+    private boolean targetEmpty;
     
     public MergeData() {
         
     }
     
-    public MergeData(SpecifyBean parent, SpecifyBean child, List<String> fetchFields) {
+    public MergeData(SpecifyBean parent, SpecifyBean child, String fieldName, List<String> fetchFields, boolean targetEmpty) {
         this.parent = parent;
         this.child = child;
+        this.fieldName = fieldName;
         this.fetchFields = fetchFields;
         this.isList = false;
+        this.targetEmpty = targetEmpty;
     }
     
-    public MergeData(SpecifyBean parent, List<SpecifyBean> children, List<String> fetchFields ) {
+    public MergeData(SpecifyBean parent, List<SpecifyBean> children, String fieldName, List<String> fetchFields) {
         this.parent = parent;
         this.children = children;
+        this.fieldName = fieldName;
         this.fetchFields = fetchFields; 
         this.isList = true;
+    }
+    
+    
+    public int getEntityId(SpecifyBean bean) {
+        return Common.getInstance().stringToInt(bean.getIdentityString());
     }
 
     public SpecifyBean getChild() {
@@ -62,15 +71,20 @@ public class MergeData implements Serializable {
         return isList;
     }
      
-    public int getParentId() {
-//        BaseEntity baseEntity = (BaseEntity)parent;  
+    public int getParentId() { 
         return Common.getInstance().stringToInt(parent.getIdentityString());
     }
     
-    public boolean isNew() {
-//        BaseEntity baseEntity = (BaseEntity)child; 
-        return child.getIdentityString().equals("0") ? true : false;
+    public boolean isNew() { 
+        return (child.getIdentityString() == null || child.getIdentityString().equals("0")) ? true : false;
     }
+
+    public boolean isTargetEmpty() {
+        return targetEmpty;
+    }
+
+    
+    
     
      
     @Override

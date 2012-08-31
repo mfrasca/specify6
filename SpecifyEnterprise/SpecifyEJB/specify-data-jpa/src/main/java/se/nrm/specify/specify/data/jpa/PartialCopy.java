@@ -7,9 +7,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;  
+import org.slf4j.LoggerFactory;   
 import se.nrm.specify.datamodel.SpecifyBean;
 import se.nrm.specify.specify.data.jpa.exceptions.DataReflectionException; 
 import se.nrm.specify.specify.data.jpa.util.ConstantsClass;
@@ -30,6 +31,8 @@ public class PartialCopy {
     private List<MergeData> mergeDataList;  
     private boolean isRelatedEntityChanged = false;
     private boolean isCollectionChanged = false;
+    
+    private EntityManager entityManager;
 
     public PartialCopy() {
     }
@@ -48,7 +51,8 @@ public class PartialCopy {
         return isRelatedEntityChanged;
     }
     
-    public void copyPartialEntityForMerge(SpecifyBean source, SpecifyBean target, List<String> fields) {
+    public void copyPartialEntityForMerge(SpecifyBean source, SpecifyBean target, List<String> fields, EntityManager entityManager) {
+        this.entityManager = entityManager;
         mergeDataList = new ArrayList<MergeData>();
         copyPartialEntity(source, target, fields, true);
     }
@@ -72,7 +76,7 @@ public class PartialCopy {
     private void copySubEntity(SpecifyBean source, SpecifyBean target, List<String> fields, boolean isMerged) {
         
 //        logger.info("copySubEntity :  source -- target : {}, is for merge : {}", source + " --- " + target, isMerged);
-        
+         
         if (fields != null && !fields.isEmpty()) { 
             Map<String, List<String>> fieldMap = createFieldMap(fields); 
             
@@ -81,6 +85,7 @@ public class PartialCopy {
                     List<String> list = entry.getValue();
                     String entityName = entry.getKey(); 
                     if (list != null && !list.isEmpty()) {
+                          
                         Field field = ReflectionUtil.getField(source.getClass(), entityName);
                         ReflectionUtil.makeAccessible(field);
                     
@@ -102,19 +107,16 @@ public class PartialCopy {
                                     copyPartialEntity(subSource, subTarget, list, false);
                                     field.set(target, subTarget);                               // set sub entity into entity 
                                 }
-                            }
-//                            }  
+                            } 
                         }
                     } 
+                } catch (IllegalAccessException ex) {
+                    logger.error("IllegalAccessException: {}", ex.getMessage());
                 } catch (IllegalArgumentException ex) {
-                    logger.error(ex.getMessage());
+                    logger.error("IllegalArgumentException: {}", ex.getMessage());
                 } catch (NoSuchFieldException ex) {
-                    logger.error(ex.getMessage());
-                } catch (DataReflectionException ex) {
-                    logger.error(ex.getMessage());
-                } catch (Exception ex) {
-                    logger.error(ex.getMessage());
-                }
+                    logger.error("NoSuchFieldException: {}", ex.getMessage());
+                } 
             }
         }        
     }
@@ -123,22 +125,20 @@ public class PartialCopy {
         
 //        logger.info("copySubEntityForMerge -- {} -- {}", field.getName(), subSource + " -- " + list);
         try {
-            SpecifyBean subTarget = (SpecifyBean) field.get(target);
-            logger.info("sub target : {} -- sub source {}", subTarget, subSource);
-
+            SpecifyBean subTarget = (SpecifyBean) field.get(target); 
             if (subSource == null && subTarget != null) {
                 if(!ReflectionUtil.isXmlTransient(field)) {
                     subTarget = null;                                           // if related entity is removed at frontend, remove foreign key relationship
                     field.set(target, subTarget);                               // set sub entity into entity 
                 } 
-            } else if (subSource != null && subTarget == null) {            // if target bean not exist, create a new instance 
-                MergeData data = new MergeData(target, subSource, list);
+            } else if (subSource != null && subTarget == null) {            // if target bean not exist, create a new instance   
+                MergeData data = new MergeData(target, subSource, field.getName(), list, true);
                 mergeDataList.add(data);
                 isRelatedEntityChanged = true;
             } else if (subSource != null && subTarget != null) {
                 if (!subSource.getIdentityString().equals(subTarget.getIdentityString())) {
                     isRelatedEntityChanged = true;
-                    MergeData data = new MergeData(target, subSource, list);
+                    MergeData data = new MergeData(target, subSource, field.getName(), list, false);
                     mergeDataList.add(data);
                 } else {
                     copyPartialEntity(subSource, subTarget, list, true);
@@ -179,23 +179,30 @@ public class PartialCopy {
         
 //        logger.info("copyCollectionForMerge : {} -- {}", field, sourceCollection + " --- " + target);
         try {
-            List<SpecifyBean> targetCollection = (List<SpecifyBean>) field.get(target);
-            targetCollection.size();                                                // this is needed for IndirectList: not instantiated
-
+            List<SpecifyBean> targetCollection = (List<SpecifyBean>) field.get(target); 
+            if(targetCollection != null) {
+                targetCollection.size();                                                // this is needed for IndirectList: not instantiated
+            } else {
+                targetCollection = new ArrayList<SpecifyBean>();
+            }  
+            
             if (sourceCollection != null && !sourceCollection.isEmpty()) {
                 List<SpecifyBean> removedTargets = new ArrayList<SpecifyBean>();
                 for (SpecifyBean subTarget : targetCollection) {                    // check through target collection, if it is not in source collection, remove from target collection
                     if (isTargetBeanRemoved(sourceCollection, subTarget)) {
                         removedTargets.add(subTarget);  
-                    } 
+                    } else { 
+                        entityManager.detach(subTarget);                            // entity need detached from entityManager for merge later
+                    }
                 } 
+                
                 targetCollection.removeAll(removedTargets);
                 if (targetCollection.isEmpty())  {
                     isCollectionChanged = true;
                     for(SpecifyBean subSource : sourceCollection) {
                         targetCollection.add(subSource);
                     }
-                    MergeData data = new MergeData(target, targetCollection, list);
+                    MergeData data = new MergeData(target, targetCollection, field.getName(), list);
                     mergeDataList.add(data);
                 } else {
                     for (SpecifyBean subSource : sourceCollection) {
@@ -207,12 +214,14 @@ public class PartialCopy {
                         } else {
                             List<String> iniNewList = new ArrayList<String>();
                             iniNewList.addAll(list);       
+                             
                             copyPartialEntity(subSource, subTarget, iniNewList, true);
+                            
                             isCollectionChanged = true;
                         }
                     }
                     if (isCollectionChanged) { 
-                        MergeData data = new MergeData(target, targetCollection, list);
+                        MergeData data = new MergeData(target, targetCollection, field.getName(), list);
                         mergeDataList.add(data);
                     }
                 }
@@ -220,7 +229,7 @@ public class PartialCopy {
                 if(!ReflectionUtil.isXmlTransient(field)) {
                     field.set(target, null);                    // if collection is removed at frontend, delete from database  
                 }
-            }
+            } 
         } catch (IllegalArgumentException ex) {
             logger.error(ex.getMessage());
         } catch (IllegalAccessException ex) {
@@ -241,8 +250,7 @@ public class PartialCopy {
 
 //        logger.info("isTargetBeanRemoved: {} - {}", sourceCollection, subTarget);
 
-        for (SpecifyBean bean : sourceCollection) {
-            logger.info("is instance : {} -- {}", subTarget.getClass().isInstance(bean), bean + " --- " + subTarget);
+        for (SpecifyBean bean : sourceCollection) { 
             if(subTarget.getClass().isInstance(bean)) {
                 
                 if (bean.getIdentityString().equals(subTarget.getIdentityString())) {
@@ -298,14 +306,14 @@ public class PartialCopy {
             try {
                 Field field = ReflectionUtil.getField(source.getClass(), string);
                 ReflectionUtil.makeAccessible(field);
-                field.set(target, field.get(source));
+                field.set(target, field.get(source)); 
             } catch (IllegalArgumentException ex) {
-                throw new DataReflectionException(ex);
+                logger.error("IllegalArgumentException : {} -- {}", string, ex.getMessage());
             } catch (IllegalAccessException ex) {
-                throw new DataReflectionException(ex);
+                logger.error("IllegalArgumentException : {} -- {}", string, ex.getMessage());
             } catch (NoSuchFieldException ex) {
-                throw new DataReflectionException(ex);
-            }
+                logger.error("IllegalArgumentException : {} -- {}", string, ex.getMessage());
+            } 
         }
     }
 
@@ -332,4 +340,18 @@ public class PartialCopy {
         return fieldMap;
     } 
  
+    
+    
+    public SpecifyBean copyEntity(SpecifyBean bean, List<String> fields, String classname) {
+
+        logger.info("copyEntity: {} - {}", bean, classname);
+
+        Map<String, SpecifyBean> beanmap = new HashMap<String, SpecifyBean>();
+        beanmap.put(classname, bean);
+        SpecifyBean copyObject = JPAUtil.createNewInstance(classname);
+
+        copyPartialEntity(bean, copyObject, fields, false);
+
+        return copyObject;
+    }
 }
