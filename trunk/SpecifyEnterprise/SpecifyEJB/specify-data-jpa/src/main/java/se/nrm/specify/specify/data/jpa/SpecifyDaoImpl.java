@@ -1,5 +1,5 @@
 package se.nrm.specify.specify.data.jpa;
-       
+        
 import java.util.*;    
 import javax.ejb.Stateless;   
 import javax.ejb.TransactionAttribute;
@@ -136,41 +136,37 @@ public class SpecifyDaoImpl<T extends SpecifyBean> implements SpecifyDao<T> {
     private T solveSubEntities(T topBean) {
         
         logger.info("solveSubEntities : {}", partialCopy.getMergeDataList()); 
-        
+           
+        SpecifyBean parent = null;
         boolean isOrgEntityMerged = false;
         T temp = null;
         List<MergeData> dataList = partialCopy.getMergeDataList();
-        for (MergeData data : dataList) {
-            SpecifyBean baseParent = data.getParent();
-            Class parentClazz = baseParent.getClass();
-             
-            T parent = findByReference(data.getParentId(), parentClazz); 
-             
+        for (MergeData data : dataList) {  
+            
+            parent = data.getParent();
             if(parent.getClass().isInstance(topBean)) {
                 parent = topBean;
-            } 
-            entityManager.flush(); 
-            entityManager.detach(parent);
-                
+            }   
             if(data.isIsList()) { 
-                ReflectionUtil.setChildrenValue(parent, data.getChildren()); 
-                try {
-                    for(SpecifyBean child : data.getChildren()) {
-//                        temp = merge((T)child);
-                    }
-                    
-                } catch(DataStoreException e) {
-                    throw new DataStoreException(e);
-                }  
-            } else { 
-                ReflectionUtil.setEntityValue(parent, data.getChild());
-                if(!parent.getClass().isInstance(topBean)) { 
-//                    temp = merge(parent);
+                
+                List<SpecifyBean> children = data.getChildren();
+                for(SpecifyBean child : children) {
+                    // TODO : if target list is new
+                } 
+                ReflectionUtil.setChildrenValue(parent, data.getChildren());  
+            } else {
+                if(data.isTargetEmpty() && !data.isNew()) {  
+                    T orgSubEntity = copyToOrgChild(data.getChild(), data.getFetchFields()); 
+                    ReflectionUtil.setEntityValue(parent, orgSubEntity, data.getFieldName());  
                 } else {
-                    temp = merge(parent);
-                    isOrgEntityMerged = true;
-                }
-            } 
+                    ReflectionUtil.setEntityValue(parent, data.getChild(), data.getFieldName()); 
+                } 
+            }
+        }
+
+        if (parent.getClass().isInstance(topBean)) {
+            temp = merge((T) parent);
+            isOrgEntityMerged = true;
         } 
         if(!isOrgEntityMerged) {
             temp = merge(topBean);
@@ -178,21 +174,36 @@ public class SpecifyDaoImpl<T extends SpecifyBean> implements SpecifyDao<T> {
         return temp;
     }
     
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    private T copyToOrgChild(SpecifyBean child, List<String> fields) {
+        
+        logger.info("doNewMerge :  {}", child, fields);
+        
+        int id = Common.getInstance().stringToInt(child.getIdentityString());
+        T orgEntity = getOrginalEntityById(id, child.getClass().getSimpleName(), fields);
+        
+        entityManager.detach(orgEntity);
+        partialCopy.copyPartialEntityForMerge(child, orgEntity, fields, entityManager);
+//        ReflectionUtil.setEntityValue(parent, orgEntity);  
+        return orgEntity;
+    }
+    
     private T reWriteEntity(T copyBean, List<String> fields) { 
         logger.info("reWriteEntity: {} -- {}", copyBean, fields);
-           
-        BaseEntity baseEntity = (BaseEntity)copyBean;
-        int id = Common.getInstance().stringToInt(baseEntity.getIdentityString());
-        T orgEntity = getOrginalEntity(id, copyBean.getClass().getSimpleName(), fields);
-        entityManager.detach(orgEntity);     
+            
+        int id = Common.getInstance().stringToInt(copyBean.getIdentityString());
+        T orgEntity = getOrginalEntityById(id, copyBean.getClass().getSimpleName(), fields);
+        entityManager.detach(orgEntity);   
          
-        partialCopy.copyPartialEntityForMerge(copyBean, orgEntity, fields);
+        partialCopy.copyPartialEntityForMerge(copyBean, orgEntity, fields, entityManager);
    
         return (T) orgEntity;
     }
+    
+ 
    
     
-    private T getOrginalEntity(int id, String entityName, List<String> fields) {
+    private T getOrginalEntityById(int id, String entityName, List<String> fields) {
         
         logger.info("getOrginalEntity -  {} -- {}", entityName, fields);
           
@@ -218,6 +229,7 @@ public class SpecifyDaoImpl<T extends SpecifyBean> implements SpecifyDao<T> {
         }   
     }
     
+     
  
     public T findById(int id, Class<T> clazz) {
 
@@ -291,6 +303,11 @@ public class SpecifyDaoImpl<T extends SpecifyBean> implements SpecifyDao<T> {
             throw new DataStoreException(e);
         }
     }
+    
+    
+    
+    
+    
     
  
  
@@ -384,10 +401,7 @@ public class SpecifyDaoImpl<T extends SpecifyBean> implements SpecifyDao<T> {
         T copyObject = JPAUtil.createNewInstance(classname);
 
         partialCopy.copyPartialEntity(bean, copyObject, fields, false);
-        
-        
-//        entitymapping.setEntityValue(obj, classname, fields, beanmap);
-
+          
         return copyObject;  
     }
 
@@ -398,7 +412,7 @@ public class SpecifyDaoImpl<T extends SpecifyBean> implements SpecifyDao<T> {
      * @param <T>       Entity
      * @param clazz:    the class of the entity
      * @return :        List<Entity>
-     * 
+     * SpecifyDaoImpl
      * TODO: current
      */
     public List<T> findAll(Class<T> clazz) {
@@ -459,8 +473,7 @@ public class SpecifyDaoImpl<T extends SpecifyBean> implements SpecifyDao<T> {
         logger.info("getAllEntitiesByNamedQuery - parameters: {}", parameters);
 
         List<T> list = createQuery(namedQuery, parameters).getResultList();
-        
-        logger.info("get...: {}", list);
+         
         return list;
     }
 
@@ -471,6 +484,69 @@ public class SpecifyDaoImpl<T extends SpecifyBean> implements SpecifyDao<T> {
         Query query = entityManager.createQuery(jpql);
         List<T> list = query.getResultList();
         return list;
+    }
+     
+    
+    public T getPartialEntity(Object searchValue, String fieldName, String entityName, List<String> fields) {
+        
+        logger.info("getPartialEntityByNamedQuery -  {} -- {}", searchValue + " --- " + fieldName + " -- " + entityName, fields);
+          
+        fields = JPAUtil.addValidFields(fields, entityName);  
+        
+        String namedQuery = entityName + ".findBy" + Common.getInstance().uppercaseFirstCharacter(fieldName);
+        logger.info("namedquery : {}", namedQuery);
+        Query query = entityManager.createNamedQuery(namedQuery);
+           
+        query.setParameter(fieldName, searchValue);
+         
+        FetchGroup group = new FetchGroup(); 
+        for (String field : fields) {
+            group.addAttribute(field.trim());
+        }
+        query.setHint(QueryHints.FETCH_GROUP, group);
+         
+        try {
+            return (T) query.getSingleResult();   
+        } catch(NoResultException ex) {
+            return null;
+        }   
+    }
+    
+    
+    /**
+     * get last collectionobject for collection
+     * 
+     * @param collectionId
+     * @return Collectionobject
+     */
+    public T getLastRecord(String namedQuery, Map<String, Object> map) {
+
+        logger.info("getLastCollectionobjectByGroup: {} -- {}", namedQuery, map);
+
+        Query query = entityManager.createNamedQuery("Collectionobject.findLastRecordByCollectionCode");
+        
+        for(Map.Entry<String, Object> entry : map.entrySet()) {
+            query.setParameter(entry.getKey(), entry.getValue());
+        } 
+        query.setMaxResults(1);
+
+        return (T) query.getResultList().get(0);
+    }
+    
+    
+    
+    /**
+     * Generic method search by jpql
+     * 
+     * @param jpql
+     * @return List<String>
+     */
+    public List<String> getTextListByJPQL(String jpql) {
+
+        logger.info("getTextListByJPQL: {}", jpql);
+
+        TypedQuery<String> query = entityManager.createQuery(jpql, String.class);
+        return query.getResultList();
     }
   
 
@@ -484,7 +560,8 @@ public class SpecifyDaoImpl<T extends SpecifyBean> implements SpecifyDao<T> {
         }
         return query;
     }
-
+ 
+     
     /**
      * Method handles ConstraintViolationException.  
      * It logs exception messages, entity properties with invalid values.

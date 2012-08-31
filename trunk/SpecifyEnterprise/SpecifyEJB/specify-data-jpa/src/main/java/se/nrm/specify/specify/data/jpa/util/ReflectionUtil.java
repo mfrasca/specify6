@@ -12,8 +12,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import org.apache.commons.lang.StringUtils; 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory; 
-import se.nrm.specify.datamodel.SpecifyBean; 
-import se.nrm.specify.specify.data.jpa.exceptions.DataReflectionException;
+import se.nrm.specify.datamodel.SpecifyBean;   
 
 /**
  *
@@ -74,10 +73,10 @@ public class ReflectionUtil {
                     addSubList(list, name, f.getName());
                 } else {
                     list.add(f.getName());
-                }                                       // add required fields into list
+                }                                        
             }
         } 
-        list.add("version");                                                    // add version field
+        list.add("version");                                                     
         list.add("timestampCreated");            
          
         return list;
@@ -118,20 +117,23 @@ public class ReflectionUtil {
         return entityName;
     } 
     
-    
-    public static void setEntityValue(SpecifyBean target, SpecifyBean source) { 
-        try { 
-            Class parentClazz = target.getClass(); 
-            Field field = getField(parentClazz, source.getEntityName());
+     
+    public static void setEntityValue(SpecifyBean parent, SpecifyBean child, String fieldName) { 
+        
+//        logger.info("setEntityValue : {} -- {}", parent + " --- " + child, fieldName); 
+        try {  
+            Class parentClazz = parent.getClass(); 
+            Field field = getField(parentClazz, fieldName);
+ 
 
             ReflectionUtil.makeAccessible(field);
-            field.set(target, source);
-        } catch (IllegalArgumentException ex) {
-            logger.error(ex.getMessage());
-        } catch (IllegalAccessException ex) {
-            logger.error(ex.getMessage());
-        } catch (NoSuchFieldException ex) {
-            logger.error(ex.getMessage());
+            field.set(parent, child);
+        } catch (IllegalArgumentException ex) { 
+            logger.error("IllegalArgumentException {}", ex.getMessage()); 
+        } catch (IllegalAccessException ex) { 
+            logger.error("IllegalAccessException {}", ex.getMessage()); 
+        } catch (NoSuchFieldException ex) { 
+            logger.error("NoSuchFieldException {}", ex.getMessage()); 
         }
     }
     
@@ -146,12 +148,12 @@ public class ReflectionUtil {
                 ReflectionUtil.makeAccessible(field);
                 field.set(bean, parent);
             } 
-        } catch (IllegalArgumentException ex) {
-            logger.error(ex.getMessage());
-        } catch (IllegalAccessException ex) {
-            logger.error(ex.getMessage());
-        } catch (NoSuchFieldException ex) {
-            logger.error(ex.getMessage());
+        } catch (IllegalArgumentException ex) { 
+            logger.error("IllegalArgumentException {}", ex.getMessage()); 
+        } catch (IllegalAccessException ex) { 
+            logger.error("IllegalAccessException {}", ex.getMessage());  
+        } catch (NoSuchFieldException ex) { 
+            logger.error("NoSuchFieldException {}", ex.getMessage()); 
         }
     }
     

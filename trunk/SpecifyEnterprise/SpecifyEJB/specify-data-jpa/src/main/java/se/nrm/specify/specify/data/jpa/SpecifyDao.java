@@ -72,6 +72,33 @@ public interface SpecifyDao<T extends SpecifyBean> {
      */
     public void delete(T entity);
     
+    
+    /**
+     * Get partial entity with search value. 
+     * 
+     * @param searchValue -- the value to search
+     * @param fieldName -- the field to search
+     * @param entityName -- the search entity
+     * @param fields -- the fields are partially fetched
+     * @return partially fetched entity
+     */
+    public T getPartialEntity(Object searchValue, String fieldName, String entityName, List<String> fields);
+    
+    /**
+     * 
+     * @param jpql
+     * @return List<String>
+     */
+    public List<String> getTextListByJPQL(String jpql);
+    
+    
+    public T getLastRecord(String namedQuery, Map<String, Object> map);
+    
+    
+    
+    
+    
+    
     public List<T> getListByJPQLByFetchGroup(String classname, String jpql, List<String> fields);
     
     public T getFetchGroupByNamedQuery(Map<String, Object> map);
