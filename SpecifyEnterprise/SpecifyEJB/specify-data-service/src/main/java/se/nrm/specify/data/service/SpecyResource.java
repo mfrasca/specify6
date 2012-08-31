@@ -31,7 +31,7 @@ import se.nrm.specify.datamodel.SpecifyBeanWrapper;
 import se.nrm.specify.business.logic.validation.SpecifyBeanId;    
 import se.nrm.specify.business.logic.validation.Status;
 import se.nrm.specify.business.logic.validation.ValidationError;  
-import se.nrm.specify.business.logic.validation.ValidationWarning; 
+import se.nrm.specify.business.logic.validation.ValidationWarning;  
 import se.nrm.specify.specify.data.jpa.exceptions.DataStoreException;  
 import se.nrm.specify.specify.data.jpa.util.Common;
 import se.nrm.specify.ui.form.data.service.UIDataConstractor;  
@@ -168,13 +168,10 @@ public class SpecyResource {
         
         SpecifyBean bean = wrapper.getBean();  
           
-        ViewData viewdata = uidata.initData(discipline, Common.getInstance().uppercaseFirstCharacter(bean.getEntityName())); 
-//        ViewData viewdata = uidata.initData(discipline, "CollectionObject");
-        logger.info("viewdata : {}", viewdata);
+        ViewData viewdata = uidata.initData(discipline, Common.getInstance().uppercaseFirstCharacter(bean.getEntityName()));   
         if (viewdata != null) {
             List<String> fields = uidata.constructSearchFields(viewdata); 
-            Validation validation = specify.mergeEntity(bean, fields); 
-            logger.info("result : {}", validation);
+            Validation validation = specify.mergeEntity(bean, fields);  
             return new ValidationWrapper(validation);
         }  
         return new ValidationWrapper(new ValidationWarning(null, Status.Update, "View not found"));
@@ -199,8 +196,7 @@ public class SpecyResource {
  
         List<String> fields = (List<String>) map.get("fields");   
   
-        Validation validation = specify.mergeEntity(wrapper.getBean(), fields); 
-        logger.info("result : {}", validation);
+        Validation validation = specify.mergeEntity(wrapper.getBean(), fields);  
         return new ValidationWrapper(validation);
     }
     
@@ -367,7 +363,7 @@ public class SpecyResource {
     } 
     
     
-    
+     
     
     
     

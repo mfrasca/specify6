@@ -29,14 +29,14 @@
         </repository>  
     </repositories>-->
     
-    <repositories>
+<!--    <repositories>
         <repository>
             <url>http://download.eclipse.org/rt/eclipselink/maven.repo</url>
             <id>eclipselink</id>
             <layout>default</layout>
             <name>Repository for library Library[eclipselink]</name>
         </repository>
-    </repositories> 
+    </repositories> -->
 
 
     <dependencies>     
