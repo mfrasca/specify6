@@ -17,11 +17,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlID; 
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import org.eclipse.persistence.oxm.annotations.XmlTransformation;
+import javax.xml.bind.annotation.XmlTransient; 
 
 /**
  *
@@ -125,8 +123,7 @@ public class Fieldnotebookpageattachment extends BaseEntity {
     public void setAttachment(Attachment attachment) {
         this.attachment = attachment;
     }
-
-    @XmlIDREF
+ 
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -144,8 +141,7 @@ public class Fieldnotebookpageattachment extends BaseEntity {
     public void setFieldNotebookPage(Fieldnotebookpage fieldNotebookPage) {
         this.fieldNotebookPage = fieldNotebookPage;
     }
-
-    @XmlIDREF
+ 
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }

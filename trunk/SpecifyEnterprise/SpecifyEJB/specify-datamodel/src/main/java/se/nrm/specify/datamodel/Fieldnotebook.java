@@ -21,10 +21,8 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlIDREF;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlID; 
+import javax.xml.bind.annotation.XmlRootElement; 
 
 /**
  *
@@ -131,8 +129,7 @@ public class Fieldnotebook extends BaseEntity {
     public void setCollection(se.nrm.specify.datamodel.Collection collection) {
         this.collection = collection;
     }
-
-    @XmlIDREF
+ 
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -140,8 +137,7 @@ public class Fieldnotebook extends BaseEntity {
     public void setCreatedByAgent(Agent createdByAgent) {
         this.createdByAgent = createdByAgent;
     }
-
-    @XmlIDREF
+ 
     public Discipline getDiscipline() {
         return discipline;
     }
@@ -165,8 +161,7 @@ public class Fieldnotebook extends BaseEntity {
     public void setLocation(String location) {
         this.location = location;
     }
-
-    @XmlIDREF
+ 
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }

@@ -21,8 +21,7 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlID; 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient; 
 
@@ -359,8 +358,7 @@ public class Referencework extends BaseEntity {
     }
  
     @XmlElementWrapper(name="authors")
-    @XmlElement(name="author") 
-    @XmlIDREF 
+    @XmlElement(name="author")  
     public Collection<Author> getAuthors() {
         return authors;
     }
@@ -386,8 +384,7 @@ public class Referencework extends BaseEntity {
     public void setCommonnametxcitations(Collection<Commonnametxcitation> commonnametxcitations) {
         this.commonnametxcitations = commonnametxcitations;
     }
-
-    @XmlIDREF
+ 
     public Referencework getContainedRFParent() {
         return containedRFParent;
     }
@@ -404,8 +401,7 @@ public class Referencework extends BaseEntity {
     public void setContainedReferenceWorks(Collection<Referencework> containedReferenceWorks) {
         this.containedReferenceWorks = containedReferenceWorks;
     }
-
-    @XmlIDREF
+ 
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -457,8 +453,7 @@ public class Referencework extends BaseEntity {
     public void setLocalityCitations(Collection<Localitycitation> localityCitations) {
         this.localityCitations = localityCitations;
     }
-
-    @XmlIDREF
+ 
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }

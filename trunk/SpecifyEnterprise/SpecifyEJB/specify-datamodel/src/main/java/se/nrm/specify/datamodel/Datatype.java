@@ -17,8 +17,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;  
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlID; 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -81,8 +80,7 @@ public class Datatype extends BaseEntity {
     public String getIdentityString() {
         return (dataTypeId != null) ? dataTypeId.toString() : "0";
     }
-    
-    @XmlIDREF
+     
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -98,8 +96,7 @@ public class Datatype extends BaseEntity {
     public void setDataTypeId(Integer dataTypeId) {
         this.dataTypeId = dataTypeId;
     }
-
-    @XmlIDREF
+ 
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }

@@ -16,10 +16,11 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;  
 import javax.validation.constraints.Size;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlID; 
 import javax.xml.bind.annotation.XmlRootElement; 
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -510,10 +511,7 @@ public class Collectingeventattribute extends BaseEntity {
     public void setYesNo5(Boolean yesNo5) {
         this.yesNo5 = yesNo5;
     }
-
-
-
-    @XmlIDREF
+ 
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -521,8 +519,7 @@ public class Collectingeventattribute extends BaseEntity {
     public void setCreatedByAgent(Agent createdByAgent) {
         this.createdByAgent = createdByAgent;
     }
-
-    @XmlIDREF
+ 
     public Discipline getDiscipline() {
         return discipline;
     }
@@ -531,6 +528,7 @@ public class Collectingeventattribute extends BaseEntity {
         this.discipline = discipline;
     }
 
+    @XmlTransient
     public Taxon getHostTaxon() {
         return hostTaxon;
     }
@@ -538,8 +536,7 @@ public class Collectingeventattribute extends BaseEntity {
     public void setHostTaxon(Taxon hostTaxon) {
         this.hostTaxon = hostTaxon;
     }
-
-    @XmlIDREF
+ 
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -548,7 +545,7 @@ public class Collectingeventattribute extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
 
-    @XmlIDREF
+    @XmlTransient
     public Collection<Collectingevent> getCollectingEvents() {
         return collectingEvents;
     }
@@ -557,6 +554,20 @@ public class Collectingeventattribute extends BaseEntity {
         this.collectingEvents = collectingEvents;
     }
 
+    
+    /**
+     * Parent pointer
+     * 
+     * @param u
+     * @param parent 
+     */
+    public void afterUnmarshal(Unmarshaller u, Object parent) {
+        if (parent instanceof Taxon) {
+            this.hostTaxon = (Taxon) parent;
+        }
+    }
+    
+    
    
     @Override
     public String getEntityName() {

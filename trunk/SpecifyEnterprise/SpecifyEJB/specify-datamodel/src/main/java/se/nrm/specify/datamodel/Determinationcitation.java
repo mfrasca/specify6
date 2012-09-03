@@ -17,8 +17,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlID; 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -69,8 +68,7 @@ public class Determinationcitation extends BaseEntity {
     @JoinColumn(name = "ModifiedByAgentID", referencedColumnName = "AgentID")
     @ManyToOne
     private Agent modifiedByAgent;
-    
-    @XmlTransient
+     
     @JoinColumn(name = "DeterminationID", referencedColumnName = "DeterminationID")
     @NotNull
     @ManyToOne(optional = false)
@@ -89,12 +87,20 @@ public class Determinationcitation extends BaseEntity {
         this.collectionMemberId = collectionMemberId;
     }
  
+
+    @XmlID
     @XmlAttribute(name = "id")
     @Override
     public String getIdentityString() {
-        return (determinationCitationId != null) ? determinationCitationId.toString() : "0";
+        return (determinationCitationId != null) ? determinationCitationId.toString() : "0"; 
     }
-
+    
+    
+    
+    
+    
+    
+    
     public String getRemarks() {
         return remarks;
     }

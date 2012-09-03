@@ -14,13 +14,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;  
-import javax.persistence.Transient;
+import javax.persistence.Table;   
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlID; 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -131,8 +130,7 @@ public class Attributedef extends BaseEntity {
     public void setCollectionObjectAttrs(Collection<Collectionobjectattr> collectionObjectAttrs) {
         this.collectionObjectAttrs = collectionObjectAttrs;
     }
-
-    @XmlIDREF
+ 
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -149,8 +147,7 @@ public class Attributedef extends BaseEntity {
     public void setDiscipline(Discipline discipline) {
         this.discipline = discipline;
     }
-
-    @XmlIDREF
+ 
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -159,6 +156,7 @@ public class Attributedef extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
 
+    @XmlTransient
     public Preptype getPrepType() {
         return prepType;
     }
@@ -207,6 +205,20 @@ public class Attributedef extends BaseEntity {
         return "attributeDef";
     }
 
+    
+    
+    /**
+     * Parent pointer
+     * 
+     * @param u
+     * @param parent 
+     */
+    public void afterUnmarshal(Unmarshaller u, Object parent) {
+        if (parent instanceof Preptype) {
+            this.prepType = (Preptype) parent;
+        }
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

@@ -22,8 +22,7 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlID; 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -37,14 +36,11 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Collectingevent.findAll", query = "SELECT c FROM Collectingevent c"),
     @NamedQuery(name = "Collectingevent.findByCollectingEventId", query = "SELECT c FROM Collectingevent c WHERE c.collectingEventId = :collectingEventId"), 
-    @NamedQuery(name = "Collectingevent.findByTimestampCreated", query = "SELECT c FROM Collectingevent c WHERE c.timestampCreated = :timestampCreated"),
-    @NamedQuery(name = "Collectingevent.findByTimestampModified", query = "SELECT c FROM Collectingevent c WHERE c.timestampModified = :timestampModified"),
-    @NamedQuery(name = "Collectingevent.findByVersion", query = "SELECT c FROM Collectingevent c WHERE c.version = :version"),
     @NamedQuery(name = "Collectingevent.findByEndDate", query = "SELECT c FROM Collectingevent c WHERE c.endDate = :endDate"),
     @NamedQuery(name = "Collectingevent.findByEndDatePrecision", query = "SELECT c FROM Collectingevent c WHERE c.endDatePrecision = :endDatePrecision"),
     @NamedQuery(name = "Collectingevent.findByEndDateVerbatim", query = "SELECT c FROM Collectingevent c WHERE c.endDateVerbatim = :endDateVerbatim"),
     @NamedQuery(name = "Collectingevent.findByEndTime", query = "SELECT c FROM Collectingevent c WHERE c.endTime = :endTime"),
-    @NamedQuery(name = "Collectingevent.findByLocality", query = "SELECT c FROM Collectingevent c WHERE c.locality.localityName like :localityName"),
+    @NamedQuery(name = "Collectingevent.findByLocalityName", query = "SELECT c FROM Collectingevent c WHERE c.locality.localityName like :localityName"),
     @NamedQuery(name = "Collectingevent.findByMethod", query = "SELECT c FROM Collectingevent c WHERE c.method = :method"),
     @NamedQuery(name = "Collectingevent.findByStartDate", query = "SELECT c FROM Collectingevent c WHERE c.startDate = :startDate"),
     @NamedQuery(name = "Collectingevent.findByStartDatePrecision", query = "SELECT c FROM Collectingevent c WHERE c.startDatePrecision = :startDatePrecision"),
@@ -371,8 +367,7 @@ public class Collectingevent extends BaseEntity {
     public void setCollectors(Collection<Collector> collectors) {
         this.collectors = collectors;
     }
-
-    @XmlIDREF
+ 
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -397,8 +392,7 @@ public class Collectingevent extends BaseEntity {
     public void setLocality(Locality locality) {
         this.locality = locality;
     }
-
-    @XmlIDREF
+ 
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -406,8 +400,7 @@ public class Collectingevent extends BaseEntity {
     public void setModifiedByAgent(Agent modifiedByAgent) {
         this.modifiedByAgent = modifiedByAgent;
     }
-
-    @XmlIDREF
+ 
     public Specifyuser getVisibilitySetBy() { 
         return visibilitySetBy;
     }

@@ -21,8 +21,7 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlID; 
 import javax.xml.bind.annotation.XmlRootElement; 
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -215,8 +214,7 @@ public class Deaccession extends BaseEntity {
     public void setAccession(Accession accession) {
         this.accession = accession;
     }
-
-    @XmlIDREF
+ 
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -232,8 +230,7 @@ public class Deaccession extends BaseEntity {
     public void setDeaccessionId(Integer deaccessionId) {
         this.deaccessionId = deaccessionId;
     }
-
-    @XmlIDREF
+ 
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }

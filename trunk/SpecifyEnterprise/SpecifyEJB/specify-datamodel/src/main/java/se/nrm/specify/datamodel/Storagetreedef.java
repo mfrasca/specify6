@@ -19,8 +19,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlID; 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -100,8 +99,7 @@ public class Storagetreedef extends BaseEntity {
     public String getIdentityString() {
         return (storageTreeDefId != null) ? storageTreeDefId.toString() : "0";
     }
-    
-    @XmlIDREF
+     
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -118,8 +116,7 @@ public class Storagetreedef extends BaseEntity {
     public void setInstitutions(Collection<Institution> institutions) {
         this.institutions = institutions;
     }
-
-    @XmlIDREF
+ 
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }

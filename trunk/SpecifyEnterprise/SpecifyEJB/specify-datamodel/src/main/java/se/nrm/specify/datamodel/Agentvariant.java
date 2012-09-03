@@ -11,15 +11,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table; 
-import javax.persistence.Transient;
+import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlID; 
 import javax.xml.bind.annotation.XmlRootElement; 
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -142,8 +141,8 @@ public class Agentvariant extends BaseEntity {
     public void setVariant(String variant) {
         this.variant = variant;
     }
-
-    @XmlIDREF
+ 
+    @XmlTransient
     @NotNull(message="Agent must be specified.")
     public Agent getAgent() {
         return agent;
@@ -160,8 +159,7 @@ public class Agentvariant extends BaseEntity {
     public void setAgentVariantId(Integer agentVariantId) {
         this.agentVariantId = agentVariantId;
     }
-
-    @XmlIDREF
+ 
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -169,8 +167,7 @@ public class Agentvariant extends BaseEntity {
     public void setCreatedByAgent(Agent createdByAgent) {
         this.createdByAgent = createdByAgent;
     }
-
-    @XmlIDREF
+ 
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }

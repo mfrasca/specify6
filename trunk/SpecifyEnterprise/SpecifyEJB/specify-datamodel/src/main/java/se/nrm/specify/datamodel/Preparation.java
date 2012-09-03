@@ -377,7 +377,7 @@ public class Preparation extends BaseEntity {
         this.storage = storage;
     }
 
-    @XmlTransient
+//    @XmlTransient
     public Collection<Deaccessionpreparation> getDeaccessionPreparations() {
         return deaccessionPreparations;
     }
@@ -386,7 +386,7 @@ public class Preparation extends BaseEntity {
         this.deaccessionPreparations = deaccessionPreparations;
     }
 
-    @XmlTransient
+//    @XmlTransient
     public Collection<Giftpreparation> getGiftPreparations() {
         return giftPreparations;
     }
@@ -395,7 +395,7 @@ public class Preparation extends BaseEntity {
         this.giftPreparations = giftPreparations;
     }
 
-    @XmlTransient
+//    @XmlTransient
     public Collection<Loanpreparation> getLoanPreparations() {
         return loanPreparations;
     }
@@ -404,6 +404,7 @@ public class Preparation extends BaseEntity {
         this.loanPreparations = loanPreparations;
     }
  
+//    @XmlTransient
     public Collection<Preparationattachment> getPreparationAttachments() {
         return preparationAttachments;
     }
@@ -412,7 +413,7 @@ public class Preparation extends BaseEntity {
         this.preparationAttachments = preparationAttachments;
     }
 
-    @XmlTransient
+//    @XmlTransient
     public Collection<Preparationattr> getPreparationAttrs() {
         return preparationAttrs;
     }
@@ -443,12 +444,12 @@ public class Preparation extends BaseEntity {
      * @param u
      * @param parent 
      */
-    public void afterUnmarshal(Unmarshaller u, Object parent) {
-        
+    public void afterUnmarshal(Unmarshaller u, Object parent) {  
         if(parent instanceof Collectionobject) {
-            this.collectionObject = (Collectionobject)parent;
-        } 
+            this.collectionObject = (Collectionobject)parent;   
+        }
     }
+    
      
     @Override
     public int hashCode() {

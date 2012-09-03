@@ -16,8 +16,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlID; 
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -97,8 +96,7 @@ public class Groupperson extends BaseEntity {
     public String getIdentityString() {
         return (groupPersonId != null) ? groupPersonId.toString() : "0";
     }
-
-    @XmlIDREF
+ 
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -115,8 +113,7 @@ public class Groupperson extends BaseEntity {
         this.division = division;
     }
 
-    @NotNull(message="Group must be specified.")
-    @XmlIDREF
+    @NotNull(message="Group must be specified.") 
     public Agent getGroup() {
         return group;
     }
