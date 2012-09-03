@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.nrm.specify.datamodel.BaseEntity;
 import se.nrm.specify.datamodel.SpecifyBean;
+import se.nrm.specify.specify.data.jpa.SpecifyDao;
 import se.nrm.specify.specify.data.jpa.util.ConstantsClass;
 
 /**
@@ -25,7 +26,7 @@ public class BaseValidationRules implements IBaseValidationRules {
     protected Map<String, Object> map = new HashMap<String, Object>();
     protected List<String> relatedTables = new ArrayList<String>();  
     protected List<String> duplicationCheckFields = new ArrayList<String>();
-    protected Map<String, IBaseValidationRules> validationRuleMap = new HashMap<String, IBaseValidationRules>(); 
+    protected Map<String, IBaseValidationRules> validationRuleMap = new HashMap<String, IBaseValidationRules>();  
      
     public BaseValidationRules(final Class<?>... dataClasses) {
         this.dataClasses = dataClasses;
@@ -56,6 +57,10 @@ public class BaseValidationRules implements IBaseValidationRules {
         return true;
     }
     
+    public boolean beforeSave() {
+        return false;
+    }
+    
     public Validation validationBeforeSave() {
         return new ValidationOK(sbId, Status.Save);
     } 
@@ -74,8 +79,7 @@ public class BaseValidationRules implements IBaseValidationRules {
 
     public Map<String, IBaseValidationRules> getValidationRuleMap() {
         return validationRuleMap;
-    }
- 
+    } 
      
     public ValidationStatus checkDuplicateNumber(String fldName, String tblName, String colName, String value) { 
         return ValidationStatus.OK;
@@ -223,4 +227,7 @@ public class BaseValidationRules implements IBaseValidationRules {
         sb.append(bean);
         return sb.toString();
     }
+
+    public void prepareForSaving(SpecifyDao dao) { 
+    } 
 }

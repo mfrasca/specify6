@@ -3,6 +3,7 @@ package se.nrm.specify.business.logic.validation;
 import java.util.List;
 import java.util.Map;
 import se.nrm.specify.datamodel.SpecifyBean;
+import se.nrm.specify.specify.data.jpa.SpecifyDao;
 
 /**
  *
@@ -24,7 +25,11 @@ public interface IBaseValidationRules {
     
     public abstract boolean isOkToDelete();
     
+    public abstract boolean beforeSave();
+    
     public Validation validationBeforeSave();
+    
+    public void prepareForSaving(SpecifyDao dao);
     
     public abstract SpecifyBeanId getSpecifyBeanId(); 
     
@@ -34,7 +39,7 @@ public interface IBaseValidationRules {
     
     public abstract List<String> getDuplicationCheckFields();
     
-    public abstract Map<String, IBaseValidationRules> getValidationRuleMap();
+    public abstract Map<String, IBaseValidationRules> getValidationRuleMap(); 
     
     public String createMsg(Status validation, ValidationStatus status, String addition, Map map);
     

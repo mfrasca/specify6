@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Map; 
 import se.nrm.specify.business.logic.util.ValidationMessage;
 import se.nrm.specify.datamodel.Collectionobject;
 import se.nrm.specify.datamodel.Determination;  
+import se.nrm.specify.datamodel.Preparation;
+import se.nrm.specify.datamodel.Preptype;
 import se.nrm.specify.datamodel.SpecifyBean;
+import se.nrm.specify.specify.data.jpa.SpecifyDao;
 import se.nrm.specify.specify.data.jpa.util.ConstantsClass;
 
 /**
@@ -58,11 +61,10 @@ public final class CollectionobjectValidation extends BaseValidationRules {
         validationRuleMap =  new HashMap<String, IBaseValidationRules>();
         if(collectionObject.getAccession() != null) { 
             validationRuleMap.put("accession", new AccessionValidation(collectionObject.getAccession())); 
-        } 
-        
+        }  
         if(collectionObject.getCollectingEvent() != null) {
             validationRuleMap.put("collectionEvent", new CollectingeventValidation(collectionObject.getCollectingEvent()));
-        } 
+        }  
     }
 
     @Override
@@ -89,8 +91,6 @@ public final class CollectionobjectValidation extends BaseValidationRules {
                 msgs.add(ValidationMessage.getInstance().NO_CURRENT_DETERMINATION);
             }
         }
-        
-        
          
         for(Map.Entry<String, IBaseValidationRules> entry : validationRuleMap.entrySet()) {
             Validation validation = entry.getValue().validationBeforeSave();
@@ -103,8 +103,30 @@ public final class CollectionobjectValidation extends BaseValidationRules {
         if(!isValidForSaving) {
             return new ValidationError(sbId, isNew() ? Status.CreateNew : Status.Update, msgs); 
         }
+         
         return new ValidationOK(sbId, Status.Save);
     }
+    
+    @Override
+    public void prepareForSaving(SpecifyDao dao) {
+        
+        logger.info("dao : {}", dao);
+        List<Preparation> preparations = (List<Preparation>) collectionObject.getPreparations();
+        if (preparations != null && !preparations.isEmpty()) {
+            for (Preparation preparation : preparations) { 
+                Preptype preptype = preparation.getPrepType();
+                if (preptype != null && preptype.getPrepTypeId() != null) {
+                     
+                    Preptype reference = (Preptype)dao.findByReference(preptype.getPrepTypeId(), Preptype.class); 
+                      
+                    preparation.setPrepType(reference);
+                }
+            }
+        }
+        collectionObject.setPreparations(preparations);
+    } 
+            
+            
   
     @Override
     public boolean isCheckForDuplication() {
@@ -115,6 +137,11 @@ public final class CollectionobjectValidation extends BaseValidationRules {
     public boolean isCheckForSaving() {
         return true;
     } 
+    
+    @Override
+    public boolean beforeSave() {
+        return true;
+    }
  
     @Override
     public String createMsg(Status validation, ValidationStatus status, String addition, Map map) {  
