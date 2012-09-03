@@ -1,5 +1,6 @@
 package se.nrm.specify.business.logic.specify;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +19,7 @@ import se.nrm.specify.business.logic.validation.ValidationOK;
 import se.nrm.specify.datamodel.SpecifyBean;
 import se.nrm.specify.specify.data.jpa.SpecifyDao;
 import se.nrm.specify.business.logic.validation.ValidationStatus;
-import se.nrm.specify.business.logic.validation.ValidationWarning; 
+import se.nrm.specify.business.logic.validation.ValidationWarning;   
 import se.nrm.specify.specify.data.jpa.exceptions.DataStoreException; 
 
 /**
@@ -29,6 +30,8 @@ import se.nrm.specify.specify.data.jpa.exceptions.DataStoreException;
 public class SpecifyLogicImpl implements SpecifyLogic {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
+    
+    private static Timestamp timestamp = new Timestamp(System.currentTimeMillis());
     
     private IBaseValidationRules validationRules;
     private List<String> msgs;
@@ -49,6 +52,7 @@ public class SpecifyLogicImpl implements SpecifyLogic {
     }
     
     public Validation createEntity(SpecifyBean bean) {
+          
         return mergeEntity(bean);
     }
     
@@ -58,6 +62,9 @@ public class SpecifyLogicImpl implements SpecifyLogic {
             return validation;
         }
         try {
+            if(validationRules.beforeSave()) {
+                validationRules.prepareForSaving(dao);
+            }
             bean = dao.merge(bean); 
             return new ValidationOK(new SpecifyBeanId(bean), (validationRules.isNew()) ? Status.CreateNew : Status.Update, (validationRules.isNew()) ? bean + " is persisted" : bean + " is updated.");
         } catch (DataStoreException e) {
@@ -74,6 +81,9 @@ public class SpecifyLogicImpl implements SpecifyLogic {
             return validation;
         } 
         try {
+            if (validationRules.beforeSave()) {
+                validationRules.prepareForSaving(dao);
+            }
             bean = dao.partialMerge(bean, fields); 
             return new ValidationOK(new SpecifyBeanId(bean), (validationRules.isNew()) ? Status.CreateNew : Status.Update, (validationRules.isNew()) ? bean + " is persisted" : bean + " is updated.");
         } catch (DataStoreException e) {
