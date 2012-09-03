@@ -399,7 +399,7 @@ public class Determination extends BaseEntity {
         this.createdByAgent = createdByAgent;
     }
 
-    @XmlTransient
+//    @XmlTransient
     public Collection<Determinationcitation> getDeterminationCitations() {
         return determinationCitations;
     }

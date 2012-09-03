@@ -18,8 +18,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlID; 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -73,7 +72,7 @@ public class Preptype extends BaseEntity {
     @ManyToOne
     private Agent modifiedByAgent;
     
-    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, mappedBy = "prepType")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "prepType")
     private Collection<Preparation> preparations;
     
     @OneToMany(mappedBy = "prepType")
@@ -99,8 +98,7 @@ public class Preptype extends BaseEntity {
     public String getIdentityString() {
         return (prepTypeId != null) ? prepTypeId.toString() : "0";
     }
-
-    @XmlIDREF
+ 
     @NotNull(message="Collection must be specified.")
     public se.nrm.specify.datamodel.Collection getCollection() {
         return collection;
@@ -109,8 +107,7 @@ public class Preptype extends BaseEntity {
     public void setCollection(se.nrm.specify.datamodel.Collection collection) {
         this.collection = collection;
     }
-
-    @XmlIDREF
+ 
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -118,8 +115,7 @@ public class Preptype extends BaseEntity {
     public void setCreatedByAgent(Agent createdByAgent) {
         this.createdByAgent = createdByAgent;
     }
-
-    @XmlIDREF
+ 
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -153,8 +149,7 @@ public class Preptype extends BaseEntity {
     public void setName(String name) {
         this.name = name;
     }
-
-    @XmlTransient
+ 
     public Collection<Attributedef> getAttributeDefs() {
         return attributeDefs;
     }

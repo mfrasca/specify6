@@ -22,7 +22,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size; 
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlID; 
 import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -1357,8 +1357,7 @@ public class Agent extends BaseEntity {
     public void setAgentAttachments(Collection<Agentattachment> agentAttachments) {
         this.agentAttachments = agentAttachments;
     }
- 
-    @XmlTransient
+  
     public Collection<Agentvariant> getVariants() {
         return variants;
     }
@@ -1375,8 +1374,7 @@ public class Agent extends BaseEntity {
     public void setGroups(Collection<Groupperson> groups) {
         this.groups = groups;
     }
-  
-    
+   
 //    @NotNull(message="Division must be specified.") 
     public Division getDivision() {
         return division;
@@ -1385,8 +1383,7 @@ public class Agent extends BaseEntity {
     public void setDivision(Division division) {
         this.division = division;
     }
-
-    @XmlIDREF
+ 
     public Institution getInstContentContact() {
         return instContentContact;
     }
@@ -1394,8 +1391,7 @@ public class Agent extends BaseEntity {
     public void setInstContentContact(Institution instContentContact) {
         this.instContentContact = instContentContact;
     }
-
-    @XmlIDREF
+ 
     public Institution getInstTechContact() {
         return instTechContact;
     }
@@ -1412,8 +1408,7 @@ public class Agent extends BaseEntity {
     public void setOrgMembers(Collection<Agent> orgMembers) {
         this.orgMembers = orgMembers;
     }
-  
-    @XmlIDREF
+   
     public Agent getOrganization() {  
         return organization;
     }
@@ -1421,8 +1416,6 @@ public class Agent extends BaseEntity {
     public void setOrganization(Agent organization) {
         this.organization = organization;
     }
-
- 
  
     @XmlIDREF
     public Agent getCreatedByAgent() {
@@ -1432,7 +1425,7 @@ public class Agent extends BaseEntity {
     public void setCreatedByAgent(Agent createdByAgent) {
         this.createdByAgent = createdByAgent;
     }
-
+ 
     @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
@@ -1441,8 +1434,7 @@ public class Agent extends BaseEntity {
     public void setModifiedByAgent(Agent modifiedByAgent) {
         this.modifiedByAgent = modifiedByAgent;
     }
-
-    @XmlIDREF
+ 
     public Specifyuser getSpecifyUser() {
         return specifyUser;
     }

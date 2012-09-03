@@ -18,8 +18,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute; 
-import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlID; 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient; 
 
@@ -465,8 +464,7 @@ public class Collection extends BaseEntity {
     public void setTechnicalContacts(java.util.Collection<Agent> technicalContacts) {
         this.technicalContacts = technicalContacts;
     }
- 
-    @XmlIDREF
+  
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -483,8 +481,7 @@ public class Collection extends BaseEntity {
     public void setDiscipline(Discipline discipline) {
         this.discipline = discipline;
     }
-
-    @XmlIDREF
+ 
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -529,8 +526,7 @@ public class Collection extends BaseEntity {
     public void setSptasksemaphores(java.util.Collection<Sptasksemaphore> sptasksemaphores) {
         this.sptasksemaphores = sptasksemaphores;
     }
-
-    @XmlIDREF
+ 
     public Institution getInstitution() {
         return institution;
     }

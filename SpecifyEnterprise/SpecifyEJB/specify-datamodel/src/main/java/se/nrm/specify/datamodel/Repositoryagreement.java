@@ -21,8 +21,7 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlID; 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -185,8 +184,7 @@ public class Repositoryagreement extends BaseEntity {
     public void setAddressOfRecord(Addressofrecord addressOfRecord) {
         this.addressOfRecord = addressOfRecord;
     }
-
-    @XmlIDREF
+ 
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -204,8 +202,7 @@ public class Repositoryagreement extends BaseEntity {
     public void setDivision(Division division) {
         this.division = division;
     }
-
-    @XmlIDREF
+ 
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }

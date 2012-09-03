@@ -212,7 +212,7 @@ public class Collectionobject extends BaseEntity {
     @OneToMany(mappedBy = "collectionObject")
     private Collection<Treatmentevent> treatmentEvents;
     
-    @OneToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST}, mappedBy = "collectionObject")
+    @OneToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval=true, mappedBy = "collectionObject")
     private Collection<Preparation> preparations;
      
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "collectionObject")

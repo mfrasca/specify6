@@ -6,8 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlID; 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -208,8 +207,7 @@ public class Workbench extends BaseEntity {
     public void setExportedFromTableName(String exportedFromTableName) {
         this.exportedFromTableName = exportedFromTableName;
     }
-
-    @XmlIDREF
+ 
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -233,8 +231,7 @@ public class Workbench extends BaseEntity {
     public void setGroup(Spprincipal group) {
         this.group = group;
     }
-
-    @XmlIDREF
+ 
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -243,8 +240,7 @@ public class Workbench extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
 
-    @NotNull(message="SpecifyUser must be specified.")
-    @XmlIDREF
+    @NotNull(message="SpecifyUser must be specified.") 
     public Specifyuser getSpecifyUser() {
         return specifyUser;
     }

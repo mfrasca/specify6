@@ -5,8 +5,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlID; 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -167,8 +166,8 @@ public class Treatmentevent extends BaseEntity {
     public void setType(String type) {
         this.type = type;
     }
-
-    @XmlIDREF
+ 
+    @XmlTransient
     public Accession getAccession() {
         return accession;
     }
@@ -185,8 +184,7 @@ public class Treatmentevent extends BaseEntity {
     public void setCollectionObject(Collectionobject collectionObject) {
         this.collectionObject = collectionObject;
     }
-
-    @XmlIDREF
+ 
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -194,8 +192,7 @@ public class Treatmentevent extends BaseEntity {
     public void setCreatedByAgent(Agent createdByAgent) {
         this.createdByAgent = createdByAgent;
     }
-
-    @XmlIDREF
+ 
     public Division getDivision() {
         return division;
     }
@@ -267,8 +264,7 @@ public class Treatmentevent extends BaseEntity {
     public void setDateTreatmentStarted(Date dateTreatmentStarted) {
         this.dateTreatmentStarted = dateTreatmentStarted;
     }
-
-    @XmlIDREF
+ 
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }

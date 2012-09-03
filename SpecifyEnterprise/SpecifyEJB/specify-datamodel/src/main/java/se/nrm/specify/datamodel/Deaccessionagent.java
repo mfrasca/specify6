@@ -16,8 +16,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlID; 
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -102,8 +101,7 @@ public class Deaccessionagent extends BaseEntity {
     public void setAgent(Agent agent) {
         this.agent = agent;
     }
-
-    @XmlIDREF
+ 
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -128,8 +126,7 @@ public class Deaccessionagent extends BaseEntity {
     public void setDeaccessionAgentId(Integer deaccessionAgentId) {
         this.deaccessionAgentId = deaccessionAgentId;
     }
-
-    @XmlIDREF
+ 
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }

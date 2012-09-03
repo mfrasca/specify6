@@ -11,14 +11,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table;  
-import javax.persistence.Transient;
+import javax.persistence.Table;   
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlID; 
 import javax.xml.bind.annotation.XmlRootElement; 
 
 /**
@@ -109,8 +107,7 @@ public class Agentspecialty extends BaseEntity {
         this.specialtyName = specialtyName;
     }
 
-    @NotNull(message="Agent must be specified.")
-    @XmlIDREF
+    @NotNull(message="Agent must be specified.") 
     public Agent getAgent() {
         return agent;
     }

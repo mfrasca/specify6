@@ -20,8 +20,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlID; 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -34,10 +33,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Locality.findAll", query = "SELECT l FROM Locality l"),
-    @NamedQuery(name = "Locality.findByLocalityId", query = "SELECT l FROM Locality l WHERE l.localityId = :localityId"),
-    @NamedQuery(name = "Locality.findByTimestampCreated", query = "SELECT l FROM Locality l WHERE l.timestampCreated = :timestampCreated"),
-    @NamedQuery(name = "Locality.findByTimestampModified", query = "SELECT l FROM Locality l WHERE l.timestampModified = :timestampModified"),
-    @NamedQuery(name = "Locality.findByVersion", query = "SELECT l FROM Locality l WHERE l.version = :version"),
+    @NamedQuery(name = "Locality.findByLocalityId", query = "SELECT l FROM Locality l WHERE l.localityId = :localityId"),  
     @NamedQuery(name = "Locality.findByDatum", query = "SELECT l FROM Locality l WHERE l.datum = :datum"),
     @NamedQuery(name = "Locality.findByElevationAccuracy", query = "SELECT l FROM Locality l WHERE l.elevationAccuracy = :elevationAccuracy"),
     @NamedQuery(name = "Locality.findByElevationMethod", query = "SELECT l FROM Locality l WHERE l.elevationMethod = :elevationMethod"),
@@ -60,11 +56,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Locality.findByOriginalElevationUnit", query = "SELECT l FROM Locality l WHERE l.originalElevationUnit = :originalElevationUnit"),
     @NamedQuery(name = "Locality.findByOriginalLatLongUnit", query = "SELECT l FROM Locality l WHERE l.originalLatLongUnit = :originalLatLongUnit"),
     @NamedQuery(name = "Locality.findByRelationToNamedPlace", query = "SELECT l FROM Locality l WHERE l.relationToNamedPlace = :relationToNamedPlace"),
-    @NamedQuery(name = "Locality.findByShortName", query = "SELECT l FROM Locality l WHERE l.shortName = :shortName"),
-    @NamedQuery(name = "Locality.findBySrcLatLongUnit", query = "SELECT l FROM Locality l WHERE l.srcLatLongUnit = :srcLatLongUnit"),
-    @NamedQuery(name = "Locality.findByText1", query = "SELECT l FROM Locality l WHERE l.text1 = :text1"),
-    @NamedQuery(name = "Locality.findByText2", query = "SELECT l FROM Locality l WHERE l.text2 = :text2"),
-    @NamedQuery(name = "Locality.findByVerbatimElevation", query = "SELECT l FROM Locality l WHERE l.verbatimElevation = :verbatimElevation"),
+    @NamedQuery(name = "Locality.findByShortName", query = "SELECT l FROM Locality l WHERE l.shortName = :shortName"), 
     @NamedQuery(name = "Locality.findByVisibility", query = "SELECT l FROM Locality l WHERE l.visibility = :visibility")})
 public class Locality extends BaseEntity {
  
@@ -509,9 +501,7 @@ public class Locality extends BaseEntity {
     public void setVisibility(Short visibility) {
         this.visibility = visibility;
     }
-
-   
-    @XmlIDREF
+ 
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -536,8 +526,7 @@ public class Locality extends BaseEntity {
     public void setGeography(Geography geography) {
         this.geography = geography;
     }
-
-    @XmlIDREF
+ 
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -545,8 +534,7 @@ public class Locality extends BaseEntity {
     public void setModifiedByAgent(Agent modifiedByAgent) {
         this.modifiedByAgent = modifiedByAgent;
     }
-
-    @XmlIDREF
+ 
     public Specifyuser getVisibilitySetBy() {
         return visibilitySetBy;
     }
@@ -645,6 +633,6 @@ public class Locality extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Locality[ localityID=" + localityId + " ]";
+        return "Locality[ localityId=" + localityId + " ]";
     } 
 }

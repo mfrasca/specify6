@@ -17,8 +17,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlID; 
 import javax.xml.bind.annotation.XmlRootElement; 
 
 /**
@@ -116,8 +115,7 @@ public class Agentgeography extends BaseEntity {
         this.role = role;
     }
 
-    @NotNull(message="Agent must be specified.")
-    @XmlIDREF
+    @NotNull(message="Agent must be specified.") 
     public Agent getAgent() {
         return agent;
     }

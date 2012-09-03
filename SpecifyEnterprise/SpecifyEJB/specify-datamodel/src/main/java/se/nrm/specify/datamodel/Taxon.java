@@ -423,7 +423,7 @@ public class Taxon extends BaseEntity {
         this.hybridChildren2 = hybridChildren2;
     }
 
-    @XmlIDREF
+//    @XmlIDREF
     public Taxon getHybridParent1() {
         return hybridParent1;
     }
@@ -432,7 +432,7 @@ public class Taxon extends BaseEntity {
         this.hybridParent1 = hybridParent1;
     }
 
-    @XmlIDREF
+//    @XmlIDREF
     public Taxon getHybridParent2() {
         return hybridParent2;
     }
@@ -441,7 +441,7 @@ public class Taxon extends BaseEntity {
         this.hybridParent2 = hybridParent2;
     }
 
-    @XmlIDREF
+//    @XmlIDREF
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }

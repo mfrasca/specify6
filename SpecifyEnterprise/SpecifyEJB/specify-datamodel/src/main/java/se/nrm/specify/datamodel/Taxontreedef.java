@@ -6,8 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlID; 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -87,8 +86,7 @@ public class Taxontreedef extends BaseEntity {
     public String getIdentityString() {
         return (taxonTreeDefId != null) ? taxonTreeDefId.toString() : "0";
     }
-
-    @XmlIDREF
+ 
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -105,8 +103,7 @@ public class Taxontreedef extends BaseEntity {
     public void setDiscipline(Collection<Discipline> discipline) {
         this.discipline = discipline;
     }
-
-    @XmlIDREF
+ 
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }

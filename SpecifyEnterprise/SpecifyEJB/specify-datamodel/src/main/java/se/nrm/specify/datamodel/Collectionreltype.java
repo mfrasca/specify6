@@ -18,8 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;  
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlID; 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -103,8 +102,7 @@ public class Collectionreltype extends BaseEntity {
     public void setCollectionRelTypeId(Integer collectionRelTypeId) {
         this.collectionRelTypeId = collectionRelTypeId;
     }
-
-    @XmlIDREF
+ 
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -120,8 +118,7 @@ public class Collectionreltype extends BaseEntity {
     public void setLeftSideCollection(se.nrm.specify.datamodel.Collection leftSideCollection) {
         this.leftSideCollection = leftSideCollection;
     }
-
-    @XmlIDREF
+ 
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }

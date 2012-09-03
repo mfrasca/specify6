@@ -17,9 +17,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlID; 
 import javax.xml.bind.annotation.XmlRootElement; 
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -94,8 +94,7 @@ public class Deaccessionpreparation extends BaseEntity {
     public String getIdentityString() {
         return (deaccessionPreparationId != null) ? deaccessionPreparationId.toString() : "0";
     }
-    
-    @XmlIDREF
+     
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -120,8 +119,7 @@ public class Deaccessionpreparation extends BaseEntity {
     public void setDeaccessionPreparationId(Integer deaccessionPreparationId) {
         this.deaccessionPreparationId = deaccessionPreparationId;
     }
-
-    @XmlIDREF
+ 
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
@@ -130,6 +128,7 @@ public class Deaccessionpreparation extends BaseEntity {
         this.modifiedByAgent = modifiedByAgent;
     }
 
+    @XmlTransient
     public Preparation getPreparation() {
         return preparation;
     }
@@ -163,6 +162,19 @@ public class Deaccessionpreparation extends BaseEntity {
 
     public void setLoanreturnpreparations(Collection<Loanreturnpreparation> loanreturnpreparations) {
         this.loanreturnpreparations = loanreturnpreparations;
+    }
+    
+    
+    /**
+     * Parent pointer
+     * 
+     * @param u
+     * @param parent 
+     */
+    public void afterUnmarshal(Unmarshaller u, Object parent) {
+        if (parent instanceof Preparation) {
+            this.preparation = (Preparation) parent;
+        }
     }
 
     @Override

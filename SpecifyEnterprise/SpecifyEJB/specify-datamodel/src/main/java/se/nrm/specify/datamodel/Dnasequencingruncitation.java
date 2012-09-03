@@ -16,8 +16,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlID; 
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -112,8 +111,7 @@ public class Dnasequencingruncitation extends BaseEntity {
     public String getIdentityString() {
         return (dnaSequencingRunCitationId != null) ? dnaSequencingRunCitationId.toString() : "0";
     }
-
-    @XmlIDREF
+ 
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -129,8 +127,7 @@ public class Dnasequencingruncitation extends BaseEntity {
     public void setDnaSequencingRunCitationId(Integer dnaSequencingRunCitationId) {
         this.dnaSequencingRunCitationId = dnaSequencingRunCitationId;
     }
-
-    @XmlIDREF
+ 
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }

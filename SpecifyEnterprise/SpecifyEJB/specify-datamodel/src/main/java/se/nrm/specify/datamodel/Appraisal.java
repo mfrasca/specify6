@@ -17,13 +17,11 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
-import javax.persistence.TemporalType; 
-import javax.persistence.Transient;
+import javax.persistence.TemporalType;  
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlID; 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -170,8 +168,7 @@ public class Appraisal extends BaseEntity {
     public void setAccession(Accession accession) {
         this.accession = accession;
     }
-
-    @XmlIDREF
+ 
     @NotNull(message="Agent must be specified.")
     public Agent getAgent() {
         return agent;
@@ -180,8 +177,7 @@ public class Appraisal extends BaseEntity {
     public void setAgent(Agent agent) {
         this.agent = agent;
     }
-
-    @XmlIDREF
+ 
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -189,8 +185,7 @@ public class Appraisal extends BaseEntity {
     public void setCreatedByAgent(Agent createdByAgent) {
         this.createdByAgent = createdByAgent;
     }
-    
-    @XmlIDREF
+     
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }

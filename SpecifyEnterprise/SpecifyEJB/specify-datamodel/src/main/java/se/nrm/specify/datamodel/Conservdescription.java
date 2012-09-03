@@ -19,8 +19,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlID; 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -274,8 +273,7 @@ public class Conservdescription extends BaseEntity {
     public void setConservDescriptionId(Integer conservDescriptionId) {
         this.conservDescriptionId = conservDescriptionId;
     }
-
-    @XmlIDREF
+ 
     public Agent getCreatedByAgent() {
         return createdByAgent;
     }
@@ -291,8 +289,7 @@ public class Conservdescription extends BaseEntity {
     public void setDivision(Division division) {
         this.division = division;
     }
-
-    @XmlIDREF
+ 
     public Agent getModifiedByAgent() {
         return modifiedByAgent;
     }
