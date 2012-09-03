@@ -84,6 +84,10 @@ public interface SpecifyDao<T extends SpecifyBean> {
      */
     public T getPartialEntity(Object searchValue, String fieldName, String entityName, List<String> fields);
     
+    public List<T> getPartialEntities(Object searchValue, String fieldName, String entityName, List<String> fields);
+    
+    
+    
     /**
      * 
      * @param jpql
@@ -102,6 +106,8 @@ public interface SpecifyDao<T extends SpecifyBean> {
     public List<T> getListByJPQLByFetchGroup(String classname, String jpql, List<String> fields);
     
     public T getFetchGroupByNamedQuery(Map<String, Object> map);
+     
+    
 
     public T getEntityByNamedQuery(String namedQuery, Map<String, Object> parameters);
   

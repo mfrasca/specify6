@@ -68,7 +68,7 @@ public class SpecifyDaoImpl<T extends SpecifyBean> implements SpecifyDao<T> {
         try {
             entityManager.persist(entity);
             entityManager.flush();
-            entityManager.refresh(tmp);
+//            entityManager.refresh(tmp);
         } catch (ConstraintViolationException e) {
             throw new DataStoreException(handleConstraintViolation(e));
         } catch (Exception e) {
@@ -114,9 +114,11 @@ public class SpecifyDaoImpl<T extends SpecifyBean> implements SpecifyDao<T> {
         logger.info("partialMerge: entity : {} - fields : {}", entity, fields);
  
         T orgEntity = reWriteEntity(entity, fields);  
+        logger.info("part : orgEntity : {}", orgEntity);
          
         if(!partialCopy.isIsRelatedEntityChanged() && !partialCopy.isIsCollectionChanged()) {
-             return merge(orgEntity); 
+            logger.info("first merge");
+             return merge(orgEntity);  
         }   
         
         T mergedEntity = null;
@@ -180,24 +182,35 @@ public class SpecifyDaoImpl<T extends SpecifyBean> implements SpecifyDao<T> {
         logger.info("doNewMerge :  {}", child, fields);
         
         int id = Common.getInstance().stringToInt(child.getIdentityString());
-        T orgEntity = getOrginalEntityById(id, child.getClass().getSimpleName(), fields);
+        if(id != 0) {
+            T orgEntity = getOrginalEntityById(id, child.getClass().getSimpleName(), fields);
+            if(orgEntity != null) {
+                entityManager.detach(orgEntity);
+                partialCopy.copyPartialEntityForMerge(child, orgEntity, fields, entityManager);
+            }
+            return orgEntity;
+        }
         
-        entityManager.detach(orgEntity);
-        partialCopy.copyPartialEntityForMerge(child, orgEntity, fields, entityManager);
+        
+        
+        
 //        ReflectionUtil.setEntityValue(parent, orgEntity);  
-        return orgEntity;
+        return null;
     }
     
     private T reWriteEntity(T copyBean, List<String> fields) { 
         logger.info("reWriteEntity: {} -- {}", copyBean, fields);
             
         int id = Common.getInstance().stringToInt(copyBean.getIdentityString());
-        T orgEntity = getOrginalEntityById(id, copyBean.getClass().getSimpleName(), fields);
-        entityManager.detach(orgEntity);   
-         
-        partialCopy.copyPartialEntityForMerge(copyBean, orgEntity, fields, entityManager);
-   
-        return (T) orgEntity;
+        if(id != 0) {
+            T orgEntity = getOrginalEntityById(id, copyBean.getClass().getSimpleName(), fields); 
+            if(orgEntity != null) {
+                entityManager.detach(orgEntity);    
+                partialCopy.copyPartialEntityForMerge(copyBean, orgEntity, fields, entityManager);
+            } 
+            return (T) orgEntity;
+        }
+        return null;
     }
     
  
@@ -205,7 +218,7 @@ public class SpecifyDaoImpl<T extends SpecifyBean> implements SpecifyDao<T> {
     
     private T getOrginalEntityById(int id, String entityName, List<String> fields) {
         
-        logger.info("getOrginalEntity -  {} -- {}", entityName, fields);
+        logger.info("getOrginalEntity -  {} -- {}", id + " --- " + entityName, fields);
           
         fields = JPAUtil.addValidFields(fields, entityName); 
          
@@ -222,7 +235,7 @@ public class SpecifyDaoImpl<T extends SpecifyBean> implements SpecifyDao<T> {
         }
         query.setHint(QueryHints.FETCH_GROUP, group);
          
-        try {
+        try { 
             return (T) query.getSingleResult();   
         } catch(NoResultException ex) {
             return null;
@@ -290,7 +303,7 @@ public class SpecifyDaoImpl<T extends SpecifyBean> implements SpecifyDao<T> {
      */
     public int getCountByJPQL(SpecifyBean bean, String jpql) {
 
-        logger.info("getCountByJPQL: {} - {}", bean, jpql);
+//        logger.info("getCountByJPQL: {} - {}", bean, jpql);
 
         Query query = entityManager.createQuery(jpql);
         try {
@@ -304,13 +317,7 @@ public class SpecifyDaoImpl<T extends SpecifyBean> implements SpecifyDao<T> {
         }
     }
     
-    
-    
-    
-    
-    
- 
- 
+     
 
     /**
      * getListByJPQLByFetchGroup - only fetches required fields as fetch group.
@@ -339,7 +346,7 @@ public class SpecifyDaoImpl<T extends SpecifyBean> implements SpecifyDao<T> {
   
         return copyEntityGroup(beans, fields, classname); 
     }
-  
+   
         
     public T getFetchGroupByNamedQuery(Map<String, Object> map) {
         
@@ -385,23 +392,22 @@ public class SpecifyDaoImpl<T extends SpecifyBean> implements SpecifyDao<T> {
      private List copyEntityGroup(List<T> beans, List<String> fields, String classname) {
 
         List newBeans = new ArrayList();
-
+        
         for (T bean : beans) {
-            newBeans.add(copyEntity(bean, fields, classname));
+            List<String> newFields = new ArrayList<String>();
+            newFields.addAll(fields);
+            newBeans.add(copyEntity(bean, newFields, classname));
         }
         return newBeans;
     }
 
     private T copyEntity(SpecifyBean bean, List<String> fields, String classname) {
          
-        logger.info("copyEntity: {} - {}", bean, classname);
-
-        Map<String, SpecifyBean> beanmap = new HashMap<String, SpecifyBean>();
-        beanmap.put(classname, bean);
+//        logger.info("copyEntity: {} - {}", bean, fields);
+ 
         T copyObject = JPAUtil.createNewInstance(classname);
 
-        partialCopy.copyPartialEntity(bean, copyObject, fields, false);
-          
+        partialCopy.copyPartialEntity(bean, copyObject, fields, false); 
         return copyObject;  
     }
 
@@ -444,8 +450,8 @@ public class SpecifyDaoImpl<T extends SpecifyBean> implements SpecifyDao<T> {
             logger.error(ex.getMessage());
             return null;                        // if result not unique, return null
         }
-    }
-
+    } 
+     
     public T getEntityByJPQL(String jpql) {
 
         logger.info("getEntityByJPQL - jpql: {}", jpql);
@@ -489,12 +495,11 @@ public class SpecifyDaoImpl<T extends SpecifyBean> implements SpecifyDao<T> {
     
     public T getPartialEntity(Object searchValue, String fieldName, String entityName, List<String> fields) {
         
-        logger.info("getPartialEntityByNamedQuery -  {} -- {}", searchValue + " --- " + fieldName + " -- " + entityName, fields);
+        logger.info("getPartialEntity -  {} -- {}", searchValue + " --- " + fieldName + " -- " + entityName, fields);
           
         fields = JPAUtil.addValidFields(fields, entityName);  
         
-        String namedQuery = entityName + ".findBy" + Common.getInstance().uppercaseFirstCharacter(fieldName);
-        logger.info("namedquery : {}", namedQuery);
+        String namedQuery = entityName + ".findBy" + Common.getInstance().uppercaseFirstCharacter(fieldName); 
         Query query = entityManager.createNamedQuery(namedQuery);
            
         query.setParameter(fieldName, searchValue);
@@ -505,12 +510,41 @@ public class SpecifyDaoImpl<T extends SpecifyBean> implements SpecifyDao<T> {
         }
         query.setHint(QueryHints.FETCH_GROUP, group);
          
-        try {
+        try { 
             return (T) query.getSingleResult();   
         } catch(NoResultException ex) {
             return null;
         }   
     }
+    
+    
+    public List<T> getPartialEntities(Object searchValue, String fieldName, String entityName, List<String> fields) {
+        
+        logger.info("getPartialEntities -  {} -- {}", searchValue + " --- " + fieldName + " -- " + entityName, fields);
+        
+        fields = JPAUtil.addValidFields(fields, entityName);
+        String namedQuery = entityName + ".findBy" + Common.getInstance().uppercaseFirstCharacter(fieldName); 
+        
+        logger.info("namedquery : {}", namedQuery);
+        
+        Query query = entityManager.createNamedQuery(namedQuery);
+        query.setParameter(fieldName, searchValue); 
+        FetchGroup group = new FetchGroup(); 
+        for (String field : fields) {
+            group.addAttribute(field.trim());
+        }
+        query.setHint(QueryHints.FETCH_GROUP, group);
+        
+        try { 
+            List<T> list = query.getResultList();  
+            return copyEntityGroup(list, fields, entityName);
+        } catch(NoResultException ex) {
+            logger.error(ex.getMessage());
+            return null;
+        }    
+    }
+    
+    
     
     
     /**
@@ -530,7 +564,9 @@ public class SpecifyDaoImpl<T extends SpecifyBean> implements SpecifyDao<T> {
         } 
         query.setMaxResults(1);
 
-        return (T) query.getResultList().get(0);
+        T bean = (T) query.getResultList().get(0);
+        logger.info("last co : {}", bean);
+        return bean;
     }
     
     

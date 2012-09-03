@@ -60,7 +60,7 @@ public class PartialCopy {
     
     public void copyPartialEntity(SpecifyBean source, SpecifyBean target, List<String> fields, boolean isMerge) {
 
-//        logger.info("copyPartialFetchedEntity : fields : {}, source -- target : {}", fields, source + " --- " + target);
+        logger.info("copyPartialFetchedEntity : fields : {}, source -- target : {}", fields, source + " --- " + target);
 
         List<String> list = getEntityFields(fields);
 
@@ -314,7 +314,7 @@ public class PartialCopy {
             } catch (NoSuchFieldException ex) {
                 logger.error("IllegalArgumentException : {} -- {}", string, ex.getMessage());
             } 
-        }
+        } 
     }
 
     private Map<String, List<String>> createFieldMap(List<String> fields) {
@@ -344,7 +344,7 @@ public class PartialCopy {
     
     public SpecifyBean copyEntity(SpecifyBean bean, List<String> fields, String classname) {
 
-        logger.info("copyEntity: {} - {}", bean, classname);
+//        logger.info("copyEntity: {} - {}", bean, classname);
 
         Map<String, SpecifyBean> beanmap = new HashMap<String, SpecifyBean>();
         beanmap.put(classname, bean);
