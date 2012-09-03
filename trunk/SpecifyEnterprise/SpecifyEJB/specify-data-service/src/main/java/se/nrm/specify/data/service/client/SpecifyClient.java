@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;  
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.UriBuilder; 
+import javax.ws.rs.core.UriBuilder;  
 import se.nrm.specify.datamodel.*; 
 import se.nrm.specify.ui.form.data.ViewCreator;
 import se.nrm.specify.ui.form.data.service.SpecifyRSClient;
@@ -211,23 +211,37 @@ public class SpecifyClient {
         accession.setAccessionAgents(aas);
         collectionobject.setAccession(accession);
  
-//        List<Preparation> preparations = (List<Preparation>) collectionobject.getPreparations();
-//        if(preparations == null) {
-//            preparations = new ArrayList<Preparation>();
+        List<Preparation> preparations = (List<Preparation>) collectionobject.getPreparations();
+        if(preparations == null) {
+            preparations = new ArrayList<Preparation>();
+            
+//            Preptype pt = new Preptype();
+//            pt.setTimestampCreated(timestamp);
+//            pt.setName(preptype.getName() + 1);
+//            pt.setCollection(collection);
 //            
-//            Preparation p = new Preparation();
-//            p.setTimestampCreated(timestamp);
-//            p.setPrepType(preptype);
-//            p.setCollectionMemberId(collection.getUserGroupScopeId());
-//            preparations.add(p);
-//        } else {
-//            for(Preparation p : preparations) {
-//                p.setCollectionMemberId(p.getCollectionMemberId() + 12);
-//                preparations.add(p);
-//            }
-//        }
-//        
-//        collectionobject.setPreparations(preparations);
+            Preparation p = new Preparation();
+            p.setTimestampCreated(timestamp);  
+            p.setCollectionMemberId(123); 
+            p.setPreparedDate(timestamp);
+            p.setPreparedDatePrecision(Short.valueOf("1"));
+            p.setPrepType(preptype);
+            p.setCreatedByAgent(agent);
+            p.setCollectionObject(collectionobject);
+            
+            
+            preparations.add(p);
+        } else {
+            for(Preparation p : preparations) {
+                p.setCollectionMemberId(p.getCollectionMemberId() + 12); 
+            }
+        }
+         
+        
+        
+        
+        
+        collectionobject.setPreparations(preparations);
         
         
         
@@ -251,37 +265,36 @@ public class SpecifyClient {
     } 
     
     private static void testCreateNewEntity() {
-        SpecifyBeanWrapper beanWrapper1 = service.path("searchbyid").path(Agent.class.getName()).path("1").accept(MediaType.APPLICATION_JSON).get(SpecifyBeanWrapper.class);
-        Agent agent = (Agent) beanWrapper1.getBean();
+        SpecifyBeanWrapper beanWrapper1 = service.path("searchbyid").path(Preptype.class.getName()).path("17").accept(MediaType.APPLICATION_JSON).get(SpecifyBeanWrapper.class);
+        Preptype preptype = (Preptype) beanWrapper1.getBean();
+        System.out.println("preptype : " + preptype);
         
-        SpecifyBeanWrapper beanWrapper = service.path("searchbyid").path(Division.class.getName()).path("2").accept(MediaType.APPLICATION_JSON).get(SpecifyBeanWrapper.class);
-        Division division = (Division) beanWrapper.getBean();
+        
+//        SpecifyBeanWrapper beanWrapper = service.path("searchbyid").path(Division.class.getName()).path("2").accept(MediaType.APPLICATION_JSON).get(SpecifyBeanWrapper.class);
+//        Division division = (Division) beanWrapper.getBean();
+        
+        SpecifyBeanWrapper beanWrapper = service.path("searchbyid").path(Collection.class.getName()).path("163840").accept(MediaType.APPLICATION_JSON).get(SpecifyBeanWrapper.class);
+        Collection collection = (Collection) beanWrapper.getBean();
  
- 
-        Accession accession = new Accession();
-        accession.setTimestampCreated(timestamp);
-        accession.setAccessionNumber("newNumber1");
-        accession.setDivision(division);
-
-        List<Accessionagent> aas = new ArrayList();
-        Accessionagent aa = new Accessionagent();
-        aa.setTimestampCreated(timestamp);
-        aa.setRole("test2");
-        aa.setAccession(accession);
-        aa.setAgent(agent);
+        Collectionobject co = new Collectionobject();
+        co.setTimestampCreated(timestamp);
+        co.setCatalogNumber("test-19561288");
+        co.setCollection(collection);
         
-
-        aas.add(aa);
-
-        accession.setAccessionAgents(aas);
+        Preparation p = new Preparation();
+        p.setTimestampCreated(timestamp);
+        p.setCollectionMemberId(123);
+        p.setPrepType(preptype);
         
-        SpecifyBeanWrapper wrapper = new SpecifyBeanWrapper(accession);
-
-
+        List<Preparation> pts = new ArrayList<Preparation>();
+        pts.add(p);
+        
+        
+        co.setPreparations(pts);
+        SpecifyBeanWrapper wrapper = new SpecifyBeanWrapper(co);
+        
         String response = service.path("newEntity").post(String.class, wrapper);
-
-        System.out.println("response..." + response);
-         
+        System.out.println("response : " + response);
 
     }
     
