@@ -155,7 +155,7 @@ public class Preparation extends BaseEntity {
     @ManyToOne
     private Preparationattribute preparationAttribute;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "preparation")
+    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, mappedBy = "preparation")
     private Collection<Preparationattachment> preparationAttachments;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "preparation")

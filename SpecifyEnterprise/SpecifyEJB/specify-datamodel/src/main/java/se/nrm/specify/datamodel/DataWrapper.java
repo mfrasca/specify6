@@ -11,7 +11,8 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public class DataWrapper {
-
+ 
+    
     @XmlElement
     private List<String> list;
     
@@ -25,13 +26,20 @@ public class DataWrapper {
     
     @XmlElement
     private Collectingevent event;
+    
     @XmlElement
     private int numSortedVials;
+    
+    @XmlElement
+    private int numOfEvent;
+    
     @XmlElement
     private String collectionCode;
      
     public DataWrapper() {
     }
+    
+    
      
     public DataWrapper(List list) {
         this.list = list;
@@ -42,6 +50,11 @@ public class DataWrapper {
         this.list = list;
         this.eventcount = eventcount;
         this.trapcount = trapcount;
+    }
+    
+    public DataWrapper(Collectingevent event, int numOfEvent) {
+        this.event = event;
+        this.numOfEvent = numOfEvent;
     }
 
     public DataWrapper(List<String> list, Collectingevent event, int numSortedVails, String collectionCode) {
@@ -84,6 +97,14 @@ public class DataWrapper {
     public int getNumSortedVials() {
         return numSortedVials;
     }
+
+    public int getNumOfEvent() {
+        return numOfEvent;
+    }
+    
+    
+    
+    
 
     @Override
     public String toString() {
