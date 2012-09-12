@@ -11,6 +11,7 @@ import se.nrm.specify.business.logic.validation.ValidationWarning;
 import se.nrm.specify.business.logic.validation.ValidationWrapper;
 import se.nrm.specify.datamodel.Accessionagent;
 import se.nrm.specify.datamodel.Address;
+import se.nrm.specify.datamodel.Collectionobject;
 import se.nrm.specify.datamodel.DataWrapper;
 import se.nrm.specify.datamodel.Determination;
 import se.nrm.specify.datamodel.Preparation;
@@ -28,11 +29,11 @@ import se.nrm.specify.datamodel.SpecifyBeanWrapper;
 public class JAXBContextResolver implements ContextResolver<JAXBContext> {
 
     private JAXBContext context;
-    private Class[] types = {SpecifyBeanWrapper.class, ValidationWrapper.class, DataWrapper.class, Determination.class, Preparation.class, 
+    private Class[] types = {SpecifyBeanWrapper.class, ValidationWrapper.class, DataWrapper.class, Collectionobject.class, Determination.class, Preparation.class, 
                              Accessionagent.class, Address.class, ValidationOK.class, ValidationWarning.class, ValidationError.class};
 
     public JAXBContextResolver() throws Exception {  
-        this.context = new JSONJAXBContext(JSONConfiguration.mapped().arrays("determinations", "preparations", "accessionAgents", "addresses").build(), types);
+        this.context = new JSONJAXBContext(JSONConfiguration.mapped().arrays("collectionobjects","determinations", "preparations", "accessionAgents", "addresses").build(), types);
     }
 
     @Override

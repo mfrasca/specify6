@@ -20,6 +20,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriInfo;    
+import javax.xml.bind.JAXBElement;
+import org.codehaus.jettison.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException; 
@@ -151,6 +153,40 @@ public class SpecyResource {
         return new ValidationWrapper(validation);
     }
     
+    
+    
+    
+    
+//    @POST
+//    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+//    @Path("putjson") 
+//    public String putTodo(JAXBElement<SpecifyBeanWrapper> r) {
+//        SpecifyBeanWrapper wrapper = r.getValue();
+//        wrapper.toString();
+//        
+//        logger.info("wrapper : {}", wrapper);
+//        
+//        logger.info("bean : {}", wrapper.getBean());
+//        
+//        System.out.println("Received PUT XML/JSON Request");
+//        return "ok";
+//    }
+//
+//    @POST
+//    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+//    @Path("putjson1") 
+//    public String putJson(JSONObject json) {
+//        
+//        logger.info("putJson : {}", json);
+//        
+//        
+//        
+//        return "ok";
+//    }
+    
+    
+    
+    
     /**
      * Generic method update an entity
      * 
@@ -272,7 +308,7 @@ public class SpecyResource {
 
     @GET
     @Path("search/uidata/{discipline}/{entity}/{id}")
-    public SpecifyBean fetchGroupEntityById(@PathParam("discipline") String discipline, @PathParam("entity") String entity, @PathParam("id") String id) {
+    public SpecifyBeanWrapper fetchGroupEntityById(@PathParam("discipline") String discipline, @PathParam("entity") String entity, @PathParam("id") String id) {
 
         logger.info("fetchGroupEntityById: {} - {}", entity, id);
 
@@ -288,7 +324,8 @@ public class SpecyResource {
             map.put("namedQuery", namedQuery);
             map.put("fields", fields);
 
-            return specify.getDao().getFetchGroupByNamedQuery(map);
+            SpecifyBean bean = specify.getDao().getFetchGroupByNamedQuery(map);
+            return new SpecifyBeanWrapper(bean);
         } else {
             return null;
         }
@@ -307,7 +344,7 @@ public class SpecyResource {
         String entity = uidata.getEntityName(viewdata);
         List<String> fields = uidata.constructSearchFields(viewdata);
 
-        List<SpecifyBean> list = (List<SpecifyBean>) specify.getDao().getListByJPQLByFetchGroup(entity, jpql, fields);
+        List<SpecifyBean> list = (List<SpecifyBean>) specify.getDao().getListByJPQLByFetchGroup(entity, jpql, fields, true);
  
         return new SpecifyBeanWrapper(list);
     }
@@ -323,7 +360,7 @@ public class SpecyResource {
         String jpql = params.get(0);
         List<String> fields = (List<String>) map.get(entity);
 
-        List<SpecifyBean> list = (List<SpecifyBean>) specify.getDao().getListByJPQLByFetchGroup(entity, jpql, fields); 
+        List<SpecifyBean> list = (List<SpecifyBean>) specify.getDao().getListByJPQLByFetchGroup(entity, jpql, fields, true); 
 
         return new SpecifyBeanWrapper(list);
     }
