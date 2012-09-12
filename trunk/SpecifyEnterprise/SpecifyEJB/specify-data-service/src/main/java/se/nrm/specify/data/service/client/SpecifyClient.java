@@ -6,16 +6,28 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.core.util.MultivaluedMapImpl;  
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.sql.Timestamp; 
 import java.util.ArrayList;  
 import java.util.List;  
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriBuilder;  
+import org.apache.http.HttpException;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 import se.nrm.specify.datamodel.*; 
 import se.nrm.specify.ui.form.data.ViewCreator;
-import se.nrm.specify.ui.form.data.service.SpecifyRSClient;
+import se.nrm.specify.ui.form.data.service.SpecifyRSClient;  
  
 
 /**
@@ -29,32 +41,84 @@ public class SpecifyClient {
     private static Gson gson;
 
     public static void main(String[] args) {
- 
-        gson = new Gson();
+        try {
+            gson = new Gson();
 
-        ClientConfig config = new DefaultClientConfig();
-        Client client = Client.create(config);
-        service = client.resource(getBaseURI());
-  
+            ClientConfig config = new DefaultClientConfig();
+            Client client = Client.create(config);
+            service = client.resource(getBaseURI());
+      
 
-//        testGetEntity();    
-//        testFetchGroup(); 
-//        testGetAllEntitiesByNamedQuery(); 
-//        testDeleteEntity();   
-//        testCreateGenericEntity();     
-//        testUpdateEntity();             
-//        testFetchGroupByNamedQuery();  
-//        
-//        testGetEntityByEntityID();  
-//        testGetAllEntities();
-//        
-//        testUIView(); 
-//        testCreateNewEntity();
-        
-        testUIDataFetch();
-//        testFindById();
+    //        testGetEntity();    
+    //        testFetchGroup(); 
+    //        testGetAllEntitiesByNamedQuery(); 
+    //        testDeleteEntity();   
+    //        testCreateGenericEntity();     
+    //        testUpdateEntity();             
+    //        testFetchGroupByNamedQuery();  
+    //        
+    //        testGetEntityByEntityID();  
+    //        testGetAllEntities();
+    //        
+    //        testUIView(); 
+    //        testCreateNewEntity();
+            
+    //        testUIDataFetch();
+    //        testFindById();
+            
+            testPutWithJson();
+        } catch (URISyntaxException ex) {
+            Logger.getLogger(SpecifyClient.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (HttpException ex) {
+            Logger.getLogger(SpecifyClient.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(SpecifyClient.class.getName()).log(Level.SEVERE, null, ex);
+        }  
         
          
+    }
+    
+    private static void testPutWithJson() throws UnsupportedEncodingException, URISyntaxException, HttpException, IOException {
+        
+        String discipline = "fish";
+        String view = "CollectionObject";
+
+//        ViewCreator creator = new ViewCreator(discipline);
+//        SpecifyRSClient client = new SpecifyRSClient(creator);
+//        
+//
+//        MultivaluedMapImpl queryParams = new MultivaluedMapImpl();
+////        queryParams.add("catalogNumber", "NHRS-GULI000000970");
+////         queryParams.add("collectionObjectId", 9439);
+//        
+//        
+//        queryParams.add("collectionObjectId", 137234);
+//          
+//        String json = client.getJSONResult(discipline, view, queryParams);
+////        String xml = client.getXMLResult(discipline, view, queryParams);
+//        System.out.println("json : " + json);
+         
+        String json = service.path("search").path("uidata").path(discipline).path(view).path("425").accept(MediaType.APPLICATION_JSON).get(String.class); 
+        System.out.println("json : " + json);
+        
+        
+        
+        
+        
+        
+        
+//        HttpClient client1 = new DefaultHttpClient();
+//        StringEntity json1 = new StringEntity(json.toString());
+//        json1.setContentType("application/json");
+//        HttpPost post = new HttpPost("http://localhost:8080/specify-data-service/putjson");
+//        post.addHeader("Content-Type", "application/json");
+//        post.setEntity(json1);
+//        
+//        HttpResponse response = client1.execute(post);
+//        System.out.println("response : " + response.getStatusLine().getStatusCode());
+        
+//        String response = service.path("putjson1").accept(MediaType.APPLICATION_XML).put(String.class, json); 
+//        System.out.println("response : " + response); 
     }
     
     
