@@ -1,7 +1,7 @@
 package se.nrm.specify.ui.form.data.service;
 
 import com.sun.jersey.core.util.MultivaluedMapImpl;
-import java.util.ArrayList;
+import java.util.ArrayList; 
 import java.util.List;
 import java.util.Map;
 import javax.ejb.Stateless;
@@ -106,8 +106,7 @@ public class UIDataConstractor {
         } 
         return jpqlSB.toString(); 
     }
-    
-    
+     
     public MultivaluedMap createSearchData(String discipline, String view, Map<String, Object> searchConditions) {
 
         logger.info("createSearchData");
