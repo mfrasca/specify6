@@ -103,7 +103,7 @@ public interface SpecifyDao<T extends SpecifyBean> {
     
     
     
-    public List<T> getListByJPQLByFetchGroup(String classname, String jpql, List<String> fields);
+    public List<T> getListByJPQLByFetchGroup(String classname, String jpql, List<String> fields, boolean makeCopy);
     
     public T getFetchGroupByNamedQuery(Map<String, Object> map);
      

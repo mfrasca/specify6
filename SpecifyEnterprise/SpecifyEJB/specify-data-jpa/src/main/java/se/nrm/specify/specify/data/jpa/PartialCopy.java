@@ -60,7 +60,7 @@ public class PartialCopy {
     
     public void copyPartialEntity(SpecifyBean source, SpecifyBean target, List<String> fields, boolean isMerge) {
 
-        logger.info("copyPartialFetchedEntity : fields : {}, source -- target : {}", fields, source + " --- " + target);
+//        logger.info("copyPartialFetchedEntity : fields : {}, source -- target : {}", fields, source + " --- " + target);
 
         List<String> list = getEntityFields(fields);
 

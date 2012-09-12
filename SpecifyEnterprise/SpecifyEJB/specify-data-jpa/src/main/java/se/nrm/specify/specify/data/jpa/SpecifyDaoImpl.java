@@ -329,7 +329,7 @@ public class SpecifyDaoImpl<T extends SpecifyBean> implements SpecifyDao<T> {
      * 
      * @return SpecifyBean
      */ 
-    public List<T> getListByJPQLByFetchGroup(String classname, String jpql, List<String> fields) {
+    public List<T> getListByJPQLByFetchGroup(String classname, String jpql, List<String> fields, boolean makeCopy) {
 
         logger.info("getListByJPQLByFetchGroup - classname: {} - jpql: {}", classname, jpql);
 
@@ -344,7 +344,7 @@ public class SpecifyDaoImpl<T extends SpecifyBean> implements SpecifyDao<T> {
 
         List<T> beans = (List<T>) query.getResultList();
   
-        return copyEntityGroup(beans, fields, classname); 
+        return makeCopy ? copyEntityGroup(beans, fields, classname) : beans;  
     }
    
         
@@ -438,7 +438,7 @@ public class SpecifyDaoImpl<T extends SpecifyBean> implements SpecifyDao<T> {
      */
     public T getEntityByNamedQuery(String namedQuery, Map<String, Object> parameters) {
 
-        logger.info("getEntityByNamedQuery - namedquery: {}, parameters: {}", namedQuery, parameters);
+//        logger.info("getEntityByNamedQuery - namedquery: {}, parameters: {}", namedQuery, parameters);
 
         Query query = createQuery(namedQuery, parameters);
         try {
@@ -501,8 +501,9 @@ public class SpecifyDaoImpl<T extends SpecifyBean> implements SpecifyDao<T> {
         
         String namedQuery = entityName + ".findBy" + Common.getInstance().uppercaseFirstCharacter(fieldName); 
         Query query = entityManager.createNamedQuery(namedQuery);
-           
         query.setParameter(fieldName, searchValue);
+        
+        
          
         FetchGroup group = new FetchGroup(); 
         for (String field : fields) {
@@ -555,18 +556,20 @@ public class SpecifyDaoImpl<T extends SpecifyBean> implements SpecifyDao<T> {
      */
     public T getLastRecord(String namedQuery, Map<String, Object> map) {
 
-        logger.info("getLastCollectionobjectByGroup: {} -- {}", namedQuery, map);
+        logger.info("getLastRecord: {} -- {}", namedQuery, map);
 
-        Query query = entityManager.createNamedQuery("Collectionobject.findLastRecordByCollectionCode");
+        Query query = entityManager.createNamedQuery(namedQuery);
         
         for(Map.Entry<String, Object> entry : map.entrySet()) {
             query.setParameter(entry.getKey(), entry.getValue());
         } 
         query.setMaxResults(1);
 
-        T bean = (T) query.getResultList().get(0);
-        logger.info("last co : {}", bean);
-        return bean;
+        List<T> beans = query.getResultList();
+        if(beans != null && !beans.isEmpty()) {
+            return (T) query.getResultList().get(0); 
+        } 
+        return null;
     }
     
     
@@ -591,9 +594,10 @@ public class SpecifyDaoImpl<T extends SpecifyBean> implements SpecifyDao<T> {
         Set<String> keys = parameters.keySet();
 
         Query query = entityManager.createNamedQuery(namedQuery);
-        for (String key : keys) {
-            query.setParameter(key, parameters.get(key));
-        }
+        
+        for(Map.Entry entry : parameters.entrySet()) {
+            query.setParameter((String)entry.getKey(), entry.getValue());
+        } 
         return query;
     }
  
