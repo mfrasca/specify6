@@ -31,6 +31,21 @@ public class UIXmlUtil {
         } 
         return Character.toLowerCase(name.charAt(0)) + name.substring(1);
     }
+    
+    public static String namedQueryConvert(final String string) {
+        if (string == null || string.length() == 0) {
+            throw new NullPointerException("string");
+        }
+        
+        String name = string;
+        if(StringUtils.contains(string, ".")) {
+            name = StringUtils.substringAfterLast(string, ".");
+        } 
+        return Character.toUpperCase(name.charAt(0)) + name.substring(1);
+    }
+    
+    
+    
 
     public static boolean isTrue(final String string) {
         if (string == null || string.length() == 0) {
