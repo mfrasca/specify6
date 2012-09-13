@@ -18,13 +18,7 @@ import java.util.logging.Logger;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriBuilder;  
-import org.apache.http.HttpException;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.HttpException; 
 import se.nrm.specify.datamodel.*; 
 import se.nrm.specify.ui.form.data.ViewCreator;
 import se.nrm.specify.ui.form.data.service.SpecifyRSClient;  
@@ -98,7 +92,7 @@ public class SpecifyClient {
 ////        String xml = client.getXMLResult(discipline, view, queryParams);
 //        System.out.println("json : " + json);
          
-        String json = service.path("search").path("uidata").path(discipline).path(view).path("425").accept(MediaType.APPLICATION_JSON).get(String.class); 
+        String json = service.path("uidata").path(discipline).path(view).path("425").accept(MediaType.APPLICATION_JSON).get(String.class); 
         System.out.println("json : " + json);
         
         
@@ -312,7 +306,7 @@ public class SpecifyClient {
         
         SpecifyBeanWrapper wp = new SpecifyBeanWrapper(collectionobject);
      
-        String response = service.path("uidatamerge").path("fish").accept(MediaType.APPLICATION_XML).put(String.class, wp); 
+        String response = service.path("uidata").path("fish").accept(MediaType.APPLICATION_XML).put(String.class, wp); 
         System.out.println("response : " + response); 
 //      
     
@@ -690,7 +684,7 @@ public class SpecifyClient {
     }
     
     private static void testGetEntityByEntityID() {
-        String xml = service.path("search").path("uidata").path("fish").path("CollectionObject").path("202841").accept(MediaType.APPLICATION_XML).get(String.class);
+        String xml = service.path("uidata").path("fish").path("CollectionObject").path("202841").accept(MediaType.APPLICATION_XML).get(String.class);
         System.out.println("xml: " + xml);
     }
     
@@ -716,7 +710,7 @@ public class SpecifyClient {
         MultivaluedMapImpl queryParams = new MultivaluedMapImpl();
         queryParams.add("catalogNumber", "NHRS-COLE000008661");
 
-        String xml = service.path("search").path("uidata").path(discipline).path(view).queryParams(queryParams).accept(MediaType.APPLICATION_XML).get(String.class);
+        String xml = service.path("uidata").path(discipline).path(view).queryParams(queryParams).accept(MediaType.APPLICATION_XML).get(String.class);
         System.out.println("xml: " + xml);
     }
   

@@ -197,7 +197,7 @@ public class SpecyResource {
      * TODO: current
      */
     @PUT
-    @Path("uidatamerge/{discipline}")
+    @Path("uidata/{discipline}")
     public ValidationWrapper updatePartialUIDataEntity(SpecifyBeanWrapper wrapper, @PathParam("discipline") String discipline) {
 
         logger.info("updatePartialUIDataEntity: {} -- {}", wrapper.getBean(), discipline);
@@ -307,7 +307,7 @@ public class SpecyResource {
     
 
     @GET
-    @Path("search/uidata/{discipline}/{entity}/{id}")
+    @Path("uidata/{discipline}/{entity}/{id}")
     public SpecifyBeanWrapper fetchGroupEntityById(@PathParam("discipline") String discipline, @PathParam("entity") String entity, @PathParam("id") String id) {
 
         logger.info("fetchGroupEntityById: {} - {}", entity, id);
@@ -332,7 +332,7 @@ public class SpecyResource {
     }
 
     @GET
-    @Path("search/uidata/{discipline}/{view}")
+    @Path("uidata/{discipline}/{view}")
     public SpecifyBeanWrapper fetchUIData(@PathParam("discipline") String discipline, @PathParam("view") String view, @Context UriInfo uri) {
 
         logger.info("fetchUIData - discipline: {} - view: {}", discipline, view);
