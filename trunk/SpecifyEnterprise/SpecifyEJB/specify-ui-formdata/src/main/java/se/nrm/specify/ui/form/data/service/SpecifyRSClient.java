@@ -51,18 +51,18 @@ public class SpecifyRSClient {
     }
 
     public List<SpecifyBean> getEntityResult(String discipline, String view, MultivaluedMapImpl searchConditions) { 
-        SpecifyBeanWrapper wrapper = service.path("search").path("uidata").path(discipline).path(view).queryParams(searchConditions).accept(MediaType.APPLICATION_JSON).get(SpecifyBeanWrapper.class); 
+        SpecifyBeanWrapper wrapper = service.path("uidata").path(discipline).path(view).queryParams(searchConditions).accept(MediaType.APPLICATION_JSON).get(SpecifyBeanWrapper.class); 
 
         return (List<SpecifyBean>) wrapper.getBeans();
     }
 
     public String getJSONResult(String discipline, String view, MultivaluedMapImpl searchConditions) { 
-        return service.path("search").path("uidata").path(discipline).path(view).queryParams(searchConditions).accept(MediaType.APPLICATION_JSON).get(String.class); 
+        return service.path("uidata").path(discipline).path(view).queryParams(searchConditions).accept(MediaType.APPLICATION_JSON).get(String.class); 
     }
 
     public String getXMLResult(String discipline, String view, MultivaluedMapImpl searchConditions) { 
         
-        return service.path("search").path("uidata").path(discipline).path(view).queryParams(searchConditions).accept(MediaType.APPLICATION_XML).get(String.class); 
+        return service.path("uidata").path(discipline).path(view).queryParams(searchConditions).accept(MediaType.APPLICATION_XML).get(String.class); 
     }
 
     private ViewData initData(String discipline, String view) {
@@ -237,7 +237,7 @@ public class SpecifyRSClient {
         
         System.out.println("service : " + service);
         
-        String response = service.path("uidatamerge").accept(MediaType.APPLICATION_XML).put(String.class, wp); 
+        String response = service.path("uidata").accept(MediaType.APPLICATION_XML).put(String.class, wp); 
         System.out.println("response : " + response); 
         
         
