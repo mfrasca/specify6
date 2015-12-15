@@ -60,7 +60,7 @@ Ext.define('SpWebPortal.controller.Search', {
 
     escapeForSolr: function(srchText) {
 	//assuming srchText is defined and non-null
-	var result = srchText.toLowerCase();
+	var result = srchText;//.toLowerCase();
 	result = result.replace('&', '%26');
 	//etc...
 	return result;
